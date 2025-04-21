@@ -14,9 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
   <!-- Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <!-- Custom Styles -->
@@ -32,68 +30,77 @@
   <div id="navDrawer" class="navigation-drawer">
     <div class="drawer-header">
       <h2>Menu</h2>
-      <md-icon-button id="closeDrawerButton">
+      <md-icon-button id="closeDrawerButton" aria-label="Close menu">
         <md-icon><span class="material-symbols-outlined">close</span></md-icon>
       </md-icon-button>
     </div>
     <div class="drawer-content">
       <md-list>
         <!-- Top Items -->
-        <md-list-item type="button" onclick="window.location.href='index.html'">
+        <md-list-item type="button" href="index.html">
+          <!-- Use href for navigation -->
           <md-icon slot="start"><span class="material-symbols-outlined">home</span></md-icon>
           <div slot="headline">Home</div>
         </md-list-item>
 
-        <md-list-item type="button" onclick="window.open('https://d4rk7355608.blogspot.com/', '_blank')">
+        <md-list-item type="button" href="https://d4rk7355608.blogspot.com/" target="_blank">
+          <!-- Use href -->
           <md-icon slot="start"><span class="material-symbols-outlined">article</span></md-icon>
           <div slot="headline">Blogs</div>
         </md-list-item>
 
-        <md-list-item type="button" onclick="window.open('https://songwhip.com/d4rkrekords', '_blank')">
+        <md-list-item type="button" href="https://songwhip.com/d4rkrekords" target="_blank">
+          <!-- Use href -->
           <md-icon slot="start"><span class="material-symbols-outlined">music_note</span></md-icon>
           <div slot="headline">Music</div>
         </md-list-item>
 
-        <!-- Divider (Optional) -->
+        <!-- Divider -->
         <md-divider></md-divider>
 
         <!-- Expandable: More -->
-        <md-list-item type="button" id="moreToggle">
+        <md-list-item type="button" id="moreToggle" aria-controls="moreContent" aria-expanded="false">
           <md-icon slot="start"><span class="material-symbols-outlined">more_horiz</span></md-icon>
           <div slot="headline">More</div>
           <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
         </md-list-item>
 
-        <div class="nested-list" id="moreContent">
+        <div class="nested-list" id="moreContent" role="group">
           <md-list>
-            <md-list-item type="button" onclick="alert('Navigate to Privacy Policy')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Privacy Policy</div>
             </md-list-item>
-            <md-list-item type="button" onclick="alert('Navigate to Code of Conduct')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Code of Conduct</div>
             </md-list-item>
           </md-list>
         </div>
 
         <!-- Expandable: Apps -->
-        <md-list-item type="button" id="appsToggle">
+        <md-list-item type="button" id="appsToggle" aria-controls="appsContent" aria-expanded="false">
           <md-icon slot="start"><span class="material-symbols-outlined">apps</span></md-icon>
           <div slot="headline">Apps</div>
           <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
         </md-list-item>
 
-        <div class="nested-list" id="appsContent">
+        <div class="nested-list" id="appsContent" role="group">
           <md-list>
-            <md-list-item type="button" onclick="alert('Navigate to Ads Help Center')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Ads Help Center</div>
             </md-list-item>
-            <md-list-item type="button" onclick="alert('Navigate to Privacy Policy (Apps)')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Privacy Policy</div>
             </md-list-item>
-            <md-list-item type="button" onclick="alert('Navigate to Terms of Service')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Terms of Service</div>
             </md-list-item>
-            <md-list-item type="button" onclick="alert('Navigate to Legal Notices')">
+            <md-list-item type="button" href="#">
+              <!-- Placeholder href -->
               <div slot="headline">Legal notices</div>
             </md-list-item>
           </md-list>
@@ -114,33 +121,43 @@
             <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
           </md-segmented-button>
           <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme" selected>
-            <!-- Default selected -->
             <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
           </md-segmented-button>
         </md-segmented-button-set>
       </div>
     </div>
-  </div>
+  </div> <!-- End Navigation Drawer -->
 
-  <!-- Top App Bar -->
-  <md-top-app-bar>
-    <md-icon-button id="menuButton" slot="navigationIcon" aria-label="Open menu">
+  <!-- Top App Bar - CENTER ALIGNED -->
+  <md-top-app-bar center-aligned>
+    <md-icon-button id="menuButton" slot="navigation" aria-label="Open menu">
+      <!-- Changed slot to 'navigation' -->
       <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
     </md-icon-button>
-    <div slot="headline" aria-level="1">Mihai's Profile</div> <!-- Added accessible headline -->
+    <!-- Use the page title or app name here -->
+    <div slot="headline" aria-level="1">Mihai's Profile</div>
+    <!-- Optional: Add trailing action icons here if needed -->
+    <!--
+    <md-icon-button slot="actions" aria-label="Search">
+      <md-icon><span class="material-symbols-outlined">search</span></md-icon>
+    </md-icon-button>
+    <md-icon-button slot="actions" aria-label="More options">
+      <md-icon><span class="material-symbols-outlined">more_vert</span></md-icon>
+    </md-icon-button>
+    -->
   </md-top-app-bar>
 
   <!-- Main Content Area -->
-  <div class="content-wrapper">
+  <main class="content-wrapper">
+    <!-- Changed div to main for semantics -->
 
     <!-- Profile Card -->
     <md-filled-card class="profile-card">
       <div class="card-content">
         <div class="profile-header">
-          <img src="https://avatars.githubusercontent.com/u/61864357?v=4" alt="Mihai-Cristian Condrea Profile Picture"
-            class="profile-avatar">
+          <img src="https://avatars.githubusercontent.com/u/61864357?v=4" alt="" class="profile-avatar"> <!-- Alt text provided by h2 -->
           <div class="profile-info">
-            <h2>Mihai-Cristian Condrea</h2>
+            <h2 id="profile-name">Mihai-Cristian Condrea</h2> <!-- Added ID for potential ARIA link -->
             <p>D4rK7355608 / D4rK</p>
           </div>
         </div>
@@ -169,29 +186,26 @@
       </div>
       <div class="card-actions">
         <md-outlined-button id="viewPortfolioButton">View Portfolio</md-outlined-button>
-        <md-filled-button style="margin-left: 8px;" onclick="alert('Contact Action TBD')">Contact</md-filled-button>
+        <md-filled-button style="margin-left: 8px;" onclick="window.location.href='mailto:d4rk7355608@gmail.com'">Contact</md-filled-button> <!-- Example contact action -->
       </div>
     </md-filled-card> <!-- End Profile Card -->
 
 
     <!-- Latest News Section -->
-    <h2 class="page-section-title">Latest news</h2>
-    <div class="news-grid">
+    <h2 class="page-section-title" id="latest-news">Latest news</h2> <!-- Added ID -->
+    <div class="news-grid" aria-labelledby="latest-news">
       <md-outlined-card class="news-card">
         <div class="news-card-image">
-          <img
-            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMmRyqC5d2cMl038xvsu6xiXwq_leF8s_exdIxFFF0D-4YR2CTU9S3N54rlFUwbZPKoUaClS4RufQtx2erUSAbRB-1kKPCTUTyDyCTnCJSoqfKsqD74gs_nYltNFqsO5zl-cDxDA6zTZPkHwIJz90i8kG9rl_ZWsvSyihAMRXL4m-CLWvuJ2vvp-rZgDs/w558-h272-rw/play_store_feature_graphic.png"
-            alt="Weddix App Banner" loading="lazy"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMmRyqC5d2cMl038xvsu6xiXwq_leF8s_exdIxFFF0D-4YR2CTU9S3N54rlFUwbZPKoUaClS4RufQtx2erUSAbRB-1kKPCTUTyDyCTnCJSoqfKsqD74gs_nYltNFqsO5zl-cDxDA6zTZPkHwIJz90i8kG9rl_ZWsvSyihAMRXL4m-CLWvuJ2vvp-rZgDs/w558-h272-rw/play_store_feature_graphic.png" alt="Weddix App Banner" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
         </div>
         <div class="news-card-content">
-          <h3>Weddix: Say Goodbye to Event Planning Stress</h3>
+          <h3 id="news-weddix-title">Weddix: Say Goodbye to Event Planning Stress</h3>
           <p>It's official: I'm embarking on a new and exciting project called Weddix! Say hello to effortless
             celebrations with your new event companion...</p>
         </div>
         <div class="news-card-actions">
-          <a href="https://d4rk7355608.blogspot.com/2024/05/weddix-say-goodbye-to-event-planning.html" target="_blank"
-            rel="noopener noreferrer">
+          <a href="https://d4rk7355608.blogspot.com/2024/05/weddix-say-goodbye-to-event-planning.html" target="_blank" rel="noopener noreferrer" aria-labelledby="news-weddix-title">
+            <!-- Link related to headline -->
             <md-text-button>Read More</md-text-button>
           </a>
         </div>
@@ -199,19 +213,16 @@
 
       <md-outlined-card class="news-card">
         <div class="news-card-image">
-          <img
-            src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgg0WGT2RMh0mdpVPXDoRWGVwqlhoalt7Ntp1ikpqtHL6x4a2W7FE_FMLmdHjraRD_C9hUPktiYuIxryPRrSh462JTJsgKq2MphHI3De-eAhxBNP2Tbi4PkYi5xp0q6pDuZ-0whaC1V6KOBPV3RW32az0F47w0mqIBGKsROnXudEkr5mqn7YuRmLiXJG5s/w648-h315-rw/mstp-splas.png"
-            alt="Music Sleep Timer Banner" loading="lazy"
-            onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgg0WGT2RMh0mdpVPXDoRWGVwqlhoalt7Ntp1ikpqtHL6x4a2W7FE_FMLmdHjraRD_C9hUPktiYuIxryPRrSh462JTJsgKq2MphHI3De-eAhxBNP2Tbi4PkYi5xp0q6pDuZ-0whaC1V6KOBPV3RW32az0F47w0mqIBGKsROnXudEkr5mqn7YuRmLiXJG5s/w648-h315-rw/mstp-splas.png" alt="Music Sleep Timer Banner" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
         </div>
         <div class="news-card-content">
-          <h3>Music Sleep Timer Plus Update</h3>
+          <h3 id="news-mstp-title">Music Sleep Timer Plus Update</h3>
           <p>Music Sleep Timer Plus is your copilot for listening to music while sleeping. After the time you set, it
             will take care of stopping playback...</p>
         </div>
         <div class="news-card-actions">
-          <a href="https://d4rk7355608.blogspot.com/2024/06/the-journey-to-better-nights-sleep.html" target="_blank"
-            rel="noopener noreferrer">
+          <a href="https://d4rk7355608.blogspot.com/2024/06/the-journey-to-better-nights-sleep.html" target="_blank" rel="noopener noreferrer" aria-labelledby="news-mstp-title">
+            <!-- Link related to headline -->
             <md-text-button>Read More</md-text-button>
           </a>
         </div>
@@ -219,8 +230,8 @@
     </div> <!-- End News Grid -->
 
     <!-- Contribute Section -->
-    <h2 class="page-section-title">Contribute</h2>
-    <md-elevated-card class="contribute-card">
+    <h2 class="page-section-title" id="contribute-title">Contribute</h2> <!-- Added ID -->
+    <md-elevated-card class="contribute-card" aria-labelledby="contribute-title">
       <h3>Do you like my projects?</h3>
       <p>Your support helps me dedicate more time to developing and maintaining open-source apps and libraries. Consider
         showing your appreciation!</p>
@@ -233,27 +244,22 @@
 
     <!-- Social Icons Section -->
     <div class="social-icons">
-      <a href="https://github.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile"
-        title="GitHub">
+      <a href="https://github.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" title="GitHub">
         <md-icon-button>
           <md-icon><i class="fab fa-github" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <a href="https://www.instagram.com/d4rk7355608/" target="_blank" rel="noopener noreferrer"
-        aria-label="Instagram Profile" title="Instagram">
+      <a href="https://www.instagram.com/d4rk7355608/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Profile" title="Instagram">
         <md-icon-button>
           <md-icon><i class="fab fa-instagram" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <!-- Add valid href for YouTube or remove if not applicable -->
-      <a href="https://youtube.com/@D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel"
-        title="YouTube">
+      <a href="https://youtube.com/@D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" title="YouTube">
         <md-icon-button>
           <md-icon><i class="fab fa-youtube" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <a href="https://www.pinterest.com/d4rk7355608/" target="_blank" rel="noopener noreferrer"
-        aria-label="Pinterest Profile" title="Pinterest">
+      <a href="https://www.pinterest.com/d4rk7355608/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest Profile" title="Pinterest">
         <md-icon-button>
           <md-icon><i class="fab fa-pinterest" aria-hidden="true"></i></md-icon>
         </md-icon-button>
@@ -263,32 +269,30 @@
           <md-icon><span class="material-symbols-outlined">email</span></md-icon>
         </md-icon-button>
       </a>
-      <a href="https://ro.linkedin.com/in/mihai-cristian-condrea" target="_blank" rel="noopener noreferrer"
-        aria-label="LinkedIn Profile" title="LinkedIn">
+      <a href="https://ro.linkedin.com/in/mihai-cristian-condrea" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" title="LinkedIn">
         <md-icon-button>
           <md-icon><i class="fab fa-linkedin-in" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <a href="https://twitter.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile"
-        title="Twitter / X">
+      <a href="https://twitter.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="X (formerly Twitter) Profile" title="X (formerly Twitter)">
+        <!-- Updated label/title -->
         <md-icon-button>
-          <md-icon><i class="fab fa-x-twitter" aria-hidden="true"></i></md-icon> <!-- Updated Twitter/X icon -->
+          <md-icon><i class="fab fa-x-twitter" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <a href="https://www.facebook.com/d4rk7355608" target="_blank" rel="noopener noreferrer"
-        aria-label="Facebook Profile" title="Facebook">
+      <a href="https://www.facebook.com/d4rk7355608" target="_blank" rel="noopener noreferrer" aria-label="Facebook Profile" title="Facebook">
         <md-icon-button>
           <md-icon><i class="fab fa-facebook-f" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
     </div> <!-- End Social Icons -->
 
-  </div> <!-- End Content Wrapper -->
+  </main> <!-- End Content Wrapper -->
 
 
-  <!-- Portfolio Dialog (Placed outside main content flow for proper layering) -->
-  <md-dialog id="portfolioDialog">
-    <div slot="headline">My Android Apps</div>
+  <!-- Portfolio Dialog (Placed outside main content flow) -->
+  <md-dialog id="portfolioDialog" aria-labelledby="portfolio-dialog-title">
+    <div slot="headline" id="portfolio-dialog-title">My Android Apps</div>
     <div slot="content" id="dialogContent" class="dialog-content-area">
       <!-- Initial Loading State -->
       <div class="dialog-loading">
@@ -304,6 +308,7 @@
 
   <!-- Main JavaScript -->
   <script src="assets/js/main.js"></script>
+
 </body>
 
 </html>
