@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mihai's Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="https://unpkg.com/@material/web/all.js?module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Basic styles to integrate MWC and Tailwind */
+        body {
+            font-family: 'Poppins', sans-serif; /* Updated font */
+            background-color: #f8f9fa; /* Light background */
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        /* Ensure MWC components inherit font */
+        md-filled-card, md-outlined-card, md-elevated-card, md-outlined-button, md-filled-button, md-chip-set, md-assist-chip, md-top-app-bar, md-icon-button {
+             font-family: 'Poppins', sans-serif; /* Updated font */
+        }
+        /* Center content */
+        .content-wrapper {
+            max-width: 900px; /* Slightly wider for grid */
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        /* Style the main profile card */
+        md-filled-card.profile-card { /* Added class for specificity */
+            width: 100%;
+            background-color: #fff;
+            --md-filled-card-container-color: #fff;
+             border-radius: 16px; /* Slightly larger radius */
+             overflow: hidden;
+             margin-bottom: 2.5rem; /* Space below profile card */
+        }
+         /* Style the top app bar */
+        md-top-app-bar {
+             --md-sys-color-primary: #6750A4; /* Example primary color */
+             --md-sys-color-on-primary: #FFFFFF;
+             border-radius: 0;
+        }
+        .card-content {
+            padding: 1.5rem;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .profile-avatar {
+             width: 60px;
+             height: 60px;
+             background-color: #e0e0e0;
+             border-radius: 50%;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             margin-right: 1rem;
+             font-weight: 500;
+             color: #333;
+             font-size: 1.25rem;
+        }
+        .profile-info h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        .profile-info p {
+            margin: 0.25rem 0 0 0;
+            color: #5f6368;
+        }
+        .section-title {
+            font-size: 1.25rem; /* Slightly larger title */
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem; /* More space below title */
+            color: #333;
+        }
+        .page-section-title { /* Title for major page sections */
+             font-size: 1.75rem;
+             font-weight: 500;
+             margin-top: 2.5rem;
+             margin-bottom: 1.5rem;
+             color: #111;
+             text-align: left; /* Align left like the image */
+        }
+        md-chip-set {
+            margin-bottom: 1rem;
+        }
+        md-assist-chip {
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            --md-assist-chip-label-text-font: 'Poppins', sans-serif; /* Ensure chip font */
+        }
+        .card-actions {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* News Section Styles */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 1.5rem; /* Gap between cards */
+            margin-bottom: 2.5rem;
+        }
+        md-outlined-card.news-card { /* Style for news cards */
+            --md-outlined-card-container-shape: 16px; /* Rounded corners */
+             display: flex;
+             flex-direction: column; /* Stack image, content, actions */
+        }
+        .news-card-image {
+            width: 100%;
+            height: 150px; /* Fixed height for image area */
+            background-color: #eee; /* Placeholder background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--md-sys-color-outline-variant, #ccc); /* M3 outline color */
+            /* You would use an <img> tag here */
+        }
+         .news-card-image img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover; /* Cover the area */
+         }
+        .news-card-content {
+            padding: 1rem;
+            flex-grow: 1; /* Allow content to take available space */
+        }
+        .news-card-content h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        .news-card-content p {
+            font-size: 0.9rem;
+            color: #5f6368;
+            line-height: 1.5;
+            /* Limit text lines (optional) */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .news-card-actions {
+             padding: 0.5rem 1rem;
+             display: flex;
+             justify-content: flex-end;
+        }
+
+        /* Contribute Section Styles */
+        md-elevated-card.contribute-card { /* Using elevated card for variation */
+            --md-elevated-card-container-shape: 16px;
+            --md-elevated-card-container-color: #f0eaff; /* Light purple background */
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .contribute-card h3 {
+             font-size: 1.5rem;
+             font-weight: 500;
+             margin-top: 0;
+             margin-bottom: 0.75rem;
+             color: #333;
+        }
+         .contribute-card p {
+             font-size: 1rem;
+             color: #444;
+             margin-bottom: 1.5rem;
+             line-height: 1.6;
+         }
+         .contribute-actions {
+             display: flex;
+             justify-content: flex-start; /* Align button left */
+         }
+
+        /* Social Icons Styles */
+        .social-icons {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 1rem;
+        }
+        .social-icons a {
+            color: #5f6368;
+            font-size: 1.75rem; /* Larger icons */
+            margin: 0 0.75rem; /* Space between icons */
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: #6750A4; /* Use primary color on hover */
+        }
+
+    </style>
+</head>
+<body class="bg-surface-container-lowest"> <md-top-app-bar>
+        <div slot="headline">Mihai-Cristian Condrea</div>
+        </md-top-app-bar>
+
+    <div class="content-wrapper">
+
+        <md-filled-card class="profile-card">
+            <div class="card-content">
+                <div class="profile-header">
+                    <div class="profile-avatar">MC</div> <div class="profile-info">
+                        <h2>Mihai-Cristian Condrea</h2>
+                        <p>D4rK7355608 / D4rK</p>
+                    </div>
+                </div>
+
+                <p class="text-gray-700 mb-4">
+                    Part-time Android Developer at Digi România and creator of 'Cleaner for Android'. Passionate about UI/UX design, animations, and building great mobile experiences using Kotlin and Jetpack Compose.
+                </p>
+
+                <h3 class="section-title">Skills & Technologies</h3>
+                <md-chip-set>
+                    <md-assist-chip label="Android Dev"></md-assist-chip>
+                    <md-assist-chip label="Kotlin"></md-assist-chip>
+                    <md-assist-chip label="Jetpack Compose"></md-assist-chip>
+                    <md-assist-chip label="MVVM"></md-assist-chip>
+                    <md-assist-chip label="Koin"></md-assist-chip>
+                    <md-assist-chip label="UI/UX Design"></md-assist-chip>
+                    <md-assist-chip label="Material Design"></md-assist-chip>
+                </md-chip-set>
+
+                 <h3 class="section-title">Notable Project</h3>
+                 <p class="text-gray-600 mb-2"> <strong>Cleaner for Android:</strong> An application available on the Google Play Store with over 10,000 downloads.
+                 </p>
+
+            </div>
+            <div class="card-actions">
+                 <md-outlined-button>View Portfolio</md-outlined-button>
+                 <md-filled-button style="margin-left: 8px;">Contact</md-filled-button>
+            </div>
+        </md-filled-card>
+
+        <h2 class="page-section-title">Latest news</h2>
+        <div class="news-grid">
+            <md-outlined-card class="news-card">
+                <div class="news-card-image">
+                     <img src="https://placehold.co/600x300/e2e8f0/94a3b8?text=Weddix+App" alt="Weddix App Banner" onerror="this.onerror=null; this.src='https://placehold.co/600x300/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
+                </div>
+                <div class="news-card-content">
+                     <h3>Weddix: Say Goodbye to Event Planning Stress</h3>
+                     <p>It's official: I'm embarking on a new and exciting project called Weddix! Say hello to effortless celebrations with your new event companion...</p>
+                </div>
+                 <div class="news-card-actions">
+                     <md-text-button>Read More</md-text-button> </div>
+            </md-outlined-card>
+
+            <md-outlined-card class="news-card">
+                <div class="news-card-image">
+                     <img src="https://placehold.co/600x300/dbeafe/60a5fa?text=Music+Sleep+Timer" alt="Music Sleep Timer Banner" onerror="this.onerror=null; this.src='https://placehold.co/600x300/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
+                </div>
+                <div class="news-card-content">
+                     <h3>Music Sleep Timer Plus Update</h3>
+                     <p>Music Sleep Timer Plus is your copilot for listening to music while sleeping. After the time you set, it will take care of stopping playback...</p>
+                </div>
+                 <div class="news-card-actions">
+                     <md-text-button>Read More</md-text-button>
+                 </div>
+            </md-outlined-card>
+
+             </div>
+
+        <h2 class="page-section-title">Contribute</h2>
+         <md-elevated-card class="contribute-card">
+             <h3>Do you like my projects?</h3>
+             <p>Your support helps me dedicate more time to developing and maintaining open-source apps and libraries. Consider showing your appreciation!</p>
+             <div class="contribute-actions">
+                 <md-filled-button>Help us</md-filled-button>
+             </div>
+         </md-elevated-card>
+
+         <div class="social-icons">
+             <a href="#" target="_blank" aria-label="GitHub Profile" title="GitHub"><i class="fab fa-github"></i></a>
+             <a href="#" target="_blank" aria-label="LinkedIn Profile" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+             <a href="#" target="_blank" aria-label="Twitter Profile" title="Twitter / X"><i class="fab fa-twitter"></i></a>
+             <a href="#" target="_blank" aria-label="Google Play Store Profile" title="Google Play"><i class="fab fa-google-play"></i></a>
+             <a href="#" target="_blank" aria-label="Personal Website" title="Website"><i class="fas fa-globe"></i></a>
+             </div>
+
+    </div>
+
+</body>
+</html>
