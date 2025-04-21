@@ -1,6 +1,5 @@
-// assets/js/main.js
-
-// --- Element References ---
+console.log("SCRIPT START: main.js executing");
+console.log("SCRIPT: Getting element references...");
 const menuButton = document.getElementById('menuButton');
 const navDrawer = document.getElementById('navDrawer');
 const closeDrawerButton = document.getElementById('closeDrawerButton');
@@ -12,112 +11,119 @@ const appsContent = document.getElementById('appsContent');
 const body = document.body;
 const themeSegmentedButtonSet = document.getElementById('themeSegmentedButtonSet');
 const htmlElement = document.documentElement;
-
-// --- Portfolio Dialog Elements ---
 const viewPortfolioButton = document.getElementById('viewPortfolioButton');
 const portfolioDialog = document.getElementById('portfolioDialog');
 const dialogContent = document.getElementById('dialogContent');
 const closePortfolioDialogButton = document.getElementById('closePortfolioDialogButton');
-
-
-// --- Constants for App Fetching ---
+console.log("SCRIPT: Element references obtained.");
+console.log("SCRIPT: Defining constants...");
 const DEVELOPER_ID = "5390214922640123642";
-// WARNING: Client-side scraping via proxies is UNRELIABLE. SERVER-SIDE is recommended.
 const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
 const PLAY_STORE_RAW_URL = `https://play.google.com/store/apps/dev?id=${DEVELOPER_ID}&hl=en&gl=us`;
 const DEVELOPER_PAGE_URL = `${CORS_PROXY_URL}${encodeURIComponent(PLAY_STORE_RAW_URL)}`;
-
 const DEFAULT_ICON_URL = "https://c.clc2l.com/t/g/o/google-playstore-Iauj7q.png";
 const PLAY_STORE_APP_URL = "https://play.google.com/store/apps/details?id=";
+console.log("SCRIPT: Constants defined. DEVELOPER_PAGE_URL:", DEVELOPER_PAGE_URL);
 
-
-// --- Drawer Logic ---
 function openDrawer() {
+  console.log("FUNC openDrawer: Called");
   if (navDrawer && drawerOverlay) {
     navDrawer.classList.add('open');
     drawerOverlay.classList.add('open');
     body.style.overflow = 'hidden';
+    console.log("FUNC openDrawer: Drawer opened, overflow hidden");
+  } else {
+    console.error("FUNC openDrawer: Drawer or overlay element not found!");
   }
 }
 
 function closeDrawer() {
+  console.log("FUNC closeDrawer: Called");
   if (navDrawer && drawerOverlay) {
     navDrawer.classList.remove('open');
     drawerOverlay.classList.remove('open');
     body.style.overflow = '';
+    console.log("FUNC closeDrawer: Drawer closed, overflow restored");
+  } else {
+    console.error("FUNC closeDrawer: Drawer or overlay element not found!");
   }
 }
 
-// --- Collapsible Section Logic ---
 function toggleSection(toggleButton, contentElement) {
-  if (!toggleButton || !contentElement) return;
-
+  const functionName = `FUNC toggleSection (Button ID: ${toggleButton?.id}, Content ID: ${contentElement?.id})`;
+  console.log(`${functionName}: Setting up listener`);
+  if (!toggleButton || !contentElement) {
+    console.error(`${functionName}: Button or content element missing`);
+    return;
+  }
   toggleButton.addEventListener('click', () => {
+    console.log(`${functionName}: Clicked`);
     const isExpanded = contentElement.classList.contains('open');
-    const icon = toggleButton.querySelector('md-icon[slot="end"] span');
-
-    // Simple accordion
+    console.log(`${functionName}: Currently expanded? ${isExpanded}`);
     if (contentElement.id === 'moreContent' && appsContent?.classList.contains('open')) {
+      console.log(`${functionName}: Closing 'appsContent'`);
       appsContent.classList.remove('open');
       appsToggle?.classList.remove('expanded');
-      const appsIcon = appsToggle?.querySelector('md-icon[slot="end"] span');
-      if (appsIcon) appsIcon.textContent = 'expand_more';
     } else if (contentElement.id === 'appsContent' && moreContent?.classList.contains('open')) {
+      console.log(`${functionName}: Closing 'moreContent'`);
       moreContent.classList.remove('open');
       moreToggle?.classList.remove('expanded');
-      const moreIcon = moreToggle?.querySelector('md-icon[slot="end"] span');
-      if (moreIcon) moreIcon.textContent = 'expand_more';
     }
-
     contentElement.classList.toggle('open', !isExpanded);
     toggleButton.classList.toggle('expanded', !isExpanded);
-    if (icon) {
-      icon.textContent = !isExpanded ? 'expand_less' : 'expand_more';
-    }
+    console.log(`${functionName}: Toggled. Now expanded? ${!isExpanded}`);
   });
 }
 
-
-// --- Theme Toggle Logic ---
 function applyTheme(theme) {
-  console.log("Applying theme:", theme);
+  console.log(`FUNC applyTheme: Called with theme='${theme}'`);
   htmlElement.classList.remove('dark');
-
+  let finalTheme = theme;
+  let themeSource = "Argument";
   if (theme === 'dark') {
     htmlElement.classList.add('dark');
     localStorage.setItem('theme', 'dark');
-    if (themeSegmentedButtonSet) themeSegmentedButtonSet.selected = 'dark';
-    console.log("Theme set to dark");
   } else if (theme === 'light') {
     localStorage.setItem('theme', 'light');
-    if (themeSegmentedButtonSet) themeSegmentedButtonSet.selected = 'light';
-    console.log("Theme set to light");
-  } else { // Auto theme
+  } else {
+    finalTheme = 'auto';
+    themeSource = "Auto";
     localStorage.removeItem('theme');
-    if (themeSegmentedButtonSet) themeSegmentedButtonSet.selected = 'auto';
-    console.log("Theme set to auto");
     if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
       htmlElement.classList.add('dark');
-      console.log("Auto theme: Applied dark (system)");
+      themeSource = "Auto (System Dark)";
     } else {
-      console.log("Auto theme: Applied light (system)");
+      themeSource = "Auto (System Light)";
     }
+  }
+  console.log(`FUNC applyTheme: ${themeSource} theme applied. localStorage['theme']='${localStorage.getItem('theme') || 'null'}'. Dark class present? ${htmlElement.classList.contains('dark')}`);
+  if (themeSegmentedButtonSet) {
+    try {
+      themeSegmentedButtonSet.selected = finalTheme;
+      console.log(`FUNC applyTheme: Set segmented button selected value to '${finalTheme}'`);
+    } catch (err) {
+      console.error("FUNC applyTheme: Error setting themeSegmentedButtonSet.selected:", err);
+    }
+  } else {
+    console.warn("FUNC applyTheme: themeSegmentedButtonSet not found, cannot update UI.");
   }
 }
 
-// --- Portfolio Dialog Logic ---
-
 function showDialogLoading() {
+  console.log("FUNC showDialogLoading: Displaying loading state.");
   if (dialogContent) {
     dialogContent.innerHTML = `
             <div class="dialog-loading">
               <md-circular-progress indeterminate aria-label="Loading apps"></md-circular-progress>
               <p>Loading apps...</p>
             </div>`;
+  } else {
+    console.error("FUNC showDialogLoading: dialogContent element not found!");
   }
 }
 
 function showDialogError(message = "Failed to load apps.") {
+  console.log(`FUNC showDialogError: Called with message: "${message}"`);
   if (dialogContent) {
     let fullMessage = message;
     if (message.includes("parsing") || message.includes("extract") || message.includes("structure")) {
@@ -125,430 +131,311 @@ function showDialogError(message = "Failed to load apps.") {
     } else if (message.includes("Network error")) {
       fullMessage += " (Could not reach data source.)";
     }
-    console.error("showDialogError:", fullMessage);
+    console.error("FUNC showDialogError: Displaying error message:", fullMessage);
     dialogContent.innerHTML = `
             <div class="dialog-error">
               <md-icon>warning</md-icon>
               <p>${fullMessage}</p>
             </div>`;
+  } else {
+    console.error("FUNC showDialogError: dialogContent element not found!");
   }
 }
 
 function createAppCardElement(appInfo) {
+  console.log(`FUNC createAppCardElement: Creating card for ${appInfo.packageName}`);
   const card = document.createElement('a');
   card.href = `${PLAY_STORE_APP_URL}${appInfo.packageName}`;
   card.target = "_blank";
   card.rel = "noopener noreferrer";
   card.className = 'app-card';
   card.title = `${appInfo.name} - ${appInfo.packageName}`;
-
   const img = document.createElement('img');
   img.src = appInfo.iconUrl || DEFAULT_ICON_URL;
   img.alt = `${appInfo.name} Icon`;
   img.loading = "lazy";
   img.onerror = () => {
+    console.warn(`FUNC createAppCardElement: Image failed to load for ${appInfo.packageName}, using default.`);
     img.src = DEFAULT_ICON_URL;
   };
-
   const name = document.createElement('p');
   name.textContent = appInfo.name;
-
   card.appendChild(img);
   card.appendChild(name);
+  console.log(`FUNC createAppCardElement: Card created successfully for ${appInfo.packageName}`);
   return card;
 }
 
-
 function displayAppsInDialog(apps) {
-  if (!dialogContent) return;
-
+  console.log("FUNC displayAppsInDialog: Called.");
+  if (!dialogContent) {
+    console.error("FUNC displayAppsInDialog: dialogContent element not found!");
+    return;
+  }
   if (!apps || apps.length === 0) {
-    console.warn("displayAppsInDialog called but no apps were found or provided.");
+    console.warn("FUNC displayAppsInDialog: No apps array provided or array is empty.");
     showDialogError("No apps found in the data.");
     return;
   }
-
-  console.log(`Displaying ${apps.length} apps in dialog.`);
+  console.log(`FUNC displayAppsInDialog: Preparing to display ${apps.length} apps.`);
   dialogContent.innerHTML = '';
   const grid = document.createElement('div');
   grid.className = 'portfolio-grid';
-
-  apps.sort((a, b) => a.name.localeCompare(b.name));
-
   apps.forEach(app => {
-    const card = createAppCardElement(app);
-    grid.appendChild(card);
+    try {
+      const card = createAppCardElement(app);
+      grid.appendChild(card);
+    } catch (error) {
+      console.error(`FUNC displayAppsInDialog: Error creating card for app:`, app, error);
+    }
   });
-
   dialogContent.appendChild(grid);
+  console.log("FUNC displayAppsInDialog: Grid with app cards appended.");
 }
 
-// --- Functions for Scraping (Highly Unreliable) ---
-
 function extractJsonData(htmlContent) {
-  console.log("Extracting JSON data...");
+  console.log("FUNC extractJsonData: Starting...");
+  if (!htmlContent || typeof htmlContent !== 'string' || htmlContent.length < 100) {
+    console.error("FUNC extractJsonData: Input htmlContent is invalid or too short.");
+    throw new Error("Invalid HTML content provided for extraction.");
+  }
+  console.log(`FUNC extractJsonData: Processing HTML content (Length: ${htmlContent.length})`);
   let relevantJsonString = null;
   let extractionMethod = "None";
-
   try {
-    // Method 1: AF_initDataCallback
+    console.log("FUNC extractJsonData: Attempting Method 1 (AF_initDataCallback)...");
     const dataCallbackRegex = /AF_initDataCallback\s*\(\s*(\{.*?\})\s*\)\s*;/gs;
     let match;
     while ((match = dataCallbackRegex.exec(htmlContent)) !== null) {
       const callbackContent = match[1];
       if (callbackContent && callbackContent.match(/['"]ds:\d+['"]/)) {
-        const dataRegex = /data\s*:\s*(\[.*?\])\s*,\s*sideChannel/s;
-        let dataMatch = callbackContent.match(dataRegex);
+        console.log("FUNC extractJsonData: Found AF_initDataCallback block.");
+        const dataMatch = callbackContent.match(/data\s*:\s*(\[.*?\])\s*,\s*sideChannel/s);
         if (dataMatch && dataMatch[1]) {
           relevantJsonString = dataMatch[1];
           extractionMethod = "AF_initDataCallback ('data:' key)";
+          console.log(`FUNC extractJsonData: Found 'data' key in AF_initDataCallback.`);
           break;
-        } else {
-          const arrayRegex = /(\[.*\])/s;
-          const arrayMatch = callbackContent.match(arrayRegex);
-          if (arrayMatch && arrayMatch[1] && arrayMatch[1].length > 500) {
-            relevantJsonString = arrayMatch[1];
-            extractionMethod = "AF_initDataCallback (fallback array regex)";
-            break;
-          }
         }
+        console.log("FUNC extractJsonData: 'data' key not found directly.");
       }
     }
-
-    // Method 2: Script Tag Fallback
     if (!relevantJsonString) {
-      console.log("AF_initDataCallback failed, trying script tag regex...");
-      // More specific regex looking for assignment or return of a large array/object
+      console.log("FUNC extractJsonData: Method 1 failed, attempting Method 2 (Script Tag Fallback)...");
       const scriptRegex = /<script[^>]*nonce="[^"]+"[^>]*>\s*(.*?)\s*<\/script>/gs;
+      let scriptCount = 0;
       while ((match = scriptRegex.exec(htmlContent)) !== null) {
+        scriptCount++;
         const scriptContent = match[1];
-        // Look for common patterns indicating data blocks
         if (scriptContent && (scriptContent.includes('window.IJ_Data') || scriptContent.includes('window.WIZ_global_data')) && scriptContent.includes(DEVELOPER_ID)) {
-          // Try to extract a large JSON-like structure (often assigned or returned)
-          const jsonLikeRegex = /(?:return|var\s+\w+\s*=|const\s+\w+\s*=|let\s+\w+\s*=)\s*(\{.*\}|\[.*\])\s*;/s;
-          let potentialJsonMatch = scriptContent.match(jsonLikeRegex);
-
+          console.log(`FUNC extractJsonData: Found potentially relevant script tag #${scriptCount}.`);
+          const potentialJsonMatch = scriptContent.match(/(?:return|var\s+\w+\s*=|const\s+\w+\s*=|let\s+\w+\s*=)\s*(\{.*\}|\[.*\])\s*;/s);
           if (potentialJsonMatch && potentialJsonMatch[1] && potentialJsonMatch[1].length > 1000) {
             relevantJsonString = potentialJsonMatch[1];
             extractionMethod = "Script Tag Regex (IJ_Data/WIZ_global_data)";
-            console.log("Found potential data using script tag regex.");
+            console.log("FUNC extractJsonData: Extracted large JSON structure from script tag.");
             break;
           }
         }
       }
+      console.log(`FUNC extractJsonData: Checked ${scriptCount} script tags.`);
     }
-
     if (!relevantJsonString) {
-      console.error("Failed to find relevant JSON structure in the HTML after trying multiple methods.");
+      console.error("FUNC extractJsonData: Failed to find relevant JSON structure.");
       throw new Error("Failed to extract JSON data structure from HTML.");
     }
-
-    console.log(`JSON extraction successful using method: ${extractionMethod}`);
-
-    // Clean before parsing
+    console.log(`FUNC extractJsonData: Extraction successful using method: ${extractionMethod}. String length: ${relevantJsonString.length}`);
+    console.log("FUNC extractJsonData: Cleaning JSON string...");
     let cleanedJsonString = relevantJsonString
-      .replace(/\\x([0-9A-Fa-f]{2})/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)))
+      .replace(/\\x([0-9A-Fa-f]{2})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
       .replace(/undefined/g, 'null')
       .replace(/,\s*([\]}])/g, '$1');
-
+    console.log("FUNC extractJsonData: Parsing cleaned JSON string...");
     const jsonData = JSON.parse(cleanedJsonString);
-    console.log("JSON parsing successful.");
-    if (Array.isArray(jsonData)) {
-      console.log(`Parsed data is an Array with ${jsonData.length} elements.`);
-    } else if (typeof jsonData === 'object') {
-      console.log(`Parsed data is an Object.`);
-    }
+    console.log("FUNC extractJsonData: JSON parsing successful.");
     return jsonData;
-
   } catch (error) {
-    console.error(`Error during JSON extraction/parsing (Method: ${extractionMethod}):`, error);
-    console.error("Failed HTML snippet:", htmlContent.substring(0, 1000));
-    console.error("Failed JSON string snippet:", relevantJsonString?.substring(0, 500));
-    throw new Error(`Error parsing developer page data: ${error.message}`);
+    console.error(`FUNC extractJsonData: Error during extraction/parsing (Method: ${extractionMethod}):`, error);
+    throw new Error(`Error parsing data: ${error.message}`);
   }
 }
 
-// **** REVISED searchForApps function with INTENSIVE LOGGING ****
 function searchForApps(jsonElement) {
-  console.log("--- Starting searchForApps ---");
-  // Log the input structure (abbreviated)
-  try {
-    console.log("Input Data Sample:", JSON.stringify(jsonElement, (key, value) => {
-      // Abbreviate long strings or arrays/objects to keep log manageable
-      if (typeof value === 'string' && value.length > 100) return value.substring(0, 97) + "...";
-      if (Array.isArray(value) && value.length > 5) return `[Array(${value.length})]`;
-      if (typeof value === 'object' && value !== null && Object.keys(value).length > 5) return `{Object(${Object.keys(value).length} keys)}`;
-      return value;
-    }, 2)?.substring(0, 2000) + "..."); // Limit total log size
-  } catch (e) {
-    console.error("Error logging input data sample:", e);
-  }
-
-
+  console.log("FUNC searchForApps: --- Starting ---");
   const appInfos = [];
   const knownPackages = new Set();
-  let arraysCheckedCount = 0;
 
-  function findDataRecursively(element, targetDepth, currentDepth = 0) {
-    if (currentDepth > targetDepth || !element) {
-      return null;
+  function flattenStrings(element) {
+    console.log(`flattenStrings: Processing type: ${typeof element}`);
+    if (typeof element === 'string') {
+      return [element];
+    } else if (Array.isArray(element)) {
+      return element.flatMap(flattenStrings);
+    } else if (element && typeof element === 'object') {
+      return Object.values(element).flatMap(flattenStrings);
     }
-    if (Array.isArray(element)) {
-      for (const item of element) {
-        const result = findDataRecursively(item, targetDepth, currentDepth + 1);
-        if (result) return result; // Return the first match found at the target depth
-      }
-    } else if (typeof element === 'object' && element !== null) {
-      if (currentDepth === targetDepth) {
-        // If we are at the target depth and it's an object, check if it looks like app data
-        // Heuristic: Does it contain a string starting with "com."?
-        if (JSON.stringify(element).includes('"com.')) {
-          console.log(`DEBUG: Potential app data object found at depth ${targetDepth}:`, JSON.stringify(element).substring(0, 300));
-          return element; // Or maybe return specific fields? Needs inspection.
-        }
-      } else {
-        // Continue searching deeper
-        for (const key in element) {
-          const result = findDataRecursively(element[key], targetDepth, currentDepth + 1);
-          if (result) return result;
-        }
-      }
-    }
-    return null;
+    return [];
   }
 
-
-  function traverse(element, path = "root") {
+  function traverse(element, path = 'root') {
+    console.log(`TRAVERSE: Path='${path}', Type='${Array.isArray(element) ? 'Array' : typeof element}'`);
     if (Array.isArray(element)) {
-      arraysCheckedCount++;
-      // Check if this array looks like a list of apps
-      // Heuristic: Does it contain multiple sub-arrays or objects? Does it contain "com." strings?
-      const contentSample = JSON.stringify(element).substring(0, 300);
-      const containsPackage = contentSample.includes('"com.');
-      const containsIconUrl = contentSample.includes('"https://play-lh');
-
-      if (element.length > 0 && containsPackage && containsIconUrl) {
-        console.log(`\n🔍 Checking Potential App List Array at path: ${path} [Length: ${element.length}]`);
-        console.log(`   Sample: ${contentSample}...`);
-
-        // Iterate through items in *this potentially correct array*
-        element.forEach((item, index) => {
-          // Assume each 'item' might represent an app's data structure (likely another array or object)
-          if (item && (Array.isArray(item) || typeof item === 'object')) {
-            console.log(`  >> Examining item[${index}] within potential list...`);
-            const itemDataSample = JSON.stringify(item).substring(0, 300);
-            console.log(`     Item Sample: ${itemDataSample}...`);
-
-            // Extract data specifically from this 'item'
-            const itemStrings = JSON.stringify(item).match(/"(.*?)"/g)?.map(s => s.slice(1, -1)) || []; // Simple string extraction
-
-            const packageName = itemStrings.find(s => s.startsWith("com.") && !s.includes("google") && s.split('.').length >= 2 && s.length < 100);
-
-            if (packageName && !knownPackages.has(packageName)) {
-              console.log(`      ✅ Found Package: ${packageName}`);
-
-              let iconUrl = itemStrings.find(s => s.startsWith("https://play-lh.googleusercontent.com") && s.includes('=') && s.match(/\.(png|jpg|jpeg|webp)/i));
-              iconUrl = iconUrl || DEFAULT_ICON_URL;
-              console.log(`      🔗 Icon URL: ${iconUrl}`);
-
-              // --- Revised Name Finding ---
-              let appName = null;
-              // Try specific indices within 'item' if it's an array (based on inspection)
-              // Common indices: 2, 3, sometimes others
-              const potentialNameIndices = [2, 3, 1, 4];
-              if (Array.isArray(item)) {
-                for (const idx of potentialNameIndices) {
-                  if (typeof item[idx] === 'string' && item[idx].match(/[a-zA-Z]/) && item[idx].length > 1 && item[idx].length < 70 && item[idx] !== packageName && !item[idx].startsWith('http')) {
-                    appName = item[idx];
-                    console.log(`      📛 Found Name (Index [${idx}]): ${appName}`);
-                    break;
-                  }
-                }
-              }
-              // Fallback: Search strings within item
-              if (!appName) {
-                appName = itemStrings.find(s =>
-                  s !== packageName && !s.startsWith("http") && !s.startsWith("com.") &&
-                  s.length > 1 && s.length < 70 && s.match(/[a-zA-Z]/) &&
-                  !/^\d+(\.\d+)?(M|k|B)?\+?$/.test(s) &&
-                  !/stars?|reviews?|downloads?|installs?|developer|ratings?|null|free|install|update|open/i.test(s) &&
-                  !s.includes('ads') && !s.includes('purchases')
-                );
-                if (appName) console.log(`      📛 Found Name (String Search): ${appName}`);
-              }
-              appName = appName || packageName; // Final fallback
-              if (appName === packageName) console.log(`      📛 Name defaulted to Package Name`);
-              // --- End Name Finding ---
-
-              appInfos.push({
-                name: appName.trim(),
-                iconUrl: iconUrl,
-                packageName: packageName
-              });
-              knownPackages.add(packageName);
-            }
-          }
+      const strings = flattenStrings(element);
+      const packageName = strings.find(s => s.startsWith('com.')) || '';
+      if (packageName && !knownPackages.has(packageName)) {
+        console.log(`TRAVERSE: Found packageName='${packageName}'`);
+        const iconUrl = strings.find(s => s.startsWith('https://')) || DEFAULT_ICON_URL;
+        console.log(`TRAVERSE: Using iconUrl='${iconUrl}'`);
+        const suggestedName = element[3] && typeof element[3] === 'string' && element[3] !== 'null' && /[A-Za-z]/.test(element[3]) && element[3].length < 50 ? element[3] : null;
+        if (suggestedName) console.log(`TRAVERSE: Found suggestedName='${suggestedName}'`);
+        const alternativeName = strings.find(s => s !== packageName && !s.startsWith('https://') && /[A-Za-z]/.test(s) && s.length < 50) || null;
+        if (alternativeName) console.log(`TRAVERSE: Found alternativeName='${alternativeName}'`);
+        const appName = suggestedName || alternativeName || packageName;
+        console.log(`TRAVERSE: Final appName='${appName}'`);
+        appInfos.push({
+          name: appName,
+          iconUrl,
+          packageName
         });
+        knownPackages.add(packageName);
       }
-
-      // Continue traversal into children EVEN IF this array wasn't the main app list
       element.forEach((child, index) => traverse(child, `${path}[${index}]`));
-
-    } else if (typeof element === 'object' && element !== null) {
-      // Traverse object values
-      Object.keys(element).forEach(key => traverse(element[key], `${path}.${key}`));
+    } else if (element && typeof element === 'object') {
+      Object.entries(element).forEach(([key, value]) => traverse(value, `${path}.${key}`));
     }
   }
 
-  try {
-    let startElement = jsonElement;
-    if (Array.isArray(jsonElement) && jsonElement.length === 1) {
-      console.log("Input is single-element array, starting traversal from element [0].");
-      startElement = jsonElement[0];
-    } else {
-      console.log("Input is not a single-element array, starting traversal from root.");
-    }
-
-    traverse(startElement); // Start traversal
-
-    console.log(`--- App search finished. Checked ${arraysCheckedCount} arrays. Final app count: ${appInfos.length} ---`);
-    if (appInfos.length === 0) {
-      console.warn("Traversal complete, but no apps extracted. The data structure might be unrecognized or the heuristics failed.");
-      console.warn("Consider manually inspecting the 'Input Data Sample' log above and the 'Checking Potential App List Array' logs to identify the correct data paths.");
-    }
-  } catch (error) {
-    console.error("Error during app data traversal:", error);
-  }
-  return appInfos;
+  traverse(jsonElement);
+  console.log(`FUNC searchForApps: Found ${appInfos.length} apps`);
+  return appInfos.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-
-// Main function to fetch and display apps
 async function fetchAndDisplayDeveloperApps() {
+  const functionName = "FUNC fetchAndDisplayDeveloperApps";
+  console.log(`${functionName}: Starting...`);
   if (!portfolioDialog || !dialogContent) {
-    console.error("Portfolio dialog or content area not found.");
+    console.error(`${functionName}: Portfolio dialog or content area element not found.`);
     return;
   }
-
-  portfolioDialog.show();
-  showDialogLoading();
-
   try {
-    console.log(`Fetching developer apps from proxy: ${DEVELOPER_PAGE_URL}`);
+    portfolioDialog.show();
+    console.log(`${functionName}: Dialog shown.`);
+    showDialogLoading();
+    console.log(`${functionName}: Fetching from URL: ${DEVELOPER_PAGE_URL}`);
     const response = await fetch(DEVELOPER_PAGE_URL, {
       mode: 'cors',
-      signal: AbortSignal.timeout(20000) // Increased timeout slightly
+      signal: AbortSignal.timeout(20000)
     });
-
+    console.log(`${functionName}: Fetch response received (Status: ${response.status}, OK: ${response.ok})`);
     const responseText = await response.text();
-
+    console.log(`${functionName}: Response text received (Length: ${responseText.length})`);
     if (!response.ok) {
-      console.error(`HTTP error ${response.status} fetching apps. Status: ${response.statusText}. Response snippet:`, responseText.substring(0, 500));
       let errorMsg = `Network error: ${response.status} ${response.statusText}.`;
       if (response.status === 403) errorMsg += " Access Forbidden (Proxy Blocked?).";
       else if (response.status === 404) errorMsg += " Not Found.";
+      else if (response.status === 429) errorMsg += " Too Many Requests (Rate Limited?).";
       else if (response.status >= 500) errorMsg += " Server error.";
-      else errorMsg += " Check URL/Proxy.";
       throw new Error(errorMsg);
     }
-
-    const htmlContent = responseText;
-    const jsonData = extractJsonData(htmlContent);
+    console.log(`${functionName}: Calling extractJsonData...`);
+    const jsonData = extractJsonData(responseText);
+    console.log(`${functionName}: Calling searchForApps...`);
     const apps = searchForApps(jsonData);
+    console.log(`${functionName}: Calling displayAppsInDialog...`);
     displayAppsInDialog(apps);
-
+    console.log(`${functionName}: Process completed successfully.`);
   } catch (error) {
-    console.error("ERROR in fetchAndDisplayDeveloperApps:", error);
-    if (error.name === 'TimeoutError') {
-      showDialogError("Loading apps timed out. Please try again.");
-    } else {
-      showDialogError(error.message || "An unexpected error occurred.");
-    }
+    console.error(`${functionName}: CATCH BLOCK - Error occurred:`, error);
+    let displayError = error.name === 'TimeoutError' ? "Loading apps timed out. Please try again." : error.message;
+    showDialogError(displayError);
+  } finally {
+    console.log(`${functionName}: --- Finished ---`);
   }
 }
 
-
-// --- Event Listeners ---
-
-// Drawer
+console.log("SCRIPT: Setting up event listeners...");
 if (menuButton) menuButton.addEventListener('click', openDrawer);
-else console.error("Menu button missing");
+else console.error("SCRIPT ERROR: Menu button missing");
 if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
-else console.error("Close drawer button missing");
+else console.error("SCRIPT ERROR: Close drawer button missing");
 if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
-else console.error("Drawer overlay missing");
-
-// Collapsible Sections
+else console.error("SCRIPT ERROR: Drawer overlay missing");
 toggleSection(moreToggle, moreContent);
 toggleSection(appsToggle, appsContent);
-
-// Theme Toggle
 if (themeSegmentedButtonSet) {
-  themeSegmentedButtonSet.addEventListener('segmented-button-set-selection', (e) => {
+  themeSegmentedButtonSet.addEventListener('segmented-button-set-selection', e => {
+    console.log("EVENT: themeSegmentedButtonSet selection changed");
     applyTheme(e.detail.button.value);
   });
+  console.log("SCRIPT: Theme toggle listener added.");
 } else {
-  console.error("Theme button set missing");
+  console.error("SCRIPT ERROR: Theme button set missing");
 }
-
-// Portfolio Dialog
 if (viewPortfolioButton && portfolioDialog) {
-  viewPortfolioButton.addEventListener('click', fetchAndDisplayDeveloperApps);
+  viewPortfolioButton.addEventListener('click', () => {
+    console.log("EVENT: viewPortfolioButton clicked");
+    fetchAndDisplayDeveloperApps();
+  });
+  console.log("SCRIPT: Portfolio button listener added.");
 } else {
-  console.error("Portfolio button or dialog missing");
+  console.error("SCRIPT ERROR: Portfolio button or dialog missing");
 }
 if (closePortfolioDialogButton && portfolioDialog) {
   closePortfolioDialogButton.addEventListener('click', () => {
+    console.log("EVENT: closePortfolioDialogButton clicked");
     portfolioDialog.close("closed-by-button");
   });
+  console.log("SCRIPT: Portfolio close button listener added.");
 } else {
-  console.error("Portfolio close button or dialog missing");
+  console.error("SCRIPT ERROR: Portfolio close button or dialog missing");
 }
-
-// --- Initial Theme Application ---
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("Applying initial theme on DOMContentLoaded...");
+  console.log("EVENT: DOMContentLoaded - Applying initial theme...");
   const savedTheme = localStorage.getItem('theme');
+  console.log(`EVENT: DOMContentLoaded - Saved theme from localStorage: '${savedTheme}'`);
   applyTheme(savedTheme || 'auto');
-
   const currentTheme = savedTheme || 'auto';
   if (themeSegmentedButtonSet) {
+    console.log(`EVENT: DOMContentLoaded - Scheduling segmented button state update to '${currentTheme}'`);
     setTimeout(() => {
       try {
+        console.log(`EVENT: DOMContentLoaded - Setting segmented button selected value to '${currentTheme}'`);
         themeSegmentedButtonSet.selected = currentTheme;
-        console.log(`Initial segmented button state set to: ${currentTheme}`);
       } catch (err) {
-        console.error("Error setting initial segmented button state:", err);
+        console.error("EVENT: DOMContentLoaded - Error setting initial segmented button state:", err);
       }
-    }, 100);
+    }, 150);
   }
 });
-
-// --- System Theme Change Listener ---
+console.log("SCRIPT: Setting up system theme change listener...");
 const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-const handleSystemThemeChange = (event) => {
+const handleSystemThemeChange = event => {
+  console.log(`EVENT: System theme change detected (Dark: ${event.matches}). Checking if theme is auto...`);
   if (!localStorage.getItem('theme')) {
+    console.log("EVENT: Theme is auto, re-applying auto theme...");
     applyTheme('auto');
+  } else {
+    console.log("EVENT: Theme is not auto, ignoring system change.");
   }
 };
 try {
   mediaQuery.addEventListener('change', handleSystemThemeChange);
-} catch (e) {
+  console.log("SCRIPT: System theme listener added (addEventListener).");
+} catch {
   try {
     mediaQuery.addListener(handleSystemThemeChange);
-  } catch (e2) {
-    console.error("Error adding theme listener:", e2);
+    console.log("SCRIPT: System theme listener added (addListener fallback).");
+  } catch (e) {
+    console.error("SCRIPT ERROR: Failed to add system theme listener:", e);
   }
 }
-
-// --- Swipe To Open Drawer Logic ---
 let touchStartX = 0,
   touchEndX = 0;
 const swipeThreshold = 50,
   edgeThreshold = 40;
 let isPotentiallySwiping = false;
-console.log("Swipe detection initialized.");
-body.addEventListener('touchstart', (e) => {
+console.log("SCRIPT: Initializing swipe detection...");
+body.addEventListener('touchstart', e => {
   const targetElement = e.target;
   if (targetElement.closest('md-dialog, button, a, md-icon-button, md-text-button, md-filled-button, md-outlined-button, md-chip, [data-swipe-ignore]') || window.getComputedStyle(targetElement).overflowY === 'scroll' || targetElement.closest('[style*="overflow"]')) {
     isPotentiallySwiping = false;
@@ -567,17 +454,19 @@ body.addEventListener('touchstart', (e) => {
 }, {
   passive: true
 });
-body.addEventListener('touchmove', (e) => {
-  if (isPotentiallySwiping) touchEndX = e.touches[0].clientX;
+body.addEventListener('touchmove', e => {
+  if (!isPotentiallySwiping) return;
+  touchEndX = e.touches[0].clientX;
 }, {
   passive: true
 });
-body.addEventListener('touchend', (e) => {
+body.addEventListener('touchend', e => {
   if (!isPotentiallySwiping) return;
   const deltaX = touchEndX - touchStartX;
   if (deltaX > swipeThreshold) {
     const endTarget = document.elementFromPoint(touchEndX, e.changedTouches[0].clientY);
     if (!endTarget || !endTarget.closest('button, a, md-icon-button, md-text-button, md-filled-button, md-outlined-button, md-chip')) {
+      console.log(`EVENT touchend: Swipe detected (deltaX=${deltaX}), opening drawer.`);
       openDrawer();
     }
   }
@@ -585,6 +474,4 @@ body.addEventListener('touchend', (e) => {
   touchStartX = 0;
   touchEndX = 0;
 });
-// --- End Swipe Logic ---
-
-console.log("Main script execution finished.");
+console.log("SCRIPT END: main.js parsed and executed.");
