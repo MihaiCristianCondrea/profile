@@ -93,8 +93,10 @@ md-top-app-bar {
     border-radius: 0;
     position: sticky;
     top: 0;
-    z-index: 998;
-    /* 👈 LOWER than drawer's z-index */
+    z-index: 998; /* 👈 Below overlay and drawer */
+    /* Ensure it doesn't create an unexpected stacking context if possible */
+    /* Might not be strictly necessary, but can sometimes help */
+    /* transform: translateZ(0); */ /* Usually not needed here */
 }
 
 /* Style the main profile card */
@@ -205,12 +207,6 @@ md-assist-chip {
     /* Subtle tint layer */
     pointer-events: none;
     border-radius: inherit;
-}
-
-.navigation-drawer {
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    overflow: hidden;
 }
 
 md-outlined-card.news-card {
@@ -346,6 +342,12 @@ md-elevated-card.contribute-card {
 
 /* --- Navigation Drawer Styles --- */
 .navigation-drawer {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    overflow: hidden;
+}
+
+.navigation-drawer {
     position: fixed;
     top: 0;
     left: 0;
@@ -358,29 +360,33 @@ md-elevated-card.contribute-card {
     transform: translateX(-100%);
     /* Initially hidden */
     transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-    z-index: 1000;
-    /* Below app bar but above content */
+    z-index: 1000; /* 👈 Highest z-index */
     display: flex;
     flex-direction: column;
     /* Stack header, content, footer */
     overflow-y: auto;
     /* Allow scrolling if content overflows */
+
+    /* --- Potential Fix for Stacking Context --- */
+    /* Force onto its own compositing layer */
+    /* This can sometimes resolve z-index issues on mobile */
+    transform: translateX(-100%) translateZ(0);
+    /* Note: We combine the transforms */
 }
 
 .navigation-drawer.open {
-    transform: translateX(0);
     /* Slide in */
+    transform: translateX(0) translateZ(0);
 }
 
-.drawer-overlay {
+drawer-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: var(--app-overlay-bg-color);
-    z-index: 999;
-    /* Below drawer, above content */
+    z-index: 999; /* 👈 Below drawer, above app bar */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
