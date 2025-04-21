@@ -106,6 +106,14 @@ html.dark {
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
 }
 
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: var(--app-bg-color);
@@ -464,18 +472,30 @@ md-elevated-card.contribute-card {
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.drawer-footer .theme-toggle-title {
+.theme-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 16px;
+}
+
+.theme-toggle-title {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--app-secondary-text-color);
-  padding: 8px 16px 4px 16px;
   margin: 0;
+  flex-shrink: 0;
 }
 
 .theme-selector-container {
+  flex-grow: 1;
   display: flex;
-  justify-content: center;
-  padding: 8px 16px;
+  justify-content: flex-end;
+}
+
+md-segmented-button-set {
+  justify-content: flex-end;
 }
 
 md-list {
@@ -517,7 +537,8 @@ md-list-item[aria-expanded] md-icon[slot="end"]>span {
   transition: transform 0.3s ease;
 }
 
-md-list-item[aria-expanded="true"] md-icon[slot="end"]>span {
+md-list-item[aria-expanded="true"] md-icon[slot="end"]>span,
+md-list-item md-icon[slot="end"]>span.rotated {
   transform: rotate(180deg);
 }
 

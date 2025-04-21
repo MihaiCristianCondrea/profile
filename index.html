@@ -80,19 +80,21 @@
     </div>
     <div class="drawer-footer">
       <md-divider></md-divider>
-      <div class="theme-toggle-title">Theme</div>
-      <div class="theme-selector-container">
-        <md-segmented-button-set id="themeSegmentedButtonSet" aria-label="Theme selection">
-          <md-segmented-button id="lightThemeButton" value="light" label="Light" aria-label="Light theme">
-            <md-icon slot="icon"><span class="material-symbols-outlined">light_mode</span></md-icon>
-          </md-segmented-button>
-          <md-segmented-button id="darkThemeButton" value="dark" label="Dark" aria-label="Dark theme">
-            <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
-          </md-segmented-button>
-          <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme">
-            <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
-          </md-segmented-button>
-        </md-segmented-button-set>
+      <div class="theme-control-row">
+        <div class="theme-toggle-title">Theme</div>
+        <div class="theme-selector-container">
+          <md-segmented-button-set id="themeSegmentedButtonSet" aria-label="Theme selection">
+            <md-segmented-button id="lightThemeButton" value="light" label="Light" aria-label="Light theme">
+              <md-icon slot="icon"><span class="material-symbols-outlined">light_mode</span></md-icon>
+            </md-segmented-button>
+            <md-segmented-button id="darkThemeButton" value="dark" label="Dark" aria-label="Dark theme">
+              <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
+            </md-segmented-button>
+            <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme">
+              <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
+            </md-segmented-button>
+          </md-segmented-button-set>
+        </div>
       </div>
     </div>
   </div>
@@ -100,7 +102,7 @@
     <md-icon-button id="menuButton" slot="navigation" aria-label="Open menu">
       <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
     </md-icon-button>
-    Mihai's Profile</div>
+    <div slot="headline">Mihai's Profile</div>
   </md-top-app-bar>
   <main class="content-wrapper">
     <md-filled-card class="profile-card">
