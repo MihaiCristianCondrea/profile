@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mihai's Profile</title>
+  <title>Home</title>
   <script type="module" src="https://unpkg.com/@material/web/all.js?module"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,14 +84,17 @@
         <div class="theme-toggle-title">Theme</div>
         <div class="theme-selector-container">
           <md-segmented-button-set id="themeSegmentedButtonSet" aria-label="Theme selection">
-            <md-segmented-button id="lightThemeButton" value="light" label="Light" aria-label="Light theme">
+            <md-segmented-button id="lightThemeButton" value="light" aria-label="Light theme">
               <md-icon slot="icon"><span class="material-symbols-outlined">light_mode</span></md-icon>
+              Light
             </md-segmented-button>
-            <md-segmented-button id="darkThemeButton" value="dark" label="Dark" aria-label="Dark theme">
+            <md-segmented-button id="darkThemeButton" value="dark" aria-label="Dark theme">
               <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
+              Dark
             </md-segmented-button>
-            <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme">
+            <md-segmented-button id="autoThemeButton" value="auto" aria-label="Auto theme">
               <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
+              Auto
             </md-segmented-button>
           </md-segmented-button-set>
         </div>
@@ -102,7 +105,6 @@
     <md-icon-button id="menuButton" slot="navigation" aria-label="Open menu">
       <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
     </md-icon-button>
-    <div slot="headline">Mihai's Profile</div>
   </md-top-app-bar>
   <main class="content-wrapper">
     <md-filled-card class="profile-card">

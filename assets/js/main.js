@@ -37,52 +37,66 @@
       console.error(`Missing toggle button or content element for section setup.`);
       return;
     }
+    const iconSpan = toggleButton.querySelector('[slot="end"] md-icon span');
     contentElement.setAttribute('aria-hidden', !contentElement.classList.contains('open'));
     toggleButton.addEventListener('click', () => {
       const isOpening = !contentElement.classList.contains('open');
       const otherContent = contentElement.id === 'moreContent' ? appsContent : moreContent;
       const otherToggle = contentElement.id === 'moreContent' ? appsToggle : moreToggle;
+      const otherIconSpan = otherToggle?.querySelector('[slot="end"] md-icon span');
 
       if (isOpening && otherContent?.classList.contains('open')) {
         otherContent.classList.remove('open');
         otherContent.setAttribute('aria-hidden', 'true');
         otherToggle?.setAttribute('aria-expanded', 'false');
-        otherToggle?.querySelector('[slot="end"] md-icon span')?.classList.remove('rotated');
+        if (otherIconSpan) otherIconSpan.classList.remove('rotated');
       }
 
       contentElement.classList.toggle('open', isOpening);
       contentElement.setAttribute('aria-hidden', !isOpening);
       toggleButton.setAttribute('aria-expanded', isOpening);
-      toggleButton.querySelector('[slot="end"] md-icon span')?.classList.toggle('rotated', isOpening);
+      if (iconSpan) iconSpan.classList.toggle('rotated', isOpening);
     });
   }
-
 
   function applyTheme(theme) {
     let effectiveTheme = theme;
     htmlElement.classList.remove('light', 'dark');
 
+    if (theme === 'auto') {
+      localStorage.removeItem('theme');
+    } else {
+      localStorage.setItem('theme', theme);
+    }
+
     if (theme === 'dark') {
       htmlElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
     } else if (theme === 'light') {
       htmlElement.classList.add('light');
-      localStorage.setItem('theme', 'light');
     } else {
       effectiveTheme = 'auto';
-      localStorage.removeItem('theme');
       if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
         htmlElement.classList.add('dark');
       } else {
-         htmlElement.classList.add('light');
+        htmlElement.classList.add('light');
       }
     }
 
     if (themeSegmentedButtonSet) {
       const buttons = themeSegmentedButtonSet.querySelectorAll('md-segmented-button');
+      let buttonFound = false;
       buttons.forEach(button => {
-        button.selected = button.value === effectiveTheme;
+        const shouldBeSelected = button.value === effectiveTheme;
+        if (button.selected !== shouldBeSelected) {
+          button.selected = shouldBeSelected;
+        }
+        if (shouldBeSelected) {
+          buttonFound = true;
+        }
       });
+      if (!buttonFound) {
+        console.warn(`Could not find theme button with value: ${effectiveTheme} to select.`);
+      }
     }
   }
 
@@ -130,71 +144,79 @@
     touchEndX = 0;
   }
 
-
-  if (menuButton) {
-    menuButton.addEventListener('click', openDrawer);
-  } else {
-    console.error('Menu button not found.');
-  }
-
-  if (closeDrawerButton) {
-    closeDrawerButton.addEventListener('click', closeDrawer);
-  } else {
-    console.error('Close drawer button not found.');
-  }
-
-  if (drawerOverlay) {
-    drawerOverlay.addEventListener('click', closeDrawer);
-  } else {
-    console.error('Drawer overlay not found.');
-  }
-
-  setupToggleSection(moreToggle, moreContent);
-  setupToggleSection(appsToggle, appsContent);
-
-  if (themeSegmentedButtonSet) {
-    themeSegmentedButtonSet.addEventListener('selection-change', (e) => {
-      const selectedValue = e.target.selectedOptions[0]?.value;
-      if (selectedValue) {
-        applyTheme(selectedValue);
+  function initializeApp() {
+      if (menuButton) {
+        menuButton.addEventListener('click', openDrawer);
       } else {
-         console.warn('Theme selection change event did not provide a valid button value.');
+        console.error('Menu button not found.');
       }
-    });
+
+      if (closeDrawerButton) {
+        closeDrawerButton.addEventListener('click', closeDrawer);
+      } else {
+        console.error('Close drawer button not found.');
+      }
+
+      if (drawerOverlay) {
+        drawerOverlay.addEventListener('click', closeDrawer);
+      } else {
+        console.error('Drawer overlay not found.');
+      }
+
+      setupToggleSection(moreToggle, moreContent);
+      setupToggleSection(appsToggle, appsContent);
+
+      if (themeSegmentedButtonSet) {
+        themeSegmentedButtonSet.addEventListener('selection-change', (event) => {
+            const buttonSet = event.target;
+            const selectedButton = buttonSet.querySelector('md-segmented-button[selected]');
+            if (selectedButton && selectedButton.value) {
+                applyTheme(selectedButton.value);
+            } else {
+                console.warn('Could not reliably determine selected theme from selection-change event.');
+                 // Fallback: Check buttons directly after a short delay if needed
+                 setTimeout(() => {
+                     const newlySelected = buttonSet.querySelector('md-segmented-button[selected]');
+                     if (newlySelected && newlySelected.value) {
+                         applyTheme(newlySelected.value);
+                     }
+                 }, 0);
+            }
+        });
+      } else {
+        console.error('Theme segmented button set not found.');
+      }
+
+      body.addEventListener('touchstart', handleTouchStart, { passive: true });
+      body.addEventListener('touchmove', handleTouchMove, { passive: true });
+      body.addEventListener('touchend', handleTouchEnd);
+
+      const savedTheme = localStorage.getItem('theme');
+      const initialTheme = savedTheme || 'auto';
+      applyTheme(initialTheme);
+
+      try {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleSystemThemeChange = (event) => {
+          if (!localStorage.getItem('theme')) {
+            applyTheme('auto');
+          }
+        };
+
+        if (mediaQuery.addEventListener) {
+          mediaQuery.addEventListener('change', handleSystemThemeChange);
+        } else if (mediaQuery.addListener) {
+          mediaQuery.addListener(handleSystemThemeChange);
+        }
+      } catch (e) {
+        console.error('Failed to set up system theme change listener:', e);
+      }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
   } else {
-    console.error('Theme segmented button set not found.');
+    initializeApp();
   }
-
-  body.addEventListener('touchstart', handleTouchStart, { passive: true });
-  body.addEventListener('touchmove', handleTouchMove, { passive: true });
-  body.addEventListener('touchend', handleTouchEnd);
-
-  const savedTheme = localStorage.getItem('theme');
-  const initialTheme = savedTheme || 'auto';
-  applyTheme(initialTheme);
-
-
-  try {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = (event) => {
-      if (!localStorage.getItem('theme')) {
-        applyTheme('auto');
-      }
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleSystemThemeChange);
-    } else if (mediaQuery.addListener) {
-      mediaQuery.addListener(handleSystemThemeChange);
-    }
-  } catch (e) {
-    console.error('Failed to set up system theme change listener:', e);
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    const initialTheme = savedTheme || 'auto';
-    applyTheme(initialTheme);
-  });
 
 })();
