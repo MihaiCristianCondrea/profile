@@ -151,10 +151,19 @@
         </p>
 
       </div>
-      <div class="card-actions">
-        <md-outlined-button>View Portfolio</md-outlined-button>
-        <md-filled-button style="margin-left: 8px;">Contact</md-filled-button>
-      </div>
+      <md-dialog id="portfolioDialog">
+        <div slot="headline">My Android Apps</div>
+        <div slot="content" id="dialogContent" class="dialog-content-area">
+          <!-- Apps will be loaded here -->
+           <div class="dialog-loading">
+              <md-circular-progress indeterminate></md-circular-progress>
+              <p>Loading apps...</p>
+            </div>
+        </div>
+        <div slot="actions">
+          <md-text-button form="dialogContent" value="close">Close</md-text-button>
+        </div>
+      </md-dialog>
     </md-filled-card>
 
     <h2 class="page-section-title">Latest news</h2>

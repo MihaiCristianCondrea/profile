@@ -133,6 +133,108 @@ md-filled-card.profile-card {
     /* Optional border */
 }
 
+#portfolioDialog {
+    --md-dialog-container-color: var(--app-card-bg-color); /* Use card background */
+}
+
+/* Style the content area */
+.dialog-content-area {
+    min-width: 300px; /* Minimum width */
+    min-height: 200px; /* Minimum height to show loading/error */
+    max-height: 60vh; /* Limit height and allow scrolling */
+    overflow-y: auto;
+    padding: 1rem; /* Add some padding */
+}
+
+/* Loading/Error states */
+.dialog-loading,
+.dialog-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    text-align: center;
+    color: var(--app-card-secondary-text-color);
+}
+.dialog-loading p,
+.dialog-error p {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+.dialog-error p {
+    color: var(--md-sys-color-error, #B3261E); /* Use Material error color if available */
+}
+html.dark .dialog-error p {
+     color: var(--md-sys-color-error, #F2B8B5);
+}
+
+
+/* Portfolio Grid */
+.portfolio-grid {
+    display: grid;
+    /* Adjust minmax for desired card size */
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem; /* Spacing between cards */
+    padding-top: 1rem; /* Space from dialog top */
+}
+
+/* Individual App Card */
+.app-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 12px; /* Slightly rounded corners */
+    background-color: var(--app-bg-color); /* Use page background, or slightly different tint */
+    border: 1px solid var(--app-border-color);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline from link */
+    color: var(--app-card-text-color); /* Inherit text color */
+}
+
+html.dark .app-card {
+     background-color: var(--app-card-bg-color); /* Use card bg in dark mode */
+}
+
+
+.app-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+html.dark .app-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+.app-card img {
+    width: 64px; /* Icon size */
+    height: 64px;
+    border-radius: 16px; /* Rounded corners for icon */
+    margin-bottom: 0.75rem;
+    object-fit: cover;
+     background-color: #eee; /* Placeholder bg */
+}
+html.dark .app-card img {
+     background-color: #333;
+}
+
+.app-card p {
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.3;
+    /* Clamp text to 2 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    word-break: break-word; /* Prevent long names overflowing */
+}
+
 .profile-info h2 {
     margin: 0;
     font-size: 1.5rem;
@@ -379,7 +481,7 @@ md-elevated-card.contribute-card {
     transform: translateX(0) translateZ(0);
 }
 
-drawer-overlay {
+#drawerOverlay { /* Was: drawer-overlay */
     position: fixed;
     top: 0;
     left: 0;
