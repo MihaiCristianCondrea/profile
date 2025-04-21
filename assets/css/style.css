@@ -74,7 +74,9 @@ md-assist-chip,
 md-top-app-bar,
 md-icon-button,
 md-list,
-md-list-item {
+md-list-item,
+md-dialog {
+    /* <-- Added md-dialog here */
     font-family: 'Poppins', sans-serif;
 }
 
@@ -93,10 +95,12 @@ md-top-app-bar {
     border-radius: 0;
     position: sticky;
     top: 0;
-    z-index: 998; /* 👈 Below overlay and drawer */
+    z-index: 998;
+    /* 👈 Below overlay and drawer */
     /* Ensure it doesn't create an unexpected stacking context if possible */
     /* Might not be strictly necessary, but can sometimes help */
-    /* transform: translateZ(0); */ /* Usually not needed here */
+    /* transform: translateZ(0); */
+    /* Usually not needed here */
 }
 
 /* Style the main profile card */
@@ -134,16 +138,28 @@ md-filled-card.profile-card {
 }
 
 #portfolioDialog {
-    --md-dialog-container-color: var(--app-card-bg-color); /* Use card background */
+    --md-dialog-container-color: var(--app-card-bg-color);
+    /* Use card background */
+    font-family: 'Poppins', sans-serif;
+    /* <-- Explicitly set font */
 }
 
 /* Style the content area */
-.dialog-content-area {
-    min-width: 300px; /* Minimum width */
-    min-height: 200px; /* Minimum height to show loading/error */
-    max-height: 60vh; /* Limit height and allow scrolling */
+dialog-content-area {
+    min-width: 300px;
+    /* Minimum width */
+    /* Adjusted max-width for better dialog appearance */
+    max-width: calc(100vw - 64px);
+    /* Max width less padding */
+    min-height: 200px;
+    /* Minimum height to show loading/error */
+    max-height: 70vh;
+    /* Limit height and allow scrolling */
     overflow-y: auto;
-    padding: 1rem; /* Add some padding */
+    padding: 0 1rem 1rem 1rem;
+    /* Adjust padding */
+    box-sizing: border-box;
+    /* Include padding in width calculation */
 }
 
 /* Loading/Error states */
@@ -156,17 +172,36 @@ md-filled-card.profile-card {
     min-height: 150px;
     text-align: center;
     color: var(--app-card-secondary-text-color);
+    padding: 1rem;
+    /* Add padding inside loading/error */
 }
+
 .dialog-loading p,
 .dialog-error p {
     margin-top: 1rem;
     font-size: 0.9rem;
 }
-.dialog-error p {
-    color: var(--md-sys-color-error, #B3261E); /* Use Material error color if available */
+
+/* Make error icon bigger */
+.dialog-error md-icon {
+    font-size: 36px;
+    /* Larger error icon */
+    color: var(--md-sys-color-error, #B3261E);
 }
+
+html.dark .dialog-error md-icon {
+    color: var(--md-sys-color-error, #F2B8B5);
+}
+
+.dialog-error p {
+    color: var(--md-sys-color-error, #B3261E);
+    /* Use Material error color if available */
+    margin-top: 0.5rem;
+    /* Reduce space after icon */
+}
+
 html.dark .dialog-error p {
-     color: var(--md-sys-color-error, #F2B8B5);
+    color: var(--md-sys-color-error, #F2B8B5);
 }
 
 
@@ -175,8 +210,10 @@ html.dark .dialog-error p {
     display: grid;
     /* Adjust minmax for desired card size */
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1rem; /* Spacing between cards */
-    padding-top: 1rem; /* Space from dialog top */
+    gap: 1rem;
+    /* Spacing between cards */
+    padding-top: 1rem;
+    /* Space from dialog top */
 }
 
 /* Individual App Card */
@@ -186,17 +223,22 @@ html.dark .dialog-error p {
     align-items: center;
     text-align: center;
     padding: 0.75rem;
-    border-radius: 12px; /* Slightly rounded corners */
-    background-color: var(--app-bg-color); /* Use page background, or slightly different tint */
+    border-radius: 12px;
+    /* Slightly rounded corners */
+    background-color: var(--app-bg-color);
+    /* Use page background, or slightly different tint */
     border: 1px solid var(--app-border-color);
     transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
     cursor: pointer;
-    text-decoration: none; /* Remove underline from link */
-    color: var(--app-card-text-color); /* Inherit text color */
+    text-decoration: none;
+    /* Remove underline from link */
+    color: var(--app-card-text-color);
+    /* Inherit text color */
 }
 
 html.dark .app-card {
-     background-color: var(--app-card-bg-color); /* Use card bg in dark mode */
+    background-color: var(--app-card-bg-color);
+    /* Use card bg in dark mode */
 }
 
 
@@ -204,21 +246,26 @@ html.dark .app-card {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 html.dark .app-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 
 .app-card img {
-    width: 64px; /* Icon size */
+    width: 64px;
+    /* Icon size */
     height: 64px;
-    border-radius: 16px; /* Rounded corners for icon */
+    border-radius: 16px;
+    /* Rounded corners for icon */
     margin-bottom: 0.75rem;
     object-fit: cover;
-     background-color: #eee; /* Placeholder bg */
+    background-color: #eee;
+    /* Placeholder bg */
 }
+
 html.dark .app-card img {
-     background-color: #333;
+    background-color: #333;
 }
 
 .app-card p {
@@ -232,7 +279,8 @@ html.dark .app-card img {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0;
-    word-break: break-word; /* Prevent long names overflowing */
+    word-break: break-word;
+    /* Prevent long names overflowing */
 }
 
 .profile-info h2 {
@@ -462,7 +510,8 @@ md-elevated-card.contribute-card {
     transform: translateX(-100%);
     /* Initially hidden */
     transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-    z-index: 1000; /* 👈 Highest z-index */
+    z-index: 1000;
+    /* 👈 Highest z-index */
     display: flex;
     flex-direction: column;
     /* Stack header, content, footer */
@@ -481,14 +530,16 @@ md-elevated-card.contribute-card {
     transform: translateX(0) translateZ(0);
 }
 
-#drawerOverlay { /* Was: drawer-overlay */
+#drawerOverlay {
+    /* Was: drawer-overlay */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: var(--app-overlay-bg-color);
-    z-index: 999; /* 👈 Below drawer, above app bar */
+    z-index: 999;
+    /* 👈 Below drawer, above app bar */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
