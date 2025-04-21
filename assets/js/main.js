@@ -18,7 +18,7 @@ const closePortfolioDialogButton = document.getElementById('closePortfolioDialog
 console.log("SCRIPT: Element references obtained.");
 console.log("SCRIPT: Defining constants...");
 const DEVELOPER_ID = "5390214922640123642";
-const CORS_PROXY_URL = "https://api.allorigins.win/raw?url=";
+const CORS_PROXY_URL = "https://api.allorigins.win/get?url=";
 const PLAY_STORE_RAW_URL = `https://play.google.com/store/apps/dev?id=${DEVELOPER_ID}&hl=en&gl=us`;
 const DEVELOPER_PAGE_URL = `${CORS_PROXY_URL}${encodeURIComponent(PLAY_STORE_RAW_URL)}`;
 const DEFAULT_ICON_URL = "https://c.clc2l.com/t/g/o/google-playstore-Iauj7q.png";
@@ -322,12 +322,10 @@ async function fetchAndDisplayDeveloperApps() {
     console.log(`${functionName}: Dialog shown.`);
     showDialogLoading();
     console.log(`${functionName}: Fetching from URL: ${DEVELOPER_PAGE_URL}`);
-    const response = await fetch(DEVELOPER_PAGE_URL, {
-      mode: 'cors',
-      signal: AbortSignal.timeout(20000)
-    });
-    console.log(`${functionName}: Fetch response received (Status: ${response.status}, OK: ${response.ok})`);
-    const responseText = await response.text();
+    const response = await fetch(DEVELOPER_PAGE_URL, { signal: AbortSignal.timeout(20000) });
+    if (!response.ok) throw new Error(`Network error: ${response.status} ${response.statusText}`);
+    const json = await response.json();         // { contents: "<!doctype html>…", status: { … } }
+    const htmlContent = json.contents;
     console.log(`${functionName}: Response text received (Length: ${responseText.length})`);
     if (!response.ok) {
       let errorMsg = `Network error: ${response.status} ${response.statusText}.`;
@@ -338,7 +336,7 @@ async function fetchAndDisplayDeveloperApps() {
       throw new Error(errorMsg);
     }
     console.log(`${functionName}: Calling extractJsonData...`);
-    const jsonData = extractJsonData(responseText);
+    const jsonData = extractJsonData(htmlContent);
     console.log(`${functionName}: Calling searchForApps...`);
     const apps = searchForApps(jsonData);
     console.log(`${functionName}: Calling displayAppsInDialog...`);
