@@ -18,7 +18,7 @@ function openDrawer() {
 
 // Function to close the drawer
 function closeDrawer() {
-     if (navDrawer && drawerOverlay) {
+    if (navDrawer && drawerOverlay) {
         navDrawer.classList.remove('open');
         drawerOverlay.classList.remove('open');
     }
@@ -29,7 +29,7 @@ if (menuButton) {
     menuButton.addEventListener('click', openDrawer);
 }
 if (closeDrawerButton) {
-     closeDrawerButton.addEventListener('click', closeDrawer);
+    closeDrawerButton.addEventListener('click', closeDrawer);
 }
 if (drawerOverlay) {
     drawerOverlay.addEventListener('click', closeDrawer); // Close on overlay click
@@ -42,11 +42,11 @@ function toggleSection(toggleButton, contentElement) {
             const isExpanded = contentElement.classList.contains('open');
             // Close other section if open
             if (contentElement.id === 'moreContent' && appsContent.classList.contains('open')) {
-                 appsContent.classList.remove('open');
-                 appsToggle.classList.remove('expanded');
+                appsContent.classList.remove('open');
+                appsToggle.classList.remove('expanded');
             } else if (contentElement.id === 'appsContent' && moreContent.classList.contains('open')) {
-                 moreContent.classList.remove('open');
-                 moreToggle.classList.remove('expanded');
+                moreContent.classList.remove('open');
+                moreToggle.classList.remove('expanded');
             }
             // Toggle current section
             contentElement.classList.toggle('open', !isExpanded);
@@ -109,10 +109,10 @@ if (savedTheme) {
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
     // Only apply if theme is set to 'auto' (no preference saved)
     if (!localStorage.getItem('theme')) {
-         if (event.matches) {
+        if (event.matches) {
             htmlElement.classList.add('dark');
-         } else {
-             htmlElement.classList.remove('dark');
-         }
+        } else {
+            htmlElement.classList.remove('dark');
+        }
     }
 });

@@ -11,7 +11,7 @@
     --md-sys-color-on-secondary-container: #0f1f11;
     /* Add other M3 colors as needed */
 
-     /* Base light theme colors */
+    /* Base light theme colors */
     --app-bg-color: #f8f9fa;
     --app-text-color: #333;
     --app-card-bg-color: #fff;
@@ -22,8 +22,10 @@
     --app-contribute-card-bg: #e1f5e1;
     --app-social-icon-color: #5f6368;
     --app-social-icon-hover-color: var(--md-sys-color-primary);
-    --app-drawer-bg-color: #ffffff; /* Drawer background */
-    --app-overlay-bg-color: rgba(0, 0, 0, 0.5); /* Overlay background */
+    --app-drawer-bg-color: #ffffff;
+    /* Drawer background */
+    --app-overlay-bg-color: rgba(0, 0, 0, 0.5);
+    /* Overlay background */
 }
 
 /* Dark theme overrides */
@@ -32,7 +34,7 @@ html.dark {
     --md-sys-color-on-primary: #003912;
     --md-sys-color-primary-container: #20512a;
     --md-sys-color-on-primary-container: #b1fbbb;
-     /* Add other dark M3 colors as needed */
+    /* Add other dark M3 colors as needed */
 
     --app-bg-color: #121212;
     --app-text-color: #e0e0e0;
@@ -44,8 +46,10 @@ html.dark {
     --app-contribute-card-bg: #2c3e2c;
     --app-social-icon-color: #a0a0a0;
     --app-social-icon-hover-color: var(--md-sys-color-primary);
-    --app-drawer-bg-color: #1e1e1e; /* Drawer background dark */
-    --app-overlay-bg-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+    --app-drawer-bg-color: #1e1e1e;
+    /* Drawer background dark */
+    --app-overlay-bg-color: rgba(0, 0, 0, 0.6);
+    /* Darker overlay */
 }
 
 
@@ -57,63 +61,89 @@ body {
     padding: 0;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 /* Ensure MWC components inherit font */
-md-filled-card, md-outlined-card, md-elevated-card, md-outlined-button, md-filled-button, md-text-button, md-chip-set, md-assist-chip, md-top-app-bar, md-icon-button, md-list, md-list-item {
-     font-family: 'Poppins', sans-serif;
+md-filled-card,
+md-outlined-card,
+md-elevated-card,
+md-outlined-button,
+md-filled-button,
+md-text-button,
+md-chip-set,
+md-assist-chip,
+md-top-app-bar,
+md-icon-button,
+md-list,
+md-list-item {
+    font-family: 'Poppins', sans-serif;
 }
+
 /* Center content */
 .content-wrapper {
     max-width: 900px;
-    margin: 0 auto; /* Remove top margin */
+    margin: 0 auto;
+    /* Remove top margin */
     padding: 1rem;
-    padding-top: 70px; /* Add padding below sticky app bar */
+    padding-top: 70px;
+    /* Add padding below sticky app bar */
 }
+
 /* Style the top app bar */
 md-top-app-bar {
-     border-radius: 0;
-     position: sticky;
-     top: 0;
-     z-index: 1001; /* Ensure app bar is above drawer overlay */
-     /* M3 colors are applied via :root/html.dark */
+    border-radius: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    /* Ensure app bar is above drawer overlay */
+    /* M3 colors are applied via :root/html.dark */
 }
+
 /* Style the main profile card */
 md-filled-card.profile-card {
     width: 100%;
     background-color: var(--app-card-bg-color);
     --md-filled-card-container-color: var(--app-card-bg-color);
-     border-radius: 16px;
-     overflow: hidden;
-     margin-bottom: 2.5rem;
-     transition: background-color 0.3s ease;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    transition: background-color 0.3s ease;
 }
+
 .card-content {
     padding: 1.5rem;
     color: var(--app-card-text-color);
 }
+
 .profile-header {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
 }
+
 /* Updated Profile Avatar Style */
 .profile-avatar {
-     width: 60px;
-     height: 60px;
-     border-radius: 50%;
-     margin-right: 1rem;
-     object-fit: cover; /* Ensure image covers the area */
-     border: 2px solid var(--app-border-color); /* Optional border */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+    /* Ensure image covers the area */
+    border: 2px solid var(--app-border-color);
+    /* Optional border */
 }
+
 .profile-info h2 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 500;
     color: var(--app-card-text-color);
 }
+
 .profile-info p {
     margin: 0.25rem 0 0 0;
     color: var(--app-card-secondary-text-color);
 }
+
 .section-title {
     font-size: 1.25rem;
     font-weight: 500;
@@ -121,30 +151,36 @@ md-filled-card.profile-card {
     margin-bottom: 1rem;
     color: var(--app-card-text-color);
 }
- p.profile-about {
-     color: var(--app-card-text-color);
-     margin-bottom: 1rem;
- }
- p.project-description {
-     color: var(--app-card-secondary-text-color);
-     margin-bottom: 0.5rem;
- }
-.page-section-title {
-     font-size: 1.75rem;
-     font-weight: 500;
-     margin-top: 2.5rem;
-     margin-bottom: 1.5rem;
-     color: var(--app-section-title-color);
-     text-align: left;
+
+p.profile-about {
+    color: var(--app-card-text-color);
+    margin-bottom: 1rem;
 }
+
+p.project-description {
+    color: var(--app-card-secondary-text-color);
+    margin-bottom: 0.5rem;
+}
+
+.page-section-title {
+    font-size: 1.75rem;
+    font-weight: 500;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--app-section-title-color);
+    text-align: left;
+}
+
 md-chip-set {
     margin-bottom: 1rem;
 }
+
 md-assist-chip {
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     --md-assist-chip-label-text-font: 'Poppins', sans-serif;
 }
+
 .card-actions {
     padding: 1rem 1.5rem;
     display: flex;
@@ -160,18 +196,21 @@ md-assist-chip {
     gap: 1.5rem;
     margin-bottom: 2.5rem;
 }
+
 md-outlined-card.news-card {
     --md-outlined-card-container-shape: 16px;
-     display: flex;
-     flex-direction: column;
-     background-color: var(--app-card-bg-color);
-     transition: background-color 0.3s ease;
-     --md-outlined-card-outline-color: var(--app-border-color);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--app-card-bg-color);
+    transition: background-color 0.3s ease;
+    --md-outlined-card-outline-color: var(--app-border-color);
 }
+
 .news-card-image {
     width: 100%;
     height: 180px;
-    background-color: #eee; /* Placeholder if image fails */
+    background-color: #eee;
+    /* Placeholder if image fails */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -179,17 +218,21 @@ md-outlined-card.news-card {
     font-size: 0.9rem;
     border-bottom: 1px solid var(--app-border-color);
     transition: border-color 0.3s ease;
-    overflow: hidden; /* Clip image */
+    overflow: hidden;
+    /* Clip image */
 }
- .news-card-image img {
-     width: 100%;
-     height: 100%;
-     object-fit: cover;
- }
+
+.news-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .news-card-content {
     padding: 1rem;
     flex-grow: 1;
 }
+
 .news-card-content h3 {
     font-size: 1.1rem;
     font-weight: 500;
@@ -197,6 +240,7 @@ md-outlined-card.news-card {
     margin-bottom: 0.5rem;
     color: var(--app-card-text-color);
 }
+
 .news-card-content p {
     font-size: 0.9rem;
     color: var(--app-card-secondary-text-color);
@@ -207,14 +251,16 @@ md-outlined-card.news-card {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .news-card-actions {
-     padding: 0.5rem 1rem;
-     display: flex;
-     justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: flex-end;
 }
- .news-card-actions a {
-     text-decoration: none;
- }
+
+.news-card-actions a {
+    text-decoration: none;
+}
 
 /* Contribute Section Styles */
 md-elevated-card.contribute-card {
@@ -224,26 +270,30 @@ md-elevated-card.contribute-card {
     margin-bottom: 2.5rem;
     transition: background-color 0.3s ease;
 }
+
 .contribute-card h3 {
-     font-size: 1.5rem;
-     font-weight: 500;
-     margin-top: 0;
-     margin-bottom: 0.75rem;
-     color: var(--app-card-text-color);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--app-card-text-color);
 }
- .contribute-card p {
-     font-size: 1rem;
-     color: var(--app-card-text-color);
-     margin-bottom: 1.5rem;
-     line-height: 1.6;
- }
- .contribute-actions {
-     display: flex;
-     justify-content: flex-start;
- }
-  .contribute-actions a {
-      text-decoration: none;
-  }
+
+.contribute-card p {
+    font-size: 1rem;
+    color: var(--app-card-text-color);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.contribute-actions {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.contribute-actions a {
+    text-decoration: none;
+}
 
 /* Social Icons Styles */
 .social-icons {
@@ -252,25 +302,31 @@ md-elevated-card.contribute-card {
     border-top: 1px solid var(--app-border-color);
     margin-top: 1rem;
     display: flex;
-    justify-content: center; /* Center the row of icons */
-    align-items: center; /* Align icons vertically */
+    justify-content: center;
+    /* Center the row of icons */
+    align-items: center;
+    /* Align icons vertically */
     flex-wrap: wrap;
     gap: 0.75rem;
     transition: border-color 0.3s ease;
 }
+
 .social-icons md-icon-button {
     --md-icon-button-icon-color: var(--app-social-icon-color);
     /* Transition handled by hover */
 }
- .social-icons md-icon i,
- .social-icons md-icon span { /* Include span for Material Symbols */
-     font-size: 20px;
-     vertical-align: middle;
- }
- .social-icons md-icon-button:hover {
+
+.social-icons md-icon i,
+.social-icons md-icon span {
+    /* Include span for Material Symbols */
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.social-icons md-icon-button:hover {
     --md-icon-button-hover-state-layer-color: var(--app-social-icon-hover-color);
     --md-icon-button-icon-color: var(--app-social-icon-hover-color);
- }
+}
 
 /* --- Navigation Drawer Styles --- */
 .navigation-drawer {
@@ -278,20 +334,28 @@ md-elevated-card.contribute-card {
     top: 0;
     left: 0;
     height: 100vh;
-    width: 300px; /* Adjust width as needed */
+    width: 300px;
+    /* Adjust width as needed */
     background-color: var(--app-drawer-bg-color);
     color: var(--app-text-color);
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
-    transform: translateX(-100%); /* Initially hidden */
+    transform: translateX(-100%);
+    /* Initially hidden */
     transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-    z-index: 1000; /* Below app bar but above content */
+    z-index: 1000;
+    /* Below app bar but above content */
     display: flex;
-    flex-direction: column; /* Stack header, content, footer */
-    overflow-y: auto; /* Allow scrolling if content overflows */
+    flex-direction: column;
+    /* Stack header, content, footer */
+    overflow-y: auto;
+    /* Allow scrolling if content overflows */
 }
+
 .navigation-drawer.open {
-    transform: translateX(0); /* Slide in */
+    transform: translateX(0);
+    /* Slide in */
 }
+
 .drawer-overlay {
     position: fixed;
     top: 0;
@@ -299,45 +363,57 @@ md-elevated-card.contribute-card {
     width: 100%;
     height: 100%;
     background-color: var(--app-overlay-bg-color);
-    z-index: 999; /* Below drawer, above content */
+    z-index: 999;
+    /* Below drawer, above content */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
+
 .drawer-overlay.open {
     opacity: 1;
     visibility: visible;
 }
+
 .drawer-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 4px 12px 16px;
     border-bottom: 1px solid var(--app-border-color);
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0;
+    /* Prevent header from shrinking */
 }
+
 .drawer-header h2 {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 500;
     color: var(--app-text-color);
 }
+
 .drawer-content {
-    flex-grow: 1; /* Allow content to take remaining space */
+    flex-grow: 1;
+    /* Allow content to take remaining space */
     padding: 0;
-    overflow-y: auto; /* Scroll only content if needed */
+    overflow-y: auto;
+    /* Scroll only content if needed */
 }
+
 .drawer-footer {
-     padding: 8px 0; /* Padding for theme toggle section */
-     border-top: 1px solid var(--app-border-color);
-     flex-shrink: 0; /* Prevent footer from shrinking */
+    padding: 8px 0;
+    /* Padding for theme toggle section */
+    border-top: 1px solid var(--app-border-color);
+    flex-shrink: 0;
+    /* Prevent footer from shrinking */
 }
+
 .drawer-footer .theme-toggle-title {
-     font-size: 0.9rem;
-     font-weight: 500;
-     color: var(--app-card-secondary-text-color);
-     padding: 8px 16px;
-     margin-bottom: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--app-card-secondary-text-color);
+    padding: 8px 16px;
+    margin-bottom: 4px;
 }
 
 /* Styles for items inside drawer */
@@ -345,29 +421,39 @@ md-list {
     --md-list-container-color: transparent;
     padding: 8px 0;
 }
+
 md-list-item {
-     --md-list-item-label-text-color: var(--app-text-color);
-     --md-list-item-supporting-text-color: var(--app-card-secondary-text-color);
-     --md-list-item-leading-icon-color: var(--app-text-color);
-     --md-list-item-trailing-icon-color: var(--app-text-color);
+    --md-list-item-label-text-color: var(--app-text-color);
+    --md-list-item-supporting-text-color: var(--app-card-secondary-text-color);
+    --md-list-item-leading-icon-color: var(--app-text-color);
+    --md-list-item-trailing-icon-color: var(--app-text-color);
 }
-.nested-list { /* Removed md-list-item wrapper */
+
+.nested-list {
+    /* Removed md-list-item wrapper */
     padding-left: 32px;
-    overflow: hidden; /* Needed for smooth transition */
-    max-height: 0; /* Initially hidden */
+    overflow: hidden;
+    /* Needed for smooth transition */
+    max-height: 0;
+    /* Initially hidden */
     transition: max-height 0.3s ease-in-out;
 }
- .nested-list.open {
-    max-height: 500px; /* Adjust max-height as needed */
- }
 
- md-list-item[type="button"] md-icon[slot="end"] { /* Target expand icon */
-     transition: transform 0.3s ease;
- }
- md-list-item[type="button"].expanded md-icon[slot="end"] {
-     transform: rotate(180deg);
- }
- /* Style theme toggle buttons inside drawer list */
- .drawer-footer md-list-item {
-     --md-list-item-label-text-font-size: 0.9rem;
- }
+.nested-list.open {
+    max-height: 500px;
+    /* Adjust max-height as needed */
+}
+
+md-list-item[type="button"] md-icon[slot="end"] {
+    /* Target expand icon */
+    transition: transform 0.3s ease;
+}
+
+md-list-item[type="button"].expanded md-icon[slot="end"] {
+    transform: rotate(180deg);
+}
+
+/* Style theme toggle buttons inside drawer list */
+.drawer-footer md-list-item {
+    --md-list-item-label-text-font-size: 0.9rem;
+}
