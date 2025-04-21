@@ -88,22 +88,23 @@
         </div>
       </md-list>
     </div>
+
     <div class="drawer-footer">
       <div class="theme-toggle-title">Theme</div>
-      <md-list>
-        <md-list-item type="button" id="lightThemeButton">
-          <md-icon slot="start"><span class="material-symbols-outlined">light_mode</span></md-icon>
-          Light
-        </md-list-item>
-        <md-list-item type="button" id="darkThemeButton">
-          <md-icon slot="start"><span class="material-symbols-outlined">dark_mode</span></md-icon>
-          Dark
-        </md-list-item>
-        <md-list-item type="button" id="autoThemeButton">
-          <md-icon slot="start"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
-          Auto
-        </md-list-item>
-      </md-list>
+      <!-- Segmented buttons with labels, adhering to MD guidelines -->
+      <div class="theme-selector-container" style="display: flex; justify-content: center; padding: 8px 16px;">
+        <md-segmented-button-set id="themeSegmentedButtonSet" aria-label="Theme selection">
+          <md-segmented-button id="lightThemeButton" value="light" label="Light" aria-label="Light theme">
+            <md-icon slot="icon"><span class="material-symbols-outlined">light_mode</span></md-icon>
+          </md-segmented-button>
+          <md-segmented-button id="darkThemeButton" value="dark" label="Dark" aria-label="Dark theme">
+            <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
+          </md-segmented-button>
+          <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme">
+            <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
+          </md-segmented-button>
+        </md-segmented-button-set>
+      </div>
     </div>
   </div>
 

@@ -93,9 +93,8 @@ md-top-app-bar {
     border-radius: 0;
     position: sticky;
     top: 0;
-    z-index: 1001;
-    /* Ensure app bar is above drawer overlay */
-    /* M3 colors are applied via :root/html.dark */
+    z-index: 998;
+    /* 👈 LOWER than drawer's z-index */
 }
 
 /* Style the main profile card */
@@ -461,6 +460,14 @@ md-list-item {
     /* Adjust max-height as needed */
 }
 
+md-outlined-card.news-card {
+    --md-outlined-card-container-shape: 16px;
+    border-radius: 16px;
+    /* Optional: helpful for non-MWC environments */
+    overflow: hidden;
+}
+
+
 md-list-item[type="button"] md-icon[slot="end"] {
     /* Target expand icon */
     transition: transform 0.3s ease;
@@ -468,8 +475,8 @@ md-list-item[type="button"] md-icon[slot="end"] {
 
 md-list-item {
     --md-list-item-label-text-font: 'Poppins', sans-serif;
-  }
-  
+}
+
 
 md-list-item[type="button"].expanded md-icon[slot="end"] {
     transform: rotate(180deg);
