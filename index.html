@@ -1,27 +1,35 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mihai's Profile</title>
-  <script src="https://cdn.tailwindcss.com"></script> <!-- Add warning acknowledgement if needed -->
+  <!-- Tailwind CSS (Development Only - Remove for Production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Material Web Components -->
   <script type="module" src="https://unpkg.com/@material/web/all.js?module"></script>
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
     crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 
 <body class="bg-surface-container-lowest">
 
+  <!-- Drawer Overlay -->
   <div id="drawerOverlay" class="drawer-overlay"></div>
 
+  <!-- Navigation Drawer -->
   <div id="navDrawer" class="navigation-drawer">
-    <!-- ... Drawer content remains the same ... -->
     <div class="drawer-header">
       <h2>Menu</h2>
       <md-icon-button id="closeDrawerButton">
@@ -46,6 +54,9 @@
           <div slot="headline">Music</div>
         </md-list-item>
 
+        <!-- Divider (Optional) -->
+        <md-divider></md-divider>
+
         <!-- Expandable: More -->
         <md-list-item type="button" id="moreToggle">
           <md-icon slot="start"><span class="material-symbols-outlined">more_horiz</span></md-icon>
@@ -55,10 +66,10 @@
 
         <div class="nested-list" id="moreContent">
           <md-list>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Privacy Policy')">
               <div slot="headline">Privacy Policy</div>
             </md-list-item>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Code of Conduct')">
               <div slot="headline">Code of Conduct</div>
             </md-list-item>
           </md-list>
@@ -73,16 +84,16 @@
 
         <div class="nested-list" id="appsContent">
           <md-list>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Ads Help Center')">
               <div slot="headline">Ads Help Center</div>
             </md-list-item>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Privacy Policy (Apps)')">
               <div slot="headline">Privacy Policy</div>
             </md-list-item>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Terms of Service')">
               <div slot="headline">Terms of Service</div>
             </md-list-item>
-            <md-list-item type="button">
+            <md-list-item type="button" onclick="alert('Navigate to Legal Notices')">
               <div slot="headline">Legal notices</div>
             </md-list-item>
           </md-list>
@@ -90,10 +101,11 @@
       </md-list>
     </div>
 
+    <!-- Drawer Footer -->
     <div class="drawer-footer">
+      <md-divider></md-divider>
       <div class="theme-toggle-title">Theme</div>
-      <!-- Segmented buttons with labels, adhering to MD guidelines -->
-      <div class="theme-selector-container" style="display: flex; justify-content: center; padding: 8px 16px;">
+      <div class="theme-selector-container">
         <md-segmented-button-set id="themeSegmentedButtonSet" aria-label="Theme selection">
           <md-segmented-button id="lightThemeButton" value="light" label="Light" aria-label="Light theme">
             <md-icon slot="icon"><span class="material-symbols-outlined">light_mode</span></md-icon>
@@ -101,7 +113,8 @@
           <md-segmented-button id="darkThemeButton" value="dark" label="Dark" aria-label="Dark theme">
             <md-icon slot="icon"><span class="material-symbols-outlined">dark_mode</span></md-icon>
           </md-segmented-button>
-          <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme">
+          <md-segmented-button id="autoThemeButton" value="auto" label="Auto" aria-label="Auto theme" selected>
+            <!-- Default selected -->
             <md-icon slot="icon"><span class="material-symbols-outlined">brightness_auto</span></md-icon>
           </md-segmented-button>
         </md-segmented-button-set>
@@ -109,15 +122,18 @@
     </div>
   </div>
 
+  <!-- Top App Bar -->
   <md-top-app-bar>
-    <md-icon-button id="menuButton" slot="navigationIcon">
+    <md-icon-button id="menuButton" slot="navigationIcon" aria-label="Open menu">
       <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
     </md-icon-button>
-    <div slot="headline"></div>
+    <div slot="headline" aria-level="1">Mihai's Profile</div> <!-- Added accessible headline -->
   </md-top-app-bar>
 
+  <!-- Main Content Area -->
   <div class="content-wrapper">
 
+    <!-- Profile Card -->
     <md-filled-card class="profile-card">
       <div class="card-content">
         <div class="profile-header">
@@ -135,7 +151,7 @@
         </p>
 
         <h3 class="section-title">Skills & Technologies</h3>
-        <md-chip-set>
+        <md-chip-set aria-label="Skills and Technologies">
           <md-assist-chip label="Android Dev"></md-assist-chip>
           <md-assist-chip label="Kotlin"></md-assist-chip>
           <md-assist-chip label="Jetpack Compose"></md-assist-chip>
@@ -152,38 +168,20 @@
         </p>
       </div>
       <div class="card-actions">
-        <!-- Add ID here -->
         <md-outlined-button id="viewPortfolioButton">View Portfolio</md-outlined-button>
-        <md-filled-button style="margin-left: 8px;">Contact</md-filled-button>
+        <md-filled-button style="margin-left: 8px;" onclick="alert('Contact Action TBD')">Contact</md-filled-button>
       </div>
-      <!-- DIALOG MOVED OUTSIDE THE CARD -->
-    </md-filled-card>
-
-    <!-- Place Dialog Here (Outside profile-card) -->
-    <md-dialog id="portfolioDialog">
-      <div slot="headline">My Android Apps</div>
-      <div slot="content" id="dialogContent" class="dialog-content-area">
-        <!-- Apps will be loaded here -->
-        <div class="dialog-loading">
-          <md-circular-progress indeterminate></md-circular-progress>
-          <p>Loading apps...</p>
-        </div>
-      </div>
-      <div slot="actions">
-        <!-- Add ID, remove form attribute -->
-        <md-text-button id="closePortfolioDialogButton" value="close">Close</md-text-button>
-      </div>
-    </md-dialog>
+    </md-filled-card> <!-- End Profile Card -->
 
 
+    <!-- Latest News Section -->
     <h2 class="page-section-title">Latest news</h2>
     <div class="news-grid">
-      <!-- ... news cards ... -->
       <md-outlined-card class="news-card">
         <div class="news-card-image">
           <img
             src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMmRyqC5d2cMl038xvsu6xiXwq_leF8s_exdIxFFF0D-4YR2CTU9S3N54rlFUwbZPKoUaClS4RufQtx2erUSAbRB-1kKPCTUTyDyCTnCJSoqfKsqD74gs_nYltNFqsO5zl-cDxDA6zTZPkHwIJz90i8kG9rl_ZWsvSyihAMRXL4m-CLWvuJ2vvp-rZgDs/w558-h272-rw/play_store_feature_graphic.png"
-            alt="Weddix App Banner"
+            alt="Weddix App Banner" loading="lazy"
             onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
         </div>
         <div class="news-card-content">
@@ -203,7 +201,7 @@
         <div class="news-card-image">
           <img
             src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgg0WGT2RMh0mdpVPXDoRWGVwqlhoalt7Ntp1ikpqtHL6x4a2W7FE_FMLmdHjraRD_C9hUPktiYuIxryPRrSh462JTJsgKq2MphHI3De-eAhxBNP2Tbi4PkYi5xp0q6pDuZ-0whaC1V6KOBPV3RW32az0F47w0mqIBGKsROnXudEkr5mqn7YuRmLiXJG5s/w648-h315-rw/mstp-splas.png"
-            alt="Music Sleep Timer Banner"
+            alt="Music Sleep Timer Banner" loading="lazy"
             onerror="this.onerror=null; this.src='https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found'; this.alt='Placeholder Image';">
         </div>
         <div class="news-card-content">
@@ -218,11 +216,11 @@
           </a>
         </div>
       </md-outlined-card>
-    </div>
+    </div> <!-- End News Grid -->
 
+    <!-- Contribute Section -->
     <h2 class="page-section-title">Contribute</h2>
     <md-elevated-card class="contribute-card">
-      <!-- ... contribute content ... -->
       <h3>Do you like my projects?</h3>
       <p>Your support helps me dedicate more time to developing and maintaining open-source apps and libraries. Consider
         showing your appreciation!</p>
@@ -231,31 +229,33 @@
           <md-filled-button>Help us</md-filled-button>
         </a>
       </div>
-    </md-elevated-card>
+    </md-elevated-card> <!-- End Contribute Card -->
 
+    <!-- Social Icons Section -->
     <div class="social-icons">
-      <!-- ... social icons ... -->
       <a href="https://github.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile"
         title="GitHub">
         <md-icon-button>
-          <md-icon><i class="fab fa-github"></i></md-icon>
+          <md-icon><i class="fab fa-github" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
       <a href="https://www.instagram.com/d4rk7355608/" target="_blank" rel="noopener noreferrer"
         aria-label="Instagram Profile" title="Instagram">
         <md-icon-button>
-          <md-icon><i class="fab fa-instagram"></i></md-icon>
+          <md-icon><i class="fab fa-instagram" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
-      <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel" title="YouTube">
+      <!-- Add valid href for YouTube or remove if not applicable -->
+      <a href="https://youtube.com/@D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="YouTube Channel"
+        title="YouTube">
         <md-icon-button>
-          <md-icon><i class="fab fa-youtube"></i></md-icon>
+          <md-icon><i class="fab fa-youtube" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
       <a href="https://www.pinterest.com/d4rk7355608/" target="_blank" rel="noopener noreferrer"
         aria-label="Pinterest Profile" title="Pinterest">
         <md-icon-button>
-          <md-icon><i class="fab fa-pinterest"></i></md-icon>
+          <md-icon><i class="fab fa-pinterest" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
       <a href="mailto:d4rk7355608@gmail.com" aria-label="Send Email" title="Email">
@@ -266,28 +266,43 @@
       <a href="https://ro.linkedin.com/in/mihai-cristian-condrea" target="_blank" rel="noopener noreferrer"
         aria-label="LinkedIn Profile" title="LinkedIn">
         <md-icon-button>
-          <md-icon><i class="fab fa-linkedin-in"></i></md-icon>
+          <md-icon><i class="fab fa-linkedin-in" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
       <a href="https://twitter.com/D4rK7355608" target="_blank" rel="noopener noreferrer" aria-label="Twitter Profile"
         title="Twitter / X">
         <md-icon-button>
-          <md-icon><i class="fab fa-twitter"></i></md-icon> </md-icon-button>
+          <md-icon><i class="fab fa-x-twitter" aria-hidden="true"></i></md-icon> <!-- Updated Twitter/X icon -->
+        </md-icon-button>
       </a>
       <a href="https://www.facebook.com/d4rk7355608" target="_blank" rel="noopener noreferrer"
         aria-label="Facebook Profile" title="Facebook">
         <md-icon-button>
-          <md-icon><i class="fab fa-facebook-f"></i></md-icon>
+          <md-icon><i class="fab fa-facebook-f" aria-hidden="true"></i></md-icon>
         </md-icon-button>
       </a>
+    </div> <!-- End Social Icons -->
+
+  </div> <!-- End Content Wrapper -->
+
+
+  <!-- Portfolio Dialog (Placed outside main content flow for proper layering) -->
+  <md-dialog id="portfolioDialog">
+    <div slot="headline">My Android Apps</div>
+    <div slot="content" id="dialogContent" class="dialog-content-area">
+      <!-- Initial Loading State -->
+      <div class="dialog-loading">
+        <md-circular-progress indeterminate aria-label="Loading apps"></md-circular-progress>
+        <p>Loading apps...</p>
+      </div>
     </div>
+    <div slot="actions">
+      <md-text-button id="closePortfolioDialogButton" value="close">Close</md-text-button>
+    </div>
+  </md-dialog>
 
-  </div> <!-- End content-wrapper -->
 
-  <script>
-    // Optional: Acknowledge TailwindCSS CDN warning programmatically if desired
-    // console.log("Tailwind CSS CDN warning acknowledged for development.");
-  </script>
+  <!-- Main JavaScript -->
   <script src="assets/js/main.js"></script>
 </body>
 
