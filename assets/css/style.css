@@ -1,763 +1,553 @@
-/* assets/css/style.css */
-
-/* Basic styles & Theme Variables */
 :root {
-    /* Android Green Color Palette */
-    --md-sys-color-primary: #3DDC84;
-    --md-sys-color-on-primary: #003912;
-    --md-sys-color-primary-container: #b1fbbb;
-    --md-sys-color-on-primary-container: #002108;
-    --md-sys-color-secondary: #516350;
-    --md-sys-color-on-secondary: #ffffff;
-    --md-sys-color-secondary-container: #d4e8d0;
-    --md-sys-color-on-secondary-container: #0f1f11;
-    --md-sys-color-tertiary: #3a665f;
-    --md-sys-color-on-tertiary: #ffffff;
-    --md-sys-color-tertiary-container: #bdece3;
-    --md-sys-color-on-tertiary-container: #00201c;
-    --md-sys-color-error: #ba1a1a;
-    --md-sys-color-on-error: #ffffff;
-    --md-sys-color-error-container: #ffdad6;
-    --md-sys-color-on-error-container: #410002;
-    --md-sys-color-background: #f8fdff;
-    --md-sys-color-on-background: #191c1d;
-    --md-sys-color-surface: #f8fdff;
-    --md-sys-color-on-surface: #191c1d;
-    --md-sys-color-surface-variant: #dee5d8;
-    --md-sys-color-on-surface-variant: #424940;
-    --md-sys-color-outline: #72796f;
-    --md-sys-color-outline-variant: #c2c9bd;
-    --md-sys-color-shadow: #000000;
-    --md-sys-color-scrim: #000000;
-    --md-sys-color-inverse-surface: #2e3132;
-    --md-sys-color-inverse-on-surface: #eff1f1;
-    --md-sys-color-inverse-primary: #96dea1;
-    --md-sys-color-surface-dim: #d8dbda;
-    --md-sys-color-surface-bright: #f8fdff;
-    --md-sys-color-surface-container-lowest: #ffffff;
-    --md-sys-color-surface-container-low: #f2f5f4;
-    --md-sys-color-surface-container: #ecefef;
-    --md-sys-color-surface-container-high: #e6ea MWCe9;
-    --md-sys-color-surface-container-highest: #e1e4e4;
-  
-    /* Custom App Variables */
-    --app-bg-color: var(--md-sys-color-surface-container-lowest);
-    --app-text-color: var(--md-sys-color-on-surface);
-    --app-card-bg-color: var(--md-sys-color-surface);
-    --app-card-text-color: var(--md-sys-color-on-surface);
-    --app-card-secondary-text-color: var(--md-sys-color-on-surface-variant);
-    --app-section-title-color: var(--md-sys-color-on-background);
-    --app-border-color: var(--md-sys-color-outline-variant);
-    --app-contribute-card-bg: var(--md-sys-color-primary-container);
-    --app-social-icon-color: var(--md-sys-color-on-surface-variant);
-    --app-social-icon-hover-color: var(--md-sys-color-primary);
-    --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
-    /* Slightly off-white for drawer */
-    --app-overlay-bg-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  /* Dark theme overrides */
-  html.dark {
-    --md-sys-color-primary: #96dea1;
-    --md-sys-color-on-primary: #003912;
-    --md-sys-color-primary-container: #20512a;
-    --md-sys-color-on-primary-container: #b1fbbb;
-    --md-sys-color-secondary: #b8ccb5;
-    --md-sys-color-on-secondary: #243424;
-    --md-sys-color-secondary-container: #3a4b3a;
-    --md-sys-color-on-secondary-container: #d4e8d0;
-    --md-sys-color-tertiary: #a1d0c7;
-    --md-sys-color-on-tertiary: #033731;
-    --md-sys-color-tertiary-container: #204e47;
-    --md-sys-color-on-tertiary-container: #bdece3;
-    --md-sys-color-error: #ffb4ab;
-    --md-sys-color-on-error: #690005;
-    --md-sys-color-error-container: #93000a;
-    --md-sys-color-on-error-container: #ffdad6;
-    --md-sys-color-background: #101415;
-    /* Slightly different from surface-lowest */
-    --md-sys-color-on-background: #e1e4e4;
-    --md-sys-color-surface: #101415;
-    --md-sys-color-on-surface: #e1e4e4;
-    --md-sys-color-surface-variant: #424940;
-    --md-sys-color-on-surface-variant: #c2c9bd;
-    --md-sys-color-outline: #8c9388;
-    --md-sys-color-outline-variant: #424940;
-    --md-sys-color-shadow: #000000;
-    --md-sys-color-scrim: #000000;
-    --md-sys-color-inverse-surface: #e1e4e4;
-    --md-sys-color-inverse-on-surface: #191c1d;
-    --md-sys-color-inverse-primary: #3c6943;
-    --md-sys-color-surface-dim: #101415;
-    --md-sys-color-surface-bright: #363a3b;
-    --md-sys-color-surface-container-lowest: #0b0f0f;
-    --md-sys-color-surface-container-low: #191c1d;
-    --md-sys-color-surface-container: #1d2021;
-    --md-sys-color-surface-container-high: #272b2b;
-    --md-sys-color-surface-container-highest: #323636;
-  
-    /* Custom App Variables (Dark) */
-    --app-bg-color: var(--md-sys-color-surface-container-lowest);
-    --app-text-color: var(--md-sys-color-on-surface);
-    --app-card-bg-color: var(--md-sys-color-surface-container-low);
-    /* Darker card background */
-    --app-card-text-color: var(--md-sys-color-on-surface);
-    --app-card-secondary-text-color: var(--md-sys-color-on-surface-variant);
-    --app-section-title-color: var(--md-sys-color-on-background);
-    --app-border-color: var(--md-sys-color-outline-variant);
-    --app-contribute-card-bg: var(--md-sys-color-primary-container);
-    --app-social-icon-color: var(--md-sys-color-on-surface-variant);
-    --app-social-icon-hover-color: var(--md-sys-color-primary);
-    --app-drawer-bg-color: var(--md-sys-color-surface-container);
-    /* Slightly lighter dark for drawer */
-    --app-overlay-bg-color: rgba(0, 0, 0, 0.6);
-  }
-  
-  
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--app-bg-color);
-    color: var(--app-text-color);
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    -webkit-font-smoothing: antialiased;
-    /* Improve font rendering */
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Ensure MWC components inherit font and use appropriate colors */
-  md-filled-card,
-  md-outlined-card,
-  md-elevated-card,
-  md-outlined-button,
-  md-filled-button,
-  md-text-button,
-  md-chip-set,
-  md-assist-chip,
-  md-top-app-bar,
-  md-icon-button,
-  md-list,
-  md-list-item,
-  md-dialog,
-  md-segmented-button-set,
-  md-segmented-button,
-  md-circular-progress,
-  md-divider {
-    font-family: 'Poppins', sans-serif;
-    /* Let components use their M3 color variables */
-  }
-  
-  md-dialog {
-    /* Apply Poppins specifically if inheritance fails */
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  /* Center content */
+  --md-sys-color-primary: #3DDC84;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #b1fbbb;
+  --md-sys-color-on-primary-container: #002108;
+  --md-sys-color-secondary: #516350;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #d4e8d0;
+  --md-sys-color-on-secondary-container: #0f1f11;
+  --md-sys-color-tertiary: #3a665f;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #bdece3;
+  --md-sys-color-on-tertiary-container: #00201c;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background: #f8fdff;
+  --md-sys-color-on-background: #191c1d;
+  --md-sys-color-surface: #f8fdff;
+  --md-sys-color-on-surface: #191c1d;
+  --md-sys-color-surface-variant: #dee5d8;
+  --md-sys-color-on-surface-variant: #424940;
+  --md-sys-color-outline: #72796f;
+  --md-sys-color-outline-variant: #c2c9bd;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #2e3132;
+  --md-sys-color-inverse-on-surface: #eff1f1;
+  --md-sys-color-inverse-primary: #96dea1;
+  --md-sys-color-surface-dim: #d8dbda;
+  --md-sys-color-surface-bright: #f8fdff;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f2f5f4;
+  --md-sys-color-surface-container: #ecefef;
+  --md-sys-color-surface-container-high: #e6eae9;
+  --md-sys-color-surface-container-highest: #e1e4e4;
+  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  --app-text-color: var(--md-sys-color-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--md-sys-color-surface);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.5);
+  --app-nested-list-bg: rgba(0, 0, 0, 0.02);
+}
+
+html.dark {
+  --md-sys-color-primary: #96dea1;
+  --md-sys-color-on-primary: #003912;
+  --md-sys-color-primary-container: #20512a;
+  --md-sys-color-on-primary-container: #b1fbbb;
+  --md-sys-color-secondary: #b8ccb5;
+  --md-sys-color-on-secondary: #243424;
+  --md-sys-color-secondary-container: #3a4b3a;
+  --md-sys-color-on-secondary-container: #d4e8d0;
+  --md-sys-color-tertiary: #a1d0c7;
+  --md-sys-color-on-tertiary: #033731;
+  --md-sys-color-tertiary-container: #204e47;
+  --md-sys-color-on-tertiary-container: #bdece3;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+  --md-sys-color-background: #101415;
+  --md-sys-color-on-background: #e1e4e4;
+  --md-sys-color-surface: #101415;
+  --md-sys-color-on-surface: #e1e4e4;
+  --md-sys-color-surface-variant: #424940;
+  --md-sys-color-on-surface-variant: #c2c9bd;
+  --md-sys-color-outline: #8c9388;
+  --md-sys-color-outline-variant: #424940;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #e1e4e4;
+  --md-sys-color-inverse-on-surface: #191c1d;
+  --md-sys-color-inverse-primary: #3c6943;
+  --md-sys-color-surface-dim: #101415;
+  --md-sys-color-surface-bright: #363a3b;
+  --md-sys-color-surface-container-lowest: #0b0f0f;
+  --md-sys-color-surface-container-low: #191c1d;
+  --md-sys-color-surface-container: #1d2021;
+  --md-sys-color-surface-container-high: #272b2b;
+  --md-sys-color-surface-container-highest: #323636;
+  --app-bg-color: var(--md-sys-color-surface-container-lowest);
+  --app-text-color: var(--md-sys-color-on-surface);
+  --app-secondary-text-color: var(--md-sys-color-on-surface-variant);
+  --app-card-bg-color: var(--md-sys-color-surface-container-low);
+  --app-outlined-card-bg-color: var(--md-sys-color-surface-container);
+  --app-section-title-color: var(--md-sys-color-on-background);
+  --app-border-color: var(--md-sys-color-outline-variant);
+  --app-contribute-card-bg: var(--md-sys-color-primary-container);
+  --app-contribute-card-text: var(--md-sys-color-on-primary-container);
+  --app-social-icon-color: var(--md-sys-color-on-surface-variant);
+  --app-social-icon-hover-color: var(--md-sys-color-primary);
+  --app-drawer-bg-color: var(--md-sys-color-surface-container);
+  --app-drawer-tint-color: var(--md-sys-color-primary);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.6);
+  --app-nested-list-bg: rgba(255, 255, 255, 0.03);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+md-filled-card,
+md-outlined-card,
+md-elevated-card,
+md-outlined-button,
+md-filled-button,
+md-text-button,
+md-chip-set,
+md-assist-chip,
+md-top-app-bar,
+md-icon-button,
+md-list,
+md-list-item,
+md-dialog,
+md-segmented-button-set,
+md-segmented-button,
+md-circular-progress,
+md-divider {
+  font-family: inherit;
+}
+
+md-assist-chip {
+  --md-assist-chip-label-text-font: 'Poppins', sans-serif;
+}
+
+md-dialog {
+  font-family: 'Poppins', sans-serif;
+}
+
+.content-wrapper {
+  max-width: 900px;
+  margin: 70px auto 0 auto;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+}
+
+md-top-app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 998;
+  width: 100%;
+}
+
+md-filled-card.profile-card {
+  --md-filled-card-container-color: var(--app-card-bg-color);
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.card-content {
+  padding: 1.5rem;
+  color: var(--app-text-color);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--app-border-color);
+  flex-shrink: 0;
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.profile-info h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  line-height: 1.2;
+}
+
+.profile-info p {
+  margin: 0.25rem 0 0 0;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--app-text-color);
+  border-bottom: 1px solid var(--app-border-color);
+  padding-bottom: 0.5rem;
+}
+
+p.profile-about {
+  color: var(--app-text-color);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+p.project-description {
+  color: var(--app-secondary-text-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+md-chip-set {
+  margin-bottom: 1.5rem;
+}
+
+md-assist-chip {
+  margin: 0 0.5rem 0.5rem 0;
+}
+
+.page-section-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-section-title-color);
+  text-align: left;
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+md-outlined-card.news-card {
+  --md-outlined-card-container-shape: 16px;
+  --md-outlined-card-outline-color: var(--app-border-color);
+  --md-outlined-card-container-color: var(--app-outlined-card-bg-color);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.news-card-image {
+  width: 100%;
+  height: 180px;
+  background-color: var(--md-sys-color-surface-container-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--app-secondary-text-color);
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--app-border-color);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  overflow: hidden;
+}
+
+.news-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.news-card-content {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-card-content h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: var(--app-text-color);
+  line-height: 1.3;
+}
+
+.news-card-content p {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.news-card-actions {
+  padding: 0.5rem 1rem 0.75rem 1rem;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+}
+
+.news-card-actions a {
+  text-decoration: none;
+}
+
+md-elevated-card.contribute-card {
+  --md-elevated-card-container-shape: 16px;
+  --md-elevated-card-container-color: var(--app-contribute-card-bg);
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.contribute-card h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 0.75rem 0;
+  color: var(--app-contribute-card-text);
+}
+
+.contribute-card p {
+  font-size: 1rem;
+  color: var(--app-contribute-card-text);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.contribute-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.contribute-actions a {
+  text-decoration: none;
+}
+
+.social-icons {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid var(--app-border-color);
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.social-icons md-icon-button {
+  --md-icon-button-icon-color: var(--app-social-icon-color);
+  --md-icon-button-hover-icon-color: var(--app-social-icon-hover-color);
+  --md-icon-button-focus-icon-color: var(--app-social-icon-hover-color);
+}
+
+.social-icons md-icon i,
+.social-icons md-icon span {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.navigation-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  width: clamp(280px, 80vw, 320px);
+  background-color: var(--app-drawer-bg-color);
+  color: var(--app-text-color);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  transform: translateX(-100%) translateZ(0);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+  contain: layout style paint;
+}
+
+.navigation-drawer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--app-drawer-tint-color);
+  opacity: 0.04;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: -1;
+  transition: background-color 0.3s ease;
+}
+
+.navigation-drawer.open {
+  transform: translateX(0) translateZ(0);
+}
+
+#drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--app-overlay-bg-color);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0s 0.3s, background-color 0.3s ease;
+  contain: strict;
+}
+
+#drawerOverlay.open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in-out, visibility 0s 0s, background-color 0.3s ease;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px 12px 16px;
+  border-bottom: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+  transition: border-color 0.3s ease;
+}
+
+.drawer-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+}
+
+.drawer-content {
+  flex-grow: 1;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.drawer-footer {
+  padding: 8px 0;
+  border-top: 1px solid var(--app-border-color);
+  flex-shrink: 0;
+  background-color: var(--app-drawer-bg-color);
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.drawer-footer .theme-toggle-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--app-secondary-text-color);
+  padding: 8px 16px 4px 16px;
+  margin: 0;
+}
+
+.theme-selector-container {
+  display: flex;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+md-list {
+  --md-list-container-color: transparent;
+  padding: 8px 0;
+}
+
+md-list-item {
+  --md-list-item-label-text-font: 'Poppins', sans-serif;
+}
+
+.nested-list {
+  padding-left: 16px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-in-out;
+  background-color: var(--app-nested-list-bg);
+  border-radius: 0 0 8px 8px;
+  margin: 0 8px 8px 8px;
+  transition: background-color 0.3s ease;
+}
+
+.nested-list md-list {
+  padding: 0 0 8px 0;
+}
+
+.nested-list md-list-item {
+  padding-left: 16px;
+  min-height: 48px;
+  --md-list-item-label-text-size: 0.9rem;
+}
+
+.nested-list.open {
+  max-height: 500px;
+}
+
+md-list-item[aria-expanded] md-icon[slot="end"]>span {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+md-list-item[aria-expanded="true"] md-icon[slot="end"]>span {
+  transform: rotate(180deg);
+}
+
+md-divider {
+  margin: 8px 0;
+  --md-divider-color: var(--app-border-color);
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 600px) {
   .content-wrapper {
-    max-width: 900px;
-    margin: 70px auto 0 auto;
-    /* Combine top margin with auto */
     padding: 1rem;
-    box-sizing: border-box;
+    margin-top: 60px;
   }
-  
-  /* Style the top app bar */
-  md-top-app-bar {
-    /* Uses M3 variables by default */
-    position: sticky;
-    /* Or fixed if preferred */
-    top: 0;
-    z-index: 998;
-    width: 100%;
-    /* Ensure full width */
-  }
-  
-  /* Style the main profile card */
-  md-filled-card.profile-card {
-    --md-filled-card-container-color: var(--app-card-bg-color);
-    width: 100%;
-    border-radius: 16px;
-    /* Consistent radius */
-    overflow: hidden;
-    /* Clip content */
-    margin-bottom: 2.5rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .card-content {
-    padding: 1.5rem;
-    color: var(--app-card-text-color);
-  }
-  
+
   .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    gap: 1rem;
-    /* Use gap for spacing */
-  }
-  
-  .profile-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--app-border-color);
-    flex-shrink: 0;
-    /* Prevent avatar shrinking */
-  }
-  
-  .profile-info h2 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--app-card-text-color);
-    line-height: 1.2;
-  }
-  
-  .profile-info p {
-    margin: 0.25rem 0 0 0;
-    color: var(--app-card-secondary-text-color);
-    font-size: 0.9rem;
-  }
-  
-  .section-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    color: var(--app-card-text-color);
-    border-bottom: 1px solid var(--app-border-color);
-    /* Optional divider */
-    padding-bottom: 0.5rem;
-    /* Space below title */
-  }
-  
-  p.profile-about {
-    color: var(--app-card-text-color);
-    margin-bottom: 1.5rem;
-    /* Increased spacing */
-    line-height: 1.6;
-  }
-  
-  p.project-description {
-    color: var(--app-card-secondary-text-color);
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .page-section-title {
-    font-size: 1.75rem;
-    font-weight: 500;
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--app-section-title-color);
-    text-align: left;
-  }
-  
-  md-chip-set {
-    margin-bottom: 1.5rem;
-    /* Increased spacing */
-  }
-  
-  md-assist-chip {
-    margin: 0 0.5rem 0.5rem 0;
-    /* Consistent spacing */
-    --md-assist-chip-label-text-font: 'Poppins', sans-serif;
-  }
-  
-  .card-actions {
-    padding: 0.75rem 1.5rem;
-    /* Adjusted padding */
-    display: flex;
-    justify-content: flex-end;
-    border-top: 1px solid var(--app-border-color);
-    transition: border-color 0.3s ease;
-    background-color: var(--app-card-bg-color);
-    /* Ensure bg matches card */
-  }
-  
-  /* --- Portfolio Dialog Styles --- */
-  #portfolioDialog {
-    --md-dialog-container-color: var(--app-card-bg-color);
-    /* Specific font application */
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  /* Style the content area */
-  .dialog-content-area {
-    min-width: 280px;
-    /* Mobile first */
-    max-width: calc(100vw - 48px);
-    /* Max width with padding */
-    width: 500px;
-    /* Default width for larger screens */
-    min-height: 200px;
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 0 1rem 1rem 1rem;
-    box-sizing: border-box;
-  }
-  
-  /* Loading/Error states */
-  .dialog-loading,
-  .dialog-error {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 150px;
-    text-align: center;
-    color: var(--app-card-secondary-text-color);
-    padding: 1.5rem;
-    /* More padding */
-  }
-  
-  .dialog-loading p,
-  .dialog-error p {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-  }
-  
-  .dialog-loading md-circular-progress {
-    margin-bottom: 1rem;
-  }
-  
-  .dialog-error md-icon {
-    font-size: 40px;
-    /* Slightly larger icon */
-    color: var(--md-sys-color-error);
-    margin-bottom: 0.75rem;
-  }
-  
-  html.dark .dialog-error md-icon {
-    color: var(--md-sys-color-error);
-    /* M3 handles dark mode */
-  }
-  
-  .dialog-error p {
-    color: var(--md-sys-color-on-surface);
-    /* Use standard text color for better readability */
-    margin-top: 0;
-  }
-  
-  /* Portfolio Grid */
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    /* Slightly smaller min */
-    gap: 1rem;
-    padding: 1rem 0;
-    /* Padding top and bottom */
-  }
-  
-  /* Individual App Card */
-  .app-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1rem 0.5rem;
-    /* Vertical padding */
-    border-radius: 12px;
-    background-color: var(--md-sys-color-surface-container);
-    /* Slightly distinct bg */
-    border: 1px solid var(--app-border-color);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    cursor: pointer;
-    text-decoration: none;
-    color: var(--app-card-text-color);
-    overflow: hidden;
-    /* Ensure content doesn't overflow */
-  }
-  
-  html.dark .app-card {
-    background-color: var(--md-sys-color-surface-container-high);
-  }
-  
-  .app-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  html.dark .app-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-  
-  .app-card img {
-    width: 60px;
-    /* Adjusted size */
-    height: 60px;
-    border-radius: 16px;
-    margin-bottom: 0.75rem;
-    object-fit: cover;
-    background-color: var(--md-sys-color-surface-variant);
-    /* Placeholder bg */
-  }
-  
-  html.dark .app-card img {
-    background-color: var(--md-sys-color-surface-variant);
-    /* Consistent placeholder */
-  }
-  
-  .app-card p {
-    font-size: 0.8rem;
-    /* Slightly smaller text */
-    font-weight: 500;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0;
-    padding: 0 0.25rem;
-    /* Add horizontal padding */
-    word-break: break-word;
-    height: 2.6em;
-    /* Reserve space for 2 lines */
-  }
-  
-  
-  /* News Section Styles */
-  .news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    /* Adjusted min */
-    gap: 1.5rem;
-    margin-bottom: 2.5rem;
-  }
-  
-  md-outlined-card.news-card {
-    --md-outlined-card-container-shape: 16px;
-    --md-outlined-card-outline-color: var(--app-border-color);
-    --md-outlined-card-container-color: var(--app-card-bg-color);
-    /* Explicit background */
-    display: flex;
-    flex-direction: column;
-    transition: background-color 0.3s ease;
-    border-radius: 16px;
-    /* Ensure radius */
-    overflow: hidden;
-    /* Clip contents */
-  }
-  
-  
-  .news-card-image {
-    width: 100%;
-    height: 180px;
-    background-color: var(--md-sys-color-surface-container-high);
-    /* Placeholder bg */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--app-card-secondary-text-color);
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--app-border-color);
-    transition: border-color 0.3s ease;
-    overflow: hidden;
-  }
-  
-  .news-card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Changed to cover */
-    display: block;
-    /* Remove potential space below image */
-  }
-  
-  .news-card-content {
-    padding: 1rem;
-    flex-grow: 1;
-    display: flex;
-    /* Use flex for better control */
-    flex-direction: column;
-  }
-  
-  .news-card-content h3 {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin: 0 0 0.5rem 0;
-    /* Reset margin */
-    color: var(--app-card-text-color);
-    line-height: 1.3;
-  }
-  
-  .news-card-content p {
-    font-size: 0.9rem;
-    color: var(--app-card-secondary-text-color);
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 0;
-    /* Reset margin */
-    flex-grow: 1;
-    /* Allow paragraph to take space */
-  }
-  
-  .news-card-actions {
-    padding: 0.5rem 1rem;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: auto;
-    /* Push actions to the bottom */
-  }
-  
-  .news-card-actions a {
-    text-decoration: none;
-  }
-  
-  /* Contribute Section Styles */
-  md-elevated-card.contribute-card {
-    --md-elevated-card-container-shape: 16px;
-    --md-elevated-card-container-color: var(--app-contribute-card-bg);
-    padding: 1.5rem;
-    margin-bottom: 2.5rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .contribute-card h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin: 0 0 0.75rem 0;
-    color: var(--md-sys-color-on-primary-container);
-    /* Use specific color */
-  }
-  
-  .contribute-card p {
-    font-size: 1rem;
-    color: var(--md-sys-color-on-primary-container);
-    /* Use specific color */
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-  
-  .contribute-actions {
-    display: flex;
-    justify-content: flex-start;
-  }
-  
-  .contribute-actions a {
-    text-decoration: none;
-  }
-  
-  /* Social Icons Styles */
-  .social-icons {
-    text-align: center;
-    padding: 2rem 0;
-    border-top: 1px solid var(--app-border-color);
-    margin-top: 2rem;
-    /* Increased margin */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 0.75rem;
-    transition: border-color 0.3s ease;
   }
-  
-  .social-icons md-icon-button {
-    --md-icon-button-icon-color: var(--app-social-icon-color);
+
+  .page-section-title {
+    font-size: 1.5rem;
   }
-  
-  .social-icons md-icon i,
-  .social-icons md-icon span {
-    font-size: 20px;
-    vertical-align: middle;
+
+  .profile-info h2 {
+    font-size: 1.3rem;
   }
-  
-  .social-icons a:hover md-icon-button,
-  /* Target button on link hover */
-  .social-icons md-icon-button:hover {
-    /* Direct button hover */
-    --md-icon-button-hover-state-layer-color: var(--app-social-icon-hover-color);
-    --md-icon-button-icon-color: var(--app-social-icon-hover-color);
+
+  .social-icons {
+    gap: 0.5rem;
   }
-  
-  /* --- Navigation Drawer Styles --- */
-  .navigation-drawer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100dvh;
-    /* Use dynamic viewport height */
-    width: clamp(280px, 80vw, 320px);
-    /* Responsive width */
-    background-color: var(--app-drawer-bg-color);
-    color: var(--app-text-color);
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    /* Main container hides overflow */
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    transform: translateX(-100%) translateZ(0);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
-    /* Smoother transition */
-    contain: layout style paint;
-    /* Performance optimization */
-  }
-  
-  /* Tint Layer */
-  .navigation-drawer::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--md-sys-color-primary);
-    opacity: 0.04;
-    pointer-events: none;
-    border-radius: inherit;
-    z-index: -1;
-    /* Ensure it's behind content */
-  }
-  
-  
-  .navigation-drawer.open {
-    transform: translateX(0) translateZ(0);
-  }
-  
-  #drawerOverlay {
-    position: fixed;
-    inset: 0;
-    /* Covers entire viewport */
-    background-color: var(--app-overlay-bg-color);
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out, visibility 0s 0.3s;
-    /* Delay hiding */
-    contain: strict;
-    /* Performance optimization */
-  }
-  
-  #drawerOverlay.open {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.3s ease-in-out, visibility 0s 0s;
-  }
-  
-  .drawer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 4px 12px 16px;
-    border-bottom: 1px solid var(--app-border-color);
-    flex-shrink: 0;
-  }
-  
-  .drawer-header h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: var(--app-text-color);
-  }
-  
-  .drawer-content {
-    flex-grow: 1;
-    padding: 0;
-    overflow-y: auto;
-    /* Allows content scrolling */
-    overscroll-behavior: contain;
-    /* Prevent body scroll */
-  }
-  
-  .drawer-footer {
-    padding: 8px 0;
-    border-top: 1px solid var(--app-border-color);
-    flex-shrink: 0;
-    background-color: var(--app-drawer-bg-color);
-  }
-  
-  .drawer-footer .theme-toggle-title {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--app-card-secondary-text-color);
-    padding: 8px 16px 4px 16px;
-    /* Adjusted padding */
-    margin: 0;
-  }
-  
-  .theme-selector-container {
-    display: flex;
-    justify-content: center;
-    padding: 8px 16px;
-  }
-  
-  /* Styles for items inside drawer */
-  md-list {
-    --md-list-container-color: transparent;
-    padding: 8px 0;
-  }
-  
-  md-list-item {
-    --md-list-item-label-text-color: var(--app-text-color);
-    --md-list-item-supporting-text-color: var(--app-card-secondary-text-color);
-    --md-list-item-leading-icon-color: var(--app-text-color);
-    --md-list-item-trailing-icon-color: var(--app-text-color);
-    --md-list-item-label-text-font: 'Poppins', sans-serif;
-  }
-  
-  /* Nested List Styling */
-  .nested-list {
-    padding-left: 16px;
-    /* Reduced initial padding */
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease-in-out, padding-left 0.3s ease-in-out;
-    /* Animate padding */
-    background-color: rgba(0, 0, 0, 0.02);
-    /* Subtle background */
-    border-radius: 0 0 8px 8px;
-    /* Rounded bottom */
-    margin: 0 8px;
-    /* Add some horizontal margin */
-  }
-  
-  html.dark .nested-list {
-    background-color: rgba(255, 255, 255, 0.03);
-  }
-  
-  .nested-list md-list {
-    padding: 0 0 8px 0;
-    /* Padding inside nested list */
-  }
-  
-  .nested-list md-list-item {
-    padding-left: 16px;
-    /* Ensure items inside are indented */
-    min-height: 48px;
-    /* Slightly smaller items */
-    --md-list-item-label-text-size: 0.9rem;
-  }
-  
-  
-  .nested-list.open {
-    max-height: 500px;
-    /* Adjust as needed */
-    padding-left: 16px;
-    /* Keep padding consistent */
-  }
-  
-  /* Expand/Collapse Icon */
-  md-list-item[type="button"] md-icon[slot="end"] {
-    transition: transform 0.3s ease;
-  }
-  
-  md-list-item[type="button"].expanded md-icon[slot="end"] {
-    transform: rotate(180deg);
-  }
-  
-  /* Divider in Drawer */
-  md-divider {
-    margin: 8px 0;
-    /* Add margin around dividers */
-    --md-divider-color: var(--app-border-color);
-  }
+}
