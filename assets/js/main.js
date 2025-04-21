@@ -25,7 +25,7 @@ const PLAY_STORE_RAW_URL = `https://play.google.com/store/apps/dev?id=${DEVELOPE
 const DEVELOPER_PAGE_URL = `${CORS_PROXY_URL}${encodeURIComponent(PLAY_STORE_RAW_URL)}`;
 const DEFAULT_ICON_URL = "https://c.clc2l.com/t/g/o/google-playstore-Iauj7q.png"; // Or use a local placeholder
 const PLAY_STORE_APP_URL = "https://play.google.com/store/apps/details?id=";
-const FETCH_TIMEOUT_MS = 20000; // 20 seconds
+const FETCH_TIMEOUT_MS = 60000; // 60 seconds
 console.log("SCRIPT: Constants defined. DEVELOPER_PAGE_URL:", DEVELOPER_PAGE_URL);
 
 // --- Drawer Functions ---
