@@ -197,6 +197,23 @@ md-assist-chip {
     margin-bottom: 2.5rem;
 }
 
+.navigation-drawer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--md-sys-color-primary);
+    opacity: 0.04;
+    /* Subtle tint layer */
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.navigation-drawer {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    overflow: hidden;
+}
+
 md-outlined-card.news-card {
     --md-outlined-card-container-shape: 16px;
     display: flex;
@@ -448,6 +465,11 @@ md-list-item[type="button"] md-icon[slot="end"] {
     /* Target expand icon */
     transition: transform 0.3s ease;
 }
+
+md-list-item {
+    --md-list-item-label-text-font: 'Poppins', sans-serif;
+  }
+  
 
 md-list-item[type="button"].expanded md-icon[slot="end"] {
     transform: rotate(180deg);

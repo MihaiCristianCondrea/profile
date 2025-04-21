@@ -29,33 +29,61 @@
     </div>
     <div class="drawer-content">
       <md-list>
-        <md-list-item headline="Home">
+        <!-- Top Items -->
+        <md-list-item type="button" onclick="window.location.href='index.html'">
           <md-icon slot="start"><span class="material-symbols-outlined">home</span></md-icon>
+          <div slot="headline">Home</div>
         </md-list-item>
-        <md-list-item headline="Blogs">
+
+        <md-list-item type="button" onclick="window.open('https://d4rk7355608.blogspot.com/', '_blank')">
           <md-icon slot="start"><span class="material-symbols-outlined">article</span></md-icon>
+          <div slot="headline">Blogs</div>
         </md-list-item>
-        <md-list-item headline="Music">
+
+        <md-list-item type="button" onclick="window.open('https://songwhip.com/d4rkrekords', '_blank')">
           <md-icon slot="start"><span class="material-symbols-outlined">music_note</span></md-icon>
+          <div slot="headline">Music</div>
         </md-list-item>
-        <md-list-item type="button" headline="More" id="moreToggle">
+
+        <!-- Expandable: More -->
+        <md-list-item type="button" id="moreToggle">
           <md-icon slot="start"><span class="material-symbols-outlined">more_horiz</span></md-icon>
+          <div slot="headline">More</div>
           <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
         </md-list-item>
+
         <div class="nested-list" id="moreContent">
-          <md-list> <md-list-item headline="Privacy Policy"></md-list-item>
-            <md-list-item headline="Code of Conduct"></md-list-item>
+          <md-list>
+            <md-list-item type="button">
+              <div slot="headline">Privacy Policy</div>
+            </md-list-item>
+            <md-list-item type="button">
+              <div slot="headline">Code of Conduct</div>
+            </md-list-item>
           </md-list>
         </div>
-        <md-list-item type="button" headline="Apps" id="appsToggle">
+
+        <!-- Expandable: Apps -->
+        <md-list-item type="button" id="appsToggle">
           <md-icon slot="start"><span class="material-symbols-outlined">apps</span></md-icon>
+          <div slot="headline">Apps</div>
           <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
         </md-list-item>
+
         <div class="nested-list" id="appsContent">
-          <md-list> <md-list-item headline="Ads Help Center"></md-list-item>
-            <md-list-item headline="Privacy Policy"></md-list-item>
-            <md-list-item headline="Terms of Service"></md-list-item>
-            <md-list-item headline="Legal notices"></md-list-item>
+          <md-list>
+            <md-list-item type="button">
+              <div slot="headline">Ads Help Center</div>
+            </md-list-item>
+            <md-list-item type="button">
+              <div slot="headline">Privacy Policy</div>
+            </md-list-item>
+            <md-list-item type="button">
+              <div slot="headline">Terms of Service</div>
+            </md-list-item>
+            <md-list-item type="button">
+              <div slot="headline">Legal notices</div>
+            </md-list-item>
           </md-list>
         </div>
       </md-list>
