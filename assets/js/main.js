@@ -271,14 +271,27 @@ function extractJsonData(htmlContent) {
 // **** REVISED searchForApps function ****
 function searchForApps(jsonElement) {
     console.log("--- Starting searchForApps ---");
+    // Log a small sample of the input data structure for inspection
+    console.log("Input jsonElement type:", typeof jsonElement);
+    if (Array.isArray(jsonElement)) {
+        console.log(`Input is Array, length: ${jsonElement.length}`);
+        if (jsonElement.length > 0) {
+            console.log("Sample of first element:", JSON.stringify(jsonElement[0], null, 2)?.substring(0, 500) + "..."); // Log structure
+        }
+    } else if (typeof jsonElement === 'object' && jsonElement !== null) {
+         console.log("Input is Object, keys:", Object.keys(jsonElement).join(', '));
+    }
+
+
     const appInfos = [];
     const knownPackages = new Set();
     let arraysChecked = 0;
     let potentialAppsFound = 0;
 
-    // Helper to flatten only strings from immediate children or grandchildren (more controlled)
+    // Helper (keep as is for now)
     function getRelevantStrings(element, depth = 0, maxDepth = 2) {
-        let strings = [];
+        // ... (keep the existing getRelevantStrings function) ...
+         let strings = [];
         if (depth > maxDepth) return strings;
 
         if (typeof element === 'string' && element.length < 200 && !element.startsWith('data:image')) {
@@ -292,67 +305,74 @@ function searchForApps(jsonElement) {
     }
 
     function traverse(element, path = "root") {
-        // *** Focus primarily on processing Arrays, like the Kotlin code ***
+        // *** Focus primarily on processing Arrays ***
         if (Array.isArray(element)) {
             arraysChecked++;
-            // console.log(`Checking Array at path: ${path} (Length: ${element.length})`); // Verbose logging
+             // console.log(`Checking Array: ${path} (Length: ${element.length})`); // Can be very verbose
 
-            // Get strings specifically within *this* array and its direct children
-            const currentLevelStrings = getRelevantStrings(element);
-            // console.log(`  Strings found in this array level: [${currentLevelStrings.join(', ')}]`); // Log strings
+             // Log arrays that seem promising (contain potential package names)
+             const hasComPackage = element.some(item => typeof item === 'string' && item.startsWith("com."));
+             if (hasComPackage) {
+                 console.log(`!!! Found array with potential package name at path: ${path}. Content sample:`, JSON.stringify(element)?.substring(0, 300) + "...");
+             }
 
-            // --- Try to find app data within this array, mimicking Kotlin logic ---
+
+            // --- Try to find app data within this array ---
+             // Heuristic: Look for arrays that contain a package name AND an icon URL structure somewhere within
+             const currentLevelStrings = getRelevantStrings(element); // Get strings from this level + children
             const packageName = currentLevelStrings.find(s => s.startsWith("com.") && !s.includes("google") && s.split('.').length >= 2 && s.length < 100);
 
             if (packageName && !knownPackages.has(packageName)) {
-                console.log(`  Potential package found: ${packageName} in array at ${path}`);
-                potentialAppsFound++;
+                // Check if there's also a potential icon URL *somewhere* in this array structure
+                const potentialIcon = currentLevelStrings.find(s => s.startsWith("https://play-lh.googleusercontent.com"));
 
-                // Find Icon URL within the same set of strings
-                let iconUrl = currentLevelStrings.find(s => s.startsWith("https://play-lh.googleusercontent.com") && s.includes('=') && s.match(/\.(png|jpg|jpeg|webp)/i));
-                iconUrl = iconUrl || DEFAULT_ICON_URL; // Fallback
+                if (potentialIcon) {
+                    // If both package and icon *might* be here, proceed with extraction
+                    console.log(`  >> Found potential package: ${packageName} AND icon hint in array at ${path}`);
+                    potentialAppsFound++;
 
-                // Find App Name
-                let appName = null;
+                    let iconUrl = currentLevelStrings.find(s => s.startsWith("https://play-lh.googleusercontent.com") && s.includes('=') && s.match(/\.(png|jpg|jpeg|webp)/i));
+                    iconUrl = iconUrl || potentialIcon || DEFAULT_ICON_URL; // Use potentialIcon as fallback before default
 
-                // 1. Try Kotlin's index heuristic (element[3])
-                if (element.length > 3 && typeof element[3] === 'string' && element[3] !== 'null' && element[3].match(/[a-zA-Z]/) && element[3].length < 50) {
-                     appName = element[3];
-                     console.log(`    Found name using index [3]: ${appName}`);
+                    let appName = null;
+
+                    // 1. Try index heuristic [3] - Must be directly in *this* array `element`
+                    if (element.length > 3 && typeof element[3] === 'string' && element[3] !== 'null' && element[3].match(/[a-zA-Z]/) && element[3].length < 50) {
+                        appName = element[3];
+                         console.log(`    Found name via index [3]: '${appName}'`);
+                    }
+
+                    // 2. Try alternative name heuristic (using `currentLevelStrings`)
+                    if (!appName) {
+                        appName = currentLevelStrings.find(s =>
+                            s !== packageName &&
+                            !s.startsWith("https://") &&
+                            s.match(/[a-zA-Z]/) && // Has letters
+                            s.length > 1 && s.length < 50 && // Reasonable length
+                            !/^\d+(\.\d+)?(M|k|B)?\+?$/.test(s) && // Not just number/rating/count
+                            !/stars?|reviews?|downloads?|installs?|developer|ratings?|null/i.test(s) && // Exclude meta words
+                            s !== "Install" && s !== "Installed" && s !== "Update" && s !== "Free" && s !== "Open" // Exclude button text
+                        );
+                         if (appName) console.log(`    Found name via alternative heuristic: '${appName}'`);
+                    }
+
+                    // 3. Final fallback
+                    appName = appName || packageName;
+                     if (appName === packageName && !knownPackages.has(packageName)) console.log(`    Falling back to package name for ${packageName}`);
+
+                    console.log(`    Adding App: Name='${appName.trim()}', Icon='${iconUrl}', Package='${packageName}'`);
+                    appInfos.push({
+                        name: appName.trim(),
+                        iconUrl: iconUrl,
+                        packageName: packageName
+                    });
+                    knownPackages.add(packageName);
+                } else {
+                    // console.log(`  Found package ${packageName} but no icon hint in array at ${path}`);
                 }
-
-                // 2. Try Kotlin's alternative name heuristic (within currentLevelStrings)
-                if (!appName) {
-                    appName = currentLevelStrings.find(s =>
-                        s !== packageName &&
-                        !s.startsWith("https://") &&
-                        s.match(/[a-zA-Z]/) &&
-                        s.length > 1 && s.length < 50 &&
-                        !/^\d+(\.\d+)?(M|k|B)?\+?$/.test(s) && // Exclude numbers/counts/ratings
-                        !/stars?|reviews?|downloads?|installs?|developer|ratings?|null/i.test(s) && // Exclude meta words and 'null'
-                        s !== "Install" && s !== "Installed" && s !== "Update" && s !== "Free" && s !== "Open"
-                     );
-                     if (appName) {
-                         console.log(`    Found name using alternative heuristic: ${appName}`);
-                     }
-                }
-
-                // 3. Final fallback to package name
-                appName = appName || packageName;
-                 if (appName === packageName) {
-                     console.log(`    Could not find specific name, falling back to package name.`);
-                 }
-
-                 console.log(`    Adding App: Name='${appName.trim()}', Icon='${iconUrl}', Package='${packageName}'`);
-                 appInfos.push({
-                    name: appName.trim(),
-                    iconUrl: iconUrl,
-                    packageName: packageName
-                });
-                knownPackages.add(packageName);
 
             }
-             // *** END of app finding logic for this array ***
+            // *** END of app finding logic for this specific array ***
 
 
             // Continue traversal *inside* this array's elements
@@ -362,12 +382,22 @@ function searchForApps(jsonElement) {
             // Traverse object values
             Object.keys(element).forEach(key => traverse(element[key], `${path}.${key}`));
         }
-        // Primitives (string, number, boolean, null) stop the traversal down that path
     }
 
     try {
-        traverse(jsonElement); // Start traversal
-        console.log(`--- App search finished. Checked ${arraysChecked} arrays. Found ${potentialAppsFound} potential apps based on package name. Final count: ${appInfos.length} ---`);
+        // **** STARTING POINT MODIFICATION ****
+        let startElement = jsonElement;
+        // If the initial element is an Array with exactly one element,
+        // assume the real data starts *inside* that element.
+        if (Array.isArray(jsonElement) && jsonElement.length === 1) {
+            console.log("Input is single-element array, starting traversal from element [0].");
+            startElement = jsonElement[0];
+        } else {
+            console.log("Input is not a single-element array, starting traversal from root.");
+        }
+
+        traverse(startElement); // Start traversal from the determined element
+        console.log(`--- App search finished. Checked ${arraysChecked} arrays. Found ${potentialAppsFound} potential apps. Final count: ${appInfos.length} ---`);
     } catch (error) {
         console.error("Error during app data traversal:", error);
     }
