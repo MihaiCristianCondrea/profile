@@ -1,222 +1,250 @@
-(function () {
-  'use strict';
-  const htmlElement = document.documentElement;
-  const body = document.body;
-  const menuButton = document.getElementById('menuButton');
-  const navDrawer = document.getElementById('navDrawer');
-  const closeDrawerButton = document.getElementById('closeDrawerButton');
-  const drawerOverlay = document.getElementById('drawerOverlay');
-  const moreToggle = document.getElementById('moreToggle');
-  const moreContent = document.getElementById('moreContent');
-  const appsToggle = document.getElementById('appsToggle');
-  const appsContent = document.getElementById('appsContent');
-  const themeSegmentedButtonSet = document.getElementById('themeSegmentedButtonSet');
+// --- Navigation Drawer Logic ---
+const menuButton = document.getElementById('menuButton');
+const navDrawer = document.getElementById('navDrawer');
+const closeDrawerButton = document.getElementById('closeDrawerButton');
+const drawerOverlay = document.getElementById('drawerOverlay');
+const moreToggle = document.getElementById('moreToggle');
+const moreContent = document.getElementById('moreContent');
+const appsToggle = document.getElementById('appsToggle');
+const appsContent = document.getElementById('appsContent');
 
-  function openDrawer() {
-    if (navDrawer && drawerOverlay) {
-      navDrawer.classList.add('open');
-      drawerOverlay.classList.add('open');
-      body.style.overflow = 'hidden';
-    } else {
-      console.error('Drawer or overlay element not found for opening.');
-    }
+function openDrawer() {
+  if (navDrawer && drawerOverlay) {
+    navDrawer.classList.add('open');
+    drawerOverlay.classList.add('open');
+    closeDrawerButton?.focus();
   }
+}
 
-  function closeDrawer() {
-    if (navDrawer && drawerOverlay) {
-      navDrawer.classList.remove('open');
-      drawerOverlay.classList.remove('open');
-      body.style.overflow = '';
-    } else {
-      console.error('Drawer or overlay element not found for closing.');
-    }
+function closeDrawer() {
+  if (navDrawer && drawerOverlay) {
+    navDrawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    menuButton?.focus();
   }
+}
 
-  function setupToggleSection(toggleButton, contentElement) {
-    if (!toggleButton || !contentElement) {
-      console.error(`Missing toggle button or content element for section setup.`);
-      return;
+if (menuButton) menuButton.addEventListener('click', openDrawer);
+if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
+if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && navDrawer?.classList.contains('open')) {
+    closeDrawer();
+  }
+});
+
+function toggleSection(toggleButton, contentElement) {
+  if (!toggleButton || !contentElement) return;
+  toggleButton.addEventListener('click', () => {
+    const isExpanded = contentElement.classList.contains('open');
+    if (contentElement.id === 'moreContent' && appsContent.classList.contains('open')) {
+      appsContent.classList.remove('open');
+      appsToggle.setAttribute('aria-expanded', 'false');
+      appsContent.setAttribute('aria-hidden', 'true');
+      appsToggle.classList.remove('expanded');
+    } else if (contentElement.id === 'appsContent' && moreContent.classList.contains('open')) {
+      moreContent.classList.remove('open');
+      moreToggle.setAttribute('aria-expanded', 'false');
+      moreContent.setAttribute('aria-hidden', 'true');
+      moreToggle.classList.remove('expanded');
     }
-    const iconSpan = toggleButton.querySelector('[slot="end"] md-icon span');
-    contentElement.setAttribute('aria-hidden', !contentElement.classList.contains('open'));
-    toggleButton.addEventListener('click', () => {
-      const isOpening = !contentElement.classList.contains('open');
-      const otherContent = contentElement.id === 'moreContent' ? appsContent : moreContent;
-      const otherToggle = contentElement.id === 'moreContent' ? appsToggle : moreToggle;
-      const otherIconSpan = otherToggle?.querySelector('[slot="end"] md-icon span');
+    contentElement.classList.toggle('open', !isExpanded);
+    toggleButton.classList.toggle('expanded', !isExpanded);
+    toggleButton.setAttribute('aria-expanded', String(!isExpanded));
+    contentElement.setAttribute('aria-hidden', String(isExpanded));
+  });
+}
+toggleSection(moreToggle, moreContent);
+toggleSection(appsToggle, appsContent);
 
-      if (isOpening && otherContent?.classList.contains('open')) {
-        otherContent.classList.remove('open');
-        otherContent.setAttribute('aria-hidden', 'true');
-        otherToggle?.setAttribute('aria-expanded', 'false');
-        if (otherIconSpan) otherIconSpan.classList.remove('rotated');
-      }
 
-      contentElement.classList.toggle('open', isOpening);
-      contentElement.setAttribute('aria-hidden', !isOpening);
-      toggleButton.setAttribute('aria-expanded', isOpening);
-      if (iconSpan) iconSpan.classList.toggle('rotated', isOpening);
+// --- Theme Toggle Logic (Using Icon Buttons) ---
+const lightThemeButton = document.getElementById('lightThemeButton');
+const darkThemeButton = document.getElementById('darkThemeButton');
+const autoThemeButton = document.getElementById('autoThemeButton');
+const themeButtons = [lightThemeButton, darkThemeButton, autoThemeButton];
+const htmlElement = document.documentElement;
+
+function applyTheme(theme) {
+  const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  htmlElement.classList.toggle('dark', isDark);
+
+  if (theme === 'light' || theme === 'dark') {
+    localStorage.setItem('theme', theme);
+  } else {
+    localStorage.removeItem('theme');
+  }
+  updateThemeButtonSelection(theme);
+}
+
+function updateThemeButtonSelection(selectedTheme) {
+  themeButtons.forEach(button => {
+    if (button) {
+      button.classList.toggle('selected', button.dataset.theme === selectedTheme);
+    }
+  });
+}
+
+themeButtons.forEach(button => {
+  if (button) {
+    button.addEventListener('click', () => {
+      applyTheme(button.dataset.theme);
     });
   }
+});
 
-  function applyTheme(theme) {
-    let effectiveTheme = theme;
-    htmlElement.classList.remove('light', 'dark');
+const savedTheme = localStorage.getItem('theme') || 'auto';
+applyTheme(savedTheme);
 
-    if (theme === 'auto') {
-      localStorage.removeItem('theme');
-    } else {
-      localStorage.setItem('theme', theme);
-    }
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+  if (!localStorage.getItem('theme')) {
+    applyTheme('auto');
+  }
+});
 
-    if (theme === 'dark') {
-      htmlElement.classList.add('dark');
-    } else if (theme === 'light') {
-      htmlElement.classList.add('light');
-    } else {
-      effectiveTheme = 'auto';
-      if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
-        htmlElement.classList.add('dark');
-      } else {
-        htmlElement.classList.add('light');
+
+// --- Blogger API Fetch Logic ---
+const apiKey = 'AIzaSyB9ed1fGZn8WrYwcZk-kUDDmfrTYPaXaRs';
+const blogUrl = 'https://d4rk7355608.blogspot.com/';
+const newsGrid = document.getElementById('newsGrid');
+const newsStatus = document.getElementById('news-status');
+const maxResults = 4; // <-- Updated to 4
+
+const get = (obj, path, defaultValue = undefined) => {
+  const travel = regexp =>
+    String.prototype.split
+      .call(path, regexp)
+      .filter(Boolean)
+      .reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), obj);
+  const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
+  return result === undefined || result === obj ? defaultValue : result;
+};
+
+function extractFirstImage(htmlContent) {
+  if (!htmlContent) return null;
+  const imgTagMatch = htmlContent.match(/<img[^>]+src="([^">]+)"/);
+  if (imgTagMatch && imgTagMatch[1] && !imgTagMatch[1].startsWith('data:image')) {
+    return imgTagMatch[1];
+  }
+  const bloggerImageMatch = htmlContent.match(/(https?:\/\/[^"]+\.googleusercontent\.com\/[^"]+)/);
+  if (bloggerImageMatch && bloggerImageMatch[1]) {
+    return bloggerImageMatch[1];
+  }
+  return null;
+}
+
+function createNewsCard(post) {
+  const card = document.createElement('md-outlined-card');
+  card.className = 'news-card';
+  const imageUrl = get(post, 'images.0.url') || extractFirstImage(post.content) || `https://placehold.co/600x360/e0e0e0/grey?text=No+Image`;
+  const placeholderImageUrl = `https://placehold.co/600x360/e0e0e0/grey?text=Image+not+found`;
+  const title = post.title || 'Untitled Post';
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = post.content || '';
+  const snippet = (tempDiv.textContent || tempDiv.innerText || '').substring(0, 150) + ((tempDiv.textContent || tempDiv.innerText || '').length > 150 ? '...' : '');
+  const postUrl = post.url || '#';
+
+  card.innerHTML = `
+                <div class="news-card-image">
+                     <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.src='${placeholderImageUrl}'; this.alt='Placeholder Image';">
+                </div>
+                <div class="news-card-content">
+                     <h3>${title}</h3>
+                     <p>${snippet || 'No content preview available.'}</p>
+                </div>
+                 <div class="news-card-actions">
+                     <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
+                        <md-text-button>Read More</md-text-button>
+                     </a>
+                 </div>
+            `;
+  return card;
+}
+
+async function fetchBlogPosts() {
+  if (!newsGrid || !newsStatus) return;
+
+  newsStatus.innerHTML = `<md-circular-progress indeterminate></md-circular-progress><span>Loading latest posts...</span>`;
+  newsStatus.style.display = 'flex';
+
+  let blogId = null;
+
+  try {
+    const blogInfoUrl = `https://www.googleapis.com/blogger/v3/blogs/byurl?url=${encodeURIComponent(blogUrl)}&key=${apiKey}`;
+    console.log("Fetching Blog ID from:", blogInfoUrl);
+    const blogInfoResponse = await fetch(blogInfoUrl);
+
+    if (!blogInfoResponse.ok) {
+      const errorData = await blogInfoResponse.json().catch(() => ({}));
+      console.error("Blogger API Error (fetching blog ID):", errorData);
+      let errorMsg = `Error fetching blog info: ${blogInfoResponse.status} ${blogInfoResponse.statusText}`;
+      if (get(errorData, 'error.message')) {
+        errorMsg += ` - ${get(errorData, 'error.message')}`;
+      } else if (blogInfoResponse.status === 404) {
+        errorMsg += ' - Blog URL not found or incorrect.';
       }
+      throw new Error(errorMsg);
     }
 
-    if (themeSegmentedButtonSet) {
-      const buttons = themeSegmentedButtonSet.querySelectorAll('md-segmented-button');
-      let buttonFound = false;
-      buttons.forEach(button => {
-        const shouldBeSelected = button.value === effectiveTheme;
-        if (button.selected !== shouldBeSelected) {
-          button.selected = shouldBeSelected;
-        }
-        if (shouldBeSelected) {
-          buttonFound = true;
-        }
+    const blogInfo = await blogInfoResponse.json();
+    blogId = blogInfo.id;
+    console.log("Found Blog ID:", blogId);
+
+    if (!blogId) {
+      throw new Error("Could not retrieve Blog ID from URL.");
+    }
+
+    const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${apiKey}&maxResults=${maxResults}&fetchImages=true&orderBy=published`;
+    console.log("Fetching Posts from:", postsUrl);
+    const postsResponse = await fetch(postsUrl);
+
+    if (!postsResponse.ok) {
+      const errorData = await postsResponse.json().catch(() => ({}));
+      console.error("Blogger API Error (fetching posts):", errorData);
+      let errorMsg = `Error fetching posts: ${postsResponse.status} ${postsResponse.statusText}`;
+      if (get(errorData, 'error.message')) {
+        errorMsg += ` - ${get(errorData, 'error.message')}`;
+      }
+      throw new Error(errorMsg);
+    }
+
+    const postsData = await postsResponse.json();
+
+    newsStatus.style.display = 'none';
+    newsGrid.innerHTML = '';
+
+    if (postsData.items && postsData.items.length > 0) {
+      postsData.items.forEach(post => {
+        const card = createNewsCard(post);
+        newsGrid.appendChild(card);
       });
-      if (!buttonFound) {
-        console.warn(`Could not find theme button with value: ${effectiveTheme} to select.`);
-      }
-    }
-  }
-
-
-  let touchStartX = 0;
-  let touchEndX = 0;
-  let isPotentiallySwiping = false;
-  const SWIPE_THRESHOLD = 50;
-  const EDGE_THRESHOLD = 40;
-
-  function handleTouchStart(e) {
-    const target = e.target;
-    if (navDrawer?.classList.contains('open') ||
-        target.closest('md-dialog, button, a, input, textarea, select, [role="button"], [data-swipe-ignore]') ||
-        window.getComputedStyle(target).overflowY === 'scroll' ||
-        target.closest('[style*="overflow"]'))
-    {
-      isPotentiallySwiping = false;
-      return;
-    }
-    const x = e.touches[0].clientX;
-    if (x < EDGE_THRESHOLD) {
-      touchStartX = x;
-      touchEndX = x;
-      isPotentiallySwiping = true;
     } else {
-      isPotentiallySwiping = false;
+      newsStatus.innerHTML = '<span>No posts found.</span>';
+      newsStatus.style.display = 'flex';
     }
+
+  } catch (error) {
+    console.error('Failed to fetch blog posts:', error);
+    newsStatus.style.display = 'flex';
+    newsStatus.innerHTML = `<span>Failed to load posts. ${error.message}. Check console for details.</span>`;
+    const loader = newsStatus.querySelector('md-circular-progress');
+    if (loader) loader.remove();
   }
+}
 
-  function handleTouchMove(e) {
-    if (isPotentiallySwiping) {
-      touchEndX = e.touches[0].clientX;
-    }
+// --- Copyright Footer Logic ---
+function setCopyrightYear() {
+  const copyrightElement = document.getElementById('copyright-message');
+  if (copyrightElement) {
+    const currentYear = new Date().getFullYear();
+    // Use textContent for security
+    copyrightElement.textContent = `Copyright © 2025-${currentYear}, D4rK`;
   }
+}
 
-  function handleTouchEnd(e) {
-    if (!isPotentiallySwiping) return;
-    const deltaX = touchEndX - touchStartX;
-    if (deltaX > SWIPE_THRESHOLD) {
-         openDrawer();
-    }
-    isPotentiallySwiping = false;
-    touchStartX = 0;
-    touchEndX = 0;
-  }
-
-  function initializeApp() {
-      if (menuButton) {
-        menuButton.addEventListener('click', openDrawer);
-      } else {
-        console.error('Menu button not found.');
-      }
-
-      if (closeDrawerButton) {
-        closeDrawerButton.addEventListener('click', closeDrawer);
-      } else {
-        console.error('Close drawer button not found.');
-      }
-
-      if (drawerOverlay) {
-        drawerOverlay.addEventListener('click', closeDrawer);
-      } else {
-        console.error('Drawer overlay not found.');
-      }
-
-      setupToggleSection(moreToggle, moreContent);
-      setupToggleSection(appsToggle, appsContent);
-
-      if (themeSegmentedButtonSet) {
-        themeSegmentedButtonSet.addEventListener('selection-change', (event) => {
-            const buttonSet = event.target;
-            const selectedButton = buttonSet.querySelector('md-segmented-button[selected]');
-            if (selectedButton && selectedButton.value) {
-                applyTheme(selectedButton.value);
-            } else {
-                console.warn('Could not reliably determine selected theme from selection-change event.');
-                 // Fallback: Check buttons directly after a short delay if needed
-                 setTimeout(() => {
-                     const newlySelected = buttonSet.querySelector('md-segmented-button[selected]');
-                     if (newlySelected && newlySelected.value) {
-                         applyTheme(newlySelected.value);
-                     }
-                 }, 0);
-            }
-        });
-      } else {
-        console.error('Theme segmented button set not found.');
-      }
-
-      body.addEventListener('touchstart', handleTouchStart, { passive: true });
-      body.addEventListener('touchmove', handleTouchMove, { passive: true });
-      body.addEventListener('touchend', handleTouchEnd);
-
-      const savedTheme = localStorage.getItem('theme');
-      const initialTheme = savedTheme || 'auto';
-      applyTheme(initialTheme);
-
-      try {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleSystemThemeChange = (event) => {
-          if (!localStorage.getItem('theme')) {
-            applyTheme('auto');
-          }
-        };
-
-        if (mediaQuery.addEventListener) {
-          mediaQuery.addEventListener('change', handleSystemThemeChange);
-        } else if (mediaQuery.addListener) {
-          mediaQuery.addListener(handleSystemThemeChange);
-        }
-      } catch (e) {
-        console.error('Failed to set up system theme change listener:', e);
-      }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-  } else {
-    initializeApp();
-  }
-
-})();
+// --- Initial Load ---
+document.addEventListener('DOMContentLoaded', () => {
+  fetchBlogPosts();
+  setCopyrightYear(); // Set copyright year on load
+});
