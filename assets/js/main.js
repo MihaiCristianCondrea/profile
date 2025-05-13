@@ -1,3 +1,4 @@
+// --- Navigation Drawer ---
 const menuButton = document.getElementById('menuButton');
 const navDrawer = document.getElementById('navDrawer');
 const closeDrawerButton = document.getElementById('closeDrawerButton');
@@ -6,6 +7,7 @@ const moreToggle = document.getElementById('moreToggle');
 const moreContent = document.getElementById('moreContent');
 const appsToggle = document.getElementById('appsToggle');
 const appsContent = document.getElementById('appsContent');
+
 function openDrawer() {
     if (navDrawer && drawerOverlay) {
         navDrawer.classList.add('open');
@@ -13,35 +15,39 @@ function openDrawer() {
         closeDrawerButton?.focus();
     }
 }
+
 function closeDrawer() {
-    if (navDrawer && drawerOverlay) {
+     if (navDrawer && drawerOverlay) {
         navDrawer.classList.remove('open');
         drawerOverlay.classList.remove('open');
         menuButton?.focus();
     }
 }
+
 if (menuButton) menuButton.addEventListener('click', openDrawer);
 if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
 if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && navDrawer?.classList.contains('open')) {
         closeDrawer();
     }
 });
+
 function toggleSection(toggleButton, contentElement) {
     if (!toggleButton || !contentElement) return;
     toggleButton.addEventListener('click', () => {
         const isExpanded = contentElement.classList.contains('open');
         if (contentElement.id === 'moreContent' && appsContent.classList.contains('open')) {
-            appsContent.classList.remove('open');
-            appsToggle.setAttribute('aria-expanded', 'false');
-            appsContent.setAttribute('aria-hidden', 'true');
-            appsToggle.classList.remove('expanded');
+             appsContent.classList.remove('open');
+             appsToggle.setAttribute('aria-expanded', 'false');
+             appsContent.setAttribute('aria-hidden', 'true');
+             appsToggle.classList.remove('expanded');
         } else if (contentElement.id === 'appsContent' && moreContent.classList.contains('open')) {
-            moreContent.classList.remove('open');
-            moreToggle.setAttribute('aria-expanded', 'false');
-            moreContent.setAttribute('aria-hidden', 'true');
-            moreToggle.classList.remove('expanded');
+             moreContent.classList.remove('open');
+             moreToggle.setAttribute('aria-expanded', 'false');
+             moreContent.setAttribute('aria-hidden', 'true');
+             moreToggle.classList.remove('expanded');
         }
         contentElement.classList.toggle('open', !isExpanded);
         toggleButton.classList.toggle('expanded', !isExpanded);
@@ -51,24 +57,30 @@ function toggleSection(toggleButton, contentElement) {
 }
 toggleSection(moreToggle, moreContent);
 toggleSection(appsToggle, appsContent);
+
+
+// --- Theme Toggle ---
 const lightThemeButton = document.getElementById('lightThemeButton');
 const darkThemeButton = document.getElementById('darkThemeButton');
 const autoThemeButton = document.getElementById('autoThemeButton');
 const themeButtons = [lightThemeButton, darkThemeButton, autoThemeButton];
 const htmlElement = document.documentElement;
+
 function applyTheme(theme) {
     const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     htmlElement.classList.toggle('dark', isDark);
     localStorage.setItem('theme', theme === 'auto' ? 'auto' : (isDark ? 'dark' : 'light'));
     updateThemeButtonSelection(theme);
 }
+
 function updateThemeButtonSelection(selectedTheme) {
     themeButtons.forEach(button => {
         if (button) {
-            button.classList.toggle('selected', button.dataset.theme === selectedTheme);
+           button.classList.toggle('selected', button.dataset.theme === selectedTheme);
         }
     });
 }
+
 themeButtons.forEach(button => {
     if (button) {
         button.addEventListener('click', () => {
@@ -76,32 +88,39 @@ themeButtons.forEach(button => {
         });
     }
 });
+
 const savedTheme = localStorage.getItem('theme') || 'auto';
 applyTheme(savedTheme);
+
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-    if (localStorage.getItem('theme') === 'auto') { 
-        applyTheme('auto');
+    if (localStorage.getItem('theme') === 'auto') {
+         applyTheme('auto');
     }
 });
+
+// --- Blogger API ---
 const appConfig = {
     blog: {
-        url: 'https:
+        url: 'https://d4rk7355608.blogspot.com/',
         maxResults: 4,
-        _getApiKey: function () {
+        _getApiKey: function() {
             const keyParts = ["QUl6YVN5Qj", "llZDFmR1puOFd", "yWXdjWmsta1V", "ERG1mclRZUGFY", "YVJz"];
             const encodedKey = keyParts.join('');
             return typeof window !== 'undefined' && window.atob ? window.atob(encodedKey) : '';
         }
     }
 };
-const newsGridElement = document.getElementById('newsGrid'); 
-const newsStatusElement = document.getElementById('news-status'); 
-const getNestedValue = (obj, path, defaultValue = undefined) => { 
+
+const newsGridElement = document.getElementById('newsGrid');
+const newsStatusElement = document.getElementById('news-status');
+
+const getNestedValue = (obj, path, defaultValue = undefined) => {
     const travel = regexp => String.prototype.split.call(path, regexp).filter(Boolean).reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), obj);
     const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
     return result === undefined || result === obj ? defaultValue : result;
 };
-function extractFirstImageFromHtml(htmlContent) { 
+
+function extractFirstImageFromHtml(htmlContent) {
     if (!htmlContent) return null;
     const imgTagMatch = htmlContent.match(/<img[^>]+src="([^">]+)"/);
     if (imgTagMatch && imgTagMatch[1] && !imgTagMatch[1].startsWith('data:image')) return imgTagMatch[1];
@@ -109,39 +128,45 @@ function extractFirstImageFromHtml(htmlContent) {
     if (bloggerImageMatch && bloggerImageMatch[1]) return bloggerImageMatch[1];
     return null;
 }
-function createBlogPostCard(post) { 
+
+function createBlogPostCard(post) {
     const card = document.createElement('md-outlined-card');
     card.className = 'news-card';
-    const placeholderImageUrl = `https:
+    const placeholderImageUrl = `https://via.placeholder.com/600x400/EEEEEE/777777?text=Image+Not+Available`;
     const imageUrl = getNestedValue(post, 'images.0.url') || extractFirstImageFromHtml(post.content) || placeholderImageUrl;
     const title = post.title || 'Untitled Post';
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = post.content || '';
     const snippet = (tempDiv.textContent || tempDiv.innerText || '').substring(0, 150) + ((tempDiv.textContent || tempDiv.innerText || '').length > 150 ? '...' : '');
     const postUrl = post.url || '#';
+
     card.innerHTML = `
-                <div class="news-card-image">
-                     <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.src='${placeholderImageUrl}'; this.alt='Placeholder Image';">
-                </div>
-                <div class="news-card-content">
-                     <h3>${title}</h3>
-                     <p>${snippet || 'No content preview available.'}</p>
-                </div>
-                 <div class="news-card-actions">
-                     <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
-                        <md-text-button>Read More</md-text-button>
-                     </a>
-                 </div>`;
+        <div class="news-card-image">
+             <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.src='${placeholderImageUrl}'; this.alt='Placeholder Image';">
+        </div>
+        <div class="news-card-content">
+             <h3>${title}</h3>
+             <p>${snippet || 'No content preview available.'}</p>
+        </div>
+         <div class="news-card-actions">
+             <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
+                <md-text-button>Read More</md-text-button>
+             </a>
+         </div>`;
     return card;
 }
+
 async function fetchBlogPosts() {
     if (!newsGridElement || !newsStatusElement) return;
+
     newsStatusElement.innerHTML = `<md-circular-progress indeterminate></md-circular-progress><span>Loading latest posts...</span>`;
     newsStatusElement.style.display = 'flex';
+
     let blogId = null;
     const currentApiKey = appConfig.blog._getApiKey();
     const currentBlogUrl = appConfig.blog.url;
     const currentMaxResults = appConfig.blog.maxResults;
+
     if (!currentApiKey) {
         newsStatusElement.style.display = 'flex';
         newsStatusElement.innerHTML = `<span>Configuration error: API key not available.</span>`;
@@ -149,8 +174,9 @@ async function fetchBlogPosts() {
         if (loader) loader.remove();
         return;
     }
+
     try {
-        const blogInfoUrl = `https:
+        const blogInfoUrl = `https://www.googleapis.com/blogger/v3/blogs/byurl?url=${encodeURIComponent(currentBlogUrl)}&key=${currentApiKey}`;
         const blogInfoResponse = await fetch(blogInfoUrl);
         if (!blogInfoResponse.ok) {
             const errorData = await blogInfoResponse.json().catch(() => ({}));
@@ -162,7 +188,8 @@ async function fetchBlogPosts() {
         const blogInfo = await blogInfoResponse.json();
         blogId = blogInfo.id;
         if (!blogId) throw new Error("Could not retrieve Blog ID from URL.");
-        const postsUrl = `https:
+
+        const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`;
         const postsResponse = await fetch(postsUrl);
         if (!postsResponse.ok) {
             const errorData = await postsResponse.json().catch(() => ({}));
@@ -171,6 +198,7 @@ async function fetchBlogPosts() {
             throw new Error(errorMsg);
         }
         const postsData = await postsResponse.json();
+
         newsStatusElement.style.display = 'none';
         newsGridElement.innerHTML = '';
         if (postsData.items && postsData.items.length > 0) {
@@ -186,50 +214,59 @@ async function fetchBlogPosts() {
         if (loader) loader.remove();
     }
 }
+
+// --- Portfolio Dialog ---
 const viewPortfolioButton = document.getElementById('viewPortfolioButton');
 const portfolioDialog = document.getElementById('portfolioDialog');
 const portfolioDialogContent = document.getElementById('portfolioDialogContent');
 const closePortfolioDialogButton = document.getElementById('closePortfolioDialogButton');
+
 function showPortfolioDialog() {
     if (portfolioDialog) {
-        portfolioDialogContent.innerHTML = `
-                    <md-circular-progress indeterminate></md-circular-progress>
-                    <span style="margin-top: 1rem;">Loading portfolio...</span>`;
+         portfolioDialogContent.innerHTML = `
+            <md-circular-progress indeterminate></md-circular-progress>
+            <span style="margin-top: 1rem;">Loading portfolio...</span>`;
         portfolioDialog.show();
         setTimeout(() => {
-            portfolioDialogContent.innerHTML = `
-                        <span class="material-symbols-outlined" style="font-size: 48px; color: var(--app-secondary-text-color);">code_off</span>
-                        <p style="margin-top: 1rem; color: var(--app-secondary-text-color);">
-                            Fetching live app data directly from the Play Store isn't feasible from the browser due to security restrictions (CORS) and technical challenges (dynamic content).
-                        </p>
-                        <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--app-secondary-text-color);">
-                            A backend service would be needed to perform this reliably.
-                        </p>
-                        <p style="margin-top: 1rem;">
-                            You can view my apps directly on the
-                            <a href="https:
-                                Google Play Store developer page
-                            </a>.
-                        </p>
-                    `;
+             portfolioDialogContent.innerHTML = `
+                <span class="material-symbols-outlined" style="font-size: 48px; color: var(--app-secondary-text-color);">code_off</span>
+                <p style="margin-top: 1rem; color: var(--app-secondary-text-color);">
+                    Fetching live app data directly from the Play Store isn't feasible from the browser due to security restrictions (CORS) and technical challenges (dynamic content).
+                </p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--app-secondary-text-color);">
+                    A backend service would be needed to perform this reliably.
+                </p>
+                <p style="margin-top: 1rem;">
+                    You can view my apps directly on the
+                    <a href="https://play.google.com/store/apps/dev?id=5390214922640123642" target="_blank" rel="noopener noreferrer">
+                        Google Play Store developer page
+                    </a>.
+                </p>
+            `;
         }, 1500);
     }
 }
+
 if (viewPortfolioButton) {
     viewPortfolioButton.addEventListener('click', showPortfolioDialog);
 }
 if (closePortfolioDialogButton && portfolioDialog) {
-    closePortfolioDialogButton.addEventListener('click', () => {
-        portfolioDialog.close();
-    });
+     closePortfolioDialogButton.addEventListener('click', () => {
+         portfolioDialog.close();
+     });
 }
+
+
+// --- Copyright Footer ---
 function setCopyrightYear() {
     const copyrightElement = document.getElementById('copyright-message');
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
-        copyrightElement.textContent = `Copyright © 2025-${currentYear}, D4rK`; 
+        copyrightElement.textContent = `Copyright © 2025-${currentYear}, D4rK`;
     }
 }
+
+// --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
     fetchBlogPosts();
     setCopyrightYear();
