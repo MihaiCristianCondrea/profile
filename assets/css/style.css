@@ -283,7 +283,8 @@ md-assist-chip {
 
 md-outlined-card.news-card {
   --md-outlined-card-container-shape: 16px;
-
+  border-radius: 16px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background-color: var(--app-card-bg-color);
