@@ -8,6 +8,12 @@ const moreContent = document.getElementById('moreContent');
 const appsToggle = document.getElementById('appsToggle');
 const appsContent = document.getElementById('appsContent');
 
+const mainContentPage = document.getElementById('mainContentPage');
+const privacyPolicyPage = document.getElementById('privacyPolicyPage');
+const navHomeLink = document.getElementById('navHomeLink');
+const navPrivacyPolicyLink = document.getElementById('navPrivacyPolicyLink');
+const appBarHeadline = document.getElementById('appBarHeadline');
+
 function openDrawer() {
     if (navDrawer && drawerOverlay) {
         navDrawer.classList.add('open');
@@ -58,6 +64,35 @@ function toggleSection(toggleButton, contentElement) {
 toggleSection(moreToggle, moreContent);
 toggleSection(appsToggle, appsContent);
 
+function showPage(pageId) {
+        // Hide all pages
+        mainContentPage.classList.remove('active');
+        mainContentPage.classList.add('page-section'); // Ensure it has the base class
+        privacyPolicyPage.classList.remove('active');
+        privacyPolicyPage.classList.add('page-section'); // Ensure it has the base class
+        // Show the selected page
+        if (pageId === 'main') {
+                mainContentPage.classList.add('active');
+                if (appBarHeadline) appBarHeadline.textContent = "Mihai's Profile";
+        } else if (pageId === 'privacy') {
+                privacyPolicyPage.classList.add('active');
+                if (appBarHeadline) appBarHeadline.textContent = "Privacy Policy";
+        }
+        window.scrollTo(0, 0); // Scroll to top on page change
+        closeDrawer(); // Close drawer after navigation
+}
+if (navHomeLink) {
+        navHomeLink.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior if it's an <a>
+                showPage('main');
+        });
+}
+if (navPrivacyPolicyLink) {
+        navPrivacyPolicyLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('privacy');
+        });
+}
 
 // --- Theme Toggle ---
 const lightThemeButton = document.getElementById('lightThemeButton');
@@ -270,6 +305,7 @@ function setCopyrightYear() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchBlogPosts();
     setCopyrightYear();
+     showPage('main'); // Ensure main page is shown by default
 });
 
 const appBar = document.getElementById('topAppBar');
