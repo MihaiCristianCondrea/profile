@@ -271,3 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchBlogPosts();
     setCopyrightYear();
 });
+
+const appBar = document.getElementById('topAppBar');
+window.addEventListener('scroll', () => {
+    const isScrolled = window.scrollY > 0;
+    appBar.classList.toggle('scrolled', isScrolled);
+});
