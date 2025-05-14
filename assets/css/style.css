@@ -196,6 +196,48 @@ md-filled-card.profile-card {
   margin-bottom: 1rem;
 }
 
+/* Page content sections */
+.page-section {
+  display: none;
+  /* Hidden by default */
+}
+
+.page-section.active {
+  display: block;
+  /* Shown when active */
+}
+
+/* Optional: style headline and icons */
+md-top-app-bar [slot="headline"] {
+  color: var(--md-sys-color-on-surface, #000000);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+md-top-app-bar md-icon,
+md-top-app-bar [slot="navigationIcon"],
+md-top-app-bar [slot="actionIcon"] {
+  color: var(--md-sys-color-on-surface, #000000);
+}
+
+/* Optional: Specific styling for the headline if general align-items is not enough */
+#appBarHeadline {
+  display: inline-flex;
+  /* Helps with alignment in some cases */
+  align-items: center;
+  /* Vertically center text within the span if it wraps or has specific height */
+  line-height: normal;
+  /* Reset line-height if inherited strangely */
+  margin: 0;
+  padding: 0;
+  /* Reset padding which might affect perceived alignment */
+  /* Tailwind might add margins/paddings to spans, this resets them for the headline */
+}
+
+.card-actions a {
+  text-decoration: none;
+}
+
 .profile-avatar {
   width: 60px;
   height: 60px;
@@ -605,4 +647,133 @@ md-list-item[type="button"].expanded md-icon[slot="end"] {
   background-color: var(--app-bg-color);
 
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+#portfolioDialog [slot="headline"] {
+  font-family: 'Poppins', sans-serif;
+}
+
+#portfolioDialog [slot="content"] {
+  font-family: 'Poppins', sans-serif;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.6;
+}
+
+#portfolioDialog md-circular-progress {
+  margin-bottom: 1rem;
+}
+
+#portfolioDialog [slot="actions"] {
+  padding-bottom: 1rem;
+}
+
+#portfolioDialog a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+}
+
+#portfolioDialog a:hover {
+  text-decoration: none;
+}
+
+/* Privacy Policy Page Specific Styles */
+#privacyPolicyPageContainer {
+  padding: 1.5rem;
+  background-color: var(--app-card-bg-color);
+  /* Use card background for consistency */
+  border-radius: 16px;
+  margin-top: 1rem;
+  /* Space from top app bar if directly under content-wrapper */
+}
+
+#privacyPolicyPageContainer img {
+  /* Style for images within privacy policy */
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--app-border-color);
+}
+
+#privacyPolicyPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  background-color: var(--app-bg-color);
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+padding-bottom: 0.5rem;
+}
+
+#privacyPolicyPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+#privacyPolicyPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#privacyPolicyPageContainer h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+#privacyPolicyPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyPageContainer strong {
+  font-weight: 500;
+  /* Poppins medium */
+}
+
+#privacyPolicyPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+}
+
+#privacyPolicyPageContainer a:hover {
+  text-decoration: none;
+}
+
+#privacyPolicyPageContainer ul {
+  list-style: disc;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  /* Add some padding for list items */
+}
+
+#privacyPolicyPageContainer li {
+  margin-bottom: 0.75rem;
+  /* Increased spacing for readability */
+  line-height: 1.7;
+}
+
+#privacyPolicyPageContainer li p {
+  /* Ensure paragraphs inside list items have consistent spacing */
+  margin-bottom: 0.25rem;
 }
