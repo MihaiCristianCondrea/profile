@@ -522,6 +522,42 @@ md-elevated-card.contribute-card {
   transform: translateX(0);
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  font-size: 20px;
+  /* Ideal for button icon */
+  line-height: 1;
+}
+
+md-filled-button md-icon {
+  margin-inline-end: 8px;
+  /* proper spacing for LTR languages */
+  display: inline-flex;
+  align-items: center;
+}
+
+.contribute-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contribute-actions {
+  display: flex;
+  justify-content: flex-start;
+  /* left-aligned action */
+}
+
+md-filled-button {
+  display: inline-flex;
+  align-items: center;
+}
+
 .drawer-overlay {
   position: fixed;
   top: 0;
