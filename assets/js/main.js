@@ -9,9 +9,9 @@ const appsToggle = document.getElementById('appsToggle');
 const appsContent = document.getElementById('appsContent');
 
 const mainContentPage = document.getElementById('mainContentPage');
-const privacyPolicyPage = document.getElementById('privacyPolicyPage');
+
 const navHomeLink = document.getElementById('navHomeLink');
-const navPrivacyPolicyLink = document.getElementById('navPrivacyPolicyLink');
+
 const appBarHeadline = document.getElementById('appBarHeadline');
 
 function openDrawer() {
@@ -65,33 +65,19 @@ toggleSection(moreToggle, moreContent);
 toggleSection(appsToggle, appsContent);
 
 function showPage(pageId) {
-        // Hide all pages
-        mainContentPage.classList.remove('active');
-        mainContentPage.classList.add('page-section'); // Ensure it has the base class
-        privacyPolicyPage.classList.remove('active');
-        privacyPolicyPage.classList.add('page-section'); // Ensure it has the base class
-        // Show the selected page
+    if (mainContentPage) { 
         if (pageId === 'main') {
-                mainContentPage.classList.add('active');
-                if (appBarHeadline) appBarHeadline.textContent = "Mihai's Profile";
-        } else if (pageId === 'privacy') {
-                privacyPolicyPage.classList.add('active');
-                if (appBarHeadline) appBarHeadline.textContent = "Privacy Policy";
+            mainContentPage.classList.add('active');
+            mainContentPage.classList.remove('page-section');
+            if (appBarHeadline) appBarHeadline.textContent = "Mihai's Profile";
+        } else {
+            mainContentPage.classList.remove('active');
+            mainContentPage.classList.add('page-section');
         }
-        window.scrollTo(0, 0); // Scroll to top on page change
-        closeDrawer(); // Close drawer after navigation
-}
-if (navHomeLink) {
-        navHomeLink.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent default link behavior if it's an <a>
-                showPage('main');
-        });
-}
-if (navPrivacyPolicyLink) {
-        navPrivacyPolicyLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                showPage('privacy');
-        });
+    }
+
+    window.scrollTo(0, 0);
+    closeDrawer();
 }
 
 // --- Theme Toggle ---
@@ -250,47 +236,6 @@ async function fetchBlogPosts() {
     }
 }
 
-// --- Portfolio Dialog ---
-const viewPortfolioButton = document.getElementById('viewPortfolioButton');
-const portfolioDialog = document.getElementById('portfolioDialog');
-const portfolioDialogContent = document.getElementById('portfolioDialogContent');
-const closePortfolioDialogButton = document.getElementById('closePortfolioDialogButton');
-
-function showPortfolioDialog() {
-    if (portfolioDialog) {
-         portfolioDialogContent.innerHTML = `
-            <md-circular-progress indeterminate></md-circular-progress>
-            <span style="margin-top: 1rem;">Loading portfolio...</span>`;
-        portfolioDialog.show();
-        setTimeout(() => {
-             portfolioDialogContent.innerHTML = `
-                <span class="material-symbols-outlined" style="font-size: 48px; color: var(--app-secondary-text-color);">code_off</span>
-                <p style="margin-top: 1rem; color: var(--app-secondary-text-color);">
-                    Fetching live app data directly from the Play Store isn't feasible from the browser due to security restrictions (CORS) and technical challenges (dynamic content).
-                </p>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--app-secondary-text-color);">
-                    A backend service would be needed to perform this reliably.
-                </p>
-                <p style="margin-top: 1rem;">
-                    You can view my apps directly on the
-                    <a href="https://play.google.com/store/apps/dev?id=5390214922640123642" target="_blank" rel="noopener noreferrer">
-                        Google Play Store developer page
-                    </a>.
-                </p>
-            `;
-        }, 1500);
-    }
-}
-
-if (viewPortfolioButton) {
-    viewPortfolioButton.addEventListener('click', showPortfolioDialog);
-}
-if (closePortfolioDialogButton && portfolioDialog) {
-     closePortfolioDialogButton.addEventListener('click', () => {
-         portfolioDialog.close();
-     });
-}
-
 
 // --- Copyright Footer ---
 function setCopyrightYear() {
@@ -305,7 +250,7 @@ function setCopyrightYear() {
 document.addEventListener('DOMContentLoaded', () => {
     fetchBlogPosts();
     setCopyrightYear();
-     showPage('main'); // Ensure main page is shown by default
+     showPage('main');
 });
 
 const appBar = document.getElementById('topAppBar');
