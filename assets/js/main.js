@@ -80,6 +80,15 @@ function showPage(pageId) {
     closeDrawer();
 }
 
+if (navHomeLink) {
+    navHomeLink.addEventListener('click', (e) => {
+        if (navHomeLink.getAttribute('href') === 'index.html' || navHomeLink.getAttribute('href') === '#') {
+             e.preventDefault();
+        }
+        showPage('main');
+    });
+}
+
 // --- Theme Toggle ---
 const lightThemeButton = document.getElementById('lightThemeButton');
 const darkThemeButton = document.getElementById('darkThemeButton');
