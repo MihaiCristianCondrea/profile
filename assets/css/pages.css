@@ -1,0 +1,228 @@
+/* --- Privacy Policy Page Specific Styles --- */
+#privacyPolicyPageContainer {
+  padding: 1.5rem;
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  margin-top: 1rem;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyPageContainer img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid var(--app-border-color);
+}
+
+#privacyPolicyPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--app-border-color);
+  padding-bottom: 0.5rem;
+}
+
+#privacyPolicyPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+#privacyPolicyPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#privacyPolicyPageContainer h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+#privacyPolicyPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyPageContainer strong {
+  font-weight: 500;
+}
+
+#privacyPolicyPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+#privacyPolicyPageContainer a:hover,
+#privacyPolicyPageContainer a:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+#privacyPolicyPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#privacyPolicyPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#privacyPolicyPageContainer li p {
+  margin-bottom: 0.25rem;
+}
+
+
+/* --- Legal Notices Page Specific Styles --- */
+#legalNoticesPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#legalNoticesPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+#legalNoticesPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#legalNoticesPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+#legalNoticesPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#legalNoticesPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#legalNoticesPageContainer .notice-item {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--app-border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#legalNoticesPageContainer .notice-item h3 {
+  font-size: 1.15rem;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+#legalNoticesPageContainer .notice-item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 0.5rem;
+}
+
+#legalNoticesPageContainer .notice-item p:last-child {
+  margin-bottom: 0;
+}
+
+/* Ensure Copyright line uses primary text color */
+#legalNoticesPageContainer .notice-item p:first-of-type {
+    color: var(--app-text-color);
+}
+#legalNoticesPageContainer .notice-item p:first-of-type strong {
+    color: var(--app-text-color);
+}
+
+#legalNoticesPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+}
+
+#legalNoticesPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#legalNoticesPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#legalNoticesPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#legalNoticesPageContainer a:hover,
+#legalNoticesPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+#legalNoticesPageContainer .last-updated {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--app-border-color);
+  text-align: center;
+  margin-bottom: 0;
+}
+
+/* Adjustments for heading spacing */
+#legalNoticesPageContainer h1 + h2,
+#legalNoticesPageContainer p + h2 {
+    margin-top: 2rem;
+}
+
+/* Ensure last paragraph in the main card content has no bottom margin if it's before .last-updated */
+#legalNoticesPageContainer > p:last-of-type:not(.last-updated) {
+    margin-bottom: 0;
+}
