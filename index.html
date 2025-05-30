@@ -33,7 +33,7 @@
         </div>
         <div class="drawer-content">
             <md-list>
-                <md-list-item href="index.html" id="navHomeLink"> <md-icon slot="start"><span
+                <md-list-item href="#home" id="navHomeLink"> <md-icon slot="start"><span
                             class="material-symbols-outlined">home</span></md-icon>
                     <div slot="headline">Home</div>
                 </md-list-item>
@@ -53,7 +53,7 @@
                 </md-list-item>
                 <div class="nested-list" id="moreContent" role="group" aria-hidden="true">
                     <md-list>
-                        <md-list-item href="pages/privacy-policy.html">
+                        <md-list-item href="#privacy-policy" id="navPrivacyPolicyLink">
                             <div slot="headline">Privacy Policy</div>
                         </md-list-item>
                         <md-list-item href="#">
@@ -107,8 +107,7 @@
         <span slot="headline" id="appBarHeadline">Mihai's Profile</span>
     </md-top-app-bar>
 
-    <div class="content-wrapper">
-        <!-- This is where your main profile content goes -->
+    <div class="content-wrapper" id="pageContentArea">
         <div id="mainContentPage" class="page-section active">
             <md-filled-card class="profile-card">
                 <div class="card-content">
@@ -205,7 +204,12 @@
         <span id="copyright-message"></span>
     </footer>
 
-    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/utils.js" defer></script>
+    <script src="assets/js/theme.js" defer></script>
+    <script src="assets/js/navigationDrawer.js" defer></script>
+    <script src="assets/js/bloggerApi.js" defer></script>
+    <script src="assets/js/router.js" defer></script>
+    <script src="assets/js/app.js" defer></script>
 
 </body>
 </html>
