@@ -65,7 +65,7 @@ toggleSection(moreToggle, moreContent);
 toggleSection(appsToggle, appsContent);
 
 function showPage(pageId) {
-    if (mainContentPage) { 
+    if (mainContentPage) {
         if (pageId === 'main') {
             mainContentPage.classList.add('active');
             mainContentPage.classList.remove('page-section');
@@ -75,7 +75,6 @@ function showPage(pageId) {
             mainContentPage.classList.add('page-section');
         }
     }
-
     window.scrollTo(0, 0);
     closeDrawer();
 }
@@ -251,19 +250,32 @@ function setCopyrightYear() {
     const copyrightElement = document.getElementById('copyright-message');
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
-        copyrightElement.textContent = `Copyright © 2025-${currentYear}, D4rK`;
+        if (!copyrightElement.textContent.includes(currentYear)) {
+             copyrightElement.textContent = `Copyright © ${new Date().getFullYear() === 2025 ? '2025' : `2025-${currentYear}`}, D4rK`;
+        }
     }
 }
 
 // --- Initial Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    fetchBlogPosts();
     setCopyrightYear();
-     showPage('main');
+    if (document.getElementById('mainContentPage')) {
+        showPage('main');
+        if (typeof fetchBlogPosts === 'function') {
+            fetchBlogPosts();
+        }
+    }
+
+    const menuButton = document.getElementById('menuButton');
+    const navDrawer = document.getElementById('navDrawer');
+    const closeDrawerButton = document.getElementById('closeDrawerButton');
 });
 
+
 const appBar = document.getElementById('topAppBar');
-window.addEventListener('scroll', () => {
-    const isScrolled = window.scrollY > 0;
-    appBar.classList.toggle('scrolled', isScrolled);
-});
+if (appBar) {
+    window.addEventListener('scroll', () => {
+        const isScrolled = window.scrollY > 0;
+        appBar.classList.toggle('scrolled', isScrolled);
+    });
+}

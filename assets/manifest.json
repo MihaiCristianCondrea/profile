@@ -1,7 +1,7 @@
 {
   "name": "Mihai's Profile",
   "short_name": "Mihai",
-  "start_url": "/",
+  "start_url": "/home/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3DDC84",
