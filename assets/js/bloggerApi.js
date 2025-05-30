@@ -23,7 +23,7 @@ function createBlogPostCard(post) {
     const imageUrl = getNestedValue(post, 'images.0.url') || extractFirstImageFromHtml(post.content) || placeholderImageUrl;
     const title = post.title || 'Untitled Post';
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = post.content || ''; // Ensure post.content is treated as HTML
+    tempDiv.innerHTML = post.content || '';
     const snippet = (tempDiv.textContent || tempDiv.innerText || '').substring(0, 150) + ((tempDiv.textContent || tempDiv.innerText || '').length > 150 ? '...' : '');
     const postUrl = post.url || '#';
 

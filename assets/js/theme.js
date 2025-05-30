@@ -8,7 +8,7 @@ function initTheme() {
     lightThemeButton = getDynamicElement('lightThemeButton');
     darkThemeButton = getDynamicElement('darkThemeButton');
     autoThemeButton = getDynamicElement('autoThemeButton');
-    themeButtons = [lightThemeButton, darkThemeButton, autoThemeButton].filter(Boolean); // Filter out nulls if elements don't exist
+    themeButtons = [lightThemeButton, darkThemeButton, autoThemeButton].filter(Boolean);
     htmlElement = document.documentElement;
 
     themeButtons.forEach(button => {

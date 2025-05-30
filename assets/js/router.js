@@ -24,6 +24,7 @@ async function loadPageContent(pageId, updateHistory = true) {
 
     let pageTitle = "Mihai's Profile";
     let newUrlFragment = 'home';
+    let pagePath = '';
 
     if (!pageContentArea) {
         console.error("Router: pageContentArea element not set. Call initRouter first.");
@@ -38,6 +39,7 @@ async function loadPageContent(pageId, updateHistory = true) {
     }
     newUrlFragment = pageId;
 
+    let errorContent = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page. An unknown error occurred.</p></div>`;
 
     if (pageId === 'home') {
         pageContentArea.innerHTML = initialHomepageHTML;
@@ -45,34 +47,48 @@ async function loadPageContent(pageId, updateHistory = true) {
         if (typeof fetchBlogPosts === 'function' && document.getElementById('newsGrid')) {
             fetchBlogPosts();
         }
-    } else if (pageId === 'privacy-policy') {
-        try {
-            const response = await fetch('pages/more/privacy-policy.html');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const contentHTML = await response.text();
-            pageContentArea.innerHTML = contentHTML;
-            pageTitle = 'Privacy Policy';
-        } catch (error) {
-            console.error('Error loading privacy policy:', error);
-            pageContentArea.innerHTML = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page. ${error.message}</p></div>`;
-            pageTitle = 'Error';
-        }
-    } else if (pageId === 'ads-help-center') {
-        try {
-            const response = await fetch('pages/more/apps/ads-help-center.html');
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const contentHTML = await response.text();
-            pageContentArea.innerHTML = contentHTML;
-            pageTitle = 'Ads Help Center';
-        } catch (error) {
-            console.error('Error loading Ads Help Center:', error);
-            pageContentArea.innerHTML = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page. ${error.message}</p></div>`;
-            pageTitle = 'Error';
-        }
     } else {
-        console.warn('Router: Unknown page:', pageId);
-        pageContentArea.innerHTML = `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
-        pageTitle = 'Not Found';
+        switch (pageId) {
+            case 'privacy-policy':
+                pagePath = 'pages/more/privacy-policy.html';
+                pageTitle = 'Privacy Policy';
+                break;
+            case 'ads-help-center':
+                pagePath = 'pages/more/apps/ads-help-center.html';
+                pageTitle = 'Ads Help Center';
+                break;
+            case 'legal-notices':
+                pagePath = 'pages/more/apps/legal-notices.html';
+                pageTitle = 'Legal Notices';
+                break;
+  
+            default:
+                console.warn('Router: Unknown page:', pageId);
+                pageContentArea.innerHTML = `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
+                pageTitle = 'Not Found';
+                if (appBarHeadline) appBarHeadline.textContent = pageTitle;
+                document.title = pageTitle + " - Mihai's Profile";
+                if (updateHistory && window.history.pushState) {
+                     window.history.pushState({ page: pageId }, pageTitle, `#${newUrlFragment}`);
+                }
+                window.scrollTo(0, 0);
+                updateActiveNavLink(newUrlFragment);
+                return;
+        }
+
+        try {
+            const response = await fetch(pagePath);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status} for ${pagePath}`);
+            }
+            const contentHTML = await response.text();
+            pageContentArea.innerHTML = contentHTML;
+        } catch (error) {
+            console.error(`Error loading ${pageTitle}:`, error);
+            errorContent = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page: ${pageTitle}. ${error.message}</p></div>`;
+            pageContentArea.innerHTML = errorContent;
+            pageTitle = 'Error';
+        }
     }
 
     if (appBarHeadline) appBarHeadline.textContent = pageTitle;

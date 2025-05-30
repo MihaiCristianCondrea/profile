@@ -63,7 +63,6 @@ function _initToggleSection(toggleButton, contentElement) {
     toggleButton.addEventListener('click', () => {
         const isExpanded = contentElement.classList.contains('open');
 
-        // Logic from original to close other section if one is opened
         if (contentElement.id === 'moreContent' && appsContent && appsContent.classList.contains('open')) {
             appsContent.classList.remove('open');
             if (appsToggle) {
