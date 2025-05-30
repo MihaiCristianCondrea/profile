@@ -94,7 +94,6 @@
   margin-bottom: 0.25rem;
 }
 
-
 /* --- Legal Notices Page Specific Styles --- */
 #legalNoticesPageContainer {
   background-color: var(--app-card-bg-color);
@@ -224,5 +223,103 @@
 
 /* Ensure last paragraph in the main card content has no bottom margin if it's before .last-updated */
 #legalNoticesPageContainer > p:last-of-type:not(.last-updated) {
+    margin-bottom: 0;
+}
+
+/* --- Ads Help Center Page Specific Styles --- */
+#adsHelpCenterPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#adsHelpCenterPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+#adsHelpCenterPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#adsHelpCenterPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+#adsHelpCenterPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#adsHelpCenterPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#adsHelpCenterPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#adsHelpCenterPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#adsHelpCenterPageContainer li::marker {
+  color: var(--md-sys-color-primary); /* Style list bullets with primary color */
+}
+
+/* If a paragraph directly follows a list, reduce its top margin for better flow */
+#adsHelpCenterPageContainer ul + p {
+  margin-top: 0.5rem;
+}
+
+#adsHelpCenterPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#adsHelpCenterPageContainer a:hover,
+#adsHelpCenterPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* Specific styling for contact list if needed, but general ul/li should cover it well */
+#adsHelpCenterPageContainer h2#contact + ul li strong {
+  /* If you want the "Email:" part in the contact list to be normal weight */
+  font-weight: normal;
+}
+
+/* Spacing adjustments: if an h3 follows an h2 directly, adjust margin */
+#adsHelpCenterPageContainer h2 + h3 {
+  margin-top: 1.25rem;
+}
+
+/* Ensure the last element within the container has no bottom margin */
+#adsHelpCenterPageContainer > *:last-child {
     margin-bottom: 0;
 }
