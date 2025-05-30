@@ -138,7 +138,9 @@ md-list,
 md-list-item,
 md-circular-progress,
 md-segmented-button,
-md-segmented-button-set
+md-segmented-button-set {
+
+}
 
 .content-wrapper {
   max-width: 900px;
@@ -149,15 +151,12 @@ md-segmented-button-set
   flex-grow: 1;
 }
 
-
 .page-section {
   display: none;
-
 }
 
 .page-section.active {
   display: block;
-
 }
 
 md-top-app-bar {
@@ -168,7 +167,6 @@ md-top-app-bar {
   border-radius: 0;
   box-shadow: none;
   transition: background-color 200ms ease, box-shadow 200ms ease;
-
   display: flex;
   align-items: center;
   padding-left: 4px;
@@ -180,7 +178,6 @@ md-top-app-bar.scrolled {
   background-color: var(--md-sys-color-surface-container, #f5f5f5);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 
 md-top-app-bar [slot="headline"] {
   color: var(--md-sys-color-on-surface, #000000);
@@ -194,17 +191,12 @@ md-top-app-bar [slot="actionIcon"] {
   color: var(--md-sys-color-on-surface, #000000);
 }
 
-
 #appBarHeadline {
   display: inline-flex;
-
   align-items: center;
-
   line-height: normal;
-
   margin: 0;
   padding: 0;
-
 }
 
 md-filled-card.profile-card {
@@ -588,7 +580,6 @@ md-list {
   padding: 8px 0;
 }
 
-
 md-list-item {
   --md-list-item-label-text-color: var(--app-text-color);
   --md-list-item-supporting-text-color: var(--app-secondary-text-color);
@@ -597,18 +588,12 @@ md-list-item {
   --md-list-item-label-text-font: 'Poppins', sans-serif;
 }
 
-
 .navigation-drawer md-list-item {
   --md-list-item-label-text-color: var(--app-text-color);
-
   --md-list-item-supporting-text-color: var(--app-secondary-text-color);
-
   --md-list-item-leading-icon-color: var(--app-text-color);
-
   --md-list-item-trailing-icon-color: var(--app-text-color);
-
   --md-list-item-label-text-font: 'Poppins', sans-serif;
-
   --md-list-item-state-layer-shape: var(--md-sys-shape-corner-full);
 }
 
@@ -656,13 +641,11 @@ md-list-item[type="button"].expanded md-icon[slot="end"] {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   font-size: 20px;
-
   line-height: 1;
 }
 
 md-filled-button md-icon {
   margin-inline-end: 8px;
-
   display: inline-flex;
   align-items: center;
 }
@@ -677,7 +660,6 @@ md-filled-button md-icon {
 .contribute-actions {
   display: flex;
   justify-content: flex-start;
-
 }
 
 md-filled-button {
@@ -685,18 +667,14 @@ md-filled-button {
   align-items: center;
 }
 
-
 #privacyPolicyPageContainer {
   padding: 1.5rem;
   background-color: var(--app-card-bg-color);
-
   border-radius: 16px;
   margin-top: 1rem;
-
 }
 
 #privacyPolicyPageContainer img {
-
   max-width: 100%;
   height: auto;
   margin: 1.5rem auto;
@@ -747,7 +725,6 @@ md-filled-button {
 
 #privacyPolicyPageContainer strong {
   font-weight: 500;
-
 }
 
 #privacyPolicyPageContainer a {
@@ -764,16 +741,13 @@ md-filled-button {
   margin-left: 1.5rem;
   margin-bottom: 1rem;
   padding-left: 1rem;
-
 }
 
 #privacyPolicyPageContainer li {
   margin-bottom: 0.75rem;
-
   line-height: 1.7;
 }
 
 #privacyPolicyPageContainer li p {
-
   margin-bottom: 0.25rem;
 }
