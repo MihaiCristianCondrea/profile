@@ -42,24 +42,36 @@ async function loadPageContent(pageId, updateHistory = true) {
     if (pageId === 'home') {
         pageContentArea.innerHTML = initialHomepageHTML;
         pageTitle = "Mihai's Profile";
-        if (typeof fetchBlogPosts === 'function' && getDynamicElement('newsGrid')) {
+        if (typeof fetchBlogPosts === 'function' && document.getElementById('newsGrid')) {
             fetchBlogPosts();
         }
     } else if (pageId === 'privacy-policy') {
         try {
-            const response = await fetch('pages/privacy-policy.html');
+            const response = await fetch('pages/more/privacy-policy.html');
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const contentHTML = await response.text();
             pageContentArea.innerHTML = contentHTML;
             pageTitle = 'Privacy Policy';
         } catch (error) {
             console.error('Error loading privacy policy:', error);
-            pageContentArea.innerHTML = `<div class="page-section"><p class="error-message text-red-500">Failed to load page. ${error.message}</p></div>`;
+            pageContentArea.innerHTML = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page. ${error.message}</p></div>`;
+            pageTitle = 'Error';
+        }
+    } else if (pageId === 'ads-help-center') {
+        try {
+            const response = await fetch('pages/more/apps/ads-help-center.html');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const contentHTML = await response.text();
+            pageContentArea.innerHTML = contentHTML;
+            pageTitle = 'Ads Help Center';
+        } catch (error) {
+            console.error('Error loading Ads Help Center:', error);
+            pageContentArea.innerHTML = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page. ${error.message}</p></div>`;
             pageTitle = 'Error';
         }
     } else {
         console.warn('Router: Unknown page:', pageId);
-        pageContentArea.innerHTML = `<div class="page-section"><p>Page not found: ${pageId}</p></div>`;
+        pageContentArea.innerHTML = `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
         pageTitle = 'Not Found';
     }
 
