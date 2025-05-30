@@ -10,6 +10,17 @@ body {
   min-height: 100vh;
 }
 
+button,
+input,
+select,
+textarea,
+optgroup {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  margin: 0;
+}
+
 .content-wrapper {
   max-width: 900px;
   width: 100%;

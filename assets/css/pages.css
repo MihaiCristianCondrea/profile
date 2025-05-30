@@ -323,3 +323,130 @@
 #adsHelpCenterPageContainer > *:last-child {
     margin-bottom: 0;
 }
+
+/* --- Privacy Policy Page Specific Styles --- */
+#privacyPolicyPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyPageContainer .last-updated-text {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+  text-align: left;
+}
+
+#privacyPolicyPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+#privacyPolicyPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+#privacyPolicyPageContainer h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#privacyPolicyPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+/* Ensure paragraphs within list items have consistent styling and less bottom margin */
+#privacyPolicyPageContainer li p {
+  margin-bottom: 0.25rem;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Make strong text within li > p also inherit color for consistency */
+#privacyPolicyPageContainer li p strong {
+    color: inherit;
+}
+
+#privacyPolicyPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#privacyPolicyPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#privacyPolicyPageContainer a:hover,
+#privacyPolicyPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+#privacyPolicyPageContainer img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* Spacing adjustments */
+#privacyPolicyPageContainer h2 + h3 {
+  margin-top: 1.25rem;
+}
+
+#privacyPolicyPageContainer ul + p {
+  margin-top: 0.5rem;
+}
+
+#privacyPolicyPageContainer > *:last-child {
+    margin-bottom: 0;
+}
