@@ -42,7 +42,6 @@ function setCopyrightYear() {
     const copyrightElement = document.getElementById('copyright-message');
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
-        // Your existing logic to set the copyright text
         copyrightElement.textContent = `Copyright © ${new Date().getFullYear() === 2025 ? '2025' : `2025-${currentYear}`}, D4rK`;
     }
 }
