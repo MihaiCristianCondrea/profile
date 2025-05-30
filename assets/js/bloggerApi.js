@@ -35,11 +35,14 @@ function createBlogPostCard(post) {
              <h3>${title}</h3>
              <p>${snippet || 'No content preview available.'}</p>
         </div>
-         <div class="news-card-actions">
-             <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
-                <md-text-button>Read More</md-text-button>
-             </a>
-         </div>`;
+        <div class="news-card-actions">
+            <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
+            <md-text-button>
+                Read More
+                <md-icon slot="icon" aria-hidden="true">arrow_forward</md-icon>
+            </md-text-button>
+            </a>
+        </div>`;
     return card;
 }
 

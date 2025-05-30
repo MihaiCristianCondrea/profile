@@ -124,24 +124,6 @@ body {
   min-height: 100vh;
 }
 
-md-filled-card,
-md-outlined-card,
-md-elevated-card,
-md-outlined-button,
-md-filled-button,
-md-text-button,
-md-chip-set,
-md-assist-chip,
-md-top-app-bar,
-md-icon-button,
-md-list,
-md-list-item,
-md-circular-progress,
-md-segmented-button,
-md-segmented-button-set {
-
-}
-
 .content-wrapper {
   max-width: 900px;
   width: 100%;
@@ -370,6 +352,7 @@ md-outlined-card.news-card {
   color: var(--app-card-text-color);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -382,6 +365,7 @@ md-outlined-card.news-card {
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
