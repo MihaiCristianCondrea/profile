@@ -4,7 +4,6 @@ const appConfig = {
         url: 'https://d4rk7355608.blogspot.com/',
         maxResults: 4,
         _getApiKey: function() {
-            // Obfuscated API key retrieval
             const keyParts = ["QUl6YVN5Qj", "llZDFmR1puOFd", "yWXdjWmsta1V", "ERG1mclRZUGFY", "YVJz"];
             const encodedKey = keyParts.join('');
             return typeof window !== 'undefined' && window.atob ? window.atob(encodedKey) : '';
@@ -52,7 +51,6 @@ async function fetchBlogPosts() {
     const newsStatusElement = getDynamicElement('news-status');
 
     if (!newsGridElement || !newsStatusElement) {
-        // console.log("Blogger API: News grid or status element not found on current page.");
         return;
     }
 
