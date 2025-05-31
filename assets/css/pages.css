@@ -638,3 +638,115 @@
 #codeOfConductPageContainer > *:last-child {
     margin-bottom: 0;
 }
+
+/* --- Privacy Policy (Apps) Page Specific Styles --- */
+#privacyPolicyAppsPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyAppsPageContainer .last-updated-text {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+  text-align: left;
+}
+
+#privacyPolicyAppsPageContainer .page-banner-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+#privacyPolicyAppsPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+#privacyPolicyAppsPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyAppsPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+#privacyPolicyAppsPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#privacyPolicyAppsPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyAppsPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#privacyPolicyAppsPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#privacyPolicyAppsPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#privacyPolicyAppsPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#privacyPolicyAppsPageContainer a:hover,
+#privacyPolicyAppsPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+#privacyPolicyAppsPageContainer md-divider {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Spacing adjustments */
+#privacyPolicyAppsPageContainer .last-updated-text + .page-banner-image + p {
+    margin-top: 1.5rem;
+}
+
+#privacyPolicyAppsPageContainer ul + p {
+  margin-top: 0.5rem;
+}
+
+#privacyPolicyAppsPageContainer > *:last-child {
+    margin-bottom: 0;
+}

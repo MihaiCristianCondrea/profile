@@ -65,6 +65,10 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/more/code-of-conduct.html';
                 pageTitle = 'Code of Conduct';
                 break;
+            case 'privacy-policy-apps':
+                pagePath = 'pages/more/apps/privacy-policy-apps.html';
+                pageTitle = 'Privacy Policy';
+                break;
   
             default:
                 console.warn('Router: Unknown page:', pageId);
