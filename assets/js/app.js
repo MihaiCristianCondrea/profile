@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navPrivacyPolicyLinkEl) {
         navPrivacyPolicyLinkEl.addEventListener('click', (e) => {
             e.preventDefault();
-            loadPageContent('privacy-policy');
+            loadPageContent('privacy-policy-website');
         });
     }
     // Add listeners for other SPA links here if any
