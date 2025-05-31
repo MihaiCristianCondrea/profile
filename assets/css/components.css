@@ -495,28 +495,37 @@ md-filled-button {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-.platform-links-container {
+md-filled-card.profile-card {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center; 
-  gap: 1rem; 
-  margin-bottom: 2.5rem;
-  margin-top: 0.5rem;
+  flex-direction: column;
 }
 
-.platform-links-container a.platform-link-button {
+.profile-card .card-content {
+  flex-grow: 1;
+}
+
+.profile-card-actions {
+  padding: 0.75rem 1.5rem 1.5rem 1.5rem; 
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-top: 1px solid var(--app-border-color); 
+  margin-top: auto;
+}
+
+.profile-card-actions a {
   text-decoration: none;
 }
 
-/* Optional: If you want the buttons to have a minimum width or take full width on small screens */
-@media (max-width: 600px) {
-  .platform-links-container {
-    flex-direction: column; 
-    align-items: center;
+/* Optional: To make buttons in actions take more width on smaller screens if they wrap */
+@media (max-width: 480px) {
+  .profile-card-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .platform-links-container a.platform-link-button md-filled-button {
+  .profile-card-actions a md-outlined-button,
+  .profile-card-actions a md-filled-button {
     width: 100%;
-    max-width: 320px;
     justify-content: center;
   }
 }
