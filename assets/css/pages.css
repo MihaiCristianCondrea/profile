@@ -457,3 +457,29 @@
 #privacyPolicyPageContainer > *:last-child {
     margin-bottom: 0;
 }
+
+#privacyPolicyPageContainer .page-banner-image,
+#adsHelpCenterPageContainer .page-banner-image,
+#legalNoticesPageContainer .page-banner-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* If you want ALL images within these containers to have this style,
+   you can keep the more general selector as you had for privacy policy: */
+#privacyPolicyPageContainer img,
+#adsHelpCenterPageContainer img,
+#legalNoticesPageContainer img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
