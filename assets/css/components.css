@@ -494,3 +494,29 @@ md-filled-button {
   background-color: var(--app-bg-color);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
+
+.platform-links-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  gap: 1rem; 
+  margin-bottom: 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.platform-links-container a.platform-link-button {
+  text-decoration: none;
+}
+
+/* Optional: If you want the buttons to have a minimum width or take full width on small screens */
+@media (max-width: 600px) {
+  .platform-links-container {
+    flex-direction: column; 
+    align-items: center;
+  }
+  .platform-links-container a.platform-link-button md-filled-button {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+  }
+}
