@@ -49,7 +49,7 @@ async function loadPageContent(pageId, updateHistory = true) {
         }
     } else {
         switch (pageId) {
-            case 'privacy-policy':
+            case 'privacy-policy-website':
                 pagePath = 'pages/more/privacy-policy.html';
                 pageTitle = 'Privacy Policy';
                 break;
@@ -60,6 +60,10 @@ async function loadPageContent(pageId, updateHistory = true) {
             case 'legal-notices':
                 pagePath = 'pages/more/apps/legal-notices.html';
                 pageTitle = 'Legal Notices';
+                break;
+            case 'code-of-conduct-website':
+                pagePath = 'pages/more/code-of-conduct.html';
+                pageTitle = 'Code of Conduct';
                 break;
   
             default:

@@ -483,3 +483,158 @@
   border: 1px solid var(--app-border-color);
   background-color: var(--md-sys-color-surface-container);
 }
+
+/* --- Code of Conduct Page Specific Styles --- */
+#codeOfConductPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#codeOfConductPageContainer .last-updated-text {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+  text-align: left;
+}
+
+#codeOfConductPageContainer .page-banner-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+#codeOfConductPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+#codeOfConductPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Adjust if h2 directly follows intro paragraphs without a divider yet */
+#codeOfConductPageContainer p + h2 {
+    margin-top: 2.5rem;
+}
+#codeOfConductPageContainer img + h2 {
+    margin-top: 2rem;
+}
+#codeOfConductPageContainer .last-updated-text + img + p + p + h2,
+#codeOfConductPageContainer .last-updated-text + p + p + h2 {
+    margin-top: 2.5rem;
+}
+
+
+#codeOfConductPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+#codeOfConductPageContainer h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+#codeOfConductPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#codeOfConductPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#codeOfConductPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#codeOfConductPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#codeOfConductPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#codeOfConductPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#codeOfConductPageContainer a:hover,
+#codeOfConductPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* Styling for the notice-item used in Enforcement Guidelines */
+#codeOfConductPageContainer .notice-item {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--app-border-color);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#codeOfConductPageContainer .notice-item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 0.25rem;
+}
+#codeOfConductPageContainer .notice-item p:last-child {
+  margin-bottom: 0;
+}
+#codeOfConductPageContainer .notice-item p strong {
+    color: var(--app-secondary-text-color);
+    font-weight: 600;
+}
+
+
+/* Divider styling is already generic */
+#codeOfConductPageContainer md-divider {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Spacing adjustments */
+#codeOfConductPageContainer ul + p {
+  margin-top: 0.5rem;
+}
+
+#codeOfConductPageContainer > *:last-child {
+    margin-bottom: 0;
+}
