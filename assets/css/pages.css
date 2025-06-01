@@ -750,3 +750,119 @@
 #privacyPolicyAppsPageContainer > *:last-child {
     margin-bottom: 0;
 }
+
+/* --- Terms of Service (Apps) Page Specific Styles --- */
+#termsOfServiceAppsPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#termsOfServiceAppsPageContainer .last-updated-text {
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--app-border-color);
+  text-align: left;
+}
+
+#termsOfServiceAppsPageContainer .page-banner-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto 2rem auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+#termsOfServiceAppsPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+#termsOfServiceAppsPageContainer h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+#termsOfServiceAppsPageContainer h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+#termsOfServiceAppsPageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#termsOfServiceAppsPageContainer strong {
+  font-weight: 600;
+  color: var(--app-text-color);
+}
+
+#termsOfServiceAppsPageContainer ul {
+  list-style: disc;
+  margin-left: 0;
+  padding-left: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#termsOfServiceAppsPageContainer li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  padding-left: 0.25rem;
+}
+
+#termsOfServiceAppsPageContainer li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#termsOfServiceAppsPageContainer a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#termsOfServiceAppsPageContainer a:hover,
+#termsOfServiceAppsPageContainer a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+#termsOfServiceAppsPageContainer md-divider {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Spacing adjustments */
+#termsOfServiceAppsPageContainer .last-updated-text + .page-banner-image + p {
+    margin-top: 1.5rem;
+}
+#termsOfServiceAppsPageContainer .last-updated-text + p {
+    margin-top: 1.5rem;
+}
+
+
+#termsOfServiceAppsPageContainer ul + p {
+  margin-top: 0.5rem;
+}
+
+#termsOfServiceAppsPageContainer > *:last-child {
+    margin-bottom: 0;
+}

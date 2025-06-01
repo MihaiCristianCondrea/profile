@@ -69,7 +69,11 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/more/apps/privacy-policy-apps.html';
                 pageTitle = 'Privacy Policy';
                 break;
-  
+            case 'terms-of-service-apps':
+                pagePath = 'pages/more/apps/terms-of-service-apps.html';
+                pageTitle = 'Terms of Service';
+                break;
+
             default:
                 console.warn('Router: Unknown page:', pageId);
                 pageContentArea.innerHTML = `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
