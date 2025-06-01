@@ -36,6 +36,7 @@ function openDrawer() {
     if (navDrawer && drawerOverlay) {
         navDrawer.classList.add('open');
         drawerOverlay.classList.add('open');
+        document.body.classList.add('drawer-is-open');
         if (closeDrawerButton) closeDrawerButton.focus();
     }
 }
@@ -47,6 +48,7 @@ function closeDrawer() {
     if (navDrawer && drawerOverlay) {
         navDrawer.classList.remove('open');
         drawerOverlay.classList.remove('open');
+        document.body.classList.remove('drawer-is-open');
         if (menuButton) menuButton.focus();
     }
 }
