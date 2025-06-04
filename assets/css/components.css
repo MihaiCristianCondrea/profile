@@ -529,3 +529,14 @@ md-filled-card.profile-card {
     justify-content: center;
   }
 }
+
+/* --- Podcast Embed Section --- */
+.podcast-embed {
+  margin: 2.5rem 0;
+  text-align: center;
+}
+
+.podcast-embed p {
+  margin-bottom: 1rem;
+  color: var(--app-text-color);
+}
