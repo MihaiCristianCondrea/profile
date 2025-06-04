@@ -31,7 +31,14 @@ LICENSE                   # GPLv3 license
 
 ## Running Locally
 
-The project does not require a build step. To view it locally you just need to serve the files with any static HTTP server:
+The project now compiles Tailwind CSS ahead of time. After cloning the repo, install dependencies and run the Tailwind build:
+
+```bash
+npm install
+npx tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.css --minify
+```
+
+Then serve the files with any static HTTP server:
 
 ```bash
 # Using Python
