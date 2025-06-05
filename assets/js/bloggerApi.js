@@ -11,6 +11,22 @@ const appConfig = {
     }
 };
 
+// Cached blog data to avoid repeated API calls
+let cachedBlogId = null;
+let cachedPostsData = null;
+
+if (typeof window !== 'undefined' && window.localStorage) {
+    cachedBlogId = localStorage.getItem('bloggerBlogId');
+    const storedPosts = localStorage.getItem('bloggerPosts');
+    if (storedPosts) {
+        try {
+            cachedPostsData = JSON.parse(storedPosts);
+        } catch (e) {
+            cachedPostsData = null;
+        }
+    }
+}
+
 /**
  * Creates an HTML card element for a blog post.
  * @param {object} post - The blog post data from Blogger API.
@@ -57,6 +73,18 @@ async function fetchBlogPosts() {
         return;
     }
 
+    if (cachedPostsData) {
+        newsStatusElement.style.display = 'none';
+        newsGridElement.innerHTML = '';
+        if (cachedPostsData.items && cachedPostsData.items.length > 0) {
+            cachedPostsData.items.forEach(post => newsGridElement.appendChild(createBlogPostCard(post)));
+        } else {
+            newsStatusElement.innerHTML = '<span>No posts found.</span>';
+            newsStatusElement.style.display = 'flex';
+        }
+        return;
+    }
+
     newsStatusElement.innerHTML = `<md-circular-progress indeterminate></md-circular-progress><span>Loading latest posts...</span>`;
     newsStatusElement.style.display = 'flex';
 
@@ -74,18 +102,26 @@ async function fetchBlogPosts() {
     }
 
     try {
-        const blogInfoUrl = `https://www.googleapis.com/blogger/v3/blogs/byurl?url=${encodeURIComponent(currentBlogUrl)}&key=${currentApiKey}`;
-        const blogInfoResponse = await fetch(blogInfoUrl);
-        if (!blogInfoResponse.ok) {
-            const errorData = await blogInfoResponse.json().catch(() => ({}));
-            let errorMsg = `Error fetching blog info: ${blogInfoResponse.status} ${blogInfoResponse.statusText}`;
-            if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
-            else if (blogInfoResponse.status === 404) errorMsg += ' - Blog URL not found or incorrect.';
-            throw new Error(errorMsg);
+        if (!cachedBlogId) {
+            const blogInfoUrl = `https://www.googleapis.com/blogger/v3/blogs/byurl?url=${encodeURIComponent(currentBlogUrl)}&key=${currentApiKey}`;
+            const blogInfoResponse = await fetch(blogInfoUrl);
+            if (!blogInfoResponse.ok) {
+                const errorData = await blogInfoResponse.json().catch(() => ({}));
+                let errorMsg = `Error fetching blog info: ${blogInfoResponse.status} ${blogInfoResponse.statusText}`;
+                if (getNestedValue(errorData, 'error.message')) errorMsg += ` - ${getNestedValue(errorData, 'error.message')}`;
+                else if (blogInfoResponse.status === 404) errorMsg += ' - Blog URL not found or incorrect.';
+                throw new Error(errorMsg);
+            }
+            const blogInfo = await blogInfoResponse.json();
+            blogId = blogInfo.id;
+            if (!blogId) throw new Error("Could not retrieve Blog ID from URL.");
+            cachedBlogId = blogId;
+            try {
+                localStorage.setItem('bloggerBlogId', blogId);
+            } catch (e) {}
+        } else {
+            blogId = cachedBlogId;
         }
-        const blogInfo = await blogInfoResponse.json();
-        blogId = blogInfo.id;
-        if (!blogId) throw new Error("Could not retrieve Blog ID from URL.");
 
         const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`; // fetchBodies for post.content
         const postsResponse = await fetch(postsUrl);
@@ -96,6 +132,10 @@ async function fetchBlogPosts() {
             throw new Error(errorMsg);
         }
         const postsData = await postsResponse.json();
+        cachedPostsData = postsData;
+        try {
+            localStorage.setItem('bloggerPosts', JSON.stringify(postsData));
+        } catch (e) {}
 
         newsStatusElement.style.display = 'none';
         newsGridElement.innerHTML = ''; // Clear previous posts
