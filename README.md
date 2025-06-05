@@ -8,6 +8,7 @@ This repository contains the source for a personal profile site built as a small
 - **Navigation Drawer** – A slide‑out drawer provides access to the home page, blog link, music link and a "More" section with additional pages.
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
+- **Blog Data Caching** – Blog ID and posts are cached locally to minimize API requests.
 - **Client‑Side Routing** – JavaScript loads internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
 - **Progressive Web App** – Includes a `manifest.json` file and icons so it can be installed as a PWA.
 
