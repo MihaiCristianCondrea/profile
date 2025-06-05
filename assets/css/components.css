@@ -31,6 +31,14 @@ md-top-app-bar [slot="actionIcon"] {
   color: var(--md-sys-color-on-surface, #000000);
 }
 
+#menuButton,
+#closeDrawerButton {
+  --md-focus-ring-width: 0;
+  --md-focus-ring-active-width: 0;
+  --md-focus-ring-color: transparent;
+  outline: none;
+}
+
 #appBarHeadline {
   display: inline-flex;
   align-items: center;
