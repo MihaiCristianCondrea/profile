@@ -548,3 +548,76 @@ md-filled-card.profile-card {
   margin-bottom: 1rem;
   color: var(--app-text-color);
 }
+/* --- Songs Page --- */
+#songsPageContainer {
+  padding: 1.5rem;
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  margin-top: 1rem;
+  color: var(--app-text-color);
+}
+
+.songs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  position: relative;
+}
+
+#songs-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--app-secondary-text-color);
+}
+
+#songs-status md-circular-progress {
+  margin-bottom: 1rem;
+}
+
+.song-card {
+  background-color: var(--app-card-bg-color);
+  border: 1px solid var(--app-border-color);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.song-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background-color: var(--md-sys-color-surface-variant);
+}
+
+.song-card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.song-card-content h3 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+  color: var(--app-text-color);
+}
+
+.song-card-links {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.song-card-links a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: var(--md-sys-color-primary);
+}
