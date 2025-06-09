@@ -52,6 +52,7 @@ You can also use any other static server such as `npx serve`.
 
 The songs page fetches track information from the [MusicBrainz](https://musicbrainz.org/doc/MusicBrainz_API) service.
 This API is free for non-commercial use and does not require authentication.
+All songs credited to **D4rK Rekords** are loaded dynamically using the artist's MusicBrainz ID.
 
 ## License
 
