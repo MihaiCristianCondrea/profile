@@ -4,7 +4,8 @@ async function fetchChannelVideos(channelId) {
     const url = `https://piped.video/api/v1/channels/${channelId}/videos`;
     const resp = await fetch(url);
     if (!resp.ok) {
-        throw new Error(`HTTP ${resp.status}`);
+        const errorText = await resp.text();
+        throw new Error(`HTTP error! status: ${resp.status}, message: ${errorText}`);
     }
     const data = await resp.json();
     return (data || []).map(v => ({
