@@ -1,18 +1,19 @@
 
-const youtubeChannelId = 'UC80JI44n7GpRGrlR71PtvPg';
+const youtubeChannelId = 'UCtzlWsxUK8FSvLwLDbESw4A';
 async function fetchChannelVideos(channelId) {
-    const url = `https://piped.video/api/v1/channels/${channelId}/videos`;
+    const url = `https://pipedapi.ducks.party/channel/${channelId}`;
     const resp = await fetch(url);
     if (!resp.ok) {
         const errorText = await resp.text();
         throw new Error(`HTTP error! status: ${resp.status}, message: ${errorText}`);
     }
     const data = await resp.json();
-    return (data || []).map(v => ({
+    const streams = data.relatedStreams || [];
+    return streams.map(v => ({
         title: v.title,
-        artists: v.uploader,
+        artists: v.uploaderName,
         image: v.thumbnail,
-        link: `https://www.youtube.com/watch?v=${v.id}`
+        link: `https://www.youtube.com${v.url}`
     }));
 }
 
