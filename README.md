@@ -48,11 +48,13 @@ python3 -m http.server 8080
 
 You can also use any other static server such as `npx serve`.
 
-### MusicBrainz API
+### YouTube Channel Feed
 
-The songs page fetches track information from the [MusicBrainz](https://musicbrainz.org/doc/MusicBrainz_API) service.
-This API is free for non-commercial use and does not require authentication.
-All songs credited to **D4rK Rekords** are loaded dynamically using the artist's MusicBrainz ID.
+The songs page fetches track information from the D4rK Rekords YouTube channel
+using the public [Piped API](https://github.com/TeamPiped/Piped). This service
+does not require any authentication. The site requests
+`https://piped.video/api/v1/channels/<channelId>/videos` and renders all
+uploaded tracks automatically.
 
 ## License
 

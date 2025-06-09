@@ -1,28 +1,18 @@
 
-const artistMbid = '1217497d-8afd-4c78-9071-9905631d5db4';
-
-async function fetchArtistTracks(mbid) {
-    const url = `https://musicbrainz.org/ws/2/recording?artist=${mbid}&fmt=json&limit=100&inc=releases`;
+const youtubeChannelId = 'UC80JI44n7GpRGrlR71PtvPg';
+async function fetchChannelVideos(channelId) {
+    const url = `https://piped.video/api/v1/channels/${channelId}/videos`;
     const resp = await fetch(url);
     if (!resp.ok) {
         throw new Error(`HTTP ${resp.status}`);
     }
     const data = await resp.json();
-    return (data.recordings || []).map(rec => {
-        const artists = (rec['artist-credit'] || []).map(a => a.name).join(', ');
-        let image = '';
-        const release = rec.releases && rec.releases[0];
-        if (release && release['release-group'] && release['release-group'].id) {
-            const rgid = release['release-group'].id;
-            image = `https://coverartarchive.org/release-group/${rgid}/front-250`;
-        }
-        return {
-            title: rec.title,
-            artists,
-            image,
-            link: `https://musicbrainz.org/recording/${rec.id}`
-        };
-    });
+    return (data || []).map(v => ({
+        title: v.title,
+        artists: v.uploader,
+        image: v.thumbnail,
+        link: `https://www.youtube.com/watch?v=${v.id}`
+    }));
 }
 
 async function loadSongs() {
@@ -33,7 +23,7 @@ async function loadSongs() {
     grid.innerHTML = '';
     let tracks = [];
     try {
-        tracks = await fetchArtistTracks(artistMbid);
+        tracks = await fetchChannelVideos(youtubeChannelId);
     } catch (err) {
         console.error('Failed to fetch songs list', err);
     }
@@ -50,7 +40,7 @@ async function loadSongs() {
             <div class="song-card-content">
                 <h3>${title}</h3>
                 <p>${artists}</p>
-                <div class="song-card-links"><a href="${link}" target="_blank" rel="noopener noreferrer">MusicBrainz</a></div>
+                <div class="song-card-links"><a href="${link}" target="_blank" rel="noopener noreferrer">YouTube</a></div>
             </div>`;
         grid.appendChild(card);
     }
