@@ -53,8 +53,8 @@ You can also use any other static server such as `npx serve`.
 The songs page fetches track information from the D4rK Rekords YouTube channel
 using the public [Piped API](https://github.com/TeamPiped/Piped). This service
 does not require any authentication. The site requests
-`https://piped.video/api/v1/channels/<channelId>/videos` and renders all
-uploaded tracks automatically.
+`https://pipedapi.ducks.party/channel/<channelId>` and renders the uploaded
+tracks from the `relatedStreams` array.
 
 ## License
 
