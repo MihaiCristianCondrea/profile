@@ -53,6 +53,10 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/more/privacy-policy.html';
                 pageTitle = 'Privacy Policy';
                 break;
+            case 'songs':
+                pagePath = 'pages/songs.html';
+                pageTitle = 'My Music';
+                break;
             case 'ads-help-center':
                 pagePath = 'pages/more/apps/ads-help-center.html';
                 pageTitle = 'Ads Help Center';
@@ -95,6 +99,9 @@ async function loadPageContent(pageId, updateHistory = true) {
             }
             const contentHTML = await response.text();
             pageContentArea.innerHTML = contentHTML;
+            if (pageId === 'songs' && typeof loadSongs === 'function' && document.getElementById('songsGrid')) {
+                loadSongs();
+            }
         } catch (error) {
             console.error(`Error loading ${pageTitle}:`, error);
             errorContent = `<div class="page-section active"><p class="error-message text-red-500">Failed to load page: ${pageTitle}. ${error.message}</p></div>`;

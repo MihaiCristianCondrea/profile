@@ -1,6 +1,6 @@
 // Global DOM element references needed by multiple modules or for initialization
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl,
-    navHomeLinkEl, navPrivacyPolicyLinkEl, topAppBarEl;
+    navHomeLinkEl, navPrivacyPolicyLinkEl, navSongsLinkEl, topAppBarEl;
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Get DOM Elements ---
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     appBarHeadlineEl = getDynamicElement('appBarHeadline');
     navHomeLinkEl = getDynamicElement('navHomeLink');
     navPrivacyPolicyLinkEl = getDynamicElement('navPrivacyPolicyLink');
+    navSongsLinkEl = getDynamicElement('navSongsLink');
     topAppBarEl = getDynamicElement('topAppBar');
 
 
@@ -36,6 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
         navPrivacyPolicyLinkEl.addEventListener('click', (e) => {
             e.preventDefault();
             loadPageContent('privacy-policy-website');
+        });
+    }
+    if (navSongsLinkEl) {
+        navSongsLinkEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadPageContent('songs');
         });
     }
     // Add listeners for other SPA links here if any
