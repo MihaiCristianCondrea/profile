@@ -48,6 +48,11 @@ python3 -m http.server 8080
 
 You can also use any other static server such as `npx serve`.
 
+### MusicBrainz API
+
+The songs page fetches track information from the [MusicBrainz](https://musicbrainz.org/doc/MusicBrainz_API) service.
+This API is free for non-commercial use and does not require authentication.
+
 ## License
 
 This project is distributed under the terms of the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for the full text.
