@@ -14,7 +14,10 @@ async function loadSongs() {
     grid.innerHTML = '';
     for (const id of trackIds) {
         try {
-            const resp = await fetch(`https://api.song.link/v1-alpha.1/links?url=spotify%3Atrack%3A${id}&userCountry=US&songIfSingle=true`);
+            const apiUrl = `https://api.song.link/v1-alpha.1/links?url=spotify%3Atrack%3A${id}&userCountry=US&songIfSingle=true`;
+            const proxiedUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+            const resp = await fetch(proxiedUrl);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
             const spotifyKey = `SPOTIFY_SONG::${id}`;
             const entity = data.entitiesByUniqueId[spotifyKey] || {};
