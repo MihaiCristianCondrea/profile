@@ -103,6 +103,10 @@ p.profile-about {
   color: var(--app-text-color);
   margin-bottom: 1rem;
 }
+.profile-about a {
+  color: var(--app-link-color);
+  text-decoration: underline;
+}
 
 /* --- Chips --- */
 md-chip-set {
