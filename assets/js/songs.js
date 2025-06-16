@@ -50,6 +50,29 @@ const platformNames = {
     boomplay: 'Boomplay'
 };
 
+const platformIcons = {
+    appleMusic: 'fa-apple',
+    itunes: 'fa-itunes',
+    spotify: 'fa-spotify',
+    youtube: 'fa-youtube',
+    youtubeMusic: 'fa-youtube',
+    google: 'fa-google-play',
+    googleStore: 'fa-google-play',
+    pandora: 'fa-music',
+    deezer: 'fa-deezer',
+    tidal: 'fa-music',
+    amazonStore: 'fa-amazon',
+    amazonMusic: 'fa-amazon',
+    soundcloud: 'fa-soundcloud',
+    napster: 'fa-napster',
+    yandex: 'fa-yandex',
+    spinrilla: 'fa-music',
+    audius: 'fa-music',
+    audiomack: 'fa-music',
+    anghami: 'fa-music',
+    boomplay: 'fa-music'
+};
+
 async function loadSongs() {
     const grid = document.getElementById('songsGrid');
     const status = document.getElementById('songs-status');
@@ -80,10 +103,11 @@ async function loadSongs() {
         if (Object.keys(linksByPlatform).length > 0) {
             for (const [platform, data] of Object.entries(linksByPlatform)) {
                 const name = platformNames[platform] || platform;
-                linksHtml += `<a href="${data.url}" target="_blank" rel="noopener noreferrer">${name}</a>`;
+                const iconClass = platformIcons[platform] || 'fa-music';
+                linksHtml += `<a href="${data.url}" target="_blank" rel="noopener noreferrer" title="${name}"><i class="fa-brands ${iconClass}"></i></a>`; 
             }
         } else {
-            linksHtml = `<a href="${track.link}" target="_blank" rel="noopener noreferrer">YouTube</a>`;
+            linksHtml = `<a href="${track.link}" target="_blank" rel="noopener noreferrer" title="YouTube"><i class="fa-brands fa-youtube"></i></a>`;
         }
 
         const card = document.createElement('div');
