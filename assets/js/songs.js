@@ -93,7 +93,17 @@ async function loadSongs() {
             console.error('Failed to fetch song info', err);
         }
 
-        const entity = songInfo?.entitiesByUniqueId?.[songInfo?.entityUniqueId];
+        let entity = songInfo?.entitiesByUniqueId?.[songInfo?.entityUniqueId];
+
+        const preferPlatforms = ['spotify', 'appleMusic', 'deezer', 'tidal', 'amazonMusic'];
+        for (const plat of preferPlatforms) {
+            const id = songInfo?.linksByPlatform?.[plat]?.entityUniqueId;
+            if (id && songInfo?.entitiesByUniqueId?.[id]) {
+                entity = songInfo.entitiesByUniqueId[id];
+                break;
+            }
+        }
+
         const img = entity?.thumbnailUrl || track.image || 'https://via.placeholder.com/250?text=No+Art';
         const title = entity?.title || track.title;
         const artists = entity?.artistName || track.artists;
@@ -104,7 +114,8 @@ async function loadSongs() {
             for (const [platform, data] of Object.entries(linksByPlatform)) {
                 const name = platformNames[platform] || platform;
                 const iconClass = platformIcons[platform] || 'fa-music';
-                linksHtml += `<a href="${data.url}" target="_blank" rel="noopener noreferrer" title="${name}"><i class="fa-brands ${iconClass}"></i></a>`; 
+                const prefix = iconClass === 'fa-music' ? 'fa-solid' : 'fa-brands';
+                linksHtml += `<a href="${data.url}" target="_blank" rel="noopener noreferrer" title="${name}"><i class="${prefix} ${iconClass}"></i></a>`;
             }
         } else {
             linksHtml = `<a href="${track.link}" target="_blank" rel="noopener noreferrer" title="YouTube"><i class="fa-brands fa-youtube"></i></a>`;
