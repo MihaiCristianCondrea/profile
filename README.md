@@ -51,10 +51,14 @@ You can also use any other static server such as `npx serve`.
 ### YouTube Channel Feed
 
 The songs page fetches track information from the D4rK Rekords YouTube channel
-using the public [Piped API](https://github.com/TeamPiped/Piped). This service
-does not require any authentication. The site requests
-`https://pipedapi.ducks.party/channel/<channelId>` and renders the uploaded
-tracks from the `relatedStreams` array.
+using the public [Piped API](https://github.com/TeamPiped/Piped). For each
+video it then queries the [Songlink API](https://song.link/api) to retrieve the
+official cover art and streaming links on other platforms such as Spotify or
+Apple Music. The Piped request does not require authentication while the
+Songlink API is accessed anonymously at
+`https://api.song.link/v1-alpha.1/links?url=<videoUrl>&songIfSingle=true`.
+The returned data is used to populate the song cards with the cover image and
+links to all available services.
 
 ## License
 
