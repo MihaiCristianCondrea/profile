@@ -618,10 +618,11 @@ md-filled-card.profile-card {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .song-card-links a {
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   color: var(--md-sys-color-primary);
 }

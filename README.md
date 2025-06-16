@@ -58,7 +58,7 @@ Apple Music. The Piped request does not require authentication while the
 Songlink API is accessed anonymously at
 `https://api.song.link/v1-alpha.1/links?url=<videoUrl>&songIfSingle=true`.
 The returned data is used to populate the song cards with the cover image and
-links to all available services.
+icons linking to all available services.
 
 ## License
 
