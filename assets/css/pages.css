@@ -866,3 +866,84 @@
 #termsOfServiceAppsPageContainer > *:last-child {
     margin-bottom: 0;
 }
+
+/* --- Contact Page Specific Styles --- */
+#contactPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#contactPageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--app-border-color);
+}
+
+#contactPageContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#contactPageContainer label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+#contactPageContainer input[type="text"],
+#contactPageContainer input[type="email"],
+#contactPageContainer textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--app-border-color);
+  border-radius: 8px;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  color: var(--app-text-color);
+}
+
+#contactPageContainer textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+#contactPageContainer button {
+  align-self: flex-start;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+#contactPageContainer button:hover {
+  filter: brightness(0.9);
+}
+
+#contactPageContainer .contact-info,
+#contactPageContainer .social-links {
+  margin-top: 2rem;
+}
+
+#contactPageContainer .contact-info a,
+#contactPageContainer .social-links a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+#contactPageContainer .social-links ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}

@@ -57,6 +57,10 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/songs.html';
                 pageTitle = 'My Music';
                 break;
+            case 'contact':
+                pagePath = 'pages/contact.html';
+                pageTitle = 'Contact';
+                break;
             case 'ads-help-center':
                 pagePath = 'pages/more/apps/ads-help-center.html';
                 pageTitle = 'Ads Help Center';
