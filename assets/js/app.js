@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navPrivacyPolicyLinkEl) {
         navPrivacyPolicyLinkEl.addEventListener('click', (e) => {
             e.preventDefault();
-            loadPageContent('privacy-policy-website');
+            loadPageContent('privacy-policy');
         });
     }
     if (navSongsLinkEl) {
