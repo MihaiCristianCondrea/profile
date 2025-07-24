@@ -49,7 +49,7 @@ async function loadPageContent(pageId, updateHistory = true) {
         }
     } else {
         switch (pageId) {
-            case 'privacy-policy-website':
+            case 'privacy-policy':
                 pagePath = 'pages/more/privacy-policy.html';
                 pageTitle = 'Privacy Policy';
                 break;
@@ -69,17 +69,17 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/more/apps/legal-notices.html';
                 pageTitle = 'Legal Notices';
                 break;
-            case 'code-of-conduct-website':
+            case 'code-of-conduct':
                 pagePath = 'pages/more/code-of-conduct.html';
                 pageTitle = 'Code of Conduct';
                 break;
-            case 'privacy-policy-apps':
+            case 'privacy-policy-end-user-software':
                 pagePath = 'pages/more/apps/privacy-policy-apps.html';
-                pageTitle = 'Privacy Policy';
+                pageTitle = 'Privacy Policy – End-User Software';
                 break;
-            case 'terms-of-service-apps':
+            case 'terms-of-service-end-user-software':
                 pagePath = 'pages/more/apps/terms-of-service-apps.html';
-                pageTitle = 'Terms of Service';
+                pageTitle = 'Terms of Service – End-User Software';
                 break;
 
             default:

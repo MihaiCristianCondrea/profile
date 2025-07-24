@@ -29,6 +29,15 @@ pages/
 LICENSE                   # GPLv3 license
 ```
 
+### Hash Fragment Navigation
+
+The router loads pages based on URL fragments (e.g., `#privacy-policy`). Important fragments include:
+
+- `#privacy-policy` – Privacy Policy
+- `#code-of-conduct` – Code of Conduct
+- `#privacy-policy-end-user-software` – Privacy Policy – End-User Software
+- `#terms-of-service-end-user-software` – Terms of Service – End-User Software
+
 ## Running Locally
 
 The project now compiles Tailwind CSS ahead of time. After cloning the repo, install dependencies and run the Tailwind build:
