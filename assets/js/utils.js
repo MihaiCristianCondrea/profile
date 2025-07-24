@@ -42,6 +42,7 @@ function setCopyrightYear() {
     const copyrightElement = document.getElementById('copyright-message');
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
-        copyrightElement.textContent = `Copyright © ${new Date().getFullYear() === 2025 ? '2025' : `2025-${currentYear}`}, D4rK`;
+        const yearText = currentYear === 2025 ? '2025' : `2025-${currentYear}`;
+        copyrightElement.textContent = `Copyright © ${yearText}, Mihai-Cristian Condrea`;
     }
 }
