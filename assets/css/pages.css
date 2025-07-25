@@ -869,7 +869,7 @@
 
 /* --- Contact Page Specific Styles --- */
 #contactPageContainer {
-  background-color: var(--app-card-bg-color);
+  background-color: var(--md-sys-color-surface-container-high);
   border-radius: 16px;
   padding: 1.5rem 2rem;
   margin-top: 1.5rem;
@@ -985,4 +985,23 @@
 
 #contactPageContainer .social-links a span {
   font-size: 0.875rem;
+}
+
+#contactPageContainer .availability {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+#contactPageContainer .testimonials {
+  margin-top: 2rem;
+  padding-left: 1rem;
+  border-left: 4px solid var(--md-sys-color-primary);
+  font-style: italic;
+}
+
+#contactPageContainer .testimonial-author {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 500;
+  text-align: right;
 }
