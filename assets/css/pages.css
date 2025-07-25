@@ -898,6 +898,7 @@
   font-size: 1.25rem;
   font-weight: 500;
   margin-bottom: 0.75rem;
+  text-align: center;
 }
 
 #contactPageContainer form {
@@ -944,47 +945,34 @@
   filter: brightness(0.9);
 }
 
-#contactPageContainer .contact-info,
-#contactPageContainer .social-links {
+#contactPageContainer .contact-info {
   margin-top: 2rem;
   text-align: left;
+}
+
+#contactPageContainer .social-links {
+  margin-top: 2rem;
+  text-align: center;
 }
 
 #contactPageContainer p {
   margin: 0 0 1rem;
 }
 
-#contactPageContainer .email-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  text-decoration: none;
-  font-weight: 500;
-  transition: background-color 0.2s ease-in-out;
-}
-
-#contactPageContainer .email-button:hover {
-  filter: brightness(0.9);
-}
 
 #contactPageContainer .social-links ul {
   list-style: none;
   padding: 0;
   display: flex;
   gap: 1rem;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
 #contactPageContainer .social-links a {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding: 0.5rem;
   border-radius: 8px;
   text-decoration: none;
