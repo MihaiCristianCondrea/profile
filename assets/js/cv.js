@@ -181,5 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupRealtimeUpdates();
     initPdfDownload();
     setupMode();
+    initTheme();
+    initNavigationDrawer();
+    setCopyrightYear();
     document.fonts.ready.then(initialize);
 });
