@@ -1,0 +1,21 @@
+/* Hide everything by default when printing */
+body * {
+    visibility: hidden;
+}
+
+/* Make only the CV preview and its contents visible */
+#cv-preview, #cv-preview * {
+    visibility: visible;
+}
+
+/* Position the CV preview to take up the entire printed page */
+#cv-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    box-shadow: none;
+    border: none;
+}
