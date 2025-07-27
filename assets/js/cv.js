@@ -141,7 +141,7 @@ function initialize() {
     document.getElementById('phone').value = '+40751029091';
     document.getElementById('email').value = 'condreamihaicristian10@gmail.com';
     document.getElementById('address').value = 'Bucharest, Romania';
-    document.getElementById('summary').value = `Passionate and Android Developer with extensive experience in the entire app lifecycle, from ideation and UI/UX design to publishing on Google Play. I use modern technologies like Jetpack Compose, Kotlin, and Firebase. I am also an independent music producer, a background that fuels a creative approach to problem-solving and a keen eye for user experience.`;
+    document.getElementById('summary').value = `Android Developer specializing in the full app lifecycle, from UI/UX design to Google Play publishing, utilizing Jetpack Compose, Kotlin, and Firebase. As a music producer, I bring a creative and user-centric approach to development.`;
     ['name','job-title','phone','email','address','summary'].forEach(id=>document.getElementById(id).dispatchEvent(new Event('input')));
     addListItem('skills','Languages: Kotlin, Java, HTML, Markdown, JSON');
     addListItem('skills','Android: Jetpack Compose, ViewModels, LiveData, Room, Navigation');
@@ -153,9 +153,10 @@ function initialize() {
     addInterestItem('Electronic Music Production');
     addInterestItem('Creating educational and promotional digital content');
     addComplexItem('work',{title:'Android Developer',company:'Digi Romania S.A., Bucharest',start:'2024',end:'Current',desc:`• Engineered Android applications for live TV and video streaming platforms.\n• Built bespoke Android applications for promotional campaigns and internal operational use.\n• Orchestrated full lifecycle management of the Google Play Console for Digi Romania, Digi Spain, and Digi Portugal.`});
-    addComplexItem('work',{title:'Android Developer',company:'Personal Projects, Bucharest',start:'2020',end:'Current',desc:`• Launched over 10 Android apps, managing everything from UI/UX design to development and publishing.\n• Focused on a Google-centric design, using Material Design principles for intuitive and consistent apps.`});
+    addComplexItem('work',{title:'Android Developer',company:'Personal Projects, Bucharest',start:'2020',end:'Current',desc:`• Android Developer specializing in the full app lifecycle, from UI/UX design to Google Play publishing, utilizing Jetpack Compose, Kotlin, and Firebase. As a music producer, I bring a creative and user-centric approach to development.\n• Launched over 10 Android apps, managing everything from UI/UX design to development and publishing.\n• Focused on a Google-centric design, using Material Design principles for intuitive and consistent apps.`});
     addComplexItem('education',{degree:'Industrial Engineering & Robotics',school:'Polytechnic University of Bucharest',start:'2020',end:'Current'});
     addComplexItem('education',{degree:'High School Diploma, Mathematics-Informatics',school:'"Hristo Botev" Theoretical High School, Bucharest',start:'2016',end:'2020'});
+    addComplexItem('education',{degree:'Currently Student at University Politechica of Bucharest',school:'',start:'2020',end:'Current'});
     document.getElementById('photo-preview').style.backgroundImage = "url('../../assets/images/cv_profile_pic.png')";
 }
 
