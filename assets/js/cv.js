@@ -158,7 +158,7 @@ function initialize() {
     addListItem('skills','Tools: Android Studio, GitHub, Git, Firebase Console, Play Console');
     addListItem('skills','Design: Material 3, Figma, SVG, Adobe Illustrator, Photoshop');
     addListItem('languages','Romanian (Native)');
-    addListItem('languages','English (Fluent)');
+    addListItem('languages','English (Advanced)');
     addInterestItem('Technology, AI, UX optimization');
     addInterestItem('Electronic Music Production');
     addInterestItem('Creating educational and promotional digital content');
