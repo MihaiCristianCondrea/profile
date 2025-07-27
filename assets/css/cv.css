@@ -51,7 +51,7 @@
 #cvPage textarea{resize:vertical;min-height:120px;}
 #cvPage input[type="file"]{color:var(--md-sys-color-on-surface-variant);margin-bottom:16px;}
 #cvPage button{border:none;border-radius:20px;padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;transition:background-color .3s,box-shadow .3s;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
-#cvPage #download-cv{background-color:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);width:100%;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
+#cvPage #download-cv{background-color:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);width:auto;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
 #cvPage #download-cv:hover{box-shadow:0 4px 8px rgba(0,0,0,0.15);}
 #cvPage button.add-btn{background-color:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);margin-bottom:10px;}
 #cvPage button.remove-btn{background-color:transparent;color:var(--md-sys-color-error);padding:8px;border-radius:50%;}
