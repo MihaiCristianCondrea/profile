@@ -1,7 +1,7 @@
 {
   "name": "Mihai's Profile",
   "short_name": "Mihai",
-  "start_url": "https://d4rk7355608.github.io/profile/#home",
+  "start_url": "./#home",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3DDC84",
