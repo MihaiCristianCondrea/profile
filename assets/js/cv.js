@@ -167,7 +167,7 @@ function initialize() {
     addComplexItem('work',{title:'Android Developer',company:'Personal Projects, Bucharest',start:'2020',end:'Current',desc:`- Successfully launched over 10 Android applications, overseeing the entire product lifecycle from UI/UX design and development to publishing.\n- Championed a Google-centric design philosophy, meticulously applying Material Design principles to deliver intuitive and visually consistent applications.`});
     addComplexItem('education',{degree:'Industrial Engineering & Robotics',school:'Polytechnic University of Bucharest',start:'2020',end:'Current'});
     addComplexItem('education',{degree:'High School Diploma, Mathematics-Informatics',school:'"Hristo Botev" Theoretical High School, Bucharest',start:'2016',end:'2020'});
-    document.getElementById('photo-preview').style.backgroundImage = "url('../src/images/cv_profile_pic.png')";
+    document.getElementById('photo-preview').style.backgroundImage = "url('../../assets/images/cv_profile_pic.png')";
 }
 
 function setupMode() {
