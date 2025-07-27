@@ -50,36 +50,40 @@ async function loadPageContent(pageId, updateHistory = true) {
     } else {
         switch (pageId) {
             case 'privacy-policy':
-                pagePath = 'pages/more/privacy-policy.html';
+                pagePath = 'pages/drawer/more/privacy-policy.html';
                 pageTitle = 'Privacy Policy';
                 break;
             case 'songs':
-                pagePath = 'pages/songs.html';
+                pagePath = 'pages/drawer/songs.html';
                 pageTitle = 'My Music';
                 break;
             case 'contact':
-                pagePath = 'pages/contact.html';
+                pagePath = 'pages/drawer/contact.html';
                 pageTitle = 'Contact';
                 break;
             case 'ads-help-center':
-                pagePath = 'pages/more/apps/ads-help-center.html';
+                pagePath = 'pages/drawer/more/apps/ads-help-center.html';
                 pageTitle = 'Ads Help Center';
                 break;
             case 'legal-notices':
-                pagePath = 'pages/more/apps/legal-notices.html';
+                pagePath = 'pages/drawer/more/apps/legal-notices.html';
                 pageTitle = 'Legal Notices';
                 break;
             case 'code-of-conduct':
-                pagePath = 'pages/more/code-of-conduct.html';
+                pagePath = 'pages/drawer/more/code-of-conduct.html';
                 pageTitle = 'Code of Conduct';
                 break;
             case 'privacy-policy-end-user-software':
-                pagePath = 'pages/more/apps/privacy-policy-apps.html';
+                pagePath = 'pages/drawer/more/apps/privacy-policy-apps.html';
                 pageTitle = 'Privacy Policy – End-User Software';
                 break;
             case 'terms-of-service-end-user-software':
-                pagePath = 'pages/more/apps/terms-of-service-apps.html';
+                pagePath = 'pages/drawer/more/apps/terms-of-service-apps.html';
                 pageTitle = 'Terms of Service – End-User Software';
+                break;
+            case 'cv':
+                pagePath = 'pages/cv/index.html';
+                pageTitle = 'My CV';
                 break;
 
             default:

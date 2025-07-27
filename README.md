@@ -22,10 +22,15 @@ assets/
   icons/                  # Favicon and PWA icons
   manifest.json           # Web app manifest
 pages/
-  more/                   # Additional pages served through the router
-    privacy-policy.html
-    code-of-conduct.html
-    apps/                 # App specific pages (ads help, legal notices, etc.)
+  drawer/                 # Pages accessible from the navigation drawer
+    songs.html
+    contact.html
+    more/
+      privacy-policy.html
+      code-of-conduct.html
+      apps/               # App specific pages (ads help, legal notices, etc.)
+  cv/                     # CV builder module loaded via `#cv`
+    index.html
 LICENSE                   # GPLv3 license
 ```
 
@@ -37,6 +42,7 @@ The router loads pages based on URL fragments (e.g., `#privacy-policy`). Importa
 - `#code-of-conduct` – Code of Conduct
 - `#privacy-policy-end-user-software` – Privacy Policy – End-User Software
 - `#terms-of-service-end-user-software` – Terms of Service – End-User Software
+- `#cv` – CV Builder
 
 ## Running Locally
 
