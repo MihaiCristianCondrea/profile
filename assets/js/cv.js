@@ -166,6 +166,36 @@ function setupMode() {
     if (!editMode && form) form.style.display = 'none';
 }
 
+function prepareAndPrintCV() {
+    const cvElement = document.getElementById('cv-preview');
+    if (!cvElement) {
+        window.print();
+        return;
+    }
+
+    const originalTransform = cvElement.style.transform;
+    const originalOrigin = cvElement.style.transformOrigin;
+
+    const contentHeight = cvElement.scrollHeight;
+    const targetHeight = 1080; // approximate printable height of an A4 page
+
+    if (contentHeight > targetHeight) {
+        const scale = targetHeight / contentHeight;
+        cvElement.style.transformOrigin = 'top left';
+        cvElement.style.transform = `scale(${scale})`;
+    } else {
+        cvElement.style.transform = '';
+    }
+
+    window.onafterprint = () => {
+        cvElement.style.transform = originalTransform;
+        cvElement.style.transformOrigin = originalOrigin;
+        window.onafterprint = null;
+    };
+
+    window.print();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     setupRealtimeUpdates();
     setupMode();
