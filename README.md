@@ -63,6 +63,16 @@ python3 -m http.server 8080
 
 You can also use any other static server such as `npx serve`.
 
+### Deploying to GitHub Pages
+
+When deploying the site at
+`https://mihaicristiancondrea.github.io/profile/`, make sure the icon
+paths in `assets/manifest.json` are **relative** (e.g.
+`icons/icon-192.png`). Absolute paths like `/icons/icon-192.png` will
+resolve to the domain root and result in 404 errors. Keeping the icon
+sources relative ensures they work correctly from the `/profile/`
+subdirectory served by GitHub Pages.
+
 ### YouTube Channel Feed
 
 The songs page fetches track information from the D4rK Rekords YouTube channel
