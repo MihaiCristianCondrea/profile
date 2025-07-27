@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mihai's CV</title>
+    <link rel="stylesheet" href="../assets/css/tailwind.css">
+    <script type="module" src="https://unpkg.com/@material/web@2.3.0/all.js?module"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/variables.css">
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/pages.css">
+    <link rel="stylesheet" href="../assets/css/cv.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="bg-surface-container-lowest">
+    <md-top-app-bar>
+        <a href="/" slot="navigationIcon" aria-label="Back home">
+            <md-icon-button>
+                <md-icon><span class="material-symbols-outlined">arrow_back</span></md-icon>
+            </md-icon-button>
+        </a>
+        <span slot="headline">My CV</span>
+    </md-top-app-bar>
+
+    <div id="cvPage">
+        <div class="form-container">
+            <h1>CV Builder</h1>
+
+            <div class="form-section">
+                <h2>Personal Info</h2>
+                <div class="input-group">
+                    <input type="text" id="name" placeholder=" ">
+                    <label for="name">Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="job-title" placeholder=" ">
+                    <label for="job-title">Job Title</label>
+                </div>
+                <input type="file" id="photo" accept="image/*">
+                <div class="input-group">
+                    <input type="tel" id="phone" placeholder=" ">
+                    <label for="phone">Phone</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder=" ">
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="address" placeholder=" ">
+                    <label for="address">Address</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="summary" placeholder=" "></textarea>
+                    <label for="summary">Professional Summary</label>
+                </div>
+            </div>
+
+            <div class="form-section dynamic-list" id="skills-form">
+                <h2>Skills</h2>
+                <button type="button" class="add-btn" onclick="addListItem('skills')">Add Skill</button>
+            </div>
+
+            <div class="form-section" id="work-form">
+                <h2>Work History</h2>
+                <button type="button" class="add-btn" onclick="addWorkItem()">Add Work Experience</button>
+            </div>
+
+            <div class="form-section" id="education-form">
+                <h2>Education</h2>
+                <button type="button" class="add-btn" onclick="addEducationItem()">Add Education</button>
+            </div>
+
+            <div class="form-section dynamic-list" id="languages-form">
+                <h2>Languages</h2>
+                <button type="button" class="add-btn" onclick="addListItem('languages')">Add Language</button>
+            </div>
+
+            <div class="form-section" id="interests-form">
+                <h2>Interests</h2>
+                <button type="button" class="add-btn" onclick="addInterestItem()">Add Interest</button>
+            </div>
+
+            <button id="download-cv">Download CV as PDF</button>
+        </div>
+
+        <div id="cv-preview">
+            <div class="cv-content">
+                <div class="cv-left">
+                    <div id="photo-preview"></div>
+                    <div class="contact-info cv-section">
+                        <p id="cv-phone"></p>
+                        <p id="cv-email"></p>
+                        <p id="cv-address"></p>
+                    </div>
+                    <div class="cv-section" id="cv-skills">
+                        <h2>Skills</h2>
+                        <ul></ul>
+                    </div>
+                    <div class="cv-section" id="cv-languages">
+                        <h2>Languages</h2>
+                        <ul></ul>
+                    </div>
+                    <div class="cv-section" id="cv-interests">
+                        <h2>Interests</h2>
+                        <ul></ul>
+                    </div>
+                </div>
+                <div class="cv-right">
+                    <h1 id="cv-name"></h1>
+                    <h2 id="cv-job-title"></h2>
+                    <div id="cv-summary"></div>
+
+                    <div class="cv-section" id="cv-work">
+                        <h2>Work history</h2>
+                    </div>
+                    <div class="cv-section" id="cv-education">
+                        <h2>Education</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <span>&copy; Mihai-Cristian Condrea</span>
+    </footer>
+
+    <script src="../assets/js/cv.js" defer></script>
+</body>
+</html>
