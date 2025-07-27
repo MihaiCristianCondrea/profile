@@ -59,7 +59,7 @@
 #cvPage .dynamic-list .list-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 #cvPage .dynamic-list .list-item input{flex-grow:1;}
 #cvPage .complex-item-form>div{background-color: var(--md-sys-color-surface-container-low);border:1px solid var(--md-sys-color-surface-variant);padding:16px;border-radius:12px;margin-bottom:16px;display:flex;flex-direction:column;gap:16px;}
-#cvPage #cv-preview{width:800px;background:var(--md-sys-color-surface);box-shadow:0 8px 24px rgba(0,0,0,0.1);border:1px solid var(--app-border-color);}
+#cvPage #cv-preview{width:800px;background:var(--md-sys-color-surface);box-shadow:0 8px 24px rgba(0,0,0,0.1);border:1px solid var(--app-border-color);height:auto;min-height:auto;}
 #cvPage .cv-content{display:flex;}
 #cvPage .cv-left{background: var(--md-sys-color-surface-container-high);width:35%;padding:40px 30px;color:#333;}
 #cvPage .cv-right{width:65%;padding:40px 30px;}

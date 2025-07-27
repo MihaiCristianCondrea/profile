@@ -136,13 +136,32 @@ function updateComplexList(sectionId) {
 
 function initPdfDownload() {
     const btn = document.getElementById('download-cv');
-    if (btn) {
-        btn.addEventListener('click', () => {
-            const cvElement = document.getElementById('cv-preview');
-            const opt = { margin:0, filename:'Mihai-Condrea-CV.pdf', image:{type:'jpeg',quality:1.0}, html2canvas:{scale:4,useCORS:true,dpi:300,letterRendering:true}, jsPDF:{unit:'px',format:'a4',orientation:'portrait'} };
-            html2pdf().from(cvElement).set(opt).save();
-        });
-    }
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+        const cvElement = document.getElementById('cv-preview');
+
+        await document.fonts.ready;
+        const images = Array.from(cvElement.querySelectorAll('img'))
+            .map(img => img.complete ? Promise.resolve() : new Promise(res => { img.onload = img.onerror = res; }));
+        await Promise.all(images);
+
+        const opt = {
+            margin: 0,
+            filename: 'Mihai-Condrea-CV.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: {
+                scale: 4,
+                useCORS: true,
+                dpi: 300,
+                letterRendering: true,
+                windowWidth: cvElement.scrollWidth,
+                windowHeight: cvElement.scrollHeight
+            },
+            jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(cvElement).set(opt).save();
+    });
 }
 
 function initialize() {
