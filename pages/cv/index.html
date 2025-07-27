@@ -19,14 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="bg-surface-container-lowest">
-    <md-top-app-bar>
-        <a href="/" slot="navigationIcon" aria-label="Back home">
-            <md-icon-button>
-                <md-icon><span class="material-symbols-outlined">arrow_back</span></md-icon>
-            </md-icon-button>
-        </a>
-        <span slot="headline">My CV</span>
-    </md-top-app-bar>
+
 
     <div id="cvPage">
         <div class="form-container">
@@ -86,7 +79,6 @@
                 <button type="button" class="add-btn" onclick="addInterestItem()">Add Interest</button>
             </div>
 
-            <button id="download-cv">Download CV as PDF</button>
         </div>
 
         <div id="cv-preview">
@@ -125,11 +117,10 @@
                 </div>
             </div>
         </div>
+        <div style="width:100%;text-align:center;margin-top:24px;">
+            <button id="download-cv">Download CV as PDF</button>
+        </div>
     </div>
-
-    <footer class="app-footer">
-        <span>&copy; Mihai-Cristian Condrea</span>
-    </footer>
 
     <script src="../../assets/js/cv.js" defer></script>
 </body>
