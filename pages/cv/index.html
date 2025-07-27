@@ -31,7 +31,7 @@
         </div>
         <div class="drawer-content">
             <md-list>
-                <md-list-item href="../../index.html" id="navHomeLink">
+                <md-list-item href="../../index.html#home" id="navHomeLink">
                     <md-icon slot="start"><span class="material-symbols-outlined">home</span></md-icon>
                     <div slot="headline">Home</div>
                 </md-list-item>
@@ -39,11 +39,50 @@
                     <md-icon slot="start"><span class="material-symbols-outlined">article</span></md-icon>
                     <div slot="headline">Blogs</div>
                 </md-list-item>
-                <md-divider></md-divider>
-                <md-list-item href="../drawer/contact.html" id="navContactLink">
-                    <md-icon slot="start"><span class="material-symbols-outlined">contact_mail</span></md-icon>
-                    <div slot="headline">Contact</div>
+                <md-list-item href="../../index.html#songs" id="navSongsLink">
+                    <md-icon slot="start"><span class="material-symbols-outlined">music_note</span></md-icon>
+                    <div slot="headline">Music</div>
                 </md-list-item>
+                <md-divider></md-divider>
+                <md-list-item type="button" id="moreToggle" aria-controls="moreContent" aria-expanded="false">
+                    <md-icon slot="start"><span class="material-symbols-outlined">more_horiz</span></md-icon>
+                    <div slot="headline">More</div>
+                    <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
+                </md-list-item>
+                <div class="nested-list" id="moreContent" role="group" aria-hidden="true">
+                    <md-list>
+                        <md-list-item href="../../index.html#privacy-policy" id="navPrivacyPolicyLink">
+                            <div slot="headline">Privacy Policy</div>
+                        </md-list-item>
+                        <md-list-item href="../../index.html#code-of-conduct">
+                            <div slot="headline">Code of Conduct</div>
+                        </md-list-item>
+                        <md-list-item href="../../index.html#contact" id="navContactLink">
+                            <div slot="headline">Contact</div>
+                        </md-list-item>
+                    </md-list>
+                </div>
+                <md-list-item type="button" id="appsToggle" aria-controls="appsContent" aria-expanded="false">
+                    <md-icon slot="start"><span class="material-symbols-outlined">apps</span></md-icon>
+                    <div slot="headline">Apps</div>
+                    <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
+                </md-list-item>
+                <div class="nested-list" id="appsContent" role="group" aria-hidden="true">
+                    <md-list>
+                        <md-list-item href="../../index.html#ads-help-center" id="navAdsHelpCenterLink">
+                            <div slot="headline">Ads Help Center</div>
+                        </md-list-item>
+                        <md-list-item href="../../index.html#privacy-policy-end-user-software">
+                            <div slot="headline">Privacy Policy</div>
+                        </md-list-item>
+                        <md-list-item href="../../index.html#terms-of-service-end-user-software">
+                            <div slot="headline">Terms of Service</div>
+                        </md-list-item>
+                        <md-list-item href="../../index.html#legal-notices" id="navLegalNoticesLink">
+                            <div slot="headline">Legal notices</div>
+                        </md-list-item>
+                    </md-list>
+                </div>
             </md-list>
         </div>
         <div class="drawer-footer">
@@ -103,27 +142,27 @@
             </div>
 
             <div class="form-section dynamic-list" id="skills-form">
-                <h2>Skills</h2>
+                <h2><span class="material-symbols-outlined">build</span> Skills</h2>
                 <button type="button" class="add-btn" onclick="addListItem('skills')">Add Skill</button>
             </div>
 
             <div class="form-section" id="work-form">
-                <h2>Work History</h2>
+                <h2><span class="material-symbols-outlined">work</span> Work History</h2>
                 <button type="button" class="add-btn" onclick="addWorkItem()">Add Work Experience</button>
             </div>
 
             <div class="form-section" id="education-form">
-                <h2>Education</h2>
+                <h2><span class="material-symbols-outlined">school</span> Education</h2>
                 <button type="button" class="add-btn" onclick="addEducationItem()">Add Education</button>
             </div>
 
             <div class="form-section dynamic-list" id="languages-form">
-                <h2>Languages</h2>
+                <h2><span class="material-symbols-outlined">language</span> Languages</h2>
                 <button type="button" class="add-btn" onclick="addListItem('languages')">Add Language</button>
             </div>
 
             <div class="form-section" id="interests-form">
-                <h2>Interests</h2>
+                <h2><span class="material-symbols-outlined">interests</span> Interests</h2>
                 <button type="button" class="add-btn" onclick="addInterestItem()">Add Interest</button>
             </div>
 
@@ -139,15 +178,15 @@
                         <p id="cv-address"></p>
                     </div>
                     <div class="cv-section" id="cv-skills">
-                        <h2>Skills</h2>
+                        <h2><span class="material-symbols-outlined">build</span> Skills</h2>
                         <ul></ul>
                     </div>
                     <div class="cv-section" id="cv-languages">
-                        <h2>Languages</h2>
+                        <h2><span class="material-symbols-outlined">language</span> Languages</h2>
                         <ul></ul>
                     </div>
                     <div class="cv-section" id="cv-interests">
-                        <h2>Interests</h2>
+                        <h2><span class="material-symbols-outlined">interests</span> Interests</h2>
                         <ul></ul>
                     </div>
                 </div>
@@ -157,10 +196,10 @@
                     <div id="cv-summary"></div>
 
                     <div class="cv-section" id="cv-work">
-                        <h2>Work history</h2>
+                        <h2><span class="material-symbols-outlined">work</span> Work history</h2>
                     </div>
                     <div class="cv-section" id="cv-education">
-                        <h2>Education</h2>
+                        <h2><span class="material-symbols-outlined">school</span> Education</h2>
                     </div>
                 </div>
             </div>

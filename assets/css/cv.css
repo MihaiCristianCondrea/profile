@@ -32,8 +32,9 @@
 #cvPage .form-section{margin-bottom:24px;}
 #cvPage .form-section h2{
     font-size:16px;font-weight:500;color:var(--md-sys-color-on-surface-variant);
-    margin-bottom:16px;padding-left:12px;
+    margin-bottom:16px;padding-left:12px;display:flex;align-items:center;gap:8px;
 }
+#cvPage .form-section h2 .material-symbols-outlined{font-size:20px;color:var(--md-sys-color-primary);}
 #cvPage .input-group{position:relative;margin-bottom:16px;}
 #cvPage label{
     position:absolute;top:16px;left:16px;color:var(--md-sys-color-on-surface-variant);
@@ -58,7 +59,7 @@
 #cvPage .dynamic-list .list-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 #cvPage .dynamic-list .list-item input{flex-grow:1;}
 #cvPage .complex-item-form>div{background-color: var(--md-sys-color-surface-container-low);border:1px solid var(--md-sys-color-surface-variant);padding:16px;border-radius:12px;margin-bottom:16px;display:flex;flex-direction:column;gap:16px;}
-#cvPage #cv-preview{width:800px;min-height:1122px;background:var(--md-sys-color-surface);box-shadow:0 8px 24px rgba(0,0,0,0.1);border:1px solid var(--app-border-color);}
+#cvPage #cv-preview{width:800px;background:var(--md-sys-color-surface);box-shadow:0 8px 24px rgba(0,0,0,0.1);border:1px solid var(--app-border-color);}
 #cvPage .cv-content{display:flex;}
 #cvPage .cv-left{background: var(--md-sys-color-surface-container-high);width:35%;padding:40px 30px;color:#333;}
 #cvPage .cv-right{width:65%;padding:40px 30px;}
@@ -66,7 +67,8 @@
 #cvPage .contact-info p{display:flex;align-items:center;gap:10px;margin-bottom:12px;word-break:break-all;font-size:14px;}
 #cvPage .contact-info .material-symbols-outlined{font-size:20px;color:var(--md-sys-color-secondary);}
 #cvPage .cv-section{margin-bottom:30px;}
-#cvPage .cv-section h2{font-family:'Poppins',sans-serif;font-size:16px;color:#333;margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--app-border-color);text-transform:uppercase;letter-spacing:1px;font-weight:700;}
+#cvPage .cv-section h2{font-family:'Poppins',sans-serif;font-size:16px;color:#333;margin-bottom:16px;padding-bottom:8px;border-bottom:1.5px solid var(--app-border-color);text-transform:uppercase;letter-spacing:1px;font-weight:700;display:flex;align-items:center;gap:8px;}
+#cvPage .cv-section h2 .material-symbols-outlined{font-size:20px;color:var(--md-sys-color-primary);}
 #cvPage .cv-right .cv-section h2{border-bottom-color:var(--md-sys-color-primary);}
 #cvPage #cv-name{font-family:'Poppins',sans-serif;font-size:36px;font-weight:700;color:#111;margin-bottom:4px;letter-spacing:-0.5px;}
 #cvPage #cv-job-title{font-family:'Poppins',sans-serif;font-size:20px;color:var(--md-sys-color-secondary);margin-bottom:24px;font-weight:400;}
