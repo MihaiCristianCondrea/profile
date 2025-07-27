@@ -82,9 +82,8 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pageTitle = 'Terms of Service – End-User Software';
                 break;
             case 'cv':
-                pagePath = 'pages/cv/index.html';
-                pageTitle = 'My CV';
-                break;
+                window.location.href = 'pages/cv/index.html';
+                return;
 
             default:
                 console.warn('Router: Unknown page:', pageId);
