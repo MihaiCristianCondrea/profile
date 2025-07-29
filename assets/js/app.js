@@ -1,7 +1,7 @@
 // Global DOM element references needed by multiple modules or for initialization
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl,
-    navHomeLinkEl, navPrivacyPolicyLinkEl, navSongsLinkEl, navContactLinkEl,
-    navResumeLinkEl, topAppBarEl;
+    navHomeLinkEl, navPrivacyPolicyLinkEl, navSongsLinkEl, navProjectsLinkEl,
+    navContactLinkEl, navResumeLinkEl, topAppBarEl;
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Get DOM Elements ---
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     navHomeLinkEl = getDynamicElement('navHomeLink');
     navPrivacyPolicyLinkEl = getDynamicElement('navPrivacyPolicyLink');
     navSongsLinkEl = getDynamicElement('navSongsLink');
+    navProjectsLinkEl = getDynamicElement('navProjectsLink');
     navContactLinkEl = getDynamicElement('navContactLink');
     navResumeLinkEl = getDynamicElement('navResumeLink');
     topAppBarEl = getDynamicElement('topAppBar');
@@ -46,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         navSongsLinkEl.addEventListener('click', (e) => {
             e.preventDefault();
             loadPageContent('songs');
+        });
+    }
+    if (navProjectsLinkEl) {
+        navProjectsLinkEl.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadPageContent('projects');
         });
     }
     if (navContactLinkEl) {
