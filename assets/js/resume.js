@@ -197,8 +197,43 @@ function prepareAndPrintResume() {
 }
 
 
+let markedLoadPromise;
+
+function ensureMarkedLoaded() {
+    if (window.marked) return Promise.resolve();
+    if (markedLoadPromise) return markedLoadPromise;
+    markedLoadPromise = new Promise(resolve => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+        script.onload = resolve;
+        script.onerror = resolve;
+        document.head.appendChild(script);
+    });
+    return markedLoadPromise;
+}
+
+function ensureResumeStyles() {
+    const head = document.head;
+    if (!document.querySelector('link[href="assets/css/resume.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'assets/css/resume.css';
+        head.appendChild(link);
+    }
+    if (!document.querySelector('link[href="assets/css/print.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'assets/css/print.css';
+        link.media = 'print';
+        head.appendChild(link);
+    }
+}
+
 function initResumePage() {
-    setupRealtimeUpdates();
-    setupMode();
-    document.fonts.ready.then(initialize);
+    ensureResumeStyles();
+    ensureMarkedLoaded().then(() => {
+        setupRealtimeUpdates();
+        setupMode();
+        document.fonts.ready.then(initialize);
+    });
 }
