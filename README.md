@@ -24,6 +24,7 @@ assets/
 pages/
   drawer/                 # Pages accessible from the navigation drawer
     songs.html
+    projects.html
     contact.html
     more/
       privacy-policy.html
@@ -43,6 +44,7 @@ The router loads pages based on URL fragments (e.g., `#privacy-policy`). Importa
 - `#privacy-policy-end-user-software` – Privacy Policy – End-User Software
 - `#terms-of-service-end-user-software` – Terms of Service – End-User Software
 - `#resume` – Resume Builder
+- `#projects` – Showcase of projects
 
 ## Running Locally
 
