@@ -10,6 +10,8 @@
     <link rel="manifest" href="assets/manifest.json">
     <link rel="stylesheet" href="assets/css/tailwind.css">
     <script type="module" src="https://unpkg.com/@material/web@2.3.0/all.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/web@2.3.0/labs/navigationdrawer/navigation-drawer.js?module"></script>
+    <script type="module" src="https://unpkg.com/@material/web@2.3.0/dialog/dialog.js?module"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
@@ -27,7 +29,7 @@
 
     <div id="drawerOverlay" class="drawer-overlay"></div>
 
-    <div id="navDrawer" class="navigation-drawer">
+    <md-navigation-drawer id="navDrawer" class="navigation-drawer" pivot="start">
         <div class="drawer-header">
             <h2>Menu</h2>
             <md-icon-button id="closeDrawerButton" aria-label="Close menu">
@@ -104,7 +106,7 @@
                 </md-icon-button>
             </div>
         </div>
-    </div>
+    </md-navigation-drawer>
 
     <md-top-app-bar id="topAppBar">
         <md-icon-button id="menuButton" slot="navigationIcon" aria-label="Open menu">
