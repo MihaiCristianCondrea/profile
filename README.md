@@ -30,7 +30,7 @@ pages/
       code-of-conduct.html
       apps/               # App specific pages (ads help, legal notices, etc.)
   cv/                     # CV builder module loaded via `#cv`
-    index.html
+    resume.html
 LICENSE                   # GPLv3 license
 ```
 
