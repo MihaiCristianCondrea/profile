@@ -81,9 +81,10 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/drawer/more/apps/terms-of-service-apps.html';
                 pageTitle = 'Terms of Service – End-User Software';
                 break;
-            case 'cv':
-                window.location.href = 'pages/cv/resume.html';
-                return;
+            case 'resume':
+                pagePath = 'pages/resume/resume.html';
+                pageTitle = "Mihai's Resume";
+                break;
 
             default:
                 console.warn('Router: Unknown page:', pageId);
@@ -108,6 +109,8 @@ async function loadPageContent(pageId, updateHistory = true) {
             pageContentArea.innerHTML = contentHTML;
             if (pageId === 'songs' && typeof loadSongs === 'function' && document.getElementById('songsGrid')) {
                 loadSongs();
+            } else if (pageId === 'resume' && typeof initResumePage === 'function') {
+                initResumePage();
             }
         } catch (error) {
             console.error(`Error loading ${pageTitle}:`, error);

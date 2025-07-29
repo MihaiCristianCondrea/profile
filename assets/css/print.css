@@ -4,12 +4,12 @@ body * {
 }
 
 /* Make only the CV preview and its contents visible */
-#cv-preview, #cv-preview * {
+#resume-preview, #resume-preview * {
     visibility: visible;
 }
 
 /* Position the CV preview to take up the entire printed page */
-#cv-preview {
+#resume-preview {
     position: absolute;
     left: 0;
     top: 0;
@@ -20,7 +20,7 @@ body * {
     border: none;
 }
 
-#cv-preview #photo-preview {
+#resume-preview #photo-preview {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
 }
