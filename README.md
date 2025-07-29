@@ -29,7 +29,7 @@ pages/
       privacy-policy.html
       code-of-conduct.html
       apps/               # App specific pages (ads help, legal notices, etc.)
-  cv/                     # CV builder module loaded via `#cv`
+  resume/                 # Resume builder module loaded via `#resume`
     resume.html
 LICENSE                   # GPLv3 license
 ```
@@ -42,7 +42,7 @@ The router loads pages based on URL fragments (e.g., `#privacy-policy`). Importa
 - `#code-of-conduct` – Code of Conduct
 - `#privacy-policy-end-user-software` – Privacy Policy – End-User Software
 - `#terms-of-service-end-user-software` – Terms of Service – End-User Software
-- `#cv` – CV Builder
+- `#resume` – Resume Builder
 
 ## Running Locally
 

@@ -1,16 +1,16 @@
-// CV builder functionality
+// Resume builder functionality
 // Real-time updates for form inputs
 function setupRealtimeUpdates() {
     const set = (id, cb) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', cb);
     };
-    set('name', e => document.getElementById('cv-name').innerText = e.target.value);
-    set('job-title', e => document.getElementById('cv-job-title').innerText = e.target.value);
-    set('phone', e => document.getElementById('cv-phone').innerHTML = e.target.value ? `<span class="material-symbols-outlined">call</span><span>${e.target.value}</span>` : '');
-    set('email', e => document.getElementById('cv-email').innerHTML = e.target.value ? `<span class="material-symbols-outlined">mail</span><span>${e.target.value}</span>` : '');
-    set('address', e => document.getElementById('cv-address').innerHTML = e.target.value ? `<span class="material-symbols-outlined">location_on</span><span>${e.target.value}</span>` : '');
-    set('summary', e => document.getElementById('cv-summary').innerHTML = marked.parse(e.target.value));
+    set('name', e => document.getElementById('resume-name').innerText = e.target.value);
+    set('job-title', e => document.getElementById('resume-job-title').innerText = e.target.value);
+    set('phone', e => document.getElementById('resume-phone').innerHTML = e.target.value ? `<span class="material-symbols-outlined">call</span><span>${e.target.value}</span>` : '');
+    set('email', e => document.getElementById('resume-email').innerHTML = e.target.value ? `<span class="material-symbols-outlined">mail</span><span>${e.target.value}</span>` : '');
+    set('address', e => document.getElementById('resume-address').innerHTML = e.target.value ? `<span class="material-symbols-outlined">location_on</span><span>${e.target.value}</span>` : '');
+    set('summary', e => document.getElementById('resume-summary').innerHTML = marked.parse(e.target.value));
     const photoInput = document.getElementById('photo');
     if (photoInput) {
         photoInput.addEventListener('change', evt => {
@@ -53,7 +53,7 @@ function removeListItem(itemId, sectionId) {
 }
 
 function updateList(sectionId) {
-    const listElement = document.querySelector(`#cv-${sectionId} ul`);
+    const listElement = document.querySelector(`#resume-${sectionId} ul`);
     listElement.innerHTML = '';
     if (sectionId === 'interests') {
         document.querySelectorAll(`#interests-form .list-item`).forEach(item => {
@@ -100,13 +100,13 @@ function removeItem(itemId, sectionId) {
 }
 
 function updateComplexList(sectionId) {
-    const container = document.getElementById(`cv-${sectionId}`);
+    const container = document.getElementById(`resume-${sectionId}`);
     const h2 = container.querySelector('h2');
     container.innerHTML = '';
     container.appendChild(h2);
     document.querySelectorAll(`.complex-item-form[id^="${sectionId}-"]`).forEach(item => {
         const div = document.createElement('div');
-        div.className = 'cv-item';
+        div.className = 'resume-item';
         if (sectionId === 'work') {
             const data = {
                 title: item.querySelector('.work-title').value,
@@ -116,7 +116,7 @@ function updateComplexList(sectionId) {
                 desc: item.querySelector('.work-desc').value.trim()
             };
             if (data.title || data.company) {
-                div.innerHTML = `<div class="cv-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.company}</strong></p><div class="description">${marked.parse(data.desc)}</div>`;
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.company}</strong></p><div class="description">${marked.parse(data.desc)}</div>`;
                 container.appendChild(div);
             }
         } else if (sectionId === 'education') {
@@ -127,7 +127,7 @@ function updateComplexList(sectionId) {
                 end: item.querySelector('.edu-end').value
             };
             if (data.degree || data.school) {
-                div.innerHTML = `<div class="cv-item-header"><h3>${data.degree}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.school}</strong></p>`;
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.school}</strong></p>`;
                 container.appendChild(div);
             }
         }
@@ -162,12 +162,12 @@ function initialize() {
 function setupMode() {
     const params = new URLSearchParams(window.location.search);
     const editMode = params.get('edit') === 'true';
-    const form = document.querySelector('#cvPage .form-container');
+    const form = document.querySelector('#resumePage .form-container');
     if (!editMode && form) form.style.display = 'none';
 }
 
-function prepareAndPrintCV() {
-    const cvElement = document.getElementById('cv-preview');
+function prepareAndPrintResume() {
+    const cvElement = document.getElementById('resume-preview');
     if (!cvElement) {
         window.print();
         return;
@@ -196,11 +196,9 @@ function prepareAndPrintCV() {
     window.print();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+
+function initResumePage() {
     setupRealtimeUpdates();
     setupMode();
-    initTheme();
-    initNavigationDrawer();
-    setCopyrightYear();
     document.fonts.ready.then(initialize);
-});
+}
