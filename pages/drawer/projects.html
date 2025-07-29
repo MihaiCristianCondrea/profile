@@ -1,15 +1,68 @@
 <div id="projectsPageContainer" class="page-section active">
-    <h1>Projects</h1>
-    <div class="projects-grid">
-        <div class="project-card">
-            <img src="https://via.placeholder.com/300x180.png?text=Project" alt="Profile Website screenshot" loading="lazy">
-            <div class="project-card-content">
-                <h3>Profile Website</h3>
-                <p>This website showcasing my profile and work.</p>
-                <div class="project-card-links">
-                    <a href="https://github.com/MihaiCristianCondrea/profile" target="_blank" rel="noopener noreferrer">GitHub</a>
-                </div>
-            </div>
+  <h1>Projects</h1>
+  <p class="projects-intro">A selection of my work using Material Design.</p>
+  <md-tabs id="projectsFilterTabs" style="margin-bottom:1rem;">
+    <md-primary-tab data-category="featured" active>Featured</md-primary-tab>
+    <md-primary-tab data-category="all">All</md-primary-tab>
+    <md-primary-tab data-category="web">Web</md-primary-tab>
+    <md-primary-tab data-category="desktop">Desktop</md-primary-tab>
+    <md-primary-tab data-category="android">Android</md-primary-tab>
+  </md-tabs>
+  <div class="projects-list">
+    <md-filled-card class="project-entry" data-category="featured web">
+      <div class="project-content">
+        <div class="project-info">
+          <h2>Profile Website</h2>
+          <div class="date-range">2023&nbsp;&ndash;&nbsp;Present</div>
+          <p>This website showcasing my profile and work. View the source on
+            <a href="https://github.com/MihaiCristianCondrea/profile" target="_blank" rel="noopener noreferrer">GitHub</a>.
+          </p>
         </div>
-    </div>
+        <div class="project-media">
+          <div class="carousel">
+            <img class="carousel-slide active" src="https://via.placeholder.com/600x400.png?text=Website+1" alt="Profile Website screenshot" loading="lazy">
+            <img class="carousel-slide" src="https://via.placeholder.com/600x400.png?text=Website+2" alt="Profile Website screenshot 2" loading="lazy">
+            <button class="prev" aria-label="Previous">
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button class="next" aria-label="Next">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </md-filled-card>
+  </div>
 </div>
+<script>
+(() => {
+  const tabs = document.querySelectorAll('#projectsFilterTabs md-primary-tab');
+  const projects = document.querySelectorAll('.project-entry');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.removeAttribute('active'));
+      tab.setAttribute('active', '');
+      const cat = tab.dataset.category;
+      projects.forEach(p => {
+        if (cat === 'all') { p.style.display = ''; return; }
+        if (cat === 'featured') { p.style.display = p.dataset.category.includes('featured') ? '' : 'none'; return; }
+        p.style.display = p.dataset.category.includes(cat) ? '' : 'none';
+      });
+    });
+  });
+
+  document.querySelectorAll('.carousel').forEach(carousel => {
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    let index = 0;
+    const update = () => slides.forEach((s,i) => s.classList.toggle('active', i===index));
+    update();
+    carousel.querySelector('.prev').addEventListener('click', () => {
+      index = (index - 1 + slides.length) % slides.length; update();
+    });
+    carousel.querySelector('.next').addEventListener('click', () => {
+      index = (index + 1) % slides.length; update();
+    });
+  });
+})();
+</script>
+
