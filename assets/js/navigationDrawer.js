@@ -20,7 +20,7 @@ function initNavigationDrawer() {
     if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
 
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && navDrawer && navDrawer.classList.contains('open')) {
+        if (event.key === 'Escape' && navDrawer && navDrawer.opened) {
             closeDrawer();
         }
     });
@@ -34,7 +34,7 @@ function initNavigationDrawer() {
  */
 function openDrawer() {
     if (navDrawer && drawerOverlay) {
-        navDrawer.classList.add('open');
+        navDrawer.opened = true;
         drawerOverlay.classList.add('open');
         document.body.classList.add('drawer-is-open');
         if (closeDrawerButton) closeDrawerButton.focus();
@@ -46,7 +46,7 @@ function openDrawer() {
  */
 function closeDrawer() {
     if (navDrawer && drawerOverlay) {
-        navDrawer.classList.remove('open');
+        navDrawer.opened = false;
         drawerOverlay.classList.remove('open');
         document.body.classList.remove('drawer-is-open');
         if (menuButton) menuButton.focus();
