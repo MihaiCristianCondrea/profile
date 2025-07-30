@@ -658,6 +658,29 @@ md-filled-card.profile-card {
   text-decoration: underline;
 }
 
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.project-actions a {
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .project-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .project-actions a md-filled-button,
+  .project-actions a md-outlined-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .carousel {
   position: relative;
   overflow: hidden;
