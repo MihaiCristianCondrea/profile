@@ -115,6 +115,8 @@ async function loadPageContent(pageId, updateHistory = true) {
                 loadSongs();
             } else if (pageId === 'resume' && typeof initResumePage === 'function') {
                 initResumePage();
+            } else if (pageId === 'projects' && typeof initProjectsPage === 'function') {
+                initProjectsPage();
             }
         } catch (error) {
             console.error(`Error loading ${pageTitle}:`, error);
