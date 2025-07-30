@@ -38,8 +38,24 @@ function initProjectsPage() {
     document.querySelectorAll('.carousel').forEach(carousel => {
       const slides = carousel.querySelectorAll('.carousel-slide');
       let index = 0;
-      const update = () => slides.forEach((s,i) => s.classList.toggle('active', i===index));
+
+      const dotsContainer = document.createElement('div');
+      dotsContainer.classList.add('carousel-dots');
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.classList.add('carousel-dot');
+        dot.addEventListener('click', () => { index = i; update(); });
+        dotsContainer.appendChild(dot);
+      });
+      carousel.appendChild(dotsContainer);
+      const dots = dotsContainer.querySelectorAll('.carousel-dot');
+
+      const update = () => {
+        slides.forEach((s,i) => s.classList.toggle('active', i===index));
+        dots.forEach((d,i) => d.classList.toggle('active', i===index));
+      };
       update();
+
       carousel.querySelector('.prev').addEventListener('click', () => {
         index = (index - 1 + slides.length) % slides.length; update();
       });

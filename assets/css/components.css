@@ -620,13 +620,13 @@ md-filled-card.profile-card {
 }
 
 .project-entry {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .project-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: start;
 }
 
@@ -691,6 +691,8 @@ md-filled-card.profile-card {
   display: none;
   width: 100%;
   border-radius: 12px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .carousel-slide.active {
@@ -714,6 +716,31 @@ md-filled-card.profile-card {
 
 .carousel button.next {
   right: 4px;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--md-sys-color-outline);
+  opacity: 0.7;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.carousel-dot.active {
+  background: var(--md-sys-color-primary);
+  opacity: 1;
 }
 
 /* --- Scrollbars --- */
