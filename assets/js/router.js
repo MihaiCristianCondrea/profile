@@ -83,6 +83,10 @@ async function loadPageContent(pageId, updateHistory = true) {
                 pagePath = 'pages/drawer/contact.html';
                 pageTitle = 'Contact';
                 break;
+            case 'about-me':
+                pagePath = 'pages/drawer/about-me.html';
+                pageTitle = 'About Me';
+                break;
             case 'ads-help-center':
                 pagePath = 'pages/drawer/more/apps/ads-help-center.html';
                 pageTitle = 'Ads Help Center';
