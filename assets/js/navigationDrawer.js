@@ -1,5 +1,5 @@
 let menuButton, navDrawer, closeDrawerButton, drawerOverlay,
-    moreToggle, moreContent, appsToggle, appsContent;
+    aboutToggle, aboutContent, androidAppsToggle, androidAppsContent;
 
 /**
  * Initializes the navigation drawer functionality.
@@ -10,10 +10,10 @@ function initNavigationDrawer() {
     navDrawer = getDynamicElement('navDrawer');
     closeDrawerButton = getDynamicElement('closeDrawerButton');
     drawerOverlay = getDynamicElement('drawerOverlay');
-    moreToggle = getDynamicElement('moreToggle');
-    moreContent = getDynamicElement('moreContent');
-    appsToggle = getDynamicElement('appsToggle');
-    appsContent = getDynamicElement('appsContent');
+    aboutToggle = getDynamicElement('aboutToggle');
+    aboutContent = getDynamicElement('aboutContent');
+    androidAppsToggle = getDynamicElement('androidAppsToggle');
+    androidAppsContent = getDynamicElement('androidAppsContent');
 
     if (menuButton) menuButton.addEventListener('click', openDrawer);
     if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
@@ -25,8 +25,8 @@ function initNavigationDrawer() {
         }
     });
 
-    _initToggleSection(moreToggle, moreContent);
-    _initToggleSection(appsToggle, appsContent);
+    _initToggleSection(aboutToggle, aboutContent);
+    _initToggleSection(androidAppsToggle, androidAppsContent);
 }
 
 /**
@@ -65,20 +65,20 @@ function _initToggleSection(toggleButton, contentElement) {
     toggleButton.addEventListener('click', () => {
         const isExpanded = contentElement.classList.contains('open');
 
-        if (contentElement.id === 'moreContent' && appsContent && appsContent.classList.contains('open')) {
-            appsContent.classList.remove('open');
-            if (appsToggle) {
-                appsToggle.setAttribute('aria-expanded', 'false');
-                appsToggle.classList.remove('expanded');
+        if (contentElement.id === 'aboutContent' && androidAppsContent && androidAppsContent.classList.contains('open')) {
+            androidAppsContent.classList.remove('open');
+            if (androidAppsToggle) {
+                androidAppsToggle.setAttribute('aria-expanded', 'false');
+                androidAppsToggle.classList.remove('expanded');
             }
-            appsContent.setAttribute('aria-hidden', 'true');
-        } else if (contentElement.id === 'appsContent' && moreContent && moreContent.classList.contains('open')) {
-            moreContent.classList.remove('open');
-            if (moreToggle) {
-                moreToggle.setAttribute('aria-expanded', 'false');
-                moreToggle.classList.remove('expanded');
+            androidAppsContent.setAttribute('aria-hidden', 'true');
+        } else if (contentElement.id === 'androidAppsContent' && aboutContent && aboutContent.classList.contains('open')) {
+            aboutContent.classList.remove('open');
+            if (aboutToggle) {
+                aboutToggle.setAttribute('aria-expanded', 'false');
+                aboutToggle.classList.remove('expanded');
             }
-            moreContent.setAttribute('aria-hidden', 'true');
+            aboutContent.setAttribute('aria-hidden', 'true');
         }
 
         contentElement.classList.toggle('open', !isExpanded);

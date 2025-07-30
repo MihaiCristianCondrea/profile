@@ -30,6 +30,7 @@
     <div id="drawerOverlay" class="drawer-overlay"></div>
     <div id="pageLoadingOverlay" class="page-loading-overlay"><md-circular-progress indeterminate></md-circular-progress></div>
 
+    <nav aria-label="Main Navigation">
     <md-navigation-drawer id="navDrawer" class="navigation-drawer" pivot="start">
         <div class="drawer-header">
             <h2>Menu</h2>
@@ -56,45 +57,50 @@
                     <div slot="headline">Projects</div>
                 </md-list-item>
                 <md-divider></md-divider>
-                <md-list-item type="button" id="moreToggle" aria-controls="moreContent" aria-expanded="false">
-                    <md-icon slot="start"><span class="material-symbols-outlined">more_horiz</span></md-icon>
-                    <div slot="headline">More</div>
+                <md-list-item type="button" id="aboutToggle" aria-controls="aboutContent" aria-expanded="false">
+                    <md-icon slot="start"><span class="material-symbols-outlined">info</span></md-icon>
+                    <div slot="headline">About</div>
                     <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
                 </md-list-item>
-                <div class="nested-list" id="moreContent" role="group" aria-hidden="true">
+                <div class="nested-list" id="aboutContent" role="group" aria-hidden="true">
                     <md-list>
                         <md-list-item href="#contact" id="navContactLink">
                             <div slot="headline">Contact</div>
                         </md-list-item>
+                        <md-list-item href="#about-me" id="navAboutMeLink">
+                            <div slot="headline">About Me</div>
+                        </md-list-item>
                         <md-list-item href="#privacy-policy" id="navPrivacyPolicyLink">
-                            <div slot="headline">Privacy Policy</div>
+                            <div slot="headline">Privacy &amp; Cookies</div>
                         </md-list-item>
                         <md-list-item href="#code-of-conduct">
                             <div slot="headline">Code of Conduct</div>
                         </md-list-item>
                     </md-list>
                 </div>
-                <md-list-item type="button" id="appsToggle" aria-controls="appsContent" aria-expanded="false">
+                <md-divider></md-divider>
+                <md-list-item type="button" id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="false">
                     <md-icon slot="start"><span class="material-symbols-outlined">apps</span></md-icon>
-                    <div slot="headline">Apps</div>
+                    <div slot="headline">Android Apps</div>
                     <md-icon slot="end"><span class="material-symbols-outlined">expand_more</span></md-icon>
                 </md-list-item>
-                <div class="nested-list" id="appsContent" role="group" aria-hidden="true">
+                <div class="nested-list" id="androidAppsContent" role="group" aria-hidden="true">
                     <md-list>
                          <md-list-item href="#ads-help-center" id="navAdsHelpCenterLink">
                             <div slot="headline">Ads Help Center</div>
                         </md-list-item>
                         <md-list-item href="#privacy-policy-end-user-software">
-                            <div slot="headline">Privacy Policy</div>
+                            <div slot="headline">App Privacy</div>
                         </md-list-item>
                         <md-list-item href="#terms-of-service-end-user-software">
                             <div slot="headline">Terms of Service</div>
                         </md-list-item>
                         <md-list-item href="#legal-notices" id="navLegalNoticesLink">
-                            <div slot="headline">Legal notices</div>
+                            <div slot="headline">Legal Info</div>
                         </md-list-item>
                     </md-list>
                 </div>
+                <md-divider></md-divider>
             </md-list>
         </div>
         <div class="drawer-footer">
@@ -110,8 +116,10 @@
                     <md-icon><span class="material-symbols-outlined">brightness_auto</span></md-icon>
                 </md-icon-button>
             </div>
+            <div class="text-center text-gray-500 text-sm mt-2">Privacy &amp; Cookies &bull; Code of Conduct</div>
         </div>
     </md-navigation-drawer>
+    </nav>
 
     <md-top-app-bar id="topAppBar">
         <md-icon-button id="menuButton" slot="navigationIcon" aria-label="Open menu">

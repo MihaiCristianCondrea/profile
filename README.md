@@ -5,7 +5,7 @@ This repository contains the source for a personal profile site built as a small
 ## Features
 
 - **Material Design Components** – UI is styled with Google's Material Web Components.
-- **Navigation Drawer** – A slide‑out drawer provides access to the home page, blog link, music link and a "More" section with additional pages.
+- **Navigation Drawer** – A slide‑out drawer lists Home, Blogs, Music, Projects and collapsible "About" and "Android Apps" sections.
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
 - **Client‑Side Routing** – JavaScript loads internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
@@ -41,7 +41,7 @@ LICENSE                   # GPLv3 license
 
 The router loads pages based on URL fragments (e.g., `#privacy-policy`). Important fragments include:
 
-- `#privacy-policy` – Privacy Policy
+- `#privacy-policy` – Privacy & Cookies
 - `#code-of-conduct` – Code of Conduct
 - `#privacy-policy-end-user-software` – Privacy Policy – End-User Software
 - `#terms-of-service-end-user-software` – Terms of Service – End-User Software
