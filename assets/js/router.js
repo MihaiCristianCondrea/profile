@@ -20,6 +20,8 @@ function initRouter(contentAreaEl, appBarHeadlineEl, homeHTML) {
  * @param {boolean} [updateHistory=true] - Whether to update browser history.
  */
 async function loadPageContent(pageId, updateHistory = true) {
+    const loadStart = Date.now();
+    if (typeof showPageLoadingOverlay === "function") showPageLoadingOverlay();
     if (typeof closeDrawer === 'function') closeDrawer();
 
     if (pageContentArea && pageContentArea.animate) {
@@ -181,6 +183,10 @@ async function loadPageContent(pageId, updateHistory = true) {
         }
         pageContentArea.style.opacity = 1;
     }
+    const elapsed = Date.now() - loadStart;
+    const minDuration = 600;
+    await new Promise(r => setTimeout(r, Math.max(0, minDuration - elapsed)));
+    if (typeof hidePageLoadingOverlay === 'function') hidePageLoadingOverlay();
 }
 
 /**

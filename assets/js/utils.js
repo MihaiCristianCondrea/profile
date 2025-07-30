@@ -45,4 +45,17 @@ function setCopyrightYear() {
         const yearText = currentYear === 2025 ? '2025' : `2025-${currentYear}`;
         copyrightElement.textContent = `Copyright © ${yearText}, Mihai-Cristian Condrea`;
     }
+
+
+/** Show page loading overlay */
+function showPageLoadingOverlay() {
+    const overlay = document.getElementById("pageLoadingOverlay");
+    if (overlay) overlay.classList.add("active");
 }
+
+/** Hide page loading overlay */
+function hidePageLoadingOverlay() {
+    const overlay = document.getElementById("pageLoadingOverlay");
+    if (overlay) overlay.classList.remove("active");
+}
+
