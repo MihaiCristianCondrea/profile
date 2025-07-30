@@ -22,6 +22,22 @@ function initRouter(contentAreaEl, appBarHeadlineEl, homeHTML) {
 async function loadPageContent(pageId, updateHistory = true) {
     if (typeof closeDrawer === 'function') closeDrawer();
 
+    if (pageContentArea && pageContentArea.animate) {
+        try {
+            await pageContentArea.animate(
+                [{ opacity: 1 }, { opacity: 0 }],
+                {
+                    duration: 90,
+                    easing: 'cubic-bezier(0.4, 0, 1, 1)',
+                    fill: 'forwards'
+                }
+            ).finished;
+        } catch (e) {
+            // Ignore animation errors
+        }
+        pageContentArea.style.opacity = 0;
+    }
+
     let pageTitle = "Mihai's Profile";
     let newUrlFragment = 'home';
     let pagePath = '';
@@ -101,6 +117,21 @@ async function loadPageContent(pageId, updateHistory = true) {
                 }
                 window.scrollTo(0, 0);
                 updateActiveNavLink(newUrlFragment);
+                if (pageContentArea && pageContentArea.animate) {
+                    try {
+                        await pageContentArea.animate(
+                            [{ opacity: 0 }, { opacity: 1 }],
+                            {
+                                duration: 210,
+                                easing: 'cubic-bezier(0, 0, 0.2, 1)',
+                                fill: 'forwards'
+                            }
+                        ).finished;
+                    } catch (e) {
+                        // Ignore animation errors
+                    }
+                    pageContentArea.style.opacity = 1;
+                }
                 return;
         }
 
@@ -134,6 +165,22 @@ async function loadPageContent(pageId, updateHistory = true) {
     }
     window.scrollTo(0, 0);
     updateActiveNavLink(newUrlFragment);
+
+    if (pageContentArea && pageContentArea.animate) {
+        try {
+            await pageContentArea.animate(
+                [{ opacity: 0 }, { opacity: 1 }],
+                {
+                    duration: 210,
+                    easing: 'cubic-bezier(0, 0, 0.2, 1)',
+                    fill: 'forwards'
+                }
+            ).finished;
+        } catch (e) {
+            // Ignore animation errors
+        }
+        pageContentArea.style.opacity = 1;
+    }
 }
 
 /**

@@ -9,6 +9,8 @@ This repository contains the source for a personal profile site built as a small
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
 - **Client‑Side Routing** – JavaScript loads internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
+- **Navigation Transitions** – Switching pages from the drawer fades content out
+  and in using Material Design motion.
 - **Progressive Web App** – Includes a `manifest.json` file and icons so it can be installed as a PWA.
 
 ## Repository Structure
