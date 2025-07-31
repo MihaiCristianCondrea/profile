@@ -743,6 +743,17 @@ md-filled-card.profile-card {
   opacity: 1;
 }
 
+/* Loading overlay for carousels */
+.carousel-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--app-bg-color);
+  z-index: 1;
+}
+
 /* --- Scrollbars --- */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
