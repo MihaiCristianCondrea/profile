@@ -48,6 +48,8 @@ function initProjectsPage() {
       loader.src = 'assets/images/lottie/anim_infinite_loop.lottie';
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
+      loader.style.width = '80px';
+      loader.style.height = '80px';
       loading.appendChild(loader);
       carousel.appendChild(loading);
 

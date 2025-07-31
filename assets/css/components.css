@@ -619,6 +619,12 @@ md-filled-card.profile-card {
   --md-primary-tab-active-indicator-color: var(--md-sys-color-primary);
 }
 
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .project-entry {
   margin-bottom: 2rem;
 }

@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPageContent('resume');
         });
     }
-    // Add listeners for other SPA links here if any
+
 
     // --- Handle Initial Page Load & Browser History ---
     const initialPageIdFromHash = window.location.hash || '#home';
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPageContent(pageId, false);
     });
 
-    // --- App Bar Scroll Behavior (from original script) ---
+    // --- App Bar Scroll Behavior ---
     if (topAppBarEl) {
         window.addEventListener('scroll', () => {
             const isScrolled = window.scrollY > 0;
