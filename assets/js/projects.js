@@ -37,7 +37,36 @@ function initProjectsPage() {
 
     document.querySelectorAll('.carousel').forEach(carousel => {
       const slides = carousel.querySelectorAll('.carousel-slide');
+      const prevBtn = carousel.querySelector('.prev');
+      const nextBtn = carousel.querySelector('.next');
       let index = 0;
+
+      // Add loading animation overlay
+      const loading = document.createElement('div');
+      loading.classList.add('carousel-loading');
+      const loader = document.createElement('lottie-player');
+      loader.src = 'assets/images/lottie/anim_infinite_loop.lottie';
+      loader.setAttribute('autoplay', '');
+      loader.setAttribute('loop', '');
+      loading.appendChild(loader);
+      carousel.appendChild(loading);
+
+      let loadedCount = 0;
+      const hideLoading = () => {
+        loadedCount++;
+        if (loadedCount === slides.length) {
+          loading.remove();
+        }
+      };
+
+      slides.forEach(img => {
+        if (img.complete) {
+          hideLoading();
+        } else {
+          img.addEventListener('load', hideLoading);
+          img.addEventListener('error', hideLoading);
+        }
+      });
 
       const dotsContainer = document.createElement('div');
       dotsContainer.classList.add('carousel-dots');
@@ -56,10 +85,16 @@ function initProjectsPage() {
       };
       update();
 
-      carousel.querySelector('.prev').addEventListener('click', () => {
+      if (slides.length < 2) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+        dotsContainer.style.display = 'none';
+      }
+
+      prevBtn.addEventListener('click', () => {
         index = (index - 1 + slides.length) % slides.length; update();
       });
-      carousel.querySelector('.next').addEventListener('click', () => {
+      nextBtn.addEventListener('click', () => {
         index = (index + 1) % slides.length; update();
       });
     });
