@@ -331,6 +331,9 @@ md-elevated-card.contribute-card {
   z-index: 1002;
   --md-navigation-drawer-container-width: 300px;
   --md-navigation-drawer-container-color: var(--app-drawer-bg-color);
+  --md-navigation-drawer-container-shape: 0 16px 16px 0;
+  --md-navigation-drawer-active-indicator-color: var(--md-sys-color-secondary-container);
+  --md-navigation-drawer-active-indicator-shape: 0 12px 12px 0;
   --md-navigation-drawer-divider-color: var(--app-border-color);
 }
 
@@ -350,6 +353,10 @@ md-elevated-card.contribute-card {
 .drawer-overlay.open {
   opacity: 1;
   visibility: visible;
+}
+
+body.drawer-is-open {
+  overflow: hidden;
 }
 
 .drawer-header {
@@ -441,6 +448,14 @@ md-list-item {
   /* --md-list-item-trailing-icon-color: var(--app-text-color); */
   /* --md-list-item-label-text-font: 'Poppins', sans-serif; */
   --md-list-item-state-layer-shape: var(--md-sys-shape-corner-full);
+}
+
+/* Active navigation item styling */
+.navigation-drawer md-list-item.nav-item-active {
+  background-color: var(--md-sys-color-secondary-container);
+  border-radius: 0 12px 12px 0;
+  --md-list-item-label-text-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-secondary-container);
 }
 
 md-list-item a[slot="headline"] {
