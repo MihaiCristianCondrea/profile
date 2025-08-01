@@ -23,8 +23,21 @@ function initProjectsPage() {
 
     const tabs = document.querySelectorAll('#projectsFilterTabs md-primary-tab');
     const projects = document.querySelectorAll('.project-entry');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
+    const projectsList = document.querySelector('.projects-list');
+    let activeTabIndex = 0;
+    tabs.forEach((tab, idx) => {
+      tab.addEventListener('click', async () => {
+        if (tab.hasAttribute('active')) return;
+        if (projectsList && projectsList.animate) {
+          const dir = idx > activeTabIndex ? 1 : -1;
+          try {
+            await projectsList.animate(
+              [{ opacity: 1, transform: 'translateX(0)' }, { opacity: 0, transform: `translateX(${ -20 * dir }px)` }],
+              { duration: 150, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'forwards' }
+            ).finished;
+          } catch (e) {}
+        }
+
         tabs.forEach(t => t.removeAttribute('active'));
         tab.setAttribute('active', '');
         const cat = tab.dataset.category;
@@ -32,6 +45,17 @@ function initProjectsPage() {
           if (cat === 'all') { p.style.display = ''; return; }
           p.style.display = p.dataset.category.includes(cat) ? '' : 'none';
         });
+
+        if (projectsList && projectsList.animate) {
+          const dir = idx > activeTabIndex ? 1 : -1;
+          try {
+            await projectsList.animate(
+              [{ opacity: 0, transform: `translateX(${20 * dir}px)` }, { opacity: 1, transform: 'translateX(0)' }],
+              { duration: 150, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'forwards' }
+            ).finished;
+          } catch (e) {}
+        }
+        activeTabIndex = idx;
       });
     });
 
@@ -48,8 +72,8 @@ function initProjectsPage() {
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
       loader.setAttribute('speed', '1');
-      loader.style.width = '80px';
-      loader.style.height = '80px';
+      loader.style.width = '120px';
+      loader.style.height = '120px';
       loading.appendChild(loader);
       carousel.appendChild(loading);
 
@@ -61,8 +85,8 @@ function initProjectsPage() {
       carousel.appendChild(placeholder);
 
       const startTime = Date.now();
-      const minDisplay = 2000;
-      const placeholderDelay = 4000;
+      const minDisplay = 3000;
+      const placeholderDelay = 5000;
       const hideLoadingOverlay = () => {
         const elapsed = Date.now() - startTime;
         const delay = Math.max(0, minDisplay - elapsed);
@@ -85,7 +109,7 @@ function initProjectsPage() {
       const hideLoading = () => {
         loadedCount++;
         if (loadedCount === slides.length) {
-          hideLoadingOverlay();
+          loadingFinished();
         }
       };
 
@@ -115,11 +139,20 @@ function initProjectsPage() {
       };
       update();
 
-      if (slides.length < 2) {
+      const hideControls = () => {
         prevBtn.style.display = 'none';
         nextBtn.style.display = 'none';
         dotsContainer.style.display = 'none';
-      }
+      };
+
+      const showControls = () => {
+        if (slides.length < 2) return;
+        prevBtn.style.display = '';
+        nextBtn.style.display = '';
+        dotsContainer.style.display = '';
+      };
+
+      hideControls();
 
       prevBtn.addEventListener('click', () => {
         index = (index - 1 + slides.length) % slides.length; update();
@@ -127,6 +160,12 @@ function initProjectsPage() {
       nextBtn.addEventListener('click', () => {
         index = (index + 1) % slides.length; update();
       });
+
+      const loadingFinished = () => {
+        hideLoadingOverlay();
+        showControls();
+      };
+
     });
   });
 }
