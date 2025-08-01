@@ -41,11 +41,10 @@ function initProjectsPage() {
       const nextBtn = carousel.querySelector('.next');
       let index = 0;
 
-      // Add loading animation overlay
       const loading = document.createElement('div');
       loading.classList.add('carousel-loading');
       const loader = document.createElement('lottie-player');
-      loader.src = 'assets/images/lottie/anim_infinite_loop.lottie';
+      loader.src = 'assets/images/lottie/anim_infinite_loop.json';
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
       loader.style.width = '80px';

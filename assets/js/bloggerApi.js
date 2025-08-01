@@ -19,7 +19,7 @@ const appConfig = {
 function createBlogPostCard(post) {
     const card = document.createElement('md-outlined-card');
     card.className = 'news-card';
-    const placeholderImageUrl = `https://via.placeholder.com/600x400/EEEEEE/777777?text=Image+Not+Available`;
+    const placeholderImageUrl = `assets/images/placeholder.png`;
     const imageUrl = getNestedValue(post, 'images.0.url') || extractFirstImageFromHtml(post.content) || placeholderImageUrl;
     const title = post.title || 'Untitled Post';
     const tempDiv = document.createElement('div');
@@ -87,7 +87,7 @@ async function fetchBlogPosts() {
         blogId = blogInfo.id;
         if (!blogId) throw new Error("Could not retrieve Blog ID from URL.");
 
-        const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`; // fetchBodies for post.content
+        const postsUrl = `https://www.googleapis.com/blogger/v3/blogs/${blogId}/posts?key=${currentApiKey}&maxResults=${currentMaxResults}&fetchImages=true&fetchBodies=true`;
         const postsResponse = await fetch(postsUrl);
         if (!postsResponse.ok) {
             const errorData = await postsResponse.json().catch(() => ({}));
@@ -98,7 +98,7 @@ async function fetchBlogPosts() {
         const postsData = await postsResponse.json();
 
         newsStatusElement.style.display = 'none';
-        newsGridElement.innerHTML = ''; // Clear previous posts
+        newsGridElement.innerHTML = '';
         if (postsData.items && postsData.items.length > 0) {
             postsData.items.forEach(post => newsGridElement.appendChild(createBlogPostCard(post)));
         } else {
