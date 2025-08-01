@@ -770,6 +770,28 @@ md-filled-card.profile-card {
   align-items: center;
   background-color: var(--app-bg-color);
   z-index: 1;
+  transition: opacity 0.5s;
+}
+
+.carousel-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--app-bg-color);
+  opacity: 0;
+  border-radius: 12px;
+  z-index: 1;
+  transition: opacity 0.5s;
+}
+
+.carousel-placeholder.show {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
 }
 
 /* --- Scrollbars --- */
