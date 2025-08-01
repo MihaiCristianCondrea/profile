@@ -43,20 +43,49 @@ function initProjectsPage() {
 
       const loading = document.createElement('div');
       loading.classList.add('carousel-loading');
-      const loader = document.createElement('lottie-player');
-      loader.setAttribute('src', 'assets/images/lottie/anim_infinite_loop.json');
+      const loader = document.createElement('dotlottie-wc');
+      loader.setAttribute('src', 'https://lottie.host/ed183b18-bffe-4e7f-a222-d554908e33b8/FhsNasBleM.lottie');
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
+      loader.setAttribute('speed', '1');
       loader.style.width = '80px';
       loader.style.height = '80px';
       loading.appendChild(loader);
       carousel.appendChild(loading);
 
+      const placeholder = document.createElement('div');
+      placeholder.classList.add('carousel-placeholder');
+      const placeholderImg = document.createElement('img');
+      placeholderImg.src = 'assets/images/placeholder.png';
+      placeholder.appendChild(placeholderImg);
+      carousel.appendChild(placeholder);
+
+      const startTime = Date.now();
+      const minDisplay = 2000;
+      const placeholderDelay = 4000;
+      const hideLoadingOverlay = () => {
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(0, minDisplay - elapsed);
+        setTimeout(() => {
+          loading.classList.add('fade-out');
+          setTimeout(() => loading.remove(), 500);
+          placeholder.classList.add('fade-out');
+          setTimeout(() => placeholder.remove(), 500);
+          clearTimeout(placeholderTimer);
+        }, delay);
+      };
+
+      const placeholderTimer = setTimeout(() => {
+        loading.classList.add('fade-out');
+        setTimeout(() => loading.remove(), 500);
+        placeholder.classList.add('show');
+      }, placeholderDelay);
+
       let loadedCount = 0;
       const hideLoading = () => {
         loadedCount++;
         if (loadedCount === slides.length) {
-          loading.remove();
+          hideLoadingOverlay();
         }
       };
 
