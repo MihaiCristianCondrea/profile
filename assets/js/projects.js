@@ -44,7 +44,7 @@ function initProjectsPage() {
       const loading = document.createElement('div');
       loading.classList.add('carousel-loading');
       const loader = document.createElement('lottie-player');
-      loader.src = 'assets/images/lottie/anim_infinite_loop.json';
+      loader.setAttribute('src', 'assets/images/lottie/anim_infinite_loop.json');
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
       loader.style.width = '80px';
