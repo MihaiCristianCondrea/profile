@@ -24,25 +24,49 @@ function createBlogPostCard(post) {
     const title = post.title || 'Untitled Post';
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = post.content || '';
-    const snippet = (tempDiv.textContent || tempDiv.innerText || '').substring(0, 150) + ((tempDiv.textContent || tempDiv.innerText || '').length > 150 ? '...' : '');
+    const snippet =
+        (tempDiv.textContent || tempDiv.innerText || '').substring(0, 150) +
+        ((tempDiv.textContent || tempDiv.innerText || '').length > 150 ? '...' : '');
     const postUrl = post.url || '#';
 
-    card.innerHTML = `
-        <div class="news-card-image">
-             <img src="${imageUrl}" alt="${title}" loading="lazy" onerror="this.onerror=null; this.src='${placeholderImageUrl}'; this.alt='Placeholder Image';">
-        </div>
-        <div class="news-card-content">
-             <h3>${title}</h3>
-             <p>${snippet || 'No content preview available.'}</p>
-        </div>
-        <div class="news-card-actions">
-            <a href="${postUrl}" target="_blank" rel="noopener noreferrer">
-            <md-text-button>
-                Read More
-                <md-icon slot="icon" aria-hidden="true">arrow_forward</md-icon>
-            </md-text-button>
-            </a>
-        </div>`;
+    const imageContainer = document.createElement('div');
+    imageContainer.className = 'news-card-image';
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = title;
+    img.loading = 'lazy';
+    img.onerror = function () {
+        this.onerror = null;
+        this.src = placeholderImageUrl;
+        this.alt = 'Placeholder Image';
+    };
+    imageContainer.appendChild(img);
+
+    const contentContainer = document.createElement('div');
+    contentContainer.className = 'news-card-content';
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = title;
+    const snippetElement = document.createElement('p');
+    snippetElement.textContent = snippet || 'No content preview available.';
+    contentContainer.append(titleElement, snippetElement);
+
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'news-card-actions';
+    const link = document.createElement('a');
+    link.href = postUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    const textButton = document.createElement('md-text-button');
+    textButton.textContent = 'Read More';
+    const icon = document.createElement('md-icon');
+    icon.setAttribute('slot', 'icon');
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = 'arrow_forward';
+    textButton.appendChild(icon);
+    link.appendChild(textButton);
+    actionsContainer.appendChild(link);
+
+    card.append(imageContainer, contentContainer, actionsContainer);
     return card;
 }
 
