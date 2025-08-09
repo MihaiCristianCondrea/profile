@@ -10,7 +10,10 @@ function setupRealtimeUpdates() {
     set('phone', e => document.getElementById('resume-phone').innerHTML = e.target.value ? `<span class="material-symbols-outlined">call</span><span>${e.target.value}</span>` : '');
     set('email', e => document.getElementById('resume-email').innerHTML = e.target.value ? `<span class="material-symbols-outlined">mail</span><span>${e.target.value}</span>` : '');
     set('address', e => document.getElementById('resume-address').innerHTML = e.target.value ? `<span class="material-symbols-outlined">location_on</span><span>${e.target.value}</span>` : '');
-    set('summary', e => document.getElementById('resume-summary').innerHTML = marked.parse(e.target.value));
+    set('summary', e => {
+        const parsed = marked.parse(e.target.value);
+        document.getElementById('resume-summary').innerHTML = DOMPurify.sanitize(parsed);
+    });
     const photoInput = document.getElementById('photo');
     if (photoInput) {
         photoInput.addEventListener('change', evt => {
@@ -116,7 +119,8 @@ function updateComplexList(sectionId) {
                 desc: item.querySelector('.work-desc').value.trim()
             };
             if (data.title || data.company) {
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.company}</strong></p><div class="description">${marked.parse(data.desc)}</div>`;
+                const descHtml = DOMPurify.sanitize(marked.parse(data.desc));
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
                 container.appendChild(div);
             }
         } else if (sectionId === 'education') {
