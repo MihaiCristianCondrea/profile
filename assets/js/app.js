@@ -1,19 +1,13 @@
 // Global DOM element references needed by multiple modules or for initialization
-let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl,
-    navHomeLinkEl, navPrivacyPolicyLinkEl, navSongsLinkEl, navProjectsLinkEl,
-    navContactLinkEl, navResumeLinkEl, topAppBarEl;
+let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
+
+let routeLinkHandlerRegistered = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Get DOM Elements ---
     pageContentAreaEl = getDynamicElement('pageContentArea');
     mainContentPageOriginalEl = getDynamicElement('mainContentPage');
     appBarHeadlineEl = getDynamicElement('appBarHeadline');
-    navHomeLinkEl = getDynamicElement('navHomeLink');
-    navPrivacyPolicyLinkEl = getDynamicElement('navPrivacyPolicyLink');
-    navSongsLinkEl = getDynamicElement('navSongsLink');
-    navProjectsLinkEl = getDynamicElement('navProjectsLink');
-    navContactLinkEl = getDynamicElement('navContactLink');
-    navResumeLinkEl = getDynamicElement('navResumeLink');
     topAppBarEl = getDynamicElement('topAppBar');
 
 
@@ -31,42 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString);
 
     // --- Setup Event Listeners for SPA Navigation ---
-    if (navHomeLinkEl) {
-        navHomeLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('home');
-        });
-    }
-    if (navPrivacyPolicyLinkEl) {
-        navPrivacyPolicyLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('privacy-policy');
-        });
-    }
-    if (navSongsLinkEl) {
-        navSongsLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('songs');
-        });
-    }
-    if (navProjectsLinkEl) {
-        navProjectsLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('projects');
-        });
-    }
-    if (navContactLinkEl) {
-        navContactLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('contact');
-        });
-    }
-    if (navResumeLinkEl) {
-        navResumeLinkEl.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadPageContent('resume');
-        });
-    }
+    setupRouteLinkInterception();
 
 
     // --- Handle Initial Page Load & Browser History ---
@@ -91,3 +50,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+function setupRouteLinkInterception() {
+    if (routeLinkHandlerRegistered) {
+        return;
+    }
+
+    const routesApi = typeof RouterRoutes !== 'undefined' ? RouterRoutes : null;
+    const hasRoute = routesApi
+        ? (typeof routesApi.hasRoute === 'function'
+            ? routesApi.hasRoute.bind(routesApi)
+            : (routeId) => {
+                if (typeof routesApi.getRoute === 'function') {
+                    return !!routesApi.getRoute(routeId);
+                }
+                const routeMap = routesApi.PAGE_ROUTES;
+                return !!(routeMap && routeMap[routeId]);
+            })
+        : null;
+
+    if (!hasRoute) {
+        console.warn('App.js: RouterRoutes API unavailable. Route link interception skipped.');
+        return;
+    }
+
+    document.addEventListener('click', (event) => {
+        const eventTarget = event.target;
+        if (!eventTarget || typeof eventTarget.closest !== 'function') {
+            return;
+        }
+
+        const interactiveElement = eventTarget.closest('a[href^="#"], md-list-item[href^="#"]');
+        if (!interactiveElement) {
+            return;
+        }
+
+        if (interactiveElement.getAttribute('target') === '_blank') {
+            return;
+        }
+
+        const rawHref = interactiveElement.getAttribute('href');
+        if (!rawHref) {
+            return;
+        }
+
+        const normalizedId = normalizePageId(rawHref);
+        if (!normalizedId || !hasRoute(normalizedId)) {
+            return;
+        }
+
+        event.preventDefault();
+        loadPageContent(normalizedId);
+    }, true);
+
+    routeLinkHandlerRegistered = true;
+}
