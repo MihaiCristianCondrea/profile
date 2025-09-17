@@ -237,13 +237,36 @@ md-outlined-card.news-card {
 .news-card-actions {
   padding: 0.5rem 1rem;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
   margin-top: auto;
   flex-shrink: 0;
 }
 
 .news-card-actions a {
   text-decoration: none;
+}
+
+.news-card-actions .share-post-button {
+  white-space: nowrap;
+}
+
+.news-card-actions .share-feedback {
+  flex-basis: 100%;
+  font-size: 0.8rem;
+  color: var(--app-secondary-text-color);
+  text-align: right;
+  display: none;
+}
+
+.news-card-actions .share-feedback.is-visible {
+  display: block;
+}
+
+.news-card-actions .share-feedback.error {
+  color: var(--md-sys-color-error);
 }
 
 .view-all-posts-container {

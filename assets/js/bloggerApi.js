@@ -52,6 +52,18 @@ function createBlogPostCard(post) {
 
     const actionsContainer = document.createElement('div');
     actionsContainer.className = 'news-card-actions';
+
+    const shareButton = document.createElement('md-text-button');
+    shareButton.type = 'button';
+    shareButton.className = 'share-post-button';
+    shareButton.textContent = 'Share';
+    shareButton.setAttribute('aria-label', title ? `Share “${title}”` : 'Share this post');
+    const shareIcon = document.createElement('md-icon');
+    shareIcon.setAttribute('slot', 'icon');
+    shareIcon.setAttribute('aria-hidden', 'true');
+    shareIcon.textContent = 'share';
+    shareButton.appendChild(shareIcon);
+
     const link = document.createElement('a');
     link.href = postUrl;
     link.target = '_blank';
@@ -64,7 +76,27 @@ function createBlogPostCard(post) {
     icon.textContent = 'arrow_forward';
     textButton.appendChild(icon);
     link.appendChild(textButton);
-    actionsContainer.appendChild(link);
+
+    const shareFeedback = document.createElement('span');
+    shareFeedback.className = 'share-feedback';
+    shareFeedback.setAttribute('role', 'status');
+    shareFeedback.setAttribute('aria-live', 'polite');
+    shareFeedback.hidden = true;
+
+    shareButton.addEventListener('click', async (event) => {
+        event.preventDefault();
+        if (shareButton.hasAttribute('disabled')) return;
+        shareButton.setAttribute('disabled', '');
+        shareButton.setAttribute('aria-busy', 'true');
+        try {
+            await shareBlogPost({ title, text: snippet, url: postUrl }, shareFeedback);
+        } finally {
+            shareButton.removeAttribute('disabled');
+            shareButton.removeAttribute('aria-busy');
+        }
+    });
+
+    actionsContainer.append(shareButton, link, shareFeedback);
 
     card.append(imageContainer, contentContainer, actionsContainer);
     return card;
@@ -136,4 +168,108 @@ async function fetchBlogPosts() {
         const loader = newsStatusElement.querySelector('md-circular-progress');
         if (loader) loader.remove();
     }
+}
+
+/**
+ * Shares a blog post using the Web Share API with clipboard fallbacks.
+ * @param {{ title: string, text: string, url: string }} postData - The data related to the post.
+ * @param {HTMLElement} feedbackElement - Element used to provide feedback to the user.
+ */
+async function shareBlogPost(postData, feedbackElement) {
+    const { title, text, url } = postData || {};
+    if (!url || url === '#') {
+        displayShareFeedback(feedbackElement, 'Unable to share: missing post link.', true);
+        return;
+    }
+
+    if (typeof navigator === 'undefined') {
+        displayShareFeedback(feedbackElement, 'Sharing is not supported in this environment.', true);
+        return;
+    }
+
+    const normalizedText = typeof text === 'string' ? text.replace(/\s+/g, ' ').trim() : '';
+    const shareTitle = title || 'Check out this post';
+    const shareText = normalizedText ? normalizedText.substring(0, 200) : '';
+
+    const fallbackCopyToClipboard = async () => {
+        try {
+            if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                await navigator.clipboard.writeText(url);
+                displayShareFeedback(feedbackElement, 'Link copied to clipboard.');
+                return;
+            }
+        } catch (clipboardError) {
+            console.warn('Clipboard API copy failed:', clipboardError);
+        }
+
+        if (typeof document !== 'undefined') {
+            try {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = url;
+                tempInput.setAttribute('readonly', '');
+                tempInput.style.position = 'fixed';
+                tempInput.style.opacity = '0';
+                document.body.appendChild(tempInput);
+                tempInput.focus();
+                tempInput.select();
+                const copied = document.execCommand && document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                if (copied) {
+                    displayShareFeedback(feedbackElement, 'Link copied to clipboard.');
+                    return;
+                }
+            } catch (legacyError) {
+                console.warn('Legacy clipboard fallback failed:', legacyError);
+            }
+        }
+
+        if (typeof window !== 'undefined' && typeof window.prompt === 'function') {
+            window.prompt('Copy this link to share:', url);
+        }
+        displayShareFeedback(feedbackElement, 'Copy the link shown to share this post.');
+    };
+
+    try {
+        if (navigator.share && typeof navigator.share === 'function') {
+            const sharePayload = { title: shareTitle, url };
+            if (shareText) sharePayload.text = shareText;
+            await navigator.share(sharePayload);
+            displayShareFeedback(feedbackElement, 'Thanks for sharing!');
+        } else {
+            await fallbackCopyToClipboard();
+        }
+    } catch (error) {
+        if (error && error.name === 'AbortError') {
+            return;
+        }
+        console.warn('Web Share API failed, using clipboard fallback.', error);
+        await fallbackCopyToClipboard();
+    }
+}
+
+/**
+ * Displays temporary feedback after share actions.
+ * @param {HTMLElement} feedbackElement - Element used to display the message.
+ * @param {string} message - The message to display.
+ * @param {boolean} [isError=false] - Whether the message represents an error.
+ */
+function displayShareFeedback(feedbackElement, message, isError = false) {
+    if (!feedbackElement) return;
+
+    if (feedbackElement._hideTimeoutId) {
+        clearTimeout(feedbackElement._hideTimeoutId);
+    }
+
+    feedbackElement.textContent = message;
+    feedbackElement.hidden = false;
+    feedbackElement.classList.toggle('error', Boolean(isError));
+    feedbackElement.classList.add('is-visible');
+
+    feedbackElement._hideTimeoutId = setTimeout(() => {
+        feedbackElement.classList.remove('is-visible');
+        feedbackElement.classList.remove('error');
+        feedbackElement.hidden = true;
+        feedbackElement.textContent = '';
+        feedbackElement._hideTimeoutId = null;
+    }, 4000);
 }
