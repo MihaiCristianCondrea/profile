@@ -1012,3 +1012,84 @@
   font-weight: 500;
   text-align: left;
 }
+/* --- About Me Page Specific Styles --- */
+#aboutMePageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+}
+
+#aboutMePageContainer h1 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin: 0 0 1.5rem 0;
+  color: var(--app-text-color);
+}
+
+#aboutMePageContainer p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+  margin-bottom: 1rem;
+}
+
+#aboutMePageContainer .about-summary {
+  font-size: 1.05rem;
+  color: var(--app-text-color);
+  margin-bottom: 1.75rem;
+}
+
+#aboutMePageContainer .about-section {
+  margin-top: 2rem;
+}
+
+#aboutMePageContainer .about-section:first-of-type {
+  margin-top: 1.5rem;
+}
+
+#aboutMePageContainer .about-section ul {
+  list-style: disc;
+  margin: 0;
+  padding-left: 1.75rem;
+}
+
+#aboutMePageContainer .about-section li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  color: var(--app-text-color);
+}
+
+#aboutMePageContainer .about-section li strong {
+  color: var(--app-text-color);
+  font-weight: 600;
+}
+
+#aboutMePageContainer .about-section a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+#aboutMePageContainer .about-section a:hover,
+#aboutMePageContainer .about-section a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+#aboutMePageContainer .profile-card-actions {
+  margin-top: 2.5rem;
+  padding: 0.75rem 0 0 0;
+  border-top: 1px solid var(--app-border-color);
+}
+
+@media (max-width: 600px) {
+  #aboutMePageContainer {
+    padding: 1.5rem;
+  }
+
+  #aboutMePageContainer .about-summary {
+    font-size: 1rem;
+  }
+}
