@@ -2,17 +2,75 @@ let pageContentArea, appBarHeadline;
 let initialHomepageHTML = '';
 const MINIMUM_LOAD_DURATION = 600;
 
+const NOOP = () => {};
+
+const routerRuntime = {
+    showOverlay: NOOP,
+    hideOverlay: NOOP,
+    closeDrawer: NOOP,
+    onHomeLoad: null,
+    pageHandlers: Object.create(null)
+};
+
+function callCallback(callback, description, ...args) {
+    if (typeof callback !== 'function') {
+        return false;
+    }
+    try {
+        callback(...args);
+        return true;
+    } catch (error) {
+        console.error(`Router: Error running ${description}:`, error);
+        return true;
+    }
+}
+
 /**
  * Initializes the router with necessary DOM elements.
  * Must be called after DOM is ready.
  * @param {HTMLElement} contentAreaEl - The main content area element.
  * @param {HTMLElement} appBarHeadlineEl - The app bar headline element.
  * @param {string} homeHTML - The initial HTML string for the home page.
+ * @param {object} [options={}] - Router configuration callbacks.
+ * @param {Function} [options.showOverlay] - Callback to show the loading overlay.
+ * @param {Function} [options.hideOverlay] - Callback to hide the loading overlay.
+ * @param {Function} [options.closeDrawer] - Callback to close the navigation drawer.
+ * @param {Function} [options.onHomeLoad] - Callback to run after the home page loads.
+ * @param {Record<string, Function>} [options.pageHandlers] - Callbacks keyed by page ID.
  */
-function initRouter(contentAreaEl, appBarHeadlineEl, homeHTML) {
+function initRouter(contentAreaEl, appBarHeadlineEl, homeHTML, options = {}) {
     pageContentArea = contentAreaEl;
     appBarHeadline = appBarHeadlineEl;
     initialHomepageHTML = homeHTML;
+
+    const normalizedOptions = options && typeof options === 'object' ? options : {};
+
+    routerRuntime.showOverlay = typeof normalizedOptions.showOverlay === 'function'
+        ? normalizedOptions.showOverlay
+        : NOOP;
+    routerRuntime.hideOverlay = typeof normalizedOptions.hideOverlay === 'function'
+        ? normalizedOptions.hideOverlay
+        : NOOP;
+    routerRuntime.closeDrawer = typeof normalizedOptions.closeDrawer === 'function'
+        ? normalizedOptions.closeDrawer
+        : NOOP;
+    routerRuntime.onHomeLoad = typeof normalizedOptions.onHomeLoad === 'function'
+        ? normalizedOptions.onHomeLoad
+        : null;
+
+    routerRuntime.pageHandlers = Object.create(null);
+    if (normalizedOptions.pageHandlers && typeof normalizedOptions.pageHandlers === 'object') {
+        Object.entries(normalizedOptions.pageHandlers).forEach(([pageId, handler]) => {
+            if (typeof handler !== 'function') {
+                return;
+            }
+            const normalizedId = typeof pageId === 'string' ? normalizePageId(pageId) : '';
+            if (!normalizedId) {
+                return;
+            }
+            routerRuntime.pageHandlers[normalizedId] = handler;
+        });
+    }
 }
 
 function normalizePageId(pageId) {
@@ -53,6 +111,21 @@ function createNotFoundHtml(pageId) {
     return `<div class="page-section active"><p class="error-message text-red-500">Page not found: ${safeId}</p></div>`;
 }
 
+function runInjectedPageHandlers(pageId) {
+    let handled = false;
+
+    if (pageId === 'home' && typeof routerRuntime.onHomeLoad === 'function') {
+        handled = callCallback(routerRuntime.onHomeLoad, 'home page load callback', pageId) || handled;
+    }
+
+    const handler = routerRuntime.pageHandlers[pageId];
+    if (typeof handler === 'function') {
+        handled = callCallback(handler, `page handler for ${pageId}`, pageId) || handled;
+    }
+
+    return handled;
+}
+
 /**
  * Loads content for a given pageId into the main content area.
  * @param {string} pageId - The ID of the page to load (e.g., 'home', 'privacy-policy').
@@ -60,12 +133,12 @@ function createNotFoundHtml(pageId) {
  */
 async function loadPageContent(pageId, updateHistory = true) {
     const loadStart = Date.now();
-    if (typeof showPageLoadingOverlay === "function") showPageLoadingOverlay();
-    if (typeof closeDrawer === 'function') closeDrawer();
+    callCallback(routerRuntime.showOverlay, 'showOverlay callback');
+    callCallback(routerRuntime.closeDrawer, 'closeDrawer callback');
 
     if (!pageContentArea) {
         console.error("Router: pageContentArea element not set. Call initRouter first.");
-        if (typeof hidePageLoadingOverlay === 'function') hidePageLoadingOverlay();
+        callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
         return;
     }
 
@@ -90,7 +163,7 @@ async function loadPageContent(pageId, updateHistory = true) {
             document.title = `${notFoundTitle} - Mihai's Profile`;
         }
 
-        if (typeof hidePageLoadingOverlay === 'function') hidePageLoadingOverlay();
+        callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
         return;
     }
 
@@ -133,12 +206,9 @@ async function loadPageContent(pageId, updateHistory = true) {
 
     pageContentArea.innerHTML = typeof loadResult.html === 'string' ? loadResult.html : createGenericErrorHtml();
 
-    if (typeof loadResult.onReady === 'function') {
-        try {
-            loadResult.onReady();
-        } catch (error) {
-            console.error('Router: Error running page ready hook:', error);
-        }
+    const handledByInjectedHandlers = runInjectedPageHandlers(normalizedPageId);
+    if (!handledByInjectedHandlers && typeof loadResult.onReady === 'function') {
+        callCallback(loadResult.onReady, 'page ready hook', normalizedPageId);
     }
 
     const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
@@ -167,7 +237,7 @@ async function loadPageContent(pageId, updateHistory = true) {
 
     const elapsed = Date.now() - loadStart;
     await new Promise(r => setTimeout(r, Math.max(0, MINIMUM_LOAD_DURATION - elapsed)));
-    if (typeof hidePageLoadingOverlay === 'function') hidePageLoadingOverlay();
+    callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
 }
 
 /**

@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("App.js: Initial home content (#mainContentPage) not found!");
     }
-    initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString);
+    const routerOptions = buildRouterOptions();
+    initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString, routerOptions);
 
     // --- Setup Event Listeners for SPA Navigation ---
     setupRouteLinkInterception();
@@ -50,6 +51,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+function buildRouterOptions() {
+    const options = {};
+
+    if (typeof showPageLoadingOverlay === 'function') {
+        options.showOverlay = () => {
+            showPageLoadingOverlay();
+        };
+    }
+
+    if (typeof hidePageLoadingOverlay === 'function') {
+        options.hideOverlay = () => {
+            hidePageLoadingOverlay();
+        };
+    }
+
+    if (typeof closeDrawer === 'function') {
+        options.closeDrawer = () => {
+            closeDrawer();
+        };
+    }
+
+    if (typeof fetchBlogPosts === 'function') {
+        options.onHomeLoad = () => {
+            const newsGrid = document.getElementById('newsGrid');
+            if (newsGrid) {
+                fetchBlogPosts();
+            }
+        };
+    }
+
+    const pageHandlers = {};
+
+    if (typeof loadSongs === 'function') {
+        pageHandlers.songs = () => {
+            const songsGrid = document.getElementById('songsGrid');
+            if (songsGrid) {
+                loadSongs();
+            }
+        };
+    }
+
+    if (typeof initProjectsPage === 'function') {
+        pageHandlers.projects = initProjectsPage;
+    }
+
+    if (typeof initResumePage === 'function') {
+        pageHandlers.resume = initResumePage;
+    }
+
+    if (Object.keys(pageHandlers).length > 0) {
+        options.pageHandlers = pageHandlers;
+    }
+
+    return options;
+}
 
 function setupRouteLinkInterception() {
     if (routeLinkHandlerRegistered) {
