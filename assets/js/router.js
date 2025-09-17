@@ -34,6 +34,25 @@ function createGenericErrorHtml(message) {
     return `<div class="page-section active"><p class="error-message text-red-500">${finalMessage}</p></div>`;
 }
 
+function getRegisteredRoute(pageId) {
+    if (typeof RouterRoutes === 'undefined' || !RouterRoutes) {
+        return null;
+    }
+    if (typeof RouterRoutes.getRoute === 'function') {
+        return RouterRoutes.getRoute(pageId);
+    }
+    const routesMap = RouterRoutes.PAGE_ROUTES;
+    if (routesMap && typeof routesMap === 'object' && pageId in routesMap) {
+        return routesMap[pageId];
+    }
+    return null;
+}
+
+function createNotFoundHtml(pageId) {
+    const safeId = pageId || 'unknown';
+    return `<div class="page-section active"><p class="error-message text-red-500">Page not found: ${safeId}</p></div>`;
+}
+
 /**
  * Loads content for a given pageId into the main content area.
  * @param {string} pageId - The ID of the page to load (e.g., 'home', 'privacy-policy').
@@ -56,6 +75,24 @@ async function loadPageContent(pageId, updateHistory = true) {
     const animationHelper = typeof RouterAnimation !== 'undefined' ? RouterAnimation : null;
     const contentLoader = typeof RouterContentLoader !== 'undefined' ? RouterContentLoader : null;
     const historyHelper = typeof RouterHistory !== 'undefined' ? RouterHistory : null;
+
+    const routeConfig = getRegisteredRoute(normalizedPageId);
+
+    if (typeof RouterRoutes !== 'undefined' && RouterRoutes && !routeConfig) {
+        console.warn('Router: Unknown page:', normalizedPageId);
+        pageContentArea.innerHTML = createNotFoundHtml(normalizedPageId);
+
+        const notFoundTitle = 'Not Found';
+        if (historyHelper && typeof historyHelper.updateTitle === 'function') {
+            historyHelper.updateTitle(appBarHeadline, notFoundTitle);
+        } else {
+            if (appBarHeadline) appBarHeadline.textContent = notFoundTitle;
+            document.title = `${notFoundTitle} - Mihai's Profile`;
+        }
+
+        if (typeof hidePageLoadingOverlay === 'function') hidePageLoadingOverlay();
+        return;
+    }
 
     if (animationHelper && typeof animationHelper.fadeOut === 'function') {
         await animationHelper.fadeOut(pageContentArea);
@@ -104,7 +141,7 @@ async function loadPageContent(pageId, updateHistory = true) {
         }
     }
 
-    const pageTitle = loadResult.title || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
+    const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
 
     if (historyHelper && typeof historyHelper.updateTitle === 'function') {
         historyHelper.updateTitle(appBarHeadline, pageTitle);
