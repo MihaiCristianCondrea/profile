@@ -444,6 +444,7 @@ body.drawer-is-open {
   padding: 16px 28px 20px;
   border-top: 1px solid var(--app-border-color);
   flex-shrink: 0;
+  text-align: center;
 }
 
 .drawer-footer .theme-toggle-title {
@@ -455,7 +456,8 @@ body.drawer-is-open {
 
 .theme-button-container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   gap: 12px;
 }
 
@@ -473,12 +475,13 @@ body.drawer-is-open {
 
 .drawer-footer .drawer-legal-links {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 4px;
   font-size: 0.75rem;
   margin-top: 12px;
+  width: 100%;
 }
 
 .drawer-footer .drawer-legal-links a {
