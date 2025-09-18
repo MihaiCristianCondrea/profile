@@ -48,7 +48,8 @@
   --app-social-icon-hover-color: var(--md-sys-color-primary);
   --app-drawer-bg-color: var(--md-sys-color-surface-container-low);
   --app-drawer-tint-color: var(--md-sys-color-primary);
-  --app-overlay-bg-color: rgba(0, 0, 0, 0.5);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
   --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
   --app-footer-text-color: #5f6368;
@@ -151,7 +152,8 @@ html.dark {
   --app-social-icon-hover-color: var(--md-sys-color-primary);
   --app-drawer-bg-color: var(--md-sys-color-surface-container);
   --app-drawer-tint-color: var(--md-sys-color-primary);
-  --app-overlay-bg-color: rgba(0, 0, 0, 0.6);
+  --app-drawer-inline-size: min(360px, 100vw);
+  --app-overlay-bg-color: rgba(0, 0, 0, 0.32);
   --app-nested-list-bg: rgba(255, 255, 255, 0.03);
   --app-theme-button-selected-bg: rgba(150, 222, 161, 0.2);
   --app-footer-text-color: #a0a0a0;
