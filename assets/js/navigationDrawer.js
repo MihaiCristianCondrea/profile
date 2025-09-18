@@ -1,5 +1,10 @@
 let menuButton, navDrawer, closeDrawerButton, drawerOverlay,
-    aboutToggle, aboutContent, androidAppsToggle, androidAppsContent;
+    aboutToggle, aboutContent, androidAppsToggle, androidAppsContent,
+    inertTargets = [];
+
+const STANDARD_DRAWER_MEDIA_QUERY = '(min-width: 840px)';
+let standardLayoutMatcher = null;
+let isStandardDrawerLayout = false;
 
 /**
  * Initializes the navigation drawer functionality.
@@ -15,42 +20,61 @@ function initNavigationDrawer() {
     androidAppsToggle = getDynamicElement('androidAppsToggle');
     androidAppsContent = getDynamicElement('androidAppsContent');
 
-    if (menuButton) menuButton.addEventListener('click', openDrawer);
-    if (closeDrawerButton) closeDrawerButton.addEventListener('click', closeDrawer);
+    inertTargets = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
+
+    if (menuButton) {
+        menuButton.addEventListener('click', openDrawer);
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.setAttribute('aria-controls', 'navDrawer');
+    }
+    if (closeDrawerButton) {
+        closeDrawerButton.addEventListener('click', closeDrawer);
+        closeDrawerButton.setAttribute('aria-controls', 'navDrawer');
+    }
     if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
 
+    if (navDrawer) {
+        navDrawer.addEventListener('navigation-drawer-changed', (event) => {
+            const opened = event && event.detail && typeof event.detail.opened === 'boolean'
+                ? event.detail.opened
+                : navDrawer.opened;
+            syncDrawerState(opened);
+        });
+    }
+
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && navDrawer && navDrawer.opened) {
+        if (event.key === 'Escape' && navDrawer && navDrawer.opened && !isStandardDrawerLayout) {
             closeDrawer();
         }
     });
 
     _initToggleSection(aboutToggle, aboutContent);
     _initToggleSection(androidAppsToggle, androidAppsContent);
+
+    setupResponsiveDrawerLayout();
+    syncDrawerState(Boolean(navDrawer && navDrawer.opened));
 }
 
 /**
  * Opens the navigation drawer.
  */
 function openDrawer() {
-    if (navDrawer && drawerOverlay) {
-        navDrawer.opened = true;
-        drawerOverlay.classList.add('open');
-        document.body.classList.add('drawer-is-open');
-        if (closeDrawerButton) closeDrawerButton.focus();
-    }
+    if (!navDrawer || isStandardDrawerLayout) return;
+
+    navDrawer.opened = true;
+    syncDrawerState(true);
+    focusFirstNavItem();
 }
 
 /**
  * Closes the navigation drawer.
  */
 function closeDrawer() {
-    if (navDrawer && drawerOverlay) {
-        navDrawer.opened = false;
-        drawerOverlay.classList.remove('open');
-        document.body.classList.remove('drawer-is-open');
-        if (menuButton) menuButton.focus();
-    }
+    if (!navDrawer || isStandardDrawerLayout) return;
+
+    navDrawer.opened = false;
+    syncDrawerState(false);
+    if (menuButton) menuButton.focus();
 }
 
 /**
@@ -86,4 +110,137 @@ function _initToggleSection(toggleButton, contentElement) {
         toggleButton.setAttribute('aria-expanded', String(!isExpanded));
         contentElement.setAttribute('aria-hidden', String(isExpanded));
     });
+}
+
+function focusFirstNavItem() {
+    if (!navDrawer) return;
+
+    const firstNavItem = navDrawer.querySelector('md-list-item[href]');
+    if (firstNavItem && typeof firstNavItem.focus === 'function') {
+        firstNavItem.focus();
+        return;
+    }
+
+    if (closeDrawerButton && typeof closeDrawerButton.focus === 'function') {
+        closeDrawerButton.focus();
+    }
+}
+
+function setupResponsiveDrawerLayout() {
+    if (!navDrawer) return;
+
+    const applyLayout = (matches) => {
+        updateDrawerLayout(Boolean(matches));
+    };
+
+    if (typeof window.matchMedia === 'function') {
+        standardLayoutMatcher = window.matchMedia(STANDARD_DRAWER_MEDIA_QUERY);
+        applyLayout(standardLayoutMatcher.matches);
+
+        const handler = (event) => applyLayout(event.matches);
+
+        if (typeof standardLayoutMatcher.addEventListener === 'function') {
+            standardLayoutMatcher.addEventListener('change', handler);
+        } else if (typeof standardLayoutMatcher.addListener === 'function') {
+            standardLayoutMatcher.addListener(handler);
+        }
+    } else {
+        applyLayout(window.innerWidth >= 840);
+        const resizeHandler = () => applyLayout(window.innerWidth >= 840);
+        window.addEventListener('resize', resizeHandler);
+    }
+}
+
+function updateDrawerLayout(shouldUseStandardLayout) {
+    if (!navDrawer) return;
+
+    const shouldUseStandard = Boolean(shouldUseStandardLayout);
+    document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
+
+    if (isStandardDrawerLayout === shouldUseStandard) {
+        syncDrawerState(Boolean(navDrawer.opened));
+        return;
+    }
+
+    isStandardDrawerLayout = shouldUseStandard;
+    document.body.classList.toggle('drawer-standard-mode', isStandardDrawerLayout);
+
+    if (isStandardDrawerLayout) {
+        navDrawer.opened = true;
+        if (menuButton) menuButton.toggleAttribute('hidden', true);
+        if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', true);
+    } else {
+        navDrawer.opened = false;
+        if (menuButton) menuButton.toggleAttribute('hidden', false);
+        if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', false);
+    }
+
+    syncDrawerState(Boolean(navDrawer.opened));
+}
+
+function syncDrawerState(isOpened) {
+    if (!navDrawer) return;
+
+    const isDrawerOpen = Boolean(isOpened);
+
+    updateNavDrawerAriaModal();
+    updateModalAccessibilityState(isDrawerOpen);
+
+    if (isStandardDrawerLayout) {
+        if (drawerOverlay) {
+            drawerOverlay.classList.remove('open');
+            drawerOverlay.setAttribute('aria-hidden', 'true');
+        }
+        document.body.classList.remove('drawer-is-open');
+        if (menuButton) menuButton.setAttribute('aria-expanded', 'false');
+        return;
+    }
+
+    if (isDrawerOpen) {
+        if (drawerOverlay) {
+            drawerOverlay.classList.add('open');
+            drawerOverlay.setAttribute('aria-hidden', 'false');
+        }
+        document.body.classList.add('drawer-is-open');
+    } else {
+        if (drawerOverlay) {
+            drawerOverlay.classList.remove('open');
+            drawerOverlay.setAttribute('aria-hidden', 'true');
+        }
+        document.body.classList.remove('drawer-is-open');
+    }
+
+    if (menuButton) {
+        menuButton.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
+    }
+}
+
+function updateModalAccessibilityState(isOpened) {
+    if (!Array.isArray(inertTargets) || inertTargets.length === 0) {
+        return;
+    }
+
+    const shouldDisableTargets = !isStandardDrawerLayout && Boolean(isOpened);
+
+    inertTargets.forEach((element) => {
+        if (!element) {
+            return;
+        }
+
+        element.toggleAttribute('inert', shouldDisableTargets);
+
+        if (shouldDisableTargets) {
+            element.setAttribute('aria-hidden', 'true');
+        } else {
+            element.removeAttribute('aria-hidden');
+        }
+    });
+}
+
+function updateNavDrawerAriaModal() {
+    if (!navDrawer) return;
+
+    const ariaModalValue = isStandardDrawerLayout ? 'false' : 'true';
+    navDrawer.setAttribute('aria-modal', ariaModalValue);
+    navDrawer.ariaModal = ariaModalValue;
 }

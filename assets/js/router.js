@@ -252,17 +252,20 @@ function updateActiveNavLink(currentPageId) {
         if (item.hasAttribute('active')) {
             item.removeAttribute('active');
         }
-         if (typeof item.active === 'boolean' && item.active) {
+        if (typeof item.active === 'boolean' && item.active) {
             item.active = false;
         }
-
+        item.removeAttribute('aria-current');
+        item.removeAttribute('aria-selected');
 
         let itemHref = item.getAttribute('href');
         if (itemHref) {
             const normalizedHref = normalizePageId(itemHref);
             if (normalizedHref === normalizedCurrentPage) {
                 item.classList.add('nav-item-active');
-                 if (typeof item.active === 'boolean') item.active = true;
+                item.setAttribute('aria-current', 'page');
+                item.setAttribute('aria-selected', 'true');
+                if (typeof item.active === 'boolean') item.active = true;
 
                 const nestedParent = item.closest('.nested-list');
                 if (nestedParent && nestedParent.id) {
