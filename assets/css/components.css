@@ -452,6 +452,7 @@ body.drawer-is-open {
   font-weight: 500;
   color: var(--app-secondary-text-color);
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .theme-button-container {
