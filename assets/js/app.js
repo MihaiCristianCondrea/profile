@@ -73,11 +73,22 @@ function buildRouterOptions() {
         };
     }
 
-    if (typeof fetchBlogPosts === 'function') {
+    if (typeof fetchBlogPosts === 'function' || typeof fetchCommittersRanking === 'function') {
         options.onHomeLoad = () => {
-            const newsGrid = document.getElementById('newsGrid');
-            if (newsGrid) {
-                fetchBlogPosts();
+            if (typeof fetchBlogPosts === 'function') {
+                const newsGrid = document.getElementById('newsGrid');
+                if (newsGrid) {
+                    fetchBlogPosts();
+                }
+            }
+
+            if (typeof fetchCommittersRanking === 'function') {
+                const rankingCardPresent = document.getElementById('committers-rank')
+                    || document.getElementById('committers-status')
+                    || document.querySelector('.achievement-card');
+                if (rankingCardPresent) {
+                    fetchCommittersRanking();
+                }
             }
         };
     }
