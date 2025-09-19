@@ -211,6 +211,14 @@ async function loadPageContent(pageId, updateHistory = true) {
         callCallback(loadResult.onReady, 'page ready hook', normalizedPageId);
     }
 
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animatePage === 'function') {
+        try {
+            SiteAnimations.animatePage(pageContentArea, normalizedPageId);
+        } catch (error) {
+            console.error('Router: Failed to run page animations:', error);
+        }
+    }
+
     const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
 
     if (historyHelper && typeof historyHelper.updateTitle === 'function') {

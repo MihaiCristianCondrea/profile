@@ -14,7 +14,7 @@ function ensureProjectsMarkedLoaded() {
 }
 
 function initProjectsPage() {
-  ensureProjectsMarkedLoaded().then(() => {
+  return ensureProjectsMarkedLoaded().then(() => {
     document.querySelectorAll('#projectsPageContainer [data-md]').forEach(el => {
       if (window.marked) {
         el.innerHTML = marked.parse(el.textContent.trim());
@@ -56,6 +56,15 @@ function initProjectsPage() {
           } catch (e) {}
         }
         activeTabIndex = idx;
+
+        if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateProjectCards === 'function') {
+          try {
+            const visibleProjects = Array.from(projects).filter(p => p.style.display !== 'none');
+            SiteAnimations.animateProjectCards(visibleProjects);
+          } catch (animationError) {
+            console.error('Projects: Failed to animate filtered project cards.', animationError);
+          }
+        }
       });
     });
 
@@ -167,6 +176,15 @@ function initProjectsPage() {
       };
 
     });
+
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateProjectCards === 'function') {
+      try {
+        const cardsToAnimate = projectsList ? projectsList.querySelectorAll('.project-entry') : projects;
+        SiteAnimations.animateProjectCards(cardsToAnimate);
+      } catch (animationError) {
+        console.error('Projects: Failed to animate project cards.', animationError);
+      }
+    }
   });
 }
 
@@ -175,3 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initProjectsPage();
   }
 });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ensureProjectsMarkedLoaded, initProjectsPage };
+}
