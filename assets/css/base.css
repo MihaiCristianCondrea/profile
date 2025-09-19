@@ -29,7 +29,6 @@ optgroup {
   padding: 1rem;
   padding-top: calc(70px + var(--safe-area-inset-top));
   padding-bottom: calc(1rem + var(--safe-area-max-inset-bottom));
-  padding-bottom: calc(1rem + max(var(--safe-area-inset-bottom), var(--safe-area-max-inset-bottom)));
   padding-inline-start: calc(1rem + var(--safe-area-inset-left));
   padding-inline-end: calc(1rem + var(--safe-area-inset-right));
   flex-grow: 1;

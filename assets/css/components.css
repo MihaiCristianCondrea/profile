@@ -444,8 +444,7 @@ md-elevated-card.contribute-card {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
-  height: 100dvh;
+  bottom: var(--safe-area-bottom-offset, 0px);
   z-index: 1002;
   display: flex;
   flex-direction: column;
@@ -459,7 +458,6 @@ md-elevated-card.contribute-card {
   --md-navigation-drawer-active-indicator-shape: 28px;
   --md-navigation-drawer-divider-color: var(--app-border-color);
   padding-bottom: var(--safe-area-max-inset-bottom);
-  padding-bottom: max(var(--safe-area-inset-bottom), var(--safe-area-max-inset-bottom));
 }
 
 .drawer-overlay {
@@ -536,7 +534,6 @@ body.drawer-is-open {
   flex-grow: 1;
   padding: 8px 0 16px;
   padding-bottom: calc(16px + var(--safe-area-max-inset-bottom));
-  padding-bottom: calc(16px + max(var(--safe-area-inset-bottom), var(--safe-area-max-inset-bottom)));
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
@@ -544,7 +541,6 @@ body.drawer-is-open {
 .drawer-footer {
   padding: 16px 28px 20px;
   padding-bottom: calc(20px + var(--safe-area-max-inset-bottom));
-  padding-bottom: calc(20px + max(var(--safe-area-inset-bottom), var(--safe-area-max-inset-bottom)));
   padding-inline-start: calc(28px + var(--safe-area-inset-left));
   padding-inline-end: calc(28px + var(--safe-area-inset-right));
   border-top: 1px solid var(--app-border-color);
