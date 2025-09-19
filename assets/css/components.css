@@ -460,38 +460,6 @@ md-elevated-card.contribute-card {
   padding-bottom: var(--safe-area-max-inset-bottom);
 }
 
-/* --- Edge-to-Edge Prep Page --- */
-.resource-card {
-  --md-elevated-card-container-shape: 16px;
-  --md-elevated-card-container-color: var(--app-card-bg-color);
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-block: 1rem;
-  padding: 1.5rem;
-  color: var(--app-text-color);
-}
-
-.resource-card h3 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.resource-card p {
-  margin: 0;
-  line-height: 1.6;
-}
-
-.resource-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.resource-actions a {
-  text-decoration: none;
-}
-
 .drawer-overlay {
   position: fixed;
   inset: 0;
@@ -595,31 +563,6 @@ body.drawer-is-open {
   gap: 12px;
 }
 
-.theme-help-button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  padding: 0;
-  border-radius: 50%;
-  background-color: transparent;
-  color: var(--app-text-color);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.theme-help-button:focus-visible,
-.theme-help-button:hover {
-  background-color: var(--app-theme-button-selected-bg);
-  color: var(--md-sys-color-primary);
-}
-
-.theme-help-button .material-symbols-outlined {
-  font-size: 20px;
-}
-
 .theme-button-container md-icon-button {
   --md-icon-button-icon-color: var(--app-text-color);
   border-radius: 50%; /* Ensure it's round */
@@ -630,112 +573,6 @@ body.drawer-is-open {
 .theme-button-container md-icon-button.selected {
   background-color: var(--app-theme-button-selected-bg);
   --md-icon-button-icon-color: var(--md-sys-color-primary);
-}
-
-.theme-help-popover {
-  border: 1px solid var(--app-border-color);
-  background-color: var(--app-card-bg-color);
-  color: var(--app-text-color);
-  border-radius: 18px;
-  padding: 16px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
-  max-width: min(320px, calc(100vw - 48px));
-  font-size: 0.9rem;
-}
-
-.theme-help-popover::backdrop {
-  background-color: rgba(0, 0, 0, 0.25);
-}
-
-.theme-help-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-.theme-help-header h3 {
-  margin: 0;
-  font-size: 1rem;
-}
-
-.theme-help-close {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 16px;
-  background-color: transparent;
-  color: inherit;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.theme-help-close:focus-visible,
-.theme-help-close:hover {
-  background-color: var(--app-theme-button-selected-bg);
-  color: var(--md-sys-color-primary);
-}
-
-.theme-help-close .material-symbols-outlined {
-  font-size: 18px;
-}
-
-.theme-help-invoker {
-  margin: 0 0 12px 0;
-  font-size: 0.75rem;
-  color: var(--app-secondary-text-color);
-}
-
-.theme-help-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: theme-help-counter;
-  display: grid;
-  gap: 12px;
-}
-
-.theme-help-list li {
-  counter-increment: theme-help-counter;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 12px;
-  align-items: flex-start;
-  position: relative;
-  font-size: 0.85rem;
-}
-
-.theme-help-list li::before {
-  content: counter(theme-help-counter);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
-  font-weight: 600;
-  font-size: 0.75rem;
-  line-height: 1;
-}
-
-.theme-help-list li::after {
-  content: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==") /
-    "Theme option " counter(theme-help-counter) " – " attr(data-theme-option);
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  border: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
 }
 
 .drawer-footer .drawer-legal-links {

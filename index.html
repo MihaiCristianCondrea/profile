@@ -95,9 +95,6 @@
                         <md-list-item href="#terms-of-service-end-user-software">
                             <div slot="headline">Terms of Service</div>
                         </md-list-item>
-                        <md-list-item href="#edge-to-edge-prep" id="navEdgeToEdgePrepLink">
-                            <div slot="headline">Edge-to-Edge Prep</div>
-                        </md-list-item>
                         <md-list-item href="#legal-notices" id="navLegalNoticesLink">
                             <div slot="headline">Legal Notices</div>
                         </md-list-item>
@@ -118,27 +115,6 @@
                 <md-icon-button id="autoThemeButton" aria-label="Auto theme" data-theme="auto">
                     <md-icon><span class="material-symbols-outlined">brightness_auto</span></md-icon>
                 </md-icon-button>
-                <button type="button" id="themeHelpButton" class="theme-help-button"
-                    popovertarget="themeHelpPopover" popovertargetaction="toggle"
-                    aria-label="Learn about theme behavior">
-                    <span class="material-symbols-outlined" aria-hidden="true">help</span>
-                </button>
-            </div>
-            <div id="themeHelpPopover" popover class="theme-help-popover" role="dialog"
-                aria-labelledby="themeHelpTitle">
-                <div class="theme-help-header">
-                    <h3 id="themeHelpTitle">Theme options</h3>
-                    <button type="button" class="theme-help-close" popovertarget="themeHelpPopover"
-                        popovertargetaction="hide" aria-label="Close theme help">
-                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
-                    </button>
-                </div>
-                <p id="themeHelpInvoker" class="theme-help-invoker" hidden></p>
-                <ol class="theme-help-list">
-                    <li data-theme-option="Light theme"><strong>Light</strong> &mdash; Always use the bright palette.</li>
-                    <li data-theme-option="Dark theme"><strong>Dark</strong> &mdash; Keep surfaces dim and text high contrast.</li>
-                    <li data-theme-option="Auto theme"><strong>Auto</strong> &mdash; Follow the system color scheme.</li>
-                </ol>
             </div>
             <div class="drawer-legal-links text-gray-500/90">
                 <a href="#privacy-policy">Privacy Policy</a>
@@ -304,7 +280,6 @@
     <script src="assets/js/utils.js" defer></script>
     <script src="assets/js/theme.js" defer></script>
     <script src="assets/js/navigationDrawer.js" defer></script>
-    <script src="assets/js/toggleSupport.js" defer></script>
     <script src="assets/js/bloggerApi.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js" defer></script>
     <script src="assets/js/resume.js" defer></script>
