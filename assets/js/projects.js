@@ -14,7 +14,7 @@ function ensureProjectsMarkedLoaded() {
 }
 
 function initProjectsPage() {
-  ensureProjectsMarkedLoaded().then(() => {
+  return ensureProjectsMarkedLoaded().then(() => {
     document.querySelectorAll('#projectsPageContainer [data-md]').forEach(el => {
       if (window.marked) {
         el.innerHTML = marked.parse(el.textContent.trim());
@@ -175,3 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initProjectsPage();
   }
 });
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ensureProjectsMarkedLoaded, initProjectsPage };
+}
