@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 button,
@@ -26,7 +27,11 @@ optgroup {
   width: 100%;
   margin: 0 auto;
   padding: 1rem;
-  padding-top: 70px;
+  padding-top: calc(70px + var(--safe-area-inset-top));
+  padding-bottom: calc(1rem + var(--safe-area-max-inset-bottom));
+  padding-bottom: calc(1rem + max(var(--safe-area-inset-bottom), var(--safe-area-max-inset-bottom)));
+  padding-inline-start: calc(1rem + var(--safe-area-inset-left));
+  padding-inline-end: calc(1rem + var(--safe-area-inset-right));
   flex-grow: 1;
 }
 
