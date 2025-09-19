@@ -790,6 +790,45 @@ md-divider.profile-section-divider {
   text-decoration: none;
 }
 
+.profile-card-actions a md-outlined-button,
+.profile-card-actions a md-filled-button,
+.achievement-card .achievement-actions md-text-button {
+  box-shadow: none;
+  transition: background-color 180ms var(--app-motion-spring),
+    color 180ms var(--app-motion-spring),
+    box-shadow 240ms var(--app-motion-bounce),
+    transform 240ms var(--app-motion-spring);
+}
+
+.profile-card-actions a md-outlined-button:hover,
+.profile-card-actions a md-outlined-button:focus-visible,
+.profile-card-actions a md-filled-button:hover,
+.profile-card-actions a md-filled-button:focus-visible,
+.achievement-card .achievement-actions md-text-button:hover,
+.achievement-card .achievement-actions md-text-button:focus-visible {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-card-actions a md-outlined-button,
+  .profile-card-actions a md-filled-button,
+  .achievement-card .achievement-actions md-text-button {
+    transition: background-color 180ms ease,
+      color 180ms ease,
+      box-shadow 240ms ease;
+  }
+
+  .profile-card-actions a md-outlined-button:hover,
+  .profile-card-actions a md-outlined-button:focus-visible,
+  .profile-card-actions a md-filled-button:hover,
+  .profile-card-actions a md-filled-button:focus-visible,
+  .achievement-card .achievement-actions md-text-button:hover,
+  .achievement-card .achievement-actions md-text-button:focus-visible {
+    transform: none;
+  }
+}
+
 /* Optional: To make buttons in actions take more width on smaller screens if they wrap */
 @media (max-width: 480px) {
   .profile-card-actions {
