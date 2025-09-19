@@ -449,7 +449,7 @@ md-elevated-card.contribute-card {
   --md-navigation-drawer-container-width: var(--app-drawer-inline-size);
   --md-navigation-drawer-container-height: 100%;
   --md-navigation-drawer-container-color: var(--app-drawer-bg-color);
-  --md-navigation-drawer-container-shape: 16px;
+  --md-navigation-drawer-container-shape: 0 16px 16px 0;
   --md-navigation-drawer-modal-container-elevation: 1;
   --md-navigation-drawer-standard-container-elevation: 0;
   --md-navigation-drawer-active-indicator-color: var(--md-sys-color-secondary-container);
