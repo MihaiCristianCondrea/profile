@@ -120,3 +120,19 @@ async function fetchCommittersRanking() {
         }
     }
 }
+
+if (typeof globalThis !== 'undefined') {
+    globalThis.formatOrdinal = formatOrdinal;
+    globalThis.formatDataAsOf = formatDataAsOf;
+    globalThis.fetchCommittersRanking = fetchCommittersRanking;
+    globalThis.updateCommittersStatus = updateCommittersStatus;
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        formatOrdinal,
+        formatDataAsOf,
+        updateCommittersStatus,
+        fetchCommittersRanking
+    };
+}
