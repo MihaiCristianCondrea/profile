@@ -13,6 +13,25 @@ function ensureProjectsMarkedLoaded() {
   return markedLoadPromiseProjects;
 }
 
+function resolveProjectsEasing(preferred, fallback) {
+  const animationsApi = typeof SiteAnimations !== 'undefined' && SiteAnimations ? SiteAnimations : null;
+  if (animationsApi && typeof animationsApi.resolveEasing === 'function') {
+    return animationsApi.resolveEasing(preferred, fallback);
+  }
+
+  const css = (typeof CSS !== 'undefined' && CSS && typeof CSS.supports === 'function')
+    ? CSS
+    : (typeof window !== 'undefined' && window.CSS && typeof window.CSS.supports === 'function'
+      ? window.CSS
+      : null);
+
+  if (preferred && css && css.supports('animation-timing-function', 'linear(0,0.5,1)')) {
+    return preferred;
+  }
+
+  return fallback;
+}
+
 function initProjectsPage() {
   return ensureProjectsMarkedLoaded().then(() => {
     document.querySelectorAll('#projectsPageContainer [data-md]').forEach(el => {
@@ -24,6 +43,11 @@ function initProjectsPage() {
     const tabs = document.querySelectorAll('#projectsFilterTabs md-primary-tab');
     const projects = document.querySelectorAll('.project-entry');
     const projectsList = document.querySelector('.projects-list');
+    const animationsApi = typeof SiteAnimations !== 'undefined' && SiteAnimations ? SiteAnimations : null;
+    const projectsListEasing = resolveProjectsEasing(
+      animationsApi && animationsApi.easings ? animationsApi.easings.spring : null,
+      'cubic-bezier(0.4,0,0.2,1)'
+    );
     let activeTabIndex = 0;
     tabs.forEach((tab, idx) => {
       tab.addEventListener('click', async () => {
@@ -33,7 +57,7 @@ function initProjectsPage() {
           try {
             await projectsList.animate(
               [{ opacity: 1, transform: 'translateX(0)' }, { opacity: 0, transform: `translateX(${ -20 * dir }px)` }],
-              { duration: 150, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'forwards' }
+              { duration: 150, easing: projectsListEasing, fill: 'forwards' }
             ).finished;
           } catch (e) {}
         }
@@ -51,7 +75,7 @@ function initProjectsPage() {
           try {
             await projectsList.animate(
               [{ opacity: 0, transform: `translateX(${20 * dir}px)` }, { opacity: 1, transform: 'translateX(0)' }],
-              { duration: 150, easing: 'cubic-bezier(0.4,0,0.2,1)', fill: 'forwards' }
+              { duration: 150, easing: projectsListEasing, fill: 'forwards' }
             ).finished;
           } catch (e) {}
         }

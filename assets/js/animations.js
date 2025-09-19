@@ -360,6 +360,7 @@
         animateNewsCards,
         animateSongCards,
         animateProjectCards,
+        resolveEasing,
         easings: LINEAR_EASINGS
     };
 })(typeof window !== 'undefined' ? window : globalThis);
