@@ -75,8 +75,15 @@
     };
 
     const LINEAR_EASINGS = Object.freeze({
+        accelerate: 'linear(0, 0.003 3.8%, 0.011 7.7%, 0.025 11.7%, 0.043 15.8%, 0.066 19.9%, 0.092 24.1%, 0.123 28.3%, 0.156 32.5%, 0.193 36.7%, 0.232 40.9%, 0.273 45.1%, 0.316 49.2%, 0.407 57.3%, 0.5 65%, 0.593 72.2%, 0.684 78.9%, 0.768 84.9%, 0.844 90%, 0.957 97.3%, 1)',
         bounce: 'linear(0, 0.004, 0.016, 0.035, 0.063 9.1%, 0.141, 0.25, 0.391, 0.563, 0.765, 1, 0.891, 0.813 45.5%, 0.785, 0.766, 0.754, 0.75, 0.754, 0.766, 0.785, 0.813 63.6%, 0.891, 1 72.7%, 0.973, 0.953, 0.941, 0.938, 0.941, 0.953, 0.973, 1, 0.988, 0.984, 0.988, 1)',
+        decelerate: 'linear(0, 0.043 1%, 0.092 2.4%, 0.123 3.3%, 0.156 4.4%, 0.193 5.6%, 0.232 7.1%, 0.273 8.7%, 0.316 10.5%, 0.361 12.6%, 0.407 14.8%, 0.453 17.3%, 0.5 20%, 0.547 22.9%, 0.593 26.1%, 0.639 29.5%, 0.684 33.2%, 0.727 37.1%, 0.768 41.4%, 0.807 45.8%, 0.844 50.6%, 0.877 55.7%, 0.908 61.1%, 0.934 66.7%, 0.957 72.7%, 0.975 79%, 0.989 85.7%, 0.997 92.7%, 1)',
         spring: 'linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1.004 83.8%, 1)'
+    });
+
+    const CUBIC_EASING_FALLBACKS = Object.freeze({
+        accelerate: 'cubic-bezier(0.4, 0, 1, 1)',
+        decelerate: 'cubic-bezier(0, 0, 0.2, 1)'
     });
 
     const supportsLinearEasing = typeof global.CSS !== 'undefined'
@@ -336,10 +343,33 @@
         }, 110);
     }
 
+    function applyMotionEasingCustomProperties() {
+        if (!root || !root.documentElement || !root.documentElement.style || typeof root.documentElement.style.setProperty !== 'function') {
+            return;
+        }
+
+        const accelerateValue = supportsLinearEasing
+            ? LINEAR_EASINGS.accelerate
+            : CUBIC_EASING_FALLBACKS.accelerate;
+        const decelerateValue = supportsLinearEasing
+            ? LINEAR_EASINGS.decelerate
+            : CUBIC_EASING_FALLBACKS.decelerate;
+
+        if (accelerateValue) {
+            root.documentElement.style.setProperty('--app-motion-ease-accelerate', accelerateValue);
+        }
+
+        if (decelerateValue) {
+            root.documentElement.style.setProperty('--app-motion-ease-decelerate', decelerateValue);
+        }
+    }
+
     function init() {
         if (!root) {
             return;
         }
+
+        applyMotionEasingCustomProperties();
 
         if (!animationsEnabled()) {
             root.documentElement.classList.add('prefers-reduced-motion');
@@ -361,6 +391,7 @@
         animateSongCards,
         animateProjectCards,
         resolveEasing,
-        easings: LINEAR_EASINGS
+        easings: LINEAR_EASINGS,
+        fallbacks: CUBIC_EASING_FALLBACKS
     };
 })(typeof window !== 'undefined' ? window : globalThis);

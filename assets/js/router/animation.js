@@ -1,15 +1,32 @@
 (function (global) {
-    const defaultFadeOutTiming = {
-        duration: 90,
-        easing: 'cubic-bezier(0.4, 0, 1, 1)',
-        fill: 'forwards'
-    };
+    const FADE_OUT_EASING_FALLBACK = 'cubic-bezier(0.4, 0, 1, 1)';
+    const FADE_IN_EASING_FALLBACK = 'cubic-bezier(0, 0, 0.2, 1)';
 
-    const defaultFadeInTiming = {
-        duration: 210,
-        easing: 'cubic-bezier(0, 0, 0.2, 1)',
+    function resolveRouterEasing(easingKey, fallback) {
+        const siteAnimations = global.SiteAnimations;
+        if (siteAnimations) {
+            const fallbacks = siteAnimations.fallbacks || {};
+            const preferred = siteAnimations.easings && siteAnimations.easings[easingKey];
+            const effectiveFallback = fallbacks[easingKey] || fallback;
+            if (typeof siteAnimations.resolveEasing === 'function') {
+                return siteAnimations.resolveEasing(preferred, effectiveFallback);
+            }
+            return effectiveFallback;
+        }
+        return fallback;
+    }
+
+    const defaultFadeOutTiming = () => ({
+        duration: 90,
+        easing: resolveRouterEasing('accelerate', FADE_OUT_EASING_FALLBACK),
         fill: 'forwards'
-    };
+    });
+
+    const defaultFadeInTiming = () => ({
+        duration: 210,
+        easing: resolveRouterEasing('decelerate', FADE_IN_EASING_FALLBACK),
+        fill: 'forwards'
+    });
 
     function setFinalOpacity(element, value) {
         if (element && element.style) {
@@ -22,7 +39,10 @@
             return Promise.resolve();
         }
 
-        const timing = Object.assign({}, defaultTiming, overrides || {});
+        const baseTiming = typeof defaultTiming === 'function'
+            ? defaultTiming()
+            : Object.assign({}, defaultTiming);
+        const timing = Object.assign(baseTiming, overrides || {});
 
         if (typeof element.animate !== 'function') {
             setFinalOpacity(element, finalOpacity);
