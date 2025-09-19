@@ -111,6 +111,11 @@
             path: 'pages/drawer/more/apps/terms-of-service-apps.html',
             title: 'Terms of Service – End-User Software'
         },
+        {
+            id: 'edge-to-edge-prep',
+            path: 'pages/drawer/more/apps/edge-to-edge-prep.html',
+            title: 'Edge-to-Edge Prep'
+        },
         { id: 'resume', path: 'pages/resume/resume.html', title: "Mihai's Resume", onLoad: runResumeOnLoad }
     ];
 
