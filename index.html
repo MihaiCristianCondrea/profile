@@ -183,6 +183,30 @@
                 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/show/1kfFn7caL2U2wlhaD9IMIa?utm_source=generator" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
 
+            <md-filled-card class="achievement-card">
+                <div class="achievement-body">
+                    <div class="achievement-icon" aria-hidden="true">
+                        <span class="material-symbols-outlined">military_tech</span>
+                    </div>
+                    <div class="achievement-content">
+                        <h3>GitHub Committers Ranking</h3>
+                        <p class="achievement-rank" id="committers-rank">—</p>
+                        <p class="achievement-status" id="committers-status" role="status" aria-live="polite">
+                            Checking latest ranking...
+                        </p>
+                        <p class="achievement-updated" id="committers-updated">Last updated: —</p>
+                    </div>
+                </div>
+                <div class="achievement-actions">
+                    <a href="https://committers.top/romania" target="_blank" rel="noopener noreferrer">
+                        <md-text-button>
+                            <md-icon slot="icon">open_in_new</md-icon>
+                            View ranking
+                        </md-text-button>
+                    </a>
+                </div>
+            </md-filled-card>
+
             <h2 class="page-section-title">Latest news</h2>
             <div class="news-section">
                 <div class="news-grid" id="newsGrid">
@@ -264,6 +288,7 @@
     <script src="assets/js/router/contentLoader.js" defer></script>
     <script src="assets/js/router/history.js" defer></script>
     <script src="assets/js/router.js" defer></script>
+    <script src="assets/js/committers.js" defer></script>
     <script src="assets/js/app.js" defer></script>
 
 </body>

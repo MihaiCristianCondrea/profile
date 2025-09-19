@@ -122,6 +122,95 @@ md-assist-chip {
   --md-assist-chip-label-text-font: 'Poppins', sans-serif;
 }
 
+/* --- Achievement Card --- */
+md-filled-card.achievement-card {
+  --md-filled-card-container-color: var(--app-card-bg-color);
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.achievement-card .achievement-body {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.achievement-card .achievement-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  flex-shrink: 0;
+}
+
+.achievement-card .achievement-icon .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.achievement-card .achievement-content {
+  flex: 1 1 220px;
+  min-width: 0;
+  color: var(--app-text-color);
+}
+
+.achievement-card .achievement-content h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: var(--app-text-color);
+}
+
+.achievement-card .achievement-rank {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+  line-height: 1.2;
+}
+
+.achievement-card .achievement-status {
+  margin: 0.5rem 0 0;
+  color: var(--app-secondary-text-color);
+  line-height: 1.5;
+}
+
+.achievement-card .achievement-status.error {
+  color: var(--md-sys-color-error);
+}
+
+.achievement-card .achievement-updated {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--app-secondary-text-color);
+}
+
+.achievement-card .achievement-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.achievement-card .achievement-actions a {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .achievement-card .achievement-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 /* --- General Card Actions --- */
 .card-actions {
   padding: 1rem 1.5rem;
