@@ -60,3 +60,14 @@ function hidePageLoadingOverlay() {
     if (overlay) overlay.classList.remove("active");
 }
 
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        getNestedValue,
+        extractFirstImageFromHtml,
+        getDynamicElement,
+        setCopyrightYear,
+        showPageLoadingOverlay,
+        hidePageLoadingOverlay
+    };
+}
+
