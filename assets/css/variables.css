@@ -59,7 +59,8 @@
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-inset-left: env(safe-area-inset-left, 0px);
-  --safe-area-max-inset-bottom: env(safe-area-max-inset-bottom, 0px);
+  --safe-area-max-inset-bottom: max(env(safe-area-max-inset-bottom, 0px), var(--safe-area-inset-bottom));
+  --safe-area-bottom-offset: calc(var(--safe-area-inset-bottom) - var(--safe-area-max-inset-bottom));
  --md-sys-typescale-label-large-font-family-name: 'Poppins';
   --md-sys-typescale-label-large-font: 'Poppins';
   --md-sys-typescale-label-large-weight: 500;
