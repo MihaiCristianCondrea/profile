@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initNavigationDrawer();
 
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
+        try {
+            SiteAnimations.init();
+        } catch (error) {
+            console.error('App.js: Failed to initialize animations.', error);
+        }
+    }
+
     let initialHomeHTMLString = "<p>Error: Home content missing.</p>";
     if (mainContentPageOriginalEl) {
         initialHomeHTMLString = mainContentPageOriginalEl.outerHTML;

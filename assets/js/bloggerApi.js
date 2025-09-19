@@ -157,6 +157,13 @@ async function fetchBlogPosts() {
         newsGridElement.innerHTML = '';
         if (postsData.items && postsData.items.length > 0) {
             postsData.items.forEach(post => newsGridElement.appendChild(createBlogPostCard(post)));
+            if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateNewsCards === 'function') {
+                try {
+                    SiteAnimations.animateNewsCards(newsGridElement.querySelectorAll('.news-card'));
+                } catch (animationError) {
+                    console.error('Blogger API: Failed to animate news cards.', animationError);
+                }
+            }
         } else {
             newsStatusElement.innerHTML = '<span>No posts found.</span>';
             newsStatusElement.style.display = 'flex';

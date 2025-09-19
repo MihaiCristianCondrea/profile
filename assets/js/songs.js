@@ -46,6 +46,14 @@ async function loadSongs() {
             </div>`;
         grid.appendChild(card);
     }
+
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateSongCards === 'function') {
+        try {
+            SiteAnimations.animateSongCards(grid.querySelectorAll('.song-card'));
+        } catch (animationError) {
+            console.error('Songs: Failed to animate song cards.', animationError);
+        }
+    }
     if (status) status.style.display = 'none';
 }
 
