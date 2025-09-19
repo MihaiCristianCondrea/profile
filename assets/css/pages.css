@@ -867,6 +867,75 @@
     margin-bottom: 0;
 }
 
+/* Shared legal page heading numbering */
+#privacyPolicyPageContainer,
+#legalNoticesPageContainer,
+#adsHelpCenterPageContainer,
+#privacyPolicyAppsPageContainer,
+#termsOfServiceAppsPageContainer,
+#codeOfConductPageContainer {
+  counter-reset: privacySections;
+}
+
+#privacyPolicyPageContainer h2,
+#legalNoticesPageContainer h2,
+#adsHelpCenterPageContainer h2,
+#privacyPolicyAppsPageContainer h2,
+#termsOfServiceAppsPageContainer h2,
+#codeOfConductPageContainer h2 {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  line-height: 1.35;
+  flex-wrap: wrap;
+}
+
+#privacyPolicyPageContainer h2::before,
+#legalNoticesPageContainer h2::before,
+#adsHelpCenterPageContainer h2::before,
+#privacyPolicyAppsPageContainer h2::before,
+#termsOfServiceAppsPageContainer h2::before,
+#codeOfConductPageContainer h2::before {
+  counter-increment: privacySections;
+  content: url('../icons/privacy-section.svg') / "Section " counter(privacySections);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container-high);
+  padding: 0.35rem;
+  margin-top: 0.1rem;
+  color: var(--md-sys-color-primary);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  #privacyPolicyPageContainer h2,
+  #legalNoticesPageContainer h2,
+  #adsHelpCenterPageContainer h2,
+  #privacyPolicyAppsPageContainer h2,
+  #termsOfServiceAppsPageContainer h2,
+  #codeOfConductPageContainer h2 {
+    gap: 0.6rem;
+  }
+
+  #privacyPolicyPageContainer h2::before,
+  #legalNoticesPageContainer h2::before,
+  #adsHelpCenterPageContainer h2::before,
+  #privacyPolicyAppsPageContainer h2::before,
+  #termsOfServiceAppsPageContainer h2::before,
+  #codeOfConductPageContainer h2::before {
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0.25rem;
+  }
+}
+
 /* --- Contact Page Specific Styles --- */
 #contactPageContainer {
   background-color: var(--md-sys-color-surface-container-high);
