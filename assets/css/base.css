@@ -52,7 +52,7 @@ optgroup {
 }
 
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined', sans-serif;
+  font-family: var(--material-symbols-font, 'Material Symbols Outlined'), 'Material Symbols Outlined', sans-serif;
   font-weight: normal;
   font-style: normal;
   font-size: 20px;
@@ -66,5 +66,14 @@ optgroup {
   font-feature-settings: 'liga';
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-filled {
+  --material-symbols-font: 'Material Symbols Filled';
+  font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+}
+
+.material-symbols-semibold {
+  --material-symbols-font: 'Material Symbols SemiBold';
+  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
