@@ -619,6 +619,8 @@ md-list-item {
   --md-list-item-container-shape: 28px;
   --md-list-item-state-layer-shape: 28px;
   --md-focus-ring-shape: 28px;
+  border-radius: var(--md-list-item-container-shape);
+  overflow: hidden;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
