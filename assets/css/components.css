@@ -705,15 +705,40 @@ md-list-item[type="button"].expanded md-icon[slot="end"] {
 }
 
 /* --- Buttons --- */
-md-filled-button md-icon {
-  margin-inline-end: 8px;
-  display: inline-flex;
-  align-items: center;
+:root {
+  --app-button-icon-inline-padding: 16px;
+  --app-text-button-icon-inline-padding: 12px;
 }
 
 md-filled-button {
-  display: inline-flex;
-  align-items: center;
+  --md-filled-button-with-leading-icon-leading-space: var(--app-button-icon-inline-padding);
+  --md-filled-button-with-leading-icon-trailing-space: var(--app-button-icon-inline-padding);
+  --md-filled-button-with-trailing-icon-leading-space: var(--app-button-icon-inline-padding);
+  --md-filled-button-with-trailing-icon-trailing-space: var(--app-button-icon-inline-padding);
+}
+
+md-outlined-button {
+  --md-outlined-button-with-leading-icon-leading-space: var(--app-button-icon-inline-padding);
+  --md-outlined-button-with-leading-icon-trailing-space: var(--app-button-icon-inline-padding);
+  --md-outlined-button-with-trailing-icon-leading-space: var(--app-button-icon-inline-padding);
+  --md-outlined-button-with-trailing-icon-trailing-space: var(--app-button-icon-inline-padding);
+}
+
+:is(md-filled-button, md-outlined-button)[has-icon] {
+  padding-inline-start: var(--app-button-icon-inline-padding);
+  padding-inline-end: var(--app-button-icon-inline-padding);
+}
+
+md-text-button {
+  --md-text-button-with-leading-icon-leading-space: var(--app-text-button-icon-inline-padding);
+  --md-text-button-with-leading-icon-trailing-space: var(--app-text-button-icon-inline-padding);
+  --md-text-button-with-trailing-icon-leading-space: var(--app-text-button-icon-inline-padding);
+  --md-text-button-with-trailing-icon-trailing-space: var(--app-text-button-icon-inline-padding);
+}
+
+md-text-button[has-icon] {
+  padding-inline-start: var(--app-text-button-icon-inline-padding);
+  padding-inline-end: var(--app-text-button-icon-inline-padding);
 }
 
 /* --- Footer --- */
