@@ -1,3 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../../tailwind.config.js";
+@source "../../index.html";
+@source "../../pages/**/*.{html,js}";
+@source "../../assets/js/**/*.js";
+
+@import "tailwindcss";
