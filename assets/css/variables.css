@@ -108,6 +108,20 @@
   --md-sys-typescale-display-small-weight: 500;
 }
 
+@supports (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: linear(0, 0.35 20%, 0.72 45%, 1.08 75%, 1);
+    --app-motion-bounce: linear(0, 0.55 25%, 1.05 60%, 1);
+  }
+}
+
+@supports not (animation-timing-function: linear(0, 0.5, 1)) {
+  :root {
+    --app-motion-spring: ease;
+    --app-motion-bounce: ease;
+  }
+}
+
 html.dark {
   --md-sys-color-primary: #96dea1;
   --md-sys-color-on-primary: #003912;
