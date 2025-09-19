@@ -154,25 +154,19 @@ function setupResponsiveDrawerLayout() {
 function updateDrawerLayout(shouldUseStandardLayout) {
     if (!navDrawer) return;
 
-    const shouldUseStandard = Boolean(shouldUseStandardLayout);
-    document.body.dataset.drawerMode = shouldUseStandard ? 'standard' : 'modal';
+    const shouldUseStandard = false; // Always use modal drawer layout to mirror mobile behavior
+    document.body.dataset.drawerMode = 'modal';
+    document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
 
-    if (isStandardDrawerLayout === shouldUseStandard) {
-        syncDrawerState(Boolean(navDrawer.opened));
-        return;
-    }
+    if (menuButton) menuButton.toggleAttribute('hidden', shouldUseStandard);
+    if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', shouldUseStandard);
 
     isStandardDrawerLayout = shouldUseStandard;
-    document.body.classList.toggle('drawer-standard-mode', isStandardDrawerLayout);
 
     if (isStandardDrawerLayout) {
         navDrawer.opened = true;
-        if (menuButton) menuButton.toggleAttribute('hidden', true);
-        if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', true);
     } else {
         navDrawer.opened = false;
-        if (menuButton) menuButton.toggleAttribute('hidden', false);
-        if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', false);
     }
 
     syncDrawerState(Boolean(navDrawer.opened));
