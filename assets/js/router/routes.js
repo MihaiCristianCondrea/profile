@@ -96,6 +96,11 @@
         { id: 'privacy-policy', path: 'pages/drawer/more/privacy-policy.html', title: 'Privacy Policy' },
         { id: 'songs', path: 'pages/drawer/songs.html', title: 'My Music', onLoad: runSongsOnLoad },
         { id: 'projects', path: 'pages/drawer/projects.html', title: 'Projects', onLoad: runProjectsOnLoad },
+        {
+            id: 'scroll-driven-animations',
+            path: 'pages/drawer/more/scroll-driven-animations.html',
+            title: 'Scroll-driven animations'
+        },
         { id: 'contact', path: 'pages/drawer/contact.html', title: 'Contact' },
         { id: 'about-me', path: 'pages/drawer/about-me.html', title: 'About Me' },
         { id: 'ads-help-center', path: 'pages/drawer/more/apps/ads-help-center.html', title: 'Ads Help Center' },
