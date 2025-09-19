@@ -74,6 +74,23 @@
         ]
     };
 
+    const LINEAR_EASINGS = Object.freeze({
+        bounce: 'linear(0, 0.004, 0.016, 0.035, 0.063 9.1%, 0.141, 0.25, 0.391, 0.563, 0.765, 1, 0.891, 0.813 45.5%, 0.785, 0.766, 0.754, 0.75, 0.754, 0.766, 0.785, 0.813 63.6%, 0.891, 1 72.7%, 0.973, 0.953, 0.941, 0.938, 0.941, 0.953, 0.973, 1, 0.988, 0.984, 0.988, 1)',
+        spring: 'linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1.004 83.8%, 1)'
+    });
+
+    const supportsLinearEasing = typeof global.CSS !== 'undefined'
+        && global.CSS
+        && typeof global.CSS.supports === 'function'
+        && global.CSS.supports('animation-timing-function', 'linear(0,0.5,1)');
+
+    function resolveEasing(preferred, fallback) {
+        if (supportsLinearEasing && preferred) {
+            return preferred;
+        }
+        return fallback;
+    }
+
     function animateElement(element, keyframes, options) {
         if (!element) {
             return null;
@@ -87,7 +104,7 @@
         const frames = Array.isArray(keyframes) ? keyframes : [keyframes];
         const animationOptions = Object.assign({
             duration: 600,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)'),
             fill: 'both'
         }, options || {});
 
@@ -143,26 +160,26 @@
         if (heroCard) {
             animateElement(heroCard, KEYFRAMES.hero, {
                 duration: 720,
-                easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+                easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.22, 1, 0.36, 1)')
             });
         }
 
         const chipElements = container.querySelectorAll('md-chip-set md-assist-chip');
         animateSequence(chipElements, KEYFRAMES.pop, {
             duration: 360,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.34, 1.56, 0.64, 1)')
         }, 40);
 
         const supportingSections = container.querySelectorAll('.achievement-card, .profile-card-actions, .podcast-embed, .news-section, .contribute-card');
         animateSequence(supportingSections, KEYFRAMES.rise, {
             duration: 640,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)')
         }, 90);
 
         const socialLinks = container.querySelectorAll('.social-icons a');
         animateSequence(socialLinks, KEYFRAMES.pop, {
             duration: 420,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.34, 1.56, 0.64, 1)')
         }, 50);
     }
 
@@ -176,14 +193,14 @@
         const formSections = resumePage.querySelectorAll('.form-container .form-section, .form-container h1');
         animateSequence(formSections, KEYFRAMES.slideInRight, {
             duration: 560,
-            easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.16, 1, 0.3, 1)')
         }, 70);
 
         const previewPanel = resumePage.querySelector('#resume-preview .resume-content');
         if (previewPanel) {
             animateElement(previewPanel, KEYFRAMES.hero, {
                 duration: 700,
-                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.16, 1, 0.3, 1)'),
                 delay: 120
             });
         }
@@ -192,7 +209,7 @@
         if (downloadButton) {
             animateElement(downloadButton, KEYFRAMES.pop, {
                 duration: 420,
-                easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.34, 1.56, 0.64, 1)'),
                 delay: 220
             });
         }
@@ -209,7 +226,7 @@
         if (heading) {
             animateElement(heading, KEYFRAMES.slideInRight, {
                 duration: 500,
-                easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+                easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)')
             });
         }
 
@@ -217,7 +234,7 @@
         if (intro) {
             animateElement(intro, KEYFRAMES.subtleRise, {
                 duration: 520,
-                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)'),
                 delay: 60
             });
         }
@@ -225,7 +242,7 @@
         const tabs = projectsPage.querySelectorAll('#projectsFilterTabs md-primary-tab');
         animateSequence(tabs, KEYFRAMES.pop, {
             duration: 360,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.34, 1.56, 0.64, 1)')
         }, 40);
 
         const cards = projectsPage.querySelectorAll('.project-entry');
@@ -239,7 +256,7 @@
         const sectionChildren = container.querySelectorAll('.page-section.active > *:not(script):not(style)');
         animateSequence(sectionChildren, KEYFRAMES.subtleRise, {
             duration: 520,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)')
         }, 70);
     }
 
@@ -282,7 +299,7 @@
         }
         animateSequence(cards, KEYFRAMES.rise, {
             duration: 560,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)')
         }, 90);
     }
 
@@ -293,7 +310,7 @@
         }
         animateSequence(cards, KEYFRAMES.pop, {
             duration: 420,
-            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.bounce, 'cubic-bezier(0.34, 1.56, 0.64, 1)')
         }, 60);
     }
 
@@ -315,7 +332,7 @@
         }
         animateSequence(cards, KEYFRAMES.rise, {
             duration: 640,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)'
+            easing: resolveEasing(LINEAR_EASINGS.spring, 'cubic-bezier(0.22, 1, 0.36, 1)')
         }, 110);
     }
 
@@ -342,6 +359,7 @@
         animatePage,
         animateNewsCards,
         animateSongCards,
-        animateProjectCards
+        animateProjectCards,
+        easings: LINEAR_EASINGS
     };
 })(typeof window !== 'undefined' ? window : globalThis);
