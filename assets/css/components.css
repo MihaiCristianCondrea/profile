@@ -444,7 +444,7 @@ md-elevated-card.contribute-card {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: var(--safe-area-bottom-offset, 0px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom));
   z-index: 1002;
   display: flex;
   flex-direction: column;
@@ -458,6 +458,38 @@ md-elevated-card.contribute-card {
   --md-navigation-drawer-active-indicator-shape: 28px;
   --md-navigation-drawer-divider-color: var(--app-border-color);
   padding-bottom: var(--safe-area-max-inset-bottom);
+}
+
+/* --- Edge-to-Edge Prep Page --- */
+.resource-card {
+  --md-elevated-card-container-shape: 16px;
+  --md-elevated-card-container-color: var(--app-card-bg-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-block: 1rem;
+  padding: 1.5rem;
+  color: var(--app-text-color);
+}
+
+.resource-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.resource-card p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.resource-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.resource-actions a {
+  text-decoration: none;
 }
 
 .drawer-overlay {

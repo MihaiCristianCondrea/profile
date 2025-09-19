@@ -1,0 +1,134 @@
+<div id="edgeToEdgePrepPage" class="page-section active">
+    <h1>Prepare for Chrome on Android going edge-to-edge</h1>
+    <p>
+        Chrome 135 introduces dynamic edge-to-edge browsing on small-screen Android devices. The viewport can now extend
+        underneath Android's gesture navigation bar, while Chrome adds a transient "chin" that slides away as users scroll.
+        This page summarizes what the change means for this website and links to the latest guidance so every surface stays
+        polished when Chrome starts drawing behind the system bars.
+    </p>
+
+    <md-divider></md-divider>
+
+    <h2 id="site-readiness">Site readiness checklist</h2>
+    <p>
+        The site already ships <code>viewport-fit=cover</code> so content can expand into the full viewport. To align with
+        the new Chrome defaults we have tightened up our safe-area handling and recommend the following checks whenever you
+        add new components:
+    </p>
+    <ul>
+        <li>
+            Size any bottom-anchored UI (drawers, banners, FAB rails) using the
+            <code>calc(env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom))</code> pattern. This allows
+            Chrome's performance fast-path to kick in when the chin moves and keeps animations stutter-free.
+        </li>
+        <li>
+            Allow content backgrounds to bleed into the navigation area by padding elements with
+            <code>var(--safe-area-max-inset-bottom)</code>. Avoid recomputing layout by <em>not</em> applying the dynamic
+            <code>env(safe-area-inset-bottom)</code> directly as padding.
+        </li>
+        <li>
+            When embedding media or dialogs that sit flush with the edges, remember to apply the existing CSS custom
+            properties (<code>--safe-area-inset-*</code>) so nothing is obscured as Chrome animates its bars.
+        </li>
+    </ul>
+
+    <md-divider></md-divider>
+
+    <h2 id="testing">Test edge-to-edge before it launches</h2>
+    <p>
+        You can validate layouts early by enabling the relevant feature flags in Chrome Canary or Dev on Android. Toggle the
+        following entries under <code>chrome://flags</code>, then restart Chrome twice to ensure they stick:
+    </p>
+    <ul>
+        <li><strong>EdgeToEdgeBottomChin</strong> ("Enabled Debug" helps visualize the chin)</li>
+        <li><strong>DrawCutOutEdgeToEdge</strong></li>
+        <li><strong>BottomBrowserControlsRefactor</strong> &rarr; <em>Enabled Dispatch yOffset</em></li>
+        <li><strong>DynamicSafeAreaInsets</strong> and <strong>DynamicSafeAreaInsetsOnScroll</strong></li>
+        <li><strong>EdgeToEdgeWebOptIn</strong>, <strong>DrawKeyNativeEdgeToEdge</strong></li>
+        <li><strong>EdgeToEdgeSafeAreaConstraint</strong> &rarr; <em>Enabled Scrollable Variation</em></li>
+        <li>Leave <strong>DrawNativeEdgeToEdge</strong> and <strong>EdgeToEdgeEverywhere</strong> disabled</li>
+    </ul>
+    <p>
+        With these flags active, scroll through every page, especially those that pin controls to the bottom edge, and confirm
+        that content remains tappable as the chin hides and reveals itself.
+    </p>
+
+    <md-divider></md-divider>
+
+    <h2 id="resources">Latest guidance from Google</h2>
+    <md-elevated-card class="resource-card">
+        <h3>Chrome on Android edge-to-edge migration guide</h3>
+        <p>
+            Bramus walks through the visual differences between Chrome 134 and 135, explains how the safe area inset values
+            evolve as the chin animates, and provides CSS recipes for both bottom-aligned components and full-bleed layouts.
+        </p>
+        <div class="resource-actions">
+            <a href="https://developer.chrome.com/docs/css-ui/edge-to-edge/" target="_blank" rel="noopener noreferrer">
+                <md-filled-button>
+                    Read documentation
+                    <md-icon slot="icon-trailing"><span class="material-symbols-outlined">open_in_new</span></md-icon>
+                </md-filled-button>
+            </a>
+        </div>
+    </md-elevated-card>
+
+    <md-elevated-card class="resource-card">
+        <h3>Prepare for Chrome on Android going edge-to-edge</h3>
+        <p>
+            The Chrome Developers blog post highlights the user-facing changes, introduces the chin, and links directly to the
+            migration guide so teams can update their stylesheets before Chrome 135 ships broadly.
+        </p>
+        <div class="resource-actions">
+            <a href="https://developer.chrome.com/blog/chrome-android-edge-to-edge/" target="_blank"
+                rel="noopener noreferrer">
+                <md-filled-button>
+                    Visit blog post
+                    <md-icon slot="icon-trailing"><span class="material-symbols-outlined">open_in_new</span></md-icon>
+                </md-filled-button>
+            </a>
+        </div>
+    </md-elevated-card>
+
+    <md-elevated-card class="resource-card">
+        <h3>Documentation fix in Android Developer docs</h3>
+        <p>
+            A recently filed bug corrected the "GradientProtection" link inside the Android edge-to-edge guide so it now points
+            to the appropriate Jetpack API reference. Keep an eye on those docs for native-side inset handling examples.
+        </p>
+        <div class="resource-actions">
+            <a href="https://issuetracker.google.com/issues/376727177" target="_blank" rel="noopener noreferrer">
+                <md-filled-button>
+                    View bug thread
+                    <md-icon slot="icon-trailing"><span class="material-symbols-outlined">open_in_new</span></md-icon>
+                </md-filled-button>
+            </a>
+        </div>
+    </md-elevated-card>
+
+    <md-elevated-card class="resource-card">
+        <h3>Make WebViews edge-to-edge</h3>
+        <p>
+            Ash Nohe's article on the Android Developers publication shows how to bridge safe area information into owned web
+            content and how to pad third-party pages when the hosting app controls the chrome. It is invaluable when testing
+            this site inside native shells.
+        </p>
+        <div class="resource-actions">
+            <a href="https://medium.com/androiddevelopers/make-webviews-edge-to-edge" target="_blank"
+                rel="noopener noreferrer">
+                <md-filled-button>
+                    Read on Medium
+                    <md-icon slot="icon-trailing"><span class="material-symbols-outlined">open_in_new</span></md-icon>
+                </md-filled-button>
+            </a>
+        </div>
+    </md-elevated-card>
+
+    <md-divider></md-divider>
+
+    <h2 id="next-steps">Next steps</h2>
+    <p>
+        Continue to audit new UI against the safe area guidelines above, and verify in both light and dark themes. If you spot
+        any quirks while Chrome rolls out its edge-to-edge experiment, file a report with detailed reproduction steps so we can
+        react quickly. This page will be kept up to date as Google publishes additional guidance or tooling.
+    </p>
+</div>
