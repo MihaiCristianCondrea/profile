@@ -23,6 +23,28 @@
         }
     }
 
+    const WINDOW_BREAKPOINTS = Object.freeze({
+        medium: 600,
+        expanded: 1200
+    });
+
+    const ORIENTATION = Object.freeze({
+        portrait: 'portrait',
+        landscape: 'landscape'
+    });
+
+    const pointerQueries = typeof global.matchMedia === 'function'
+        ? {
+            fine: global.matchMedia('(any-pointer: fine)'),
+            coarse: global.matchMedia('(any-pointer: coarse)'),
+            none: global.matchMedia('(pointer: none)')
+        }
+        : { fine: null, coarse: null, none: null };
+
+    let currentWindowSizeClass = 'compact';
+    let currentOrientation = ORIENTATION.portrait;
+    let currentPointerType = 'coarse';
+
     function canAnimate() {
         return hasWaapiSupport;
     }
@@ -56,6 +78,255 @@
         return [value];
     }
 
+    function computeWindowSizeClass(width) {
+        if (typeof width !== 'number' || width <= 0) {
+            return currentWindowSizeClass;
+        }
+        if (width >= WINDOW_BREAKPOINTS.expanded) {
+            return 'expanded';
+        }
+        if (width >= WINDOW_BREAKPOINTS.medium) {
+            return 'medium';
+        }
+        return 'compact';
+    }
+
+    function detectOrientation(width, height) {
+        if (typeof width !== 'number' || typeof height !== 'number') {
+            return currentOrientation;
+        }
+        if (height <= 0 && width <= 0) {
+            return currentOrientation;
+        }
+        if (height <= 0) {
+            return currentOrientation;
+        }
+        return width >= height ? ORIENTATION.landscape : ORIENTATION.portrait;
+    }
+
+    function updatePointerType() {
+        const previous = currentPointerType;
+
+        if (!pointerQueries.fine && !pointerQueries.coarse && !pointerQueries.none) {
+            currentPointerType = 'coarse';
+            return currentPointerType !== previous;
+        }
+
+        if (pointerQueries.fine && pointerQueries.fine.matches) {
+            currentPointerType = 'fine';
+        } else if (pointerQueries.coarse && pointerQueries.coarse.matches) {
+            currentPointerType = 'coarse';
+        } else if (pointerQueries.none && pointerQueries.none.matches) {
+            currentPointerType = 'none';
+        }
+
+        if (!currentPointerType) {
+            currentPointerType = 'coarse';
+        }
+
+        return currentPointerType !== previous;
+    }
+
+    function updateEnvironmentMetadata() {
+        if (!root || !root.documentElement) {
+            return;
+        }
+
+        const htmlElement = root.documentElement;
+
+        if (currentWindowSizeClass) {
+            htmlElement.dataset.windowSize = currentWindowSizeClass;
+        }
+
+        if (currentOrientation) {
+            htmlElement.dataset.orientation = currentOrientation;
+        }
+
+        if (currentPointerType) {
+            htmlElement.dataset.pointer = currentPointerType;
+        }
+    }
+
+    function updateMotionTokensForContext() {
+        if (!root || !root.documentElement || !root.documentElement.style) {
+            return;
+        }
+
+        const htmlElement = root.documentElement;
+        const style = htmlElement.style;
+        const scheme = MOTION_SCHEMES[activeMotionScheme] || MOTION_SCHEMES[DEFAULT_MOTION_SCHEME];
+
+        if (!scheme) {
+            return;
+        }
+
+        const reduce = shouldReduceMotion();
+
+        const spatialTokens = scheme.spatial || {};
+        const effectTokens = scheme.effect || {};
+        const fallbackScheme = MOTION_SCHEMES[DEFAULT_MOTION_SCHEME] || {};
+        const fallbackSpatial = fallbackScheme.spatial || {};
+        const fallbackEffect = fallbackScheme.effect || {};
+
+        const shortToken = effectTokens.fast || fallbackEffect.fast || DEFAULT_MOTION_TOKEN;
+        const mediumToken = effectTokens.default || fallbackEffect.default || DEFAULT_MOTION_TOKEN;
+
+        let longToken = spatialTokens.default || fallbackSpatial.default || DEFAULT_MOTION_TOKEN;
+        if (currentWindowSizeClass === 'expanded' && spatialTokens.slow) {
+            longToken = spatialTokens.slow;
+        } else if (currentWindowSizeClass === 'compact' && spatialTokens.fast) {
+            longToken = spatialTokens.fast;
+        }
+
+        const reducedReference = effectTokens.default || spatialTokens.fast || DEFAULT_MOTION_TOKEN;
+
+        const resolveDuration = (token, fallback) => {
+            const baseToken = token || fallback || DEFAULT_MOTION_TOKEN;
+            const duration = reduce
+                ? (typeof baseToken.reducedDuration === 'number'
+                    ? baseToken.reducedDuration
+                    : DEFAULT_MOTION_TOKEN.reducedDuration)
+                : (typeof baseToken.duration === 'number'
+                    ? baseToken.duration
+                    : DEFAULT_MOTION_TOKEN.duration);
+            return Number.isFinite(duration) ? `${Math.round(duration)}ms` : null;
+        };
+
+        const shortValue = resolveDuration(shortToken, DEFAULT_MOTION_TOKEN);
+        if (shortValue) {
+            style.setProperty('--app-motion-duration-short', shortValue);
+        }
+
+        const mediumValue = resolveDuration(mediumToken, DEFAULT_MOTION_TOKEN);
+        if (mediumValue) {
+            style.setProperty('--app-motion-duration-medium', mediumValue);
+        }
+
+        const longValue = resolveDuration(longToken, DEFAULT_MOTION_TOKEN);
+        if (longValue) {
+            style.setProperty('--app-motion-duration-long', longValue);
+        }
+
+        const reducedDuration = typeof reducedReference.reducedDuration === 'number'
+            ? `${Math.round(reducedReference.reducedDuration)}ms`
+            : (DEFAULT_MOTION_TOKEN.reducedDuration
+                ? `${Math.round(DEFAULT_MOTION_TOKEN.reducedDuration)}ms`
+                : null);
+
+        if (reducedDuration) {
+            style.setProperty('--app-motion-reduced-duration', reducedDuration);
+        }
+    }
+
+    function registerQueryListener(query, handler) {
+        if (!query || !handler) {
+            return;
+        }
+
+        if (typeof query.addEventListener === 'function') {
+            query.addEventListener('change', handler);
+        } else if (typeof query.addListener === 'function') {
+            query.addListener(handler);
+        }
+    }
+
+    function updateAdaptiveContext() {
+        if (!root) {
+            return false;
+        }
+
+        const htmlElement = root.documentElement;
+        const width = htmlElement ? htmlElement.clientWidth : (typeof global.innerWidth === 'number' ? global.innerWidth : 0);
+        const height = htmlElement ? htmlElement.clientHeight : (typeof global.innerHeight === 'number' ? global.innerHeight : 0);
+
+        const nextWindowClass = computeWindowSizeClass(width);
+        const nextOrientation = detectOrientation(width, height);
+
+        let changed = false;
+
+        if (nextWindowClass !== currentWindowSizeClass) {
+            currentWindowSizeClass = nextWindowClass;
+            changed = true;
+        }
+
+        if (nextOrientation !== currentOrientation) {
+            currentOrientation = nextOrientation;
+            changed = true;
+        }
+
+        const pointerChanged = updatePointerType();
+        updateEnvironmentMetadata();
+
+        return changed || pointerChanged;
+    }
+
+    function updateMotionSchemeForContext() {
+        let targetScheme = DEFAULT_MOTION_SCHEME;
+
+        if (shouldReduceMotion()) {
+            targetScheme = 'standard';
+        } else if (currentPointerType === 'none') {
+            targetScheme = 'standard';
+        } else if (currentWindowSizeClass === 'compact' && currentPointerType === 'coarse') {
+            targetScheme = 'standard';
+        } else if (currentWindowSizeClass === 'expanded') {
+            targetScheme = 'expressive';
+        } else if (currentPointerType === 'fine' && currentWindowSizeClass !== 'compact') {
+            targetScheme = 'expressive';
+        }
+
+        if (!MOTION_SCHEMES[targetScheme]) {
+            targetScheme = DEFAULT_MOTION_SCHEME;
+        }
+
+        setMotionScheme(targetScheme);
+    }
+
+    function observeAdaptiveConditions() {
+        const applyContextUpdate = () => {
+            const changed = updateAdaptiveContext();
+            if (changed) {
+                updateMotionSchemeForContext();
+            } else {
+                updateMotionTokensForContext();
+            }
+        };
+
+        applyContextUpdate();
+
+        if (typeof global.addEventListener === 'function') {
+            let resizeHandle = null;
+            const scheduleUpdate = () => {
+                if (resizeHandle) {
+                    return;
+                }
+
+                const run = () => {
+                    resizeHandle = null;
+                    applyContextUpdate();
+                };
+
+                if (typeof global.requestAnimationFrame === 'function') {
+                    resizeHandle = global.requestAnimationFrame(run);
+                } else {
+                    resizeHandle = global.setTimeout(run, 120);
+                }
+            };
+
+            global.addEventListener('resize', scheduleUpdate, { passive: true });
+            global.addEventListener('orientationchange', scheduleUpdate);
+        }
+
+        const orientation = global.screen && global.screen.orientation;
+        if (orientation && typeof orientation.addEventListener === 'function') {
+            orientation.addEventListener('change', applyContextUpdate);
+        }
+
+        registerQueryListener(pointerQueries.fine, applyContextUpdate);
+        registerQueryListener(pointerQueries.coarse, applyContextUpdate);
+        registerQueryListener(pointerQueries.none, applyContextUpdate);
+    }
+
     function updateMotionPreferenceClasses() {
         if (!root || !root.documentElement) {
             return;
@@ -71,6 +342,7 @@
         }
 
         htmlElement.classList.toggle('animations-enabled', canAnimate() && !reduce);
+        updateMotionSchemeForContext();
     }
 
     const KEYFRAMES = {
@@ -243,6 +515,8 @@
         currentMotionSchemeClass = `motion-scheme-${activeMotionScheme}`;
         htmlElement.classList.add(currentMotionSchemeClass);
         htmlElement.dataset.motionScheme = activeMotionScheme;
+        updateEnvironmentMetadata();
+        updateMotionTokensForContext();
     }
 
     function setMotionScheme(schemeName) {
@@ -292,13 +566,16 @@
     function getAdaptiveStagger(baseGap) {
         let computedGap = typeof baseGap === 'number' ? baseGap : 0;
 
-        if (root && root.documentElement) {
-            const width = root.documentElement.clientWidth || 0;
-            if (width >= 1440) {
-                computedGap = Math.round(computedGap * 1.25);
-            } else if (width <= 480) {
-                computedGap = Math.round(computedGap * 0.8);
-            }
+        if (currentWindowSizeClass === 'expanded') {
+            computedGap = Math.round(computedGap * 1.3);
+        } else if (currentWindowSizeClass === 'medium') {
+            computedGap = Math.round(computedGap * 1.1);
+        } else {
+            computedGap = Math.round(computedGap * 0.9);
+        }
+
+        if (currentOrientation === ORIENTATION.landscape) {
+            computedGap = Math.round(computedGap * 0.9);
         }
 
         if (shouldReduceMotion()) {
@@ -641,7 +918,9 @@
         }
 
         applyMotionSchemeAttributes();
+        observeAdaptiveConditions();
         updateMotionPreferenceClasses();
+        updateMotionSchemeForContext();
 
         if (!canAnimate()) {
             return;
@@ -662,6 +941,9 @@
         resolveEasing,
         setMotionScheme,
         getMotionScheme,
+        getWindowSizeClass: () => currentWindowSizeClass,
+        getOrientation: () => currentOrientation,
+        getPointerType: () => currentPointerType,
         schemes: MOTION_SCHEMES,
         shouldReduceMotion,
         canAnimate,

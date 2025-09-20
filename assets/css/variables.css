@@ -55,9 +55,10 @@
   --app-footer-text-color: #5f6368;
   --app-link-color: #4285F4;
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
-  --app-motion-duration-short: 200ms;
-  --app-motion-duration-medium: 300ms;
-  --app-motion-duration-long: 500ms;
+  --app-motion-duration-short: 220ms;
+  --app-motion-duration-medium: 320ms;
+  --app-motion-duration-long: 520ms;
+  --app-motion-reduced-duration: 180ms;
   --app-motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
   --app-motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
   --app-motion-ease-standard: var(--app-motion-ease-decelerate);
