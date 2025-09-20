@@ -345,28 +345,194 @@
         updateMotionSchemeForContext();
     }
 
+    function getMotionContext() {
+        return {
+            windowSize: currentWindowSizeClass,
+            orientation: currentOrientation,
+            pointer: currentPointerType,
+            reduceMotion: shouldReduceMotion()
+        };
+    }
+
+    function resolveAxis(preference, context) {
+        if (preference === 'horizontal') {
+            return 'X';
+        }
+        if (preference === 'vertical') {
+            return 'Y';
+        }
+        if (context && context.orientation === ORIENTATION.landscape) {
+            return 'X';
+        }
+        return 'Y';
+    }
+
+    function computeDistanceValue(baseDistance, context, axis) {
+        const base = typeof baseDistance === 'number'
+            ? baseDistance
+            : parseFloat(baseDistance) || 0;
+        const windowSize = context && context.windowSize
+            ? context.windowSize
+            : currentWindowSizeClass;
+
+        let distance = base;
+
+        if (windowSize === 'expanded') {
+            distance += 12;
+        } else if (windowSize === 'medium') {
+            distance += 6;
+        } else {
+            distance = Math.max(6, distance - 2);
+        }
+
+        if (context && context.orientation === ORIENTATION.landscape && axis === 'X') {
+            distance += 6;
+        }
+
+        if (context && context.pointer === 'coarse') {
+            distance += 4;
+        } else if (context && context.pointer === 'fine' && windowSize !== 'compact') {
+            distance = Math.max(6, distance - 2);
+        }
+
+        return Math.round(distance);
+    }
+
+    function composeTransform(axis, distanceValue, scaleValue) {
+        const distance = typeof distanceValue === 'number'
+            ? `${distanceValue}px`
+            : distanceValue;
+        const translate = axis === 'X'
+            ? `translate3d(${distance}, 0, 0)`
+            : `translate3d(0, ${distance}, 0)`;
+        const scale = typeof scaleValue === 'number' && scaleValue !== 1
+            ? ` scale(${scaleValue})`
+            : '';
+        return `${translate}${scale}`;
+    }
+
+    function applyBlur(frame, blurValue) {
+        if (!frame || typeof blurValue !== 'number') {
+            return;
+        }
+        frame.filter = blurValue > 0 ? `blur(${blurValue}px)` : 'blur(0px)';
+    }
+
+    function makeEnterKeyframeFactory(config) {
+        const {
+            baseDistance = 16,
+            axisPreference = 'auto',
+            startScale = 1,
+            endScale = 1,
+            startOpacity = 0,
+            endOpacity = 1,
+            startBlur,
+            endBlur,
+            direction = 'positive'
+        } = config || {};
+
+        return (context) => {
+            const motionContext = context || getMotionContext();
+            const axis = resolveAxis(axisPreference, motionContext);
+            const offset = computeDistanceValue(baseDistance, motionContext, axis);
+            const signedOffset = direction === 'negative' ? -offset : offset;
+
+            const firstFrame = {
+                opacity: startOpacity,
+                transform: composeTransform(axis, signedOffset, startScale)
+            };
+            const lastFrame = {
+                opacity: endOpacity,
+                transform: composeTransform(axis, 0, endScale)
+            };
+
+            if (startBlur !== undefined) {
+                applyBlur(firstFrame, startBlur);
+                applyBlur(lastFrame, endBlur !== undefined ? endBlur : 0);
+            } else if (endBlur !== undefined) {
+                applyBlur(lastFrame, endBlur);
+            }
+
+            return [firstFrame, lastFrame];
+        };
+    }
+
     const KEYFRAMES = {
-        hero: [
-            { opacity: 0, transform: 'translateY(24px) scale(0.97)', filter: 'blur(6px)' },
-            { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0)' }
-        ],
-        rise: [
-            { opacity: 0, transform: 'translateY(18px)', filter: 'blur(4px)' },
-            { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }
-        ],
-        subtleRise: [
-            { opacity: 0, transform: 'translateY(12px)', filter: 'blur(2px)' },
-            { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }
-        ],
-        pop: [
-            { opacity: 0, transform: 'translateY(8px) scale(0.94)', filter: 'blur(2px)' },
-            { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'blur(0)' }
-        ],
-        slideInRight: [
-            { opacity: 0, transform: 'translateX(-20px)', filter: 'blur(3px)' },
-            { opacity: 1, transform: 'translateX(0)', filter: 'blur(0)' }
-        ]
+        hero: makeEnterKeyframeFactory({
+            baseDistance: 28,
+            startScale: 0.97,
+            startBlur: 6,
+            endBlur: 0
+        }),
+        rise: makeEnterKeyframeFactory({
+            baseDistance: 20,
+            startBlur: 4,
+            endBlur: 0
+        }),
+        subtleRise: makeEnterKeyframeFactory({
+            baseDistance: 16,
+            startBlur: 2,
+            endBlur: 0
+        }),
+        pop: makeEnterKeyframeFactory({
+            baseDistance: 14,
+            startScale: 0.94,
+            endScale: 1,
+            startBlur: 2,
+            endBlur: 0
+        }),
+        slideInRight: makeEnterKeyframeFactory({
+            baseDistance: 22,
+            axisPreference: 'horizontal',
+            direction: 'negative',
+            startBlur: 2,
+            endBlur: 0
+        })
     };
+
+    function createPageTransitionKeyframes(direction = 'in') {
+        const normalizedDirection = direction === 'out' ? 'out' : 'in';
+
+        if (shouldReduceMotion()) {
+            return normalizedDirection === 'out'
+                ? [{ opacity: 1 }, { opacity: 0 }]
+                : [{ opacity: 0 }, { opacity: 1 }];
+        }
+
+        const context = getMotionContext();
+        const axis = resolveAxis('auto', context);
+        const baseDistance = axis === 'X' ? 36 : 30;
+        const offset = computeDistanceValue(baseDistance, context, axis);
+
+        if (normalizedDirection === 'out') {
+            const frames = [
+                {
+                    opacity: 1,
+                    transform: composeTransform(axis, 0, 1)
+                },
+                {
+                    opacity: 0,
+                    transform: composeTransform(axis, -offset, 1)
+                }
+            ];
+            applyBlur(frames[1], 4);
+            return frames;
+        }
+
+        const frames = [
+            {
+                opacity: 0,
+                transform: composeTransform(axis, offset, 1)
+            },
+            {
+                opacity: 1,
+                transform: composeTransform(axis, 0, 1)
+            }
+        ];
+        applyBlur(frames[0], 4);
+        applyBlur(frames[1], 0);
+        return frames;
+    }
 
     const REDUCED_KEYFRAMES = Object.freeze({
         fade: [
@@ -595,8 +761,14 @@
             return null;
         }
 
+        const motionContext = getMotionContext();
+        const framesSource = typeof keyframes === 'function'
+            ? keyframes(motionContext)
+            : keyframes;
         const hasReducedMotion = shouldReduceMotion();
-        const framesInput = Array.isArray(keyframes) ? keyframes : [keyframes];
+        const framesInput = Array.isArray(framesSource)
+            ? framesSource
+            : [framesSource];
         const frames = hasReducedMotion ? getReducedKeyframes(framesInput) : framesInput;
         const motionSpec = resolveMotionSpec(motionMeta);
 
@@ -940,7 +1112,11 @@
         animateProjectCards,
         resolveEasing,
         setMotionScheme,
+        getMotionSpec: (meta) => resolveMotionSpec(meta),
         getMotionScheme,
+        getMotionContext,
+        createPageTransitionKeyframes,
+        animateElement,
         getWindowSizeClass: () => currentWindowSizeClass,
         getOrientation: () => currentOrientation,
         getPointerType: () => currentPointerType,
