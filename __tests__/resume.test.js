@@ -257,4 +257,19 @@ describe('resume.js browser integration', () => {
     await runInitResumePage();
     expect(document.querySelector('#resumePage .form-container').style.display).toBe('none');
   });
+
+  test('respects edit query parameter provided inside the hash fragment', async () => {
+    window.history.replaceState({}, '', 'http://localhost/#resume?edit=true');
+    await runInitResumePage();
+    expect(document.querySelector('#resumePage .form-container').style.display).not.toBe('none');
+
+    document.head.innerHTML = '';
+    document.body.innerHTML = baseMarkup;
+    document.fonts = { ready: Promise.resolve() };
+    window.marked.parse.mockClear();
+    window.DOMPurify.sanitize.mockClear();
+    window.history.replaceState({}, '', 'http://localhost/#resume?edit=false');
+    await runInitResumePage();
+    expect(document.querySelector('#resumePage .form-container').style.display).toBe('none');
+  });
 });
