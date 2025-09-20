@@ -53,10 +53,11 @@ describe('router helper scripts', () => {
       }));
 
       const fadePromise = RouterAnimation.fadeOut(element);
-      expect(element.animate).toHaveBeenCalledWith(
-        [{ opacity: 1 }, { opacity: 0 }],
-        expect.objectContaining({ fill: 'forwards' })
-      );
+      const [frames, options] = element.animate.mock.calls[0];
+      expect(Array.isArray(frames)).toBe(true);
+      expect(frames[0]).toEqual(expect.objectContaining({ opacity: 1 }));
+      expect(frames[frames.length - 1]).toEqual(expect.objectContaining({ opacity: 0 }));
+      expect(options).toEqual(expect.objectContaining({ fill: 'both' }));
 
       resolveFinished();
       await expect(fadePromise).resolves.toBeUndefined();
@@ -79,6 +80,42 @@ describe('router helper scripts', () => {
 
       await expect(RouterAnimation.fadeOut(element)).resolves.toBeUndefined();
       expect(element.style.opacity).toBe('0');
+    });
+
+    test('fadeIn uses SiteAnimations timing and keyframes when available', async () => {
+      const element = document.createElement('div');
+      const customFrames = [
+        { opacity: 0, transform: 'translate3d(24px, 0, 0)' },
+        { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+      ];
+
+      element.animate = jest.fn(() => ({ finished: Promise.resolve() }));
+
+      window.SiteAnimations = {
+        createPageTransitionKeyframes: jest.fn(() => customFrames),
+        getMotionSpec: jest.fn(() => ({
+          duration: 250,
+          easing: 'linear(0, 1)',
+          fallbackEasing: 'ease-out',
+          reducedDuration: 140
+        })),
+        resolveEasing: jest.fn((preferred, fallback) => preferred || fallback),
+        shouldReduceMotion: jest.fn(() => false),
+        canAnimate: jest.fn(() => true),
+        getMotionContext: jest.fn(() => ({ windowSize: 'compact' })),
+        fallbacks: {},
+        easings: {}
+      };
+
+      await expect(RouterAnimation.fadeIn(element)).resolves.toBeUndefined();
+
+      expect(window.SiteAnimations.createPageTransitionKeyframes).toHaveBeenCalledWith('in');
+
+      const [frames, options] = element.animate.mock.calls[0];
+      expect(frames).toBe(customFrames);
+      expect(options).toEqual(expect.objectContaining({ duration: 250 }));
+
+      delete window.SiteAnimations;
     });
   });
 
