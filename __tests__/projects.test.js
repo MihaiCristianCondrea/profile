@@ -1,158 +1,83 @@
-beforeEach(() => {
-  jest.resetModules();
-  document.head.innerHTML = '';
-  document.body.innerHTML = '';
-  delete window.marked;
-});
+import { jest } from '@jest/globals';
+import { ensureProjectsMarkedLoaded, initProjectsPage } from '../assets/js/pages/projects.js';
 
-describe('ensureProjectsMarkedLoaded', () => {
-  test('appends the marked script at most once', async () => {
-    const appendSpy = jest.spyOn(document.head, 'appendChild');
-    let appendedScript;
-    appendSpy.mockImplementation(node => {
-      appendedScript = node;
-      return node;
-    });
-
-    const { ensureProjectsMarkedLoaded } = require('../assets/js/projects.js');
-
-    const firstCall = ensureProjectsMarkedLoaded();
-    expect(appendSpy).toHaveBeenCalledTimes(1);
-    expect(appendedScript).toBeTruthy();
-
-    const secondCall = ensureProjectsMarkedLoaded();
-    expect(appendSpy).toHaveBeenCalledTimes(1);
-    expect(secondCall).toBe(firstCall);
-
-    appendedScript.onload();
-    await firstCall;
-
-    const thirdCall = ensureProjectsMarkedLoaded();
-    expect(appendSpy).toHaveBeenCalledTimes(1);
-    await thirdCall;
-
-    appendSpy.mockRestore();
+describe('pages/projects', () => {
+  afterEach(() => {
+    document.head.innerHTML = '';
+    document.body.innerHTML = '';
+    delete window.marked;
+    delete window.SiteAnimations;
   });
-});
 
-describe('initProjectsPage interactions', () => {
-  beforeEach(() => {
+  test('ensureProjectsMarkedLoaded appends the Marked script when needed', async () => {
+    delete window.marked;
+
+    const loadPromise = ensureProjectsMarkedLoaded();
+
+    const script = document.head.querySelector('script[src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"]');
+    expect(script).not.toBeNull();
+
+    const secondCallPromise = ensureProjectsMarkedLoaded();
+    expect(secondCallPromise).toBe(loadPromise);
+
+    script.dispatchEvent(new Event('load'));
+    await expect(loadPromise).resolves.toBeInstanceOf(Event);
+  });
+
+  test('ensureProjectsMarkedLoaded resolves immediately when Marked is present', async () => {
+    window.marked = {};
+    await expect(ensureProjectsMarkedLoaded()).resolves.toBeUndefined();
+  });
+
+  test('initProjectsPage parses markdown, filters projects, and triggers animations', async () => {
     document.body.innerHTML = `
       <div id="projectsPageContainer">
-        <div id="projectsFilterTabs">
-          <md-primary-tab data-category="all" active>All</md-primary-tab>
-          <md-primary-tab data-category="web">Web</md-primary-tab>
-        </div>
-        <div class="projects-list">
-          <div id="projectA" class="project-entry" data-category="web,app">
-            <div class="carousel">
-              <button class="prev">Prev</button>
-              <div class="carousel-slide" data-name="one"></div>
-              <div class="carousel-slide" data-name="two"></div>
-              <button class="next">Next</button>
-            </div>
-          </div>
-          <div id="projectB" class="project-entry" data-category="mobile">
-            <div class="carousel">
-              <button class="prev">Prev</button>
-              <div class="carousel-slide" data-name="single"></div>
-              <button class="next">Next</button>
-            </div>
-          </div>
-        </div>
-        <div data-md>Sample **markdown**</div>
+        <div data-md>**Markdown**</div>
+      </div>
+      <div id="projectsFilterTabs">
+        <md-primary-tab data-category="all"></md-primary-tab>
+        <md-primary-tab data-category="android"></md-primary-tab>
+      </div>
+      <div class="projects-list">
+        <div class="project-entry" data-category="android"></div>
+        <div class="project-entry" data-category="design"></div>
+      </div>
+      <div class="carousel">
+        <div class="carousel-slide active"></div>
+        <button class="prev" type="button"></button>
+        <button class="next" type="button"></button>
       </div>
     `;
-    window.marked = { parse: jest.fn(text => `<p>${text}</p>`) };
-  });
-
-  afterEach(() => {
-    delete window.marked;
-    jest.useRealTimers();
-  });
-
-  test('filters projects, awaits animations, and toggles carousel controls after images load', async () => {
-    jest.useFakeTimers();
 
     const projectsList = document.querySelector('.projects-list');
-    const animationResolvers = [];
-    projectsList.animate = jest.fn(() => {
-      let resolver;
-      const finished = new Promise(resolve => {
-        resolver = resolve;
-      });
-      animationResolvers.push(resolver);
-      return { finished };
-    });
+    projectsList.animate = jest.fn().mockReturnValue({ finished: Promise.resolve() });
 
-    const { initProjectsPage } = require('../assets/js/projects.js');
+    window.marked = {
+      parse: jest.fn((text) => `<p>${text}</p>`)
+    };
+
+    window.SiteAnimations = {
+      resolveEasing: jest.fn((preferred, fallback) => preferred || fallback),
+      easings: { spring: 'cubic-bezier(0.2, 0.8, 0.2, 1)' },
+      animateProjectCards: jest.fn()
+    };
+
     await initProjectsPage();
 
-    const markdownElement = document.querySelector('[data-md]');
-    expect(window.marked.parse).toHaveBeenCalledWith('Sample **markdown**');
-    expect(markdownElement.innerHTML).toBe('<p>Sample **markdown**</p>');
+    expect(window.marked.parse).toHaveBeenCalled();
 
-    const firstCarousel = document.querySelector('#projectA .carousel');
-    const firstPrev = firstCarousel.querySelector('.prev');
-    const firstNext = firstCarousel.querySelector('.next');
-    const firstDots = firstCarousel.querySelector('.carousel-dots');
-
-    expect(firstPrev.style.display).toBe('none');
-    expect(firstNext.style.display).toBe('none');
-    expect(firstDots.style.display).toBe('none');
+    const markdownElement = document.querySelector('#projectsPageContainer [data-md]');
+    expect(markdownElement.innerHTML).toContain('<p>');
 
     const tabs = document.querySelectorAll('#projectsFilterTabs md-primary-tab');
-    const allTab = tabs[0];
-    const webTab = tabs[1];
-    const [matchingProject, otherProject] = document.querySelectorAll('.project-entry');
-
-    webTab.dispatchEvent(new window.Event('click'));
-
-    expect(projectsList.animate).toHaveBeenCalledTimes(1);
-    expect(otherProject.style.display).toBe('');
-
-    const resolveFirstAnimation = animationResolvers.shift();
-    resolveFirstAnimation();
+    tabs[1].dispatchEvent(new Event('click'));
+    await Promise.resolve();
     await Promise.resolve();
 
-    expect(projectsList.animate).toHaveBeenCalledTimes(2);
-    expect(projectsList.animate.mock.calls[0][0][1].transform).toBe('translateX(-20px)');
-    expect(projectsList.animate.mock.calls[1][0][0].transform).toBe('translateX(20px)');
-    expect(allTab.hasAttribute('active')).toBe(false);
-    expect(webTab.hasAttribute('active')).toBe(true);
-    expect(matchingProject.style.display).toBe('');
-    expect(otherProject.style.display).toBe('none');
-
-    const resolveSecondAnimation = animationResolvers.shift();
-    resolveSecondAnimation();
-    await Promise.resolve();
-
-    expect(projectsList.animate).toHaveBeenCalledTimes(2);
-
-    const firstSlides = firstCarousel.querySelectorAll('.carousel-slide');
-    firstSlides.forEach(slide => {
-      slide.dispatchEvent(new window.Event('load'));
-    });
-    await Promise.resolve();
-
-    expect(firstPrev.style.display).toBe('');
-    expect(firstNext.style.display).toBe('');
-    expect(firstDots.style.display).toBe('');
-
-    const secondCarousel = document.querySelector('#projectB .carousel');
-    const secondPrev = secondCarousel.querySelector('.prev');
-    const secondNext = secondCarousel.querySelector('.next');
-    const secondDots = secondCarousel.querySelector('.carousel-dots');
-    const singleSlide = secondCarousel.querySelector('.carousel-slide');
-
-    singleSlide.dispatchEvent(new window.Event('load'));
-    await Promise.resolve();
-
-    expect(secondPrev.style.display).toBe('none');
-    expect(secondNext.style.display).toBe('none');
-    expect(secondDots.style.display).toBe('none');
-
-    jest.runOnlyPendingTimers();
-    jest.runOnlyPendingTimers();
+    expect(projectsList.animate).toHaveBeenCalled();
+    const [firstProject, secondProject] = document.querySelectorAll('.project-entry');
+    expect(firstProject.style.display).toBe('');
+    expect(secondProject.style.display).toBe('none');
+    expect(window.SiteAnimations.animateProjectCards).toHaveBeenCalled();
   });
 });

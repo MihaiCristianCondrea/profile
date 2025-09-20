@@ -1,16 +1,18 @@
-const path = require('path');
+import { updateForRoute, buildCanonicalUrl } from '../assets/js/core/metadata.js';
 
-describe('SiteMetadata.updateForRoute', () => {
-  const modulePath = path.resolve(__dirname, '../assets/js/metadataManager.js');
-
+describe('core/metadata', () => {
   beforeEach(() => {
-    jest.resetModules();
     document.head.innerHTML = '';
-    delete global.SiteMetadata;
-    require(modulePath);
   });
 
-  test('applies provided route metadata to document head', () => {
+  test('buildCanonicalUrl generates canonical URLs for slugs and absolute URLs', () => {
+    expect(buildCanonicalUrl('projects')).toBe('https://mihaicristiancondrea.github.io/profile/#projects');
+    expect(buildCanonicalUrl('/')).toBe('https://mihaicristiancondrea.github.io/profile/');
+    expect(buildCanonicalUrl('')).toBe('https://mihaicristiancondrea.github.io/profile/');
+    expect(buildCanonicalUrl('https://example.com/custom')).toBe('https://example.com/custom');
+  });
+
+  test('updateForRoute applies provided metadata to the document head', () => {
     const route = {
       id: 'projects',
       title: 'Projects',
@@ -36,7 +38,7 @@ describe('SiteMetadata.updateForRoute', () => {
       }
     };
 
-    const result = global.SiteMetadata.updateForRoute(route, { pageTitle: 'Projects', pageId: 'projects' });
+    const result = updateForRoute(route, { pageTitle: 'Projects', pageId: 'projects' });
 
     expect(result.canonicalUrl).toBe('https://mihaicristiancondrea.github.io/profile/#projects');
     expect(document.querySelector('meta[name="description"]').getAttribute('content'))
@@ -65,10 +67,10 @@ describe('SiteMetadata.updateForRoute', () => {
       .toBe('https://mihaicristiancondrea.github.io/profile/#projects');
   });
 
-  test('falls back to defaults when metadata is missing', () => {
+  test('updateForRoute falls back to defaults when metadata is missing', () => {
     const route = { id: 'unknown-page', title: 'Unknown Page' };
 
-    const result = global.SiteMetadata.updateForRoute(route, {});
+    const result = updateForRoute(route, {});
 
     expect(result.canonicalUrl).toBe('https://mihaicristiancondrea.github.io/profile/#unknown-page');
     expect(document.querySelector('meta[property="og:title"]').getAttribute('content'))
