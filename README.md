@@ -93,6 +93,51 @@ in the project root so they are included in the published bundle.
 - You can re-run `npm run verify:seo` at any time to confirm the sitemap and robots files
   are still available before pushing a release.
 
+### Metadata & Social Sharing
+
+- Every client-side route now carries a `metadata` block defined in
+  `assets/js/router/routes.js`. The router sanitizes those values and
+  a lightweight metadata manager updates `<meta>` and canonical tags each
+  time navigation occurs.
+- When registering a new route you **must** provide the following fields to
+  keep SEO and social previews accurate:
+  - `description`: A short summary tailored to the page’s search intent.
+  - `keywords`: An array (or comma-separated string) of focused keywords.
+  - `canonicalSlug`: Either the hash slug (e.g. `projects`) or a fully
+    qualified canonical URL.
+  - `openGraph`: Supply at least a `title`, `description`, and `type`
+    (`website`, `article`, `music.playlist`, etc.). The manager fills in the
+    default image unless you override it.
+  - `twitter`: Provide `title`/`description` overrides when they should differ
+    from the Open Graph copy.
+- Example route registration:
+
+  ```js
+  RouterRoutes.registerRoute({
+    id: 'case-study',
+    path: 'pages/case-study.html',
+    title: 'Case Study',
+    metadata: {
+      description: 'Deep dive into a Compose motion project.',
+      keywords: ['Jetpack Compose animation', 'Material motion case study'],
+      canonicalSlug: 'case-study',
+      openGraph: {
+        title: 'Compose Motion Case Study | Mihai-Cristian Condrea',
+        description: 'Deep dive into a Compose motion project.',
+        type: 'article'
+      },
+      twitter: {
+        title: 'Compose Motion Case Study',
+        description: 'See how Material motion patterns were built for Android.'
+      }
+    }
+  });
+  ```
+
+- The metadata manager lives in `assets/js/metadataManager.js`. It ensures
+  the description, keyword, Open Graph, Twitter, and canonical tags always
+  reflect the active route while falling back to opinionated defaults.
+
 ### YouTube Channel Feed
 
 The songs page fetches track information from the D4rK Rekords YouTube channel

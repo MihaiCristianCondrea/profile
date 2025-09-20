@@ -12,6 +12,22 @@ const routerRuntime = {
     pageHandlers: Object.create(null)
 };
 
+function updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadStatus) {
+    if (typeof SiteMetadata === 'undefined' || !SiteMetadata || typeof SiteMetadata.updateForRoute !== 'function') {
+        return;
+    }
+
+    try {
+        SiteMetadata.updateForRoute(routeConfig, {
+            pageId: normalizedPageId,
+            pageTitle,
+            loadStatus
+        });
+    } catch (error) {
+        console.error('Router: Failed to update metadata:', error);
+    }
+}
+
 function callCallback(callback, description, ...args) {
     if (typeof callback !== 'function') {
         return false;
@@ -156,6 +172,7 @@ async function loadPageContent(pageId, updateHistory = true) {
         pageContentArea.innerHTML = createNotFoundHtml(normalizedPageId);
 
         const notFoundTitle = 'Not Found';
+        updateMetadataForPage(null, notFoundTitle, normalizedPageId, 'not-found');
         if (historyHelper && typeof historyHelper.updateTitle === 'function') {
             historyHelper.updateTitle(appBarHeadline, notFoundTitle);
         } else {
@@ -220,6 +237,8 @@ async function loadPageContent(pageId, updateHistory = true) {
     }
 
     const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
+
+    updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadResult.status);
 
     if (historyHelper && typeof historyHelper.updateTitle === 'function') {
         historyHelper.updateTitle(appBarHeadline, pageTitle);
