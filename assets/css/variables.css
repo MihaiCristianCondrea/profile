@@ -1,5 +1,5 @@
 :root {
-  --md-sys-color-primary: #3DDC84;
+  --md-sys-color-primary: #3ddc84;
   --md-sys-color-on-primary: #003912;
   --md-sys-color-primary-container: #b1fbbb;
   --md-sys-color-on-primary-container: #002108;
@@ -53,7 +53,7 @@
   --app-nested-list-bg: rgba(0, 0, 0, 0.02);
   --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
   --app-footer-text-color: #5f6368;
-  --app-link-color: #4285F4;
+  --app-link-color: #4285f4;
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
   --app-motion-duration-short: 220ms;
   --app-motion-duration-medium: 320ms;
@@ -67,9 +67,14 @@
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-inset-left: env(safe-area-inset-left, 0px);
-  --safe-area-max-inset-bottom: max(env(safe-area-max-inset-bottom, 36px), var(--safe-area-inset-bottom));
-  --safe-area-bottom-offset: calc(env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom));
- --md-sys-typescale-label-large-font-family-name: 'Poppins';
+  --safe-area-max-inset-bottom: max(
+    env(safe-area-max-inset-bottom, 36px),
+    var(--safe-area-inset-bottom)
+  );
+  --safe-area-bottom-offset: calc(
+    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
+  );
+  --md-sys-typescale-label-large-font-family-name: 'Poppins';
   --md-sys-typescale-label-large-font: 'Poppins';
   --md-sys-typescale-label-large-weight: 500;
   --md-sys-typescale-label-medium-font-family-name: 'Poppins';
