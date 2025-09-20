@@ -55,6 +55,13 @@
   --app-footer-text-color: #5f6368;
   --app-link-color: #4285F4;
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
+  --app-motion-duration-short: 200ms;
+  --app-motion-duration-medium: 300ms;
+  --app-motion-duration-long: 500ms;
+  --app-motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --app-motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --app-motion-ease-standard: var(--app-motion-ease-decelerate);
+  --app-motion-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);

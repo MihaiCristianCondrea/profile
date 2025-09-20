@@ -38,19 +38,19 @@
 #resumePage .input-group{position:relative;margin-bottom:16px;}
 #resumePage label{
     position:absolute;top:16px;left:16px;color:var(--md-sys-color-on-surface-variant);
-    font-size:16px;pointer-events:none;transition:all .2s ease;
+    font-size:16px;pointer-events:none;transition:all var(--app-motion-duration-short,200ms) var(--app-motion-ease-standard,cubic-bezier(0,0,0.2,1));
 }
 #resumePage input[type="text"],#resumePage input[type="email"],#resumePage input[type="tel"],#resumePage textarea{
     width:100%;background-color: var(--md-sys-color-surface-container-low);border:none;
     border-bottom:1px solid var(--md-sys-color-on-surface-variant);
     padding:24px 16px 8px 16px;border-radius:8px 8px 0 0;font-size:16px;
-    color:var(--md-sys-color-on-surface);box-sizing:border-box;transition:border-color .2s ease;
+    color:var(--md-sys-color-on-surface);box-sizing:border-box;transition:border-color var(--app-motion-duration-short,200ms) var(--app-motion-ease-standard,cubic-bezier(0,0,0.2,1));
 }
 #resumePage input[type="text"]:focus,#resumePage input[type="email"]:focus,#resumePage input[type="tel"]:focus,#resumePage textarea:focus{outline:none;border-bottom:2px solid var(--md-sys-color-primary);}
 #resumePage input[type="text"]:focus + label,#resumePage input[type="text"]:not(:placeholder-shown) + label,#resumePage input[type="email"]:focus + label,#resumePage input[type="email"]:not(:placeholder-shown) + label,#resumePage input[type="tel"]:focus + label,#resumePage input[type="tel"]:not(:placeholder-shown) + label,#resumePage textarea:focus + label,#resumePage textarea:not(:placeholder-shown) + label{top:6px;left:16px;font-size:12px;color:var(--md-sys-color-primary);}
 #resumePage textarea{resize:vertical;min-height:120px;}
 #resumePage input[type="file"]{color:var(--md-sys-color-on-surface-variant);margin-bottom:16px;}
-#resumePage button{border:none;border-radius:20px;padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;transition:background-color .3s,box-shadow .3s;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+#resumePage button{border:none;border-radius:20px;padding:10px 24px;font-size:14px;font-weight:500;cursor:pointer;transition:background-color var(--app-motion-duration-medium,300ms) var(--app-motion-ease-standard,cubic-bezier(0,0,0.2,1)),box-shadow var(--app-motion-duration-medium,300ms) var(--app-motion-ease-standard,cubic-bezier(0,0,0.2,1));display:inline-flex;align-items:center;justify-content:center;gap:8px;}
 #resumePage #download-resume{background-color:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);width:auto;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
 #resumePage #download-resume:hover{box-shadow:0 4px 8px rgba(0,0,0,0.15);}
 #resumePage button.add-btn{background-color:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);margin-bottom:10px;}

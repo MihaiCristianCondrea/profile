@@ -1007,7 +1007,8 @@
   padding: 0.5rem 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color var(--app-motion-duration-short, 200ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
 #contactPageContainer button:hover {
@@ -1047,7 +1048,8 @@
   text-decoration: none;
   color: var(--app-text-color);
   font-weight: 500;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color var(--app-motion-duration-short, 200ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
 #contactPageContainer .social-links a:hover {
