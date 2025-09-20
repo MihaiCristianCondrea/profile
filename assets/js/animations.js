@@ -827,133 +827,161 @@
         }
     }
 
+    function whenAnimationFinished(animation) {
+        if (!animation || typeof animation !== 'object') {
+            return Promise.resolve();
+        }
+
+        const { finished } = animation;
+        if (!finished || typeof finished.then !== 'function') {
+            return Promise.resolve();
+        }
+
+        return finished.catch(() => { });
+    }
+
     function animateSequence(elements, keyframes, options, gap = 80, motionMeta) {
         const nodes = coerceArray(elements).filter(Boolean);
         if (nodes.length === 0) {
-            return;
+            return Promise.resolve();
         }
 
         const computedGap = getAdaptiveStagger(typeof gap === 'number' ? gap : 0);
 
-        nodes.forEach((element, index) => {
+        const animations = nodes.map((element, index) => {
             const baseOptions = Object.assign({}, options || {});
             const existingDelay = typeof baseOptions.delay === 'number' ? baseOptions.delay : 0;
             baseOptions.delay = existingDelay + index * computedGap;
-            animateElement(element, keyframes, baseOptions, motionMeta);
+            return animateElement(element, keyframes, baseOptions, motionMeta);
         });
+
+        return Promise.all(animations.map((animation) => whenAnimationFinished(animation))).then(() => { });
     }
 
     function animateHome(container) {
         if (!container) {
-            return;
+            return Promise.resolve();
         }
 
         const heroCard = container.querySelector('.profile-card');
-        if (heroCard) {
-            animateElement(heroCard, KEYFRAMES.hero, null, {
+        const heroAnimation = heroCard
+            ? animateElement(heroCard, KEYFRAMES.hero, null, {
                 scheme: 'expressive',
                 type: 'spatial',
                 speed: 'slow'
-            });
-        }
+            })
+            : null;
 
         const chipElements = container.querySelectorAll('md-chip-set md-assist-chip');
-        animateSequence(chipElements, KEYFRAMES.pop, { delay: 40 }, 40, {
-            scheme: 'expressive',
-            type: 'spatial',
-            speed: 'fast'
-        });
-
         const supportingSections = container.querySelectorAll('.achievement-card, .profile-card-actions, .podcast-embed, .news-section, .contribute-card');
-        animateSequence(supportingSections, KEYFRAMES.rise, { delay: 80 }, 96, {
-            scheme: 'expressive',
-            type: 'spatial',
-            speed: 'default'
-        });
-
         const socialLinks = container.querySelectorAll('.social-icons a');
-        animateSequence(socialLinks, KEYFRAMES.pop, { delay: 120 }, 48, {
-            scheme: 'expressive',
-            type: 'spatial',
-            speed: 'fast'
-        });
+
+        return whenAnimationFinished(heroAnimation)
+            .then(() => Promise.all([
+                animateSequence(chipElements, KEYFRAMES.pop, { delay: 40 }, 40, {
+                    scheme: 'expressive',
+                    type: 'spatial',
+                    speed: 'fast'
+                }),
+                animateSequence(supportingSections, KEYFRAMES.rise, { delay: 80 }, 96, {
+                    scheme: 'expressive',
+                    type: 'spatial',
+                    speed: 'default'
+                })
+            ]))
+            .then(() => animateSequence(socialLinks, KEYFRAMES.pop, { delay: 120 }, 48, {
+                scheme: 'expressive',
+                type: 'spatial',
+                speed: 'fast'
+            }))
+            .catch((error) => {
+                if (error) {
+                    console.error('SiteAnimations: Home animation sequence failed', error);
+                }
+            });
     }
 
     function animateResume(container) {
         const resumePage = container ? container.querySelector('#resumePage') : null;
         if (!resumePage) {
-            animateDefault(container);
-            return;
+            return animateDefault(container);
         }
 
         const formSections = resumePage.querySelectorAll('.form-container .form-section, .form-container h1');
-        animateSequence(formSections, KEYFRAMES.slideInRight, { delay: 24 }, 70, {
+        const formPromise = animateSequence(formSections, KEYFRAMES.slideInRight, { delay: 24 }, 70, {
             scheme: 'standard',
             type: 'spatial',
             speed: 'default'
         });
 
         const previewPanel = resumePage.querySelector('#resume-preview .resume-content');
-        if (previewPanel) {
-            animateElement(previewPanel, KEYFRAMES.hero, { delay: 120 }, {
+        const previewPromise = previewPanel
+            ? whenAnimationFinished(animateElement(previewPanel, KEYFRAMES.hero, { delay: 120 }, {
                 scheme: 'standard',
                 type: 'spatial',
                 speed: 'slow'
-            });
-        }
+            }))
+            : Promise.resolve();
 
         const downloadButton = resumePage.querySelector('button[onclick="prepareAndPrintResume()"]');
-        if (downloadButton) {
-            animateElement(downloadButton, KEYFRAMES.pop, { delay: 200 }, {
+        const downloadPromise = downloadButton
+            ? whenAnimationFinished(animateElement(downloadButton, KEYFRAMES.pop, { delay: 200 }, {
                 scheme: 'standard',
                 type: 'spatial',
                 speed: 'fast'
-            });
-        }
+            }))
+            : Promise.resolve();
+
+        return Promise.all([formPromise, previewPromise, downloadPromise]).then(() => { });
     }
 
     function animateProjects(container) {
         const projectsPage = container ? container.querySelector('#projectsPageContainer') : null;
         if (!projectsPage) {
-            animateDefault(container);
-            return;
+            return animateDefault(container);
         }
 
         const heading = projectsPage.querySelector('h1');
-        if (heading) {
-            animateElement(heading, KEYFRAMES.slideInRight, null, {
+        const headingFinished = heading
+            ? whenAnimationFinished(animateElement(heading, KEYFRAMES.slideInRight, null, {
                 scheme: 'expressive',
                 type: 'spatial',
                 speed: 'default'
-            });
-        }
+            }))
+            : Promise.resolve();
 
         const intro = projectsPage.querySelector('.projects-intro');
-        if (intro) {
-            animateElement(intro, KEYFRAMES.subtleRise, { delay: 60 }, {
+        const runIntro = () => {
+            if (!intro) {
+                return Promise.resolve();
+            }
+            const introAnimation = animateElement(intro, KEYFRAMES.subtleRise, { delay: 60 }, {
                 scheme: 'expressive',
                 type: 'spatial',
                 speed: 'default'
             });
-        }
+            return whenAnimationFinished(introAnimation);
+        };
 
         const tabs = projectsPage.querySelectorAll('#projectsFilterTabs md-primary-tab');
-        animateSequence(tabs, KEYFRAMES.pop, { delay: 40 }, 36, {
+        const tabsPromise = () => animateSequence(tabs, KEYFRAMES.pop, { delay: 40 }, 36, {
             scheme: 'expressive',
             type: 'spatial',
             speed: 'fast'
         });
 
         const cards = projectsPage.querySelectorAll('.project-entry');
-        animateProjectCards(cards);
+        return headingFinished
+            .then(() => Promise.all([runIntro(), tabsPromise()]))
+            .then(() => animateProjectCards(cards));
     }
 
     function animateDefault(container) {
         if (!container) {
-            return;
+            return Promise.resolve();
         }
         const sectionChildren = container.querySelectorAll('.page-section.active > *:not(script):not(style)');
-        animateSequence(sectionChildren, KEYFRAMES.subtleRise, { delay: 24 }, 70, {
+        return animateSequence(sectionChildren, KEYFRAMES.subtleRise, { delay: 24 }, 70, {
             scheme: 'standard',
             type: 'spatial',
             speed: 'default'
@@ -965,39 +993,55 @@
         const targetContainer = ElementConstructor && container instanceof ElementConstructor
             ? container
             : (root ? root.getElementById('pageContentArea') : null);
-        if (!targetContainer) {
-            return;
+        if (!targetContainer || !canAnimate()) {
+            return Promise.resolve();
         }
 
-        if (!canAnimate()) {
-            return;
-        }
-
-        const run = () => {
-            if (normalizedId === 'home' || normalizedId === '') {
-                animateHome(targetContainer);
-            } else if (normalizedId === 'resume') {
-                animateResume(targetContainer);
-            } else if (normalizedId === 'projects') {
-                animateProjects(targetContainer);
+        const schedule = (callback) => {
+            if (typeof global.requestAnimationFrame === 'function') {
+                global.requestAnimationFrame(callback);
             } else {
-                animateDefault(targetContainer);
+                global.setTimeout(callback, 16);
             }
         };
 
-        if (typeof global.requestAnimationFrame === 'function') {
-            global.requestAnimationFrame(run);
-        } else {
-            setTimeout(run, 16);
-        }
+        return new Promise((resolve) => {
+            schedule(() => {
+                let animationResult;
+                try {
+                    if (normalizedId === 'home' || normalizedId === '') {
+                        animationResult = animateHome(targetContainer);
+                    } else if (normalizedId === 'resume') {
+                        animationResult = animateResume(targetContainer);
+                    } else if (normalizedId === 'projects') {
+                        animationResult = animateProjects(targetContainer);
+                    } else {
+                        animationResult = animateDefault(targetContainer);
+                    }
+                } catch (error) {
+                    console.error('SiteAnimations: Failed to dispatch page animation', error);
+                    resolve();
+                    return;
+                }
+
+                Promise.resolve(animationResult)
+                    .then(() => resolve())
+                    .catch((error) => {
+                        if (error) {
+                            console.error('SiteAnimations: Page animation rejected', error);
+                        }
+                        resolve();
+                    });
+            });
+        });
     }
 
     function animateNewsCards(elements) {
         const cards = coerceArray(elements).filter(Boolean);
         if (cards.length === 0) {
-            return;
+            return Promise.resolve();
         }
-        animateSequence(cards, KEYFRAMES.rise, { delay: 32 }, 90, {
+        return animateSequence(cards, KEYFRAMES.rise, { delay: 32 }, 90, {
             scheme: 'standard',
             type: 'spatial',
             speed: 'default'
@@ -1007,9 +1051,9 @@
     function animateSongCards(elements) {
         const cards = coerceArray(elements).filter(Boolean);
         if (cards.length === 0) {
-            return;
+            return Promise.resolve();
         }
-        animateSequence(cards, KEYFRAMES.pop, { delay: 36 }, 60, {
+        return animateSequence(cards, KEYFRAMES.pop, { delay: 36 }, 60, {
             scheme: 'expressive',
             type: 'spatial',
             speed: 'fast'
@@ -1030,9 +1074,9 @@
             return el.style.display !== 'none';
         });
         if (cards.length === 0) {
-            return;
+            return Promise.resolve();
         }
-        animateSequence(cards, KEYFRAMES.rise, { delay: 48 }, 110, {
+        return animateSequence(cards, KEYFRAMES.rise, { delay: 48 }, 110, {
             scheme: 'standard',
             type: 'spatial',
             speed: 'default'

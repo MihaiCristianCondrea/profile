@@ -167,104 +167,135 @@ async function loadPageContent(pageId, updateHistory = true) {
 
     const routeConfig = getRegisteredRoute(normalizedPageId);
 
-    if (typeof RouterRoutes !== 'undefined' && RouterRoutes && !routeConfig) {
-        console.warn('Router: Unknown page:', normalizedPageId);
-        pageContentArea.innerHTML = createNotFoundHtml(normalizedPageId);
+    let minHeightApplied = false;
+    const releaseMinHeight = () => {
+        if (!minHeightApplied || !pageContentArea || !pageContentArea.style) {
+            return;
+        }
+        pageContentArea.style.minHeight = '';
+        minHeightApplied = false;
+    };
 
-        const notFoundTitle = 'Not Found';
-        updateMetadataForPage(null, notFoundTitle, normalizedPageId, 'not-found');
-        if (historyHelper && typeof historyHelper.updateTitle === 'function') {
-            historyHelper.updateTitle(appBarHeadline, notFoundTitle);
-        } else {
-            if (appBarHeadline) appBarHeadline.textContent = notFoundTitle;
-            document.title = `${notFoundTitle} - Mihai's Profile`;
+    let pageAnimationPromise = Promise.resolve();
+
+    try {
+        if (typeof RouterRoutes !== 'undefined' && RouterRoutes && !routeConfig) {
+            console.warn('Router: Unknown page:', normalizedPageId);
+            pageContentArea.innerHTML = createNotFoundHtml(normalizedPageId);
+
+            const notFoundTitle = 'Not Found';
+            updateMetadataForPage(null, notFoundTitle, normalizedPageId, 'not-found');
+            if (historyHelper && typeof historyHelper.updateTitle === 'function') {
+                historyHelper.updateTitle(appBarHeadline, notFoundTitle);
+            } else {
+                if (appBarHeadline) appBarHeadline.textContent = notFoundTitle;
+                document.title = `${notFoundTitle} - Mihai's Profile`;
+            }
+
+            return;
         }
 
-        callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
-        return;
-    }
+        if (animationHelper && typeof animationHelper.fadeOut === 'function') {
+            await animationHelper.fadeOut(pageContentArea);
+        } else if (pageContentArea.style) {
+            pageContentArea.style.opacity = 0;
+        }
 
-    if (animationHelper && typeof animationHelper.fadeOut === 'function') {
-        await animationHelper.fadeOut(pageContentArea);
-    } else if (pageContentArea.style) {
-        pageContentArea.style.opacity = 0;
-    }
+        if (typeof pageContentArea.getBoundingClientRect === 'function' && pageContentArea.style) {
+            const rect = pageContentArea.getBoundingClientRect();
+            if (rect && Number.isFinite(rect.height) && rect.height > 0) {
+                pageContentArea.style.minHeight = `${Math.round(rect.height)}px`;
+                minHeightApplied = true;
+            }
+        }
 
-    let loadResult;
-    if (contentLoader && typeof contentLoader.fetchPageMarkup === 'function') {
-        try {
-            loadResult = await contentLoader.fetchPageMarkup(normalizedPageId, {
-                initialHomeHTML: initialHomepageHTML
-            });
-        } catch (error) {
+        let loadResult;
+        if (contentLoader && typeof contentLoader.fetchPageMarkup === 'function') {
+            try {
+                loadResult = await contentLoader.fetchPageMarkup(normalizedPageId, {
+                    initialHomeHTML: initialHomepageHTML
+                });
+            } catch (error) {
+                loadResult = {
+                    status: 'error',
+                    title: 'Error',
+                    html: createGenericErrorHtml(`Failed to load page. ${error.message}`),
+                    error
+                };
+            }
+        } else {
             loadResult = {
                 status: 'error',
                 title: 'Error',
-                html: createGenericErrorHtml(`Failed to load page. ${error.message}`),
-                error
+                html: createGenericErrorHtml('Failed to load page. Router content loader is unavailable.')
             };
         }
-    } else {
-        loadResult = {
-            status: 'error',
-            title: 'Error',
-            html: createGenericErrorHtml('Failed to load page. Router content loader is unavailable.')
-        };
-    }
 
-    if (loadResult.status === 'not-found') {
-        console.warn('Router: Unknown page:', normalizedPageId);
-    }
-
-    if (loadResult.status === 'error' && loadResult.error) {
-        const contextTitle = loadResult.sourceTitle || loadResult.title || normalizedPageId;
-        console.error(`Error loading ${contextTitle}:`, loadResult.error);
-    }
-
-    pageContentArea.innerHTML = typeof loadResult.html === 'string' ? loadResult.html : createGenericErrorHtml();
-
-    const handledByInjectedHandlers = runInjectedPageHandlers(normalizedPageId);
-    if (!handledByInjectedHandlers && typeof loadResult.onReady === 'function') {
-        callCallback(loadResult.onReady, 'page ready hook', normalizedPageId);
-    }
-
-    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animatePage === 'function') {
-        try {
-            SiteAnimations.animatePage(pageContentArea, normalizedPageId);
-        } catch (error) {
-            console.error('Router: Failed to run page animations:', error);
+        if (loadResult.status === 'not-found') {
+            console.warn('Router: Unknown page:', normalizedPageId);
         }
+
+        if (loadResult.status === 'error' && loadResult.error) {
+            const contextTitle = loadResult.sourceTitle || loadResult.title || normalizedPageId;
+            console.error(`Error loading ${contextTitle}:`, loadResult.error);
+        }
+
+        pageContentArea.innerHTML = typeof loadResult.html === 'string' ? loadResult.html : createGenericErrorHtml();
+
+        const handledByInjectedHandlers = runInjectedPageHandlers(normalizedPageId);
+        if (!handledByInjectedHandlers && typeof loadResult.onReady === 'function') {
+            callCallback(loadResult.onReady, 'page ready hook', normalizedPageId);
+        }
+
+        if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animatePage === 'function') {
+            try {
+                pageAnimationPromise = Promise.resolve(SiteAnimations.animatePage(pageContentArea, normalizedPageId));
+            } catch (error) {
+                console.error('Router: Failed to run page animations:', error);
+                pageAnimationPromise = Promise.resolve();
+            }
+        }
+        pageAnimationPromise.catch((error) => {
+            if (error) {
+                console.error('Router: Page animation failed:', error);
+            }
+        });
+
+        const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
+
+        updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadResult.status);
+
+        if (historyHelper && typeof historyHelper.updateTitle === 'function') {
+            historyHelper.updateTitle(appBarHeadline, pageTitle);
+        } else {
+            if (appBarHeadline) appBarHeadline.textContent = pageTitle;
+            document.title = `${pageTitle} - Mihai's Profile`;
+        }
+
+        if (historyHelper && typeof historyHelper.pushState === 'function') {
+            historyHelper.pushState(normalizedPageId, pageTitle, newUrlFragment, updateHistory);
+        } else if (updateHistory && window.history && typeof window.history.pushState === 'function') {
+            window.history.pushState({ page: normalizedPageId }, pageTitle, `#${newUrlFragment}`);
+        }
+
+        window.scrollTo(0, 0);
+        updateActiveNavLink(newUrlFragment);
+
+        let fadeInResult = null;
+        if (animationHelper && typeof animationHelper.fadeIn === 'function') {
+            fadeInResult = animationHelper.fadeIn(pageContentArea);
+        } else if (pageContentArea.style) {
+            pageContentArea.style.opacity = 1;
+        }
+        await Promise.resolve(fadeInResult);
+        releaseMinHeight();
+
+        const elapsed = Date.now() - loadStart;
+        await new Promise(r => setTimeout(r, Math.max(0, MINIMUM_LOAD_DURATION - elapsed)));
+    } finally {
+        releaseMinHeight();
+        callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
     }
-
-    const pageTitle = loadResult.title || (routeConfig && routeConfig.title) || (contentLoader && contentLoader.DEFAULT_PAGE_TITLE) || "Mihai's Profile";
-
-    updateMetadataForPage(routeConfig, pageTitle, normalizedPageId, loadResult.status);
-
-    if (historyHelper && typeof historyHelper.updateTitle === 'function') {
-        historyHelper.updateTitle(appBarHeadline, pageTitle);
-    } else {
-        if (appBarHeadline) appBarHeadline.textContent = pageTitle;
-        document.title = `${pageTitle} - Mihai's Profile`;
-    }
-
-    if (historyHelper && typeof historyHelper.pushState === 'function') {
-        historyHelper.pushState(normalizedPageId, pageTitle, newUrlFragment, updateHistory);
-    } else if (updateHistory && window.history && typeof window.history.pushState === 'function') {
-        window.history.pushState({ page: normalizedPageId }, pageTitle, `#${newUrlFragment}`);
-    }
-
-    window.scrollTo(0, 0);
-    updateActiveNavLink(newUrlFragment);
-
-    if (animationHelper && typeof animationHelper.fadeIn === 'function') {
-        await animationHelper.fadeIn(pageContentArea);
-    } else if (pageContentArea.style) {
-        pageContentArea.style.opacity = 1;
-    }
-
-    const elapsed = Date.now() - loadStart;
-    await new Promise(r => setTimeout(r, Math.max(0, MINIMUM_LOAD_DURATION - elapsed)));
-    callCallback(routerRuntime.hideOverlay, 'hideOverlay callback');
 }
 
 /**
