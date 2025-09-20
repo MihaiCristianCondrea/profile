@@ -719,6 +719,114 @@
         };
     }
 
+    function resolveDelayForContext(delayValue, motionMeta, context) {
+        if (delayValue === undefined || delayValue === null) {
+            return null;
+        }
+
+        const parsedDelay = typeof delayValue === 'number'
+            ? delayValue
+            : parseFloat(delayValue);
+
+        if (!Number.isFinite(parsedDelay)) {
+            return 0;
+        }
+
+        if (parsedDelay <= 0) {
+            return 0;
+        }
+
+        const motionContext = context && typeof context === 'object'
+            ? context
+            : getMotionContext();
+
+        const windowSize = motionContext.windowSize || currentWindowSizeClass;
+        const pointer = motionContext.pointer || currentPointerType;
+        const orientation = motionContext.orientation || currentOrientation;
+        const isSpatial = !motionMeta || motionMeta.type !== 'effect';
+        const speed = motionMeta && motionMeta.speed;
+
+        let resolved = parsedDelay;
+
+        if (windowSize === 'expanded') {
+            resolved += isSpatial ? 40 : 24;
+        } else if (windowSize === 'compact') {
+            resolved = Math.max(0, resolved - (isSpatial ? 18 : 12));
+        }
+
+        if (pointer === 'fine' && windowSize !== 'compact') {
+            resolved = Math.max(0, resolved - 12);
+        } else if (pointer === 'coarse') {
+            resolved += isSpatial ? 12 : 8;
+        }
+
+        if (orientation === ORIENTATION.landscape && isSpatial) {
+            resolved = Math.round(resolved * 0.9);
+        }
+
+        if (speed === 'fast') {
+            resolved = Math.round(resolved * 0.85);
+        } else if (speed === 'slow') {
+            resolved = Math.round(resolved * 1.1);
+        }
+
+        return Math.max(0, Math.round(resolved));
+    }
+
+    function resolveDurationForContext(durationValue, motionMeta, context, motionSpec) {
+        if (typeof durationValue !== 'number' || !Number.isFinite(durationValue)) {
+            return durationValue;
+        }
+
+        const motionContext = context && typeof context === 'object'
+            ? context
+            : getMotionContext();
+
+        const windowSize = motionContext.windowSize || currentWindowSizeClass;
+        const pointer = motionContext.pointer || currentPointerType;
+        const orientation = motionContext.orientation || currentOrientation;
+        const isSpatial = !motionMeta || motionMeta.type !== 'effect';
+        const speed = motionMeta && motionMeta.speed;
+
+        let resolved = durationValue;
+
+        if (windowSize === 'expanded') {
+            resolved *= isSpatial ? 1.12 : 1.08;
+        } else if (windowSize === 'compact') {
+            resolved *= isSpatial ? 0.9 : 0.94;
+        }
+
+        if (pointer === 'fine' && windowSize !== 'compact') {
+            resolved *= 0.95;
+        } else if (pointer === 'coarse') {
+            resolved *= isSpatial ? 1.06 : 1.02;
+        }
+
+        if (orientation === ORIENTATION.landscape && isSpatial) {
+            resolved *= 0.95;
+        }
+
+        if (speed === 'fast') {
+            resolved *= 0.88;
+        } else if (speed === 'slow') {
+            resolved *= isSpatial ? 1.12 : 1.08;
+        }
+
+        const specDuration = motionSpec && typeof motionSpec.duration === 'number'
+            ? motionSpec.duration
+            : durationValue;
+
+        const baseLowerBound = isSpatial ? 180 : 140;
+        const baseUpperBound = isSpatial ? 900 : 600;
+
+        const lowerBound = Math.max(baseLowerBound, Math.round(specDuration * 0.75));
+        const upperBound = Math.min(baseUpperBound, Math.round(specDuration * 1.25));
+
+        resolved = Math.min(upperBound, Math.max(lowerBound, resolved));
+
+        return Math.round(resolved);
+    }
+
     function getReducedKeyframes(frames) {
         const normalizedFrames = Array.isArray(frames) ? frames : [frames];
         const lastFrame = normalizedFrames[normalizedFrames.length - 1] || {};
@@ -730,6 +838,10 @@
     }
 
     function getAdaptiveStagger(baseGap) {
+        if (shouldReduceMotion()) {
+            return 0;
+        }
+
         let computedGap = typeof baseGap === 'number' ? baseGap : 0;
 
         if (currentWindowSizeClass === 'expanded') {
@@ -744,11 +856,13 @@
             computedGap = Math.round(computedGap * 0.9);
         }
 
-        if (shouldReduceMotion()) {
-            computedGap = Math.max(0, Math.min(120, Math.round(computedGap * 0.55)));
+        if (currentPointerType === 'coarse') {
+            computedGap = Math.round(computedGap * 1.05);
+        } else if (currentPointerType === 'fine' && currentWindowSizeClass !== 'compact') {
+            computedGap = Math.round(computedGap * 0.9);
         }
 
-        return computedGap;
+        return Math.max(0, computedGap);
     }
 
     function animateElement(element, keyframes, options, motionMeta) {
@@ -780,6 +894,22 @@
             animationOptions.duration = motionSpec.duration;
         }
 
+        if (!hasReducedMotion) {
+            const contextualDelay = resolveDelayForContext(animationOptions.delay, motionMeta, motionContext);
+            if (contextualDelay !== null) {
+                animationOptions.delay = contextualDelay;
+            }
+
+            if (typeof animationOptions.duration === 'number') {
+                animationOptions.duration = resolveDurationForContext(
+                    animationOptions.duration,
+                    motionMeta,
+                    motionContext,
+                    motionSpec
+                );
+            }
+        }
+
         const resolvedFallback = motionSpec.fallbackEasing || DEFAULT_MOTION_TOKEN.fallbackEasing;
         const baseEasing = animationOptions.easing === undefined
             ? motionSpec.easing
@@ -791,6 +921,7 @@
             if (typeof reducedDuration === 'number') {
                 animationOptions.duration = Math.min(animationOptions.duration, reducedDuration);
             }
+            animationOptions.delay = 0;
             animationOptions.easing = resolveEasing(LINEAR_EASINGS.decelerate, CUBIC_EASING_FALLBACKS.decelerate);
         }
 
