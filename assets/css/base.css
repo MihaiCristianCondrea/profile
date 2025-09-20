@@ -4,7 +4,10 @@ body {
   color: var(--app-text-color);
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -76,4 +79,13 @@ optgroup {
 .material-symbols-semibold {
   --material-symbols-font: 'Material Symbols SemiBold';
   font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+}
+
+html.prefers-reduced-motion *,
+html.prefers-reduced-motion *::before,
+html.prefers-reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  transition-delay: 0ms !important;
 }

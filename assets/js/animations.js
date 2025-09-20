@@ -354,6 +354,7 @@
         const decelerateValue = supportsLinearEasing
             ? LINEAR_EASINGS.decelerate
             : CUBIC_EASING_FALLBACKS.decelerate;
+        const standardValue = decelerateValue;
 
         if (accelerateValue) {
             root.documentElement.style.setProperty('--app-motion-ease-accelerate', accelerateValue);
@@ -361,6 +362,10 @@
 
         if (decelerateValue) {
             root.documentElement.style.setProperty('--app-motion-ease-decelerate', decelerateValue);
+        }
+
+        if (standardValue) {
+            root.documentElement.style.setProperty('--app-motion-ease-standard', standardValue);
         }
     }
 
