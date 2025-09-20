@@ -54,8 +54,10 @@ The project now compiles Tailwind CSS ahead of time. After cloning the repo, ins
 
 ```bash
 npm install
-npx tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.css --minify
+npm run build
 ```
+
+The `build` script simply wraps the Tailwind CLI command so the minified stylesheet is always available before serving the site.
 
 Then serve the files with any static HTTP server:
 
@@ -76,6 +78,20 @@ paths in `assets/manifest.json` are **relative** (e.g.
 resolve to the domain root and result in 404 errors. Keeping the icon
 sources relative ensures they work correctly from the `/profile/`
 subdirectory served by GitHub Pages.
+
+Run `npm run deploy` before publishing. It executes the Tailwind build and
+verifies that the SEO metadata files (`sitemap.xml` and `robots.txt`) are present
+in the project root so they are included in the published bundle.
+
+### Search Engine Indexing
+
+- The repository now provides `sitemap.xml` and `robots.txt` at the project root.
+  They are served statically by GitHub Pages alongside the rest of the site.
+- After each deployment, submit `https://mihaicristiancondrea.github.io/profile/sitemap.xml`
+  in both [Google Search Console](https://search.google.com/search-console/about) and
+  [Bing Webmaster Tools](https://www.bing.com/webmasters/about) to trigger a fresh crawl.
+- You can re-run `npm run verify:seo` at any time to confirm the sitemap and robots files
+  are still available before pushing a release.
 
 ### YouTube Channel Feed
 
