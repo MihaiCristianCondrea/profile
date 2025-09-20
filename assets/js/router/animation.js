@@ -16,14 +16,42 @@
         return fallback;
     }
 
+    function getReducedDurationCap(defaultValue) {
+        const doc = global.document;
+        if (!doc || !doc.documentElement || typeof global.getComputedStyle !== 'function') {
+            return defaultValue;
+        }
+
+        const value = global.getComputedStyle(doc.documentElement).getPropertyValue('--app-motion-reduced-duration');
+        if (!value) {
+            return defaultValue;
+        }
+
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return defaultValue;
+        }
+
+        let parsed = parseFloat(trimmed);
+        if (!Number.isFinite(parsed)) {
+            return defaultValue;
+        }
+
+        if (trimmed.endsWith('s') && !trimmed.endsWith('ms')) {
+            parsed *= 1000;
+        }
+
+        return parsed;
+    }
+
     const defaultFadeOutTiming = () => ({
-        duration: 90,
+        duration: 200,
         easing: resolveRouterEasing('accelerate', FADE_OUT_EASING_FALLBACK),
         fill: 'forwards'
     });
 
     const defaultFadeInTiming = () => ({
-        duration: 210,
+        duration: 320,
         easing: resolveRouterEasing('decelerate', FADE_IN_EASING_FALLBACK),
         fill: 'forwards'
     });
@@ -44,9 +72,29 @@
             : Object.assign({}, defaultTiming);
         const timing = Object.assign(baseTiming, overrides || {});
 
-        if (typeof element.animate !== 'function') {
+        const siteAnimations = global.SiteAnimations;
+        const canUseWaapi = !siteAnimations
+            || typeof siteAnimations.canAnimate !== 'function'
+            || siteAnimations.canAnimate();
+
+        if (!canUseWaapi || typeof element.animate !== 'function') {
             setFinalOpacity(element, finalOpacity);
             return Promise.resolve();
+        }
+
+        const prefersReducedMotion = siteAnimations
+            && typeof siteAnimations.shouldReduceMotion === 'function'
+            && siteAnimations.shouldReduceMotion();
+
+        if (prefersReducedMotion) {
+            const reducedCap = getReducedDurationCap(200);
+            if (typeof timing.duration === 'number') {
+                timing.duration = Math.min(timing.duration, reducedCap);
+            } else {
+                timing.duration = reducedCap;
+            }
+            timing.easing = resolveRouterEasing('decelerate', FADE_IN_EASING_FALLBACK);
+            timing.delay = 0;
         }
 
         try {

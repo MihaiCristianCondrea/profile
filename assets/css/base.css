@@ -84,8 +84,9 @@ optgroup {
 html.prefers-reduced-motion *,
 html.prefers-reduced-motion *::before,
 html.prefers-reduced-motion *::after {
-  animation-duration: 0.01ms !important;
+  animation-duration: var(--app-motion-reduced-duration, 180ms) !important;
   animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
+  transition-duration: var(--app-motion-reduced-duration, 180ms) !important;
   transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
 }
