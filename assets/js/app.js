@@ -1,4 +1,5 @@
 // Global DOM element references needed by multiple modules or for initialization
+const PROFILE_AVATAR_FALLBACK_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
 
 let routeLinkHandlerRegistered = false;
@@ -9,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mainContentPageOriginalEl = getDynamicElement('mainContentPage');
     appBarHeadlineEl = getDynamicElement('appBarHeadline');
     topAppBarEl = getDynamicElement('topAppBar');
+
+    initProfileAvatarFallback();
 
 
     // --- Initialize Modules ---
@@ -120,6 +123,10 @@ function buildRouterOptions() {
         pageHandlers.resume = initResumePage;
     }
 
+    if (typeof initContactPage === 'function') {
+        pageHandlers.contact = initContactPage;
+    }
+
     if (Object.keys(pageHandlers).length > 0) {
         options.pageHandlers = pageHandlers;
     }
@@ -180,4 +187,24 @@ function setupRouteLinkInterception() {
     }, true);
 
     routeLinkHandlerRegistered = true;
+}
+
+function initProfileAvatarFallback() {
+    const profileAvatar = document.querySelector('.profile-avatar');
+    if (!profileAvatar) {
+        return;
+    }
+
+    const applyFallback = () => {
+        profileAvatar.classList.add('profile-avatar-fallback');
+        if (profileAvatar.src !== PROFILE_AVATAR_FALLBACK_SRC) {
+            profileAvatar.src = PROFILE_AVATAR_FALLBACK_SRC;
+        }
+    };
+
+    profileAvatar.addEventListener('error', applyFallback, { once: true });
+
+    if (profileAvatar.complete && profileAvatar.naturalWidth === 0) {
+        applyFallback();
+    }
 }

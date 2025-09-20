@@ -1136,7 +1136,7 @@
             }))
             : Promise.resolve();
 
-        const downloadButton = resumePage.querySelector('button[onclick="prepareAndPrintResume()"]');
+        const downloadButton = resumePage.querySelector('#downloadResumeButton');
         const downloadPromise = downloadButton
             ? whenAnimationFinished(animateElement(downloadButton, KEYFRAMES.pop, { delay: 200 }, {
                 scheme: 'standard',

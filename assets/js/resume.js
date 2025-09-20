@@ -1,4 +1,44 @@
 // Resume builder functionality
+function createInputGroupElement({
+    id,
+    labelText,
+    value = '',
+    control = 'input',
+    type = 'text',
+    placeholder = ' ',
+    wrapperClass = 'input-group',
+    inputClasses = [],
+    onInput
+}) {
+    const wrapper = document.createElement('div');
+    wrapper.className = wrapperClass;
+
+    const inputElement = control === 'textarea'
+        ? document.createElement('textarea')
+        : document.createElement('input');
+
+    if (control !== 'textarea') {
+        inputElement.type = type;
+    }
+
+    inputElement.placeholder = placeholder;
+    inputElement.value = value;
+    inputElement.id = id;
+    inputClasses.forEach(cls => inputElement.classList.add(cls));
+
+    if (typeof onInput === 'function') {
+        inputElement.addEventListener('input', onInput);
+    }
+
+    const label = document.createElement('label');
+    label.setAttribute('for', id);
+    label.textContent = labelText;
+
+    wrapper.append(inputElement, label);
+
+    return { wrapper, inputElement };
+}
+
 // Real-time updates for form inputs
 function setupRealtimeUpdates() {
     const set = (id, cb) => {
@@ -31,22 +71,66 @@ function addListItem(sectionId, value = '') {
     if (!container) return;
     const capitalName = sectionId.charAt(0).toUpperCase() + sectionId.slice(1, -1);
     const itemId = `${sectionId}-${Date.now()}`;
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.id = itemId;
-    div.innerHTML = `<div class="input-group" style="flex-grow:1;margin-bottom:0;"><input type="text" oninput="updateList('${sectionId}')" value="${value}" placeholder=" " id="input-${itemId}"><label for="input-${itemId}">${capitalName}</label></div><button type="button" class="remove-btn" onclick="removeListItem('${itemId}','${sectionId}')">×</button>`;
-    container.insertBefore(div, container.querySelector('.add-btn'));
+    const listItem = document.createElement('div');
+    listItem.className = 'list-item';
+    listItem.id = itemId;
+
+    const { wrapper } = createInputGroupElement({
+        id: `input-${itemId}`,
+        labelText: capitalName,
+        value,
+        wrapperClass: 'input-group resume-inline-group',
+        onInput: () => updateList(sectionId)
+    });
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'remove-btn';
+    removeButton.setAttribute('aria-label', 'Remove item');
+    removeButton.textContent = '×';
+    removeButton.addEventListener('click', () => removeListItem(itemId, sectionId));
+
+    listItem.append(wrapper, removeButton);
+    container.insertBefore(listItem, container.querySelector('.add-btn'));
     updateList(sectionId);
 }
 
 function addInterestItem(value = '', isProject = false) {
     const container = document.getElementById('interests-form');
     const itemId = `interests-${Date.now()}`;
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.id = itemId;
-    div.innerHTML = `<div class="input-group" style="flex-grow:1;margin-bottom:0;"><input type="text" oninput="updateList('interests')" value="${value}" placeholder=" " id="input-${itemId}"><label for="input-${itemId}">Interest or Project</label></div><input type="checkbox" id="check-${itemId}" onchange="updateList('interests')" ${isProject ? 'checked' : ''} style="margin-left:8px;"><label for="check-${itemId}" style="position:static;font-size:14px;pointer-events:auto;">Is Project?</label><button type="button" class="remove-btn" onclick="removeListItem('${itemId}','interests')">×</button>`;
-    container.insertBefore(div, container.querySelector('.add-btn'));
+    const listItem = document.createElement('div');
+    listItem.className = 'list-item';
+    listItem.id = itemId;
+
+    const { wrapper } = createInputGroupElement({
+        id: `input-${itemId}`,
+        labelText: 'Interest or Project',
+        value,
+        wrapperClass: 'input-group resume-inline-group',
+        onInput: () => updateList('interests')
+    });
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `check-${itemId}`;
+    checkbox.className = 'resume-checkbox';
+    checkbox.checked = isProject;
+    checkbox.addEventListener('change', () => updateList('interests'));
+
+    const checkboxLabel = document.createElement('label');
+    checkboxLabel.setAttribute('for', checkbox.id);
+    checkboxLabel.className = 'resume-checkbox-label';
+    checkboxLabel.textContent = 'Is Project?';
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'remove-btn';
+    removeButton.setAttribute('aria-label', 'Remove interest');
+    removeButton.textContent = '×';
+    removeButton.addEventListener('click', () => removeListItem(itemId, 'interests'));
+
+    listItem.append(wrapper, checkbox, checkboxLabel, removeButton);
+    container.insertBefore(listItem, container.querySelector('.add-btn'));
     updateList('interests');
 }
 
@@ -82,15 +166,109 @@ function updateList(sectionId) {
 function addComplexItem(sectionId, data = {}) {
     const container = document.getElementById(`${sectionId}-form`);
     const itemId = `${sectionId}-${Date.now()}`;
-    const div = document.createElement('div');
-    div.className = 'complex-item-form';
-    div.id = itemId;
+    const formWrapper = document.createElement('div');
+    formWrapper.className = 'complex-item-form';
+    formWrapper.id = itemId;
+
+    const innerContainer = document.createElement('div');
+    innerContainer.className = 'complex-item-fields';
+    formWrapper.appendChild(innerContainer);
+
+    const handleInput = () => updateComplexList(sectionId);
+
     if (sectionId === 'work') {
-        div.innerHTML = `<div><div class="input-group"><input type="text" class="work-title" oninput="updateComplexList('work')" value="${data.title||''}" placeholder=" "><label>Job Title</label></div><div class="input-group"><input type="text" class="work-company" oninput="updateComplexList('work')" value="${data.company||''}" placeholder=" "><label>Company & Location</label></div><div class="input-group"><input type="text" class="work-start" oninput="updateComplexList('work')" value="${data.start||''}" placeholder=" "><label>Start Year</label></div><div class="input-group"><input type="text" class="work-end" oninput="updateComplexList('work')" value="${data.end||''}" placeholder=" "><label>End Year</label></div><div class="input-group"><textarea class="work-desc" oninput="updateComplexList('work')" placeholder=" ">${data.desc||''}</textarea><label>Description (Markdown supported)</label></div><button type="button" class="remove-btn" onclick="removeItem('${itemId}','work')" style="align-self:flex-end;">×</button></div>`;
+        const titleGroup = createInputGroupElement({
+            id: `${itemId}-title`,
+            labelText: 'Job Title',
+            value: data.title || '',
+            inputClasses: ['work-title'],
+            onInput: handleInput
+        });
+        const companyGroup = createInputGroupElement({
+            id: `${itemId}-company`,
+            labelText: 'Company & Location',
+            value: data.company || '',
+            inputClasses: ['work-company'],
+            onInput: handleInput
+        });
+        const startGroup = createInputGroupElement({
+            id: `${itemId}-start`,
+            labelText: 'Start Year',
+            value: data.start || '',
+            inputClasses: ['work-start'],
+            onInput: handleInput
+        });
+        const endGroup = createInputGroupElement({
+            id: `${itemId}-end`,
+            labelText: 'End Year',
+            value: data.end || '',
+            inputClasses: ['work-end'],
+            onInput: handleInput
+        });
+        const descriptionGroup = createInputGroupElement({
+            id: `${itemId}-desc`,
+            labelText: 'Description (Markdown supported)',
+            value: data.desc || '',
+            control: 'textarea',
+            inputClasses: ['work-desc'],
+            onInput: handleInput
+        });
+
+        innerContainer.append(
+            titleGroup.wrapper,
+            companyGroup.wrapper,
+            startGroup.wrapper,
+            endGroup.wrapper,
+            descriptionGroup.wrapper
+        );
     } else if (sectionId === 'education') {
-        div.innerHTML = `<div><div class="input-group"><input type="text" class="edu-degree" oninput="updateComplexList('education')" value="${data.degree||''}" placeholder=" "><label>Degree / Certificate</label></div><div class="input-group"><input type="text" class="edu-school" oninput="updateComplexList('education')" value="${data.school||''}" placeholder=" "><label>School / University</label></div><div class="input-group"><input type="text" class="edu-start" oninput="updateComplexList('education')" value="${data.start||''}" placeholder=" "><label>Start Year</label></div><div class="input-group"><input type="text" class="edu-end" oninput="updateComplexList('education')" value="${data.end||''}" placeholder=" "><label>End Year</label></div><button type="button" class="remove-btn" onclick="removeItem('${itemId}','education')" style="align-self:flex-end;">×</button></div>`;
+        const degreeGroup = createInputGroupElement({
+            id: `${itemId}-degree`,
+            labelText: 'Degree / Certificate',
+            value: data.degree || '',
+            inputClasses: ['edu-degree'],
+            onInput: handleInput
+        });
+        const schoolGroup = createInputGroupElement({
+            id: `${itemId}-school`,
+            labelText: 'School / University',
+            value: data.school || '',
+            inputClasses: ['edu-school'],
+            onInput: handleInput
+        });
+        const startGroup = createInputGroupElement({
+            id: `${itemId}-start`,
+            labelText: 'Start Year',
+            value: data.start || '',
+            inputClasses: ['edu-start'],
+            onInput: handleInput
+        });
+        const endGroup = createInputGroupElement({
+            id: `${itemId}-end`,
+            labelText: 'End Year',
+            value: data.end || '',
+            inputClasses: ['edu-end'],
+            onInput: handleInput
+        });
+
+        innerContainer.append(
+            degreeGroup.wrapper,
+            schoolGroup.wrapper,
+            startGroup.wrapper,
+            endGroup.wrapper
+        );
     }
-    container.insertBefore(div, container.querySelector('.add-btn'));
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'remove-btn';
+    removeButton.setAttribute('aria-label', 'Remove entry');
+    removeButton.textContent = '×';
+    removeButton.addEventListener('click', () => removeItem(itemId, sectionId));
+
+    innerContainer.appendChild(removeButton);
+
+    container.insertBefore(formWrapper, container.querySelector('.add-btn'));
     updateComplexList(sectionId);
 }
 
@@ -205,6 +383,36 @@ function setupMode() {
     }
 }
 
+function setupResumeControls() {
+    document.querySelectorAll('[data-add-list]').forEach(button => {
+        if (button.dataset.resumeBound === 'true') return;
+        const sectionId = button.dataset.addList;
+        if (!sectionId) return;
+        button.addEventListener('click', () => addListItem(sectionId));
+        button.dataset.resumeBound = 'true';
+    });
+
+    document.querySelectorAll('[data-add-complex]').forEach(button => {
+        if (button.dataset.resumeBound === 'true') return;
+        const sectionId = button.dataset.addComplex;
+        if (!sectionId) return;
+        button.addEventListener('click', () => addComplexItem(sectionId));
+        button.dataset.resumeBound = 'true';
+    });
+
+    document.querySelectorAll('[data-add-interest]').forEach(button => {
+        if (button.dataset.resumeBound === 'true') return;
+        button.addEventListener('click', () => addInterestItem());
+        button.dataset.resumeBound = 'true';
+    });
+
+    const downloadButton = document.getElementById('downloadResumeButton');
+    if (downloadButton && downloadButton.dataset.resumeBound !== 'true') {
+        downloadButton.addEventListener('click', prepareAndPrintResume);
+        downloadButton.dataset.resumeBound = 'true';
+    }
+}
+
 function prepareAndPrintResume() {
     const cvElement = document.getElementById('resume-preview');
     if (!cvElement) {
@@ -271,6 +479,7 @@ function ensureResumeStyles() {
 function initResumePage() {
     ensureResumeStyles();
     ensureMarkedLoaded().then(() => {
+        setupResumeControls();
         setupRealtimeUpdates();
         setupMode();
         document.fonts.ready.then(initialize);

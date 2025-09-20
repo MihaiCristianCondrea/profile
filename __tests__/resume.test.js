@@ -17,23 +17,23 @@ const baseMarkup = `
     </div>
     <div class="form-section dynamic-list" id="skills-form">
       <h2><span class="material-symbols-outlined">build</span> Skills</h2>
-      <button type="button" class="add-btn" onclick="addListItem('skills')">Add Skill</button>
+      <button type="button" class="add-btn" data-add-list="skills">Add Skill</button>
     </div>
     <div class="form-section" id="work-form">
       <h2><span class="material-symbols-outlined">work</span> Work History</h2>
-      <button type="button" class="add-btn" onclick="addWorkItem()">Add Work Experience</button>
+      <button type="button" class="add-btn" data-add-complex="work">Add Work Experience</button>
     </div>
     <div class="form-section" id="education-form">
       <h2><span class="material-symbols-outlined">school</span> Education</h2>
-      <button type="button" class="add-btn" onclick="addEducationItem()">Add Education</button>
+      <button type="button" class="add-btn" data-add-complex="education">Add Education</button>
     </div>
     <div class="form-section dynamic-list" id="languages-form">
       <h2><span class="material-symbols-outlined">language</span> Languages</h2>
-      <button type="button" class="add-btn" onclick="addListItem('languages')">Add Language</button>
+      <button type="button" class="add-btn" data-add-list="languages">Add Language</button>
     </div>
     <div class="form-section" id="interests-form">
       <h2><span class="material-symbols-outlined">interests</span> Interests</h2>
-      <button type="button" class="add-btn" onclick="addInterestItem()">Add Interest</button>
+      <button type="button" class="add-btn" data-add-interest="true">Add Interest</button>
     </div>
   </div>
   <div id="resume-preview">
@@ -70,6 +70,12 @@ const baseMarkup = `
         </div>
       </div>
     </div>
+  </div>
+</div>
+  <div class="resume-download">
+    <button type="button" id="downloadResumeButton">
+      <span class="material-symbols-outlined">download</span><span>Download Resume as PDF</span>
+    </button>
   </div>
 </div>
 `;

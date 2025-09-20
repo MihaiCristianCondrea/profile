@@ -170,10 +170,10 @@
 
 /* Ensure Copyright line uses primary text color */
 #legalNoticesPageContainer .notice-item p:first-of-type {
-    color: var(--app-text-color);
+  color: var(--app-text-color);
 }
 #legalNoticesPageContainer .notice-item p:first-of-type strong {
-    color: var(--app-text-color);
+  color: var(--app-text-color);
 }
 
 #legalNoticesPageContainer ul {
@@ -218,12 +218,12 @@
 /* Adjustments for heading spacing */
 #legalNoticesPageContainer h1 + h2,
 #legalNoticesPageContainer p + h2 {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 
 /* Ensure last paragraph in the main card content has no bottom margin if it's before .last-updated */
 #legalNoticesPageContainer > p:last-of-type:not(.last-updated) {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* --- Ads Help Center Page Specific Styles --- */
@@ -288,7 +288,9 @@
 }
 
 #adsHelpCenterPageContainer li::marker {
-  color: var(--md-sys-color-primary); /* Style list bullets with primary color */
+  color: var(
+    --md-sys-color-primary
+  ); /* Style list bullets with primary color */
 }
 
 /* If a paragraph directly follows a list, reduce its top margin for better flow */
@@ -321,7 +323,7 @@
 
 /* Ensure the last element within the container has no bottom margin */
 #adsHelpCenterPageContainer > *:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 #adsHelpCenterPageContainer md-divider,
@@ -416,7 +418,7 @@
 
 /* Make strong text within li > p also inherit color for consistency */
 #privacyPolicyPageContainer li p strong {
-    color: inherit;
+  color: inherit;
 }
 
 #privacyPolicyPageContainer li::marker {
@@ -455,7 +457,7 @@
 }
 
 #privacyPolicyPageContainer > *:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 #privacyPolicyPageContainer .page-banner-image,
@@ -530,16 +532,15 @@
 
 /* Adjust if h2 directly follows intro paragraphs without a divider yet */
 #codeOfConductPageContainer p + h2 {
-    margin-top: 2.5rem;
+  margin-top: 2.5rem;
 }
 #codeOfConductPageContainer img + h2 {
-    margin-top: 2rem;
+  margin-top: 2rem;
 }
 #codeOfConductPageContainer .last-updated-text + img + p + p + h2,
 #codeOfConductPageContainer .last-updated-text + p + p + h2 {
-    margin-top: 2.5rem;
+  margin-top: 2.5rem;
 }
-
 
 #codeOfConductPageContainer h3 {
   font-size: 1.2rem;
@@ -619,10 +620,9 @@
   margin-bottom: 0;
 }
 #codeOfConductPageContainer .notice-item p strong {
-    color: var(--app-secondary-text-color);
-    font-weight: 600;
+  color: var(--app-secondary-text-color);
+  font-weight: 600;
 }
-
 
 /* Divider styling is already generic */
 #codeOfConductPageContainer md-divider {
@@ -636,7 +636,7 @@
 }
 
 #codeOfConductPageContainer > *:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* --- Privacy Policy (Apps) Page Specific Styles --- */
@@ -740,7 +740,7 @@
 
 /* Spacing adjustments */
 #privacyPolicyAppsPageContainer .last-updated-text + .page-banner-image + p {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 
 #privacyPolicyAppsPageContainer ul + p {
@@ -748,7 +748,7 @@
 }
 
 #privacyPolicyAppsPageContainer > *:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* --- Terms of Service (Apps) Page Specific Styles --- */
@@ -852,19 +852,18 @@
 
 /* Spacing adjustments */
 #termsOfServiceAppsPageContainer .last-updated-text + .page-banner-image + p {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
 #termsOfServiceAppsPageContainer .last-updated-text + p {
-    margin-top: 1.5rem;
+  margin-top: 1.5rem;
 }
-
 
 #termsOfServiceAppsPageContainer ul + p {
   margin-top: 0.5rem;
 }
 
 #termsOfServiceAppsPageContainer > *:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* Shared legal page heading numbering */
@@ -897,7 +896,8 @@
 #termsOfServiceAppsPageContainer h2::before,
 #codeOfConductPageContainer h2::before {
   counter-increment: privacySections;
-  content: url('../icons/privacy-section.svg') / "Section " counter(privacySections);
+  content: url('../icons/privacy-section.svg') / 'Section '
+    counter(privacySections);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -982,8 +982,8 @@
   margin-bottom: 0.25rem;
 }
 
-#contactPageContainer input[type="text"],
-#contactPageContainer input[type="email"],
+#contactPageContainer input[type='text'],
+#contactPageContainer input[type='email'],
 #contactPageContainer textarea {
   width: 100%;
   padding: 0.5rem;
@@ -1029,7 +1029,6 @@
   margin: 0 0 1rem;
 }
 
-
 #contactPageContainer .social-links ul {
   list-style: none;
   padding: 0;
@@ -1068,6 +1067,10 @@
 #contactPageContainer .availability {
   margin-top: 1.5rem;
   text-align: left;
+}
+
+#contactPageContainer .resume-button {
+  margin: 1rem 0;
 }
 
 #contactPageContainer .testimonials {

@@ -7,7 +7,8 @@ md-top-app-bar {
   height: calc(56px + var(--safe-area-inset-top));
   border-radius: 0;
   box-shadow: none;
-  transition: background-color var(--app-motion-duration-short, 200ms)
+  transition:
+    background-color var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     box-shadow var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
@@ -27,19 +28,20 @@ md-top-app-bar.scrolled {
   border-bottom-right-radius: 24px;
 }
 
-md-top-app-bar [slot="headline"] {
+md-top-app-bar [slot='headline'] {
   color: var(--md-sys-color-on-surface, #000000);
   font-size: 20px;
   font-weight: 500;
 }
 
 md-top-app-bar .material-symbols-outlined {
-  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
 
 md-top-app-bar md-icon,
-md-top-app-bar [slot="navigationIcon"],
-md-top-app-bar [slot="actionIcon"] {
+md-top-app-bar [slot='navigationIcon'],
+md-top-app-bar [slot='actionIcon'] {
   color: var(--md-sys-color-on-surface, #000000);
 }
 
@@ -92,6 +94,10 @@ md-filled-card.profile-card {
   background-color: #eee;
 }
 
+.profile-avatar.profile-avatar-fallback {
+  background-color: #e0e0e0;
+}
+
 .profile-info h2 {
   margin: 0;
   font-size: 1.5rem;
@@ -142,7 +148,8 @@ md-filled-card.achievement-card {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  transition: background-color var(--app-motion-duration-medium, 300ms)
+  transition:
+    background-color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
@@ -460,7 +467,9 @@ md-elevated-card.contribute-card {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom));
+  bottom: calc(
+    env(safe-area-inset-bottom, 0px) - var(--safe-area-max-inset-bottom)
+  );
   z-index: 1002;
   display: flex;
   flex-direction: column;
@@ -470,7 +479,9 @@ md-elevated-card.contribute-card {
   --md-navigation-drawer-container-shape: 0 16px 16px 0;
   --md-navigation-drawer-modal-container-elevation: 1;
   --md-navigation-drawer-standard-container-elevation: 0;
-  --md-navigation-drawer-active-indicator-color: var(--md-sys-color-secondary-container);
+  --md-navigation-drawer-active-indicator-color: var(
+    --md-sys-color-secondary-container
+  );
   --md-navigation-drawer-active-indicator-shape: 28px;
   --md-navigation-drawer-divider-color: var(--app-border-color);
   padding-bottom: var(--safe-area-max-inset-bottom);
@@ -482,11 +493,16 @@ md-elevated-card.contribute-card {
   min-height: 100vh;
   min-height: 100dvh;
   background-color: var(--app-overlay-bg-color);
-  background-color: color-mix(in srgb, var(--md-sys-color-scrim) 32%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--md-sys-color-scrim) 32%,
+    transparent
+  );
   z-index: 1001;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--app-motion-duration-medium, 300ms)
+  transition:
+    opacity var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     visibility var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
@@ -591,7 +607,8 @@ body.drawer-is-open {
 }
 
 .theme-button-container md-icon-button .material-symbols-outlined {
-  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
 
 .theme-button-container md-icon-button.selected {
@@ -600,7 +617,8 @@ body.drawer-is-open {
 }
 
 .theme-button-container md-icon-button.selected .material-symbols-outlined {
-  font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
 }
 
 .drawer-footer .drawer-legal-links {
@@ -658,13 +676,14 @@ md-list-item {
   --md-focus-ring-shape: 28px;
   border-radius: var(--md-list-item-container-shape);
   overflow: hidden;
-  transition: color var(--app-motion-duration-short, 200ms)
+  transition:
+    color var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     background-color var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-.navigation-drawer md-list-item [slot="headline"] {
+.navigation-drawer md-list-item [slot='headline'] {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -676,11 +695,13 @@ md-list-item {
   border-radius: 28px;
   --md-list-item-label-text-color: var(--md-sys-color-on-secondary-container);
   --md-list-item-leading-icon-color: var(--md-sys-color-on-secondary-container);
-  --md-list-item-trailing-icon-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-trailing-icon-color: var(
+    --md-sys-color-on-secondary-container
+  );
   --md-list-item-label-text-weight: 600;
 }
 
-md-list-item a[slot="headline"] {
+md-list-item a[slot='headline'] {
   color: inherit;
   text-decoration: none;
   display: block;
@@ -689,15 +710,18 @@ md-list-item a[slot="headline"] {
 
 .navigation-drawer md-list-item .material-symbols-outlined {
   font-size: 24px;
-  transition: color var(--app-motion-duration-short, 200ms)
+  transition:
+    color var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     font-family var(--app-motion-duration-short, 200ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-  font-family: 'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
+  font-family:
+    'Material Symbols SemiBold', 'Material Symbols Outlined', sans-serif;
 }
 
 .navigation-drawer md-list-item.nav-item-active .material-symbols-outlined {
-  font-family: 'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
+  font-family:
+    'Material Symbols Filled', 'Material Symbols Outlined', sans-serif;
 }
 
 .navigation-drawer md-list-item:hover:not(.nav-item-active) {
@@ -705,7 +729,7 @@ md-list-item a[slot="headline"] {
   --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface);
 }
 
-.navigation-drawer md-list-item[aria-current="page"] {
+.navigation-drawer md-list-item[aria-current='page'] {
   --md-list-item-label-text-weight: 600;
 }
 
@@ -728,12 +752,12 @@ md-list-item a[slot="headline"] {
   padding: 0;
 }
 
-md-list-item[type="button"] md-icon[slot="end"] {
+md-list-item[type='button'] md-icon[slot='end'] {
   transition: transform var(--app-motion-duration-medium, 300ms)
     var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-md-list-item[type="button"].expanded md-icon[slot="end"] {
+md-list-item[type='button'].expanded md-icon[slot='end'] {
   transform: rotate(180deg);
 }
 
@@ -744,17 +768,33 @@ md-list-item[type="button"].expanded md-icon[slot="end"] {
 }
 
 md-filled-button {
-  --md-filled-button-with-leading-icon-leading-space: var(--app-button-icon-inline-padding);
-  --md-filled-button-with-leading-icon-trailing-space: var(--app-button-icon-inline-padding);
-  --md-filled-button-with-trailing-icon-leading-space: var(--app-button-icon-inline-padding);
-  --md-filled-button-with-trailing-icon-trailing-space: var(--app-button-icon-inline-padding);
+  --md-filled-button-with-leading-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
 }
 
 md-outlined-button {
-  --md-outlined-button-with-leading-icon-leading-space: var(--app-button-icon-inline-padding);
-  --md-outlined-button-with-leading-icon-trailing-space: var(--app-button-icon-inline-padding);
-  --md-outlined-button-with-trailing-icon-leading-space: var(--app-button-icon-inline-padding);
-  --md-outlined-button-with-trailing-icon-trailing-space: var(--app-button-icon-inline-padding);
+  --md-outlined-button-with-leading-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-outlined-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-outlined-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-outlined-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
 }
 
 :is(md-filled-button, md-outlined-button)[has-icon] {
@@ -763,10 +803,18 @@ md-outlined-button {
 }
 
 md-text-button {
-  --md-text-button-with-leading-icon-leading-space: var(--app-text-button-icon-inline-padding);
-  --md-text-button-with-leading-icon-trailing-space: var(--app-text-button-icon-inline-padding);
-  --md-text-button-with-trailing-icon-leading-space: var(--app-text-button-icon-inline-padding);
-  --md-text-button-with-trailing-icon-trailing-space: var(--app-text-button-icon-inline-padding);
+  --md-text-button-with-leading-icon-leading-space: var(
+    --app-text-button-icon-inline-padding
+  );
+  --md-text-button-with-leading-icon-trailing-space: var(
+    --app-text-button-icon-inline-padding
+  );
+  --md-text-button-with-trailing-icon-leading-space: var(
+    --app-text-button-icon-inline-padding
+  );
+  --md-text-button-with-trailing-icon-trailing-space: var(
+    --app-text-button-icon-inline-padding
+  );
 }
 
 md-text-button[has-icon] {
@@ -784,7 +832,8 @@ md-text-button[has-icon] {
   border-top: 1px solid var(--app-border-color);
   width: 100%;
   background-color: var(--app-bg-color);
-  transition: background-color var(--app-motion-duration-medium, 300ms)
+  transition:
+    background-color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
@@ -823,14 +872,27 @@ md-divider.profile-section-divider {
 .profile-card-actions a md-filled-button,
 .achievement-card .achievement-actions md-text-button {
   box-shadow: none;
-  transition: background-color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-spring, var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))),
+  transition:
+    background-color var(--app-motion-duration-short, 200ms)
+      var(
+        --app-motion-spring,
+        var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))
+      ),
     color var(--app-motion-duration-short, 200ms)
-      var(--app-motion-spring, var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))),
+      var(
+        --app-motion-spring,
+        var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))
+      ),
     box-shadow var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-bounce, var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))),
+      var(
+        --app-motion-bounce,
+        var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))
+      ),
     transform var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-spring, var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)));
+      var(
+        --app-motion-spring,
+        var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1))
+      );
 }
 
 .profile-card-actions a md-outlined-button:hover,
@@ -847,7 +909,8 @@ md-divider.profile-section-divider {
   .profile-card-actions a md-outlined-button,
   .profile-card-actions a md-filled-button,
   .achievement-card .achievement-actions md-text-button {
-    transition: background-color var(--app-motion-duration-short, 200ms) ease,
+    transition:
+      background-color var(--app-motion-duration-short, 200ms) ease,
       color var(--app-motion-duration-short, 200ms) ease,
       box-shadow var(--app-motion-duration-medium, 300ms) ease;
   }
@@ -884,6 +947,10 @@ md-divider.profile-section-divider {
 .podcast-embed p {
   margin-bottom: 1rem;
   color: var(--app-text-color);
+}
+
+.podcast-embed iframe {
+  border-radius: 12px;
 }
 /* --- Songs Page --- */
 #songsPageContainer {
@@ -969,7 +1036,7 @@ md-divider.profile-section-divider {
   color: var(--app-text-color);
 }
 
-#projectsFilterTabs {
+.projects-filter-tabs {
   margin-bottom: 1rem;
   --md-primary-tab-active-indicator-color: var(--md-sys-color-primary);
 }
@@ -1140,13 +1207,24 @@ md-divider.profile-section-divider {
 }
 
 /* --- Scrollbars --- */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: var(--md-sys-color-outline-variant); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background-color: var(--md-sys-color-outline); }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--md-sys-color-outline-variant);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--md-sys-color-outline);
+}
 
-
-md-dialog { --md-dialog-container-color: var(--app-dialog-bg-color); }
+md-dialog {
+  --md-dialog-container-color: var(--app-dialog-bg-color);
+}
 
 /* --- Page Loading Overlay --- */
 .page-loading-overlay {
@@ -1157,12 +1235,14 @@ md-dialog { --md-dialog-container-color: var(--app-dialog-bg-color); }
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--safe-area-inset-top) var(--safe-area-inset-right) var(--safe-area-inset-bottom) var(--safe-area-inset-left);
+  padding: var(--safe-area-inset-top) var(--safe-area-inset-right)
+    var(--safe-area-inset-bottom) var(--safe-area-inset-left);
   background-color: var(--app-bg-color);
   z-index: 1100;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--app-motion-duration-medium, 300ms)
+  transition:
+    opacity var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
     visibility var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
@@ -1171,5 +1251,3 @@ md-dialog { --md-dialog-container-color: var(--app-dialog-bg-color); }
   opacity: 1;
   visibility: visible;
 }
-
-
