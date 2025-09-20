@@ -163,11 +163,46 @@ function initialize() {
     document.getElementById('photo-preview').style.backgroundImage = "url('assets/images/profile/cv_profile_pic.png')";
 }
 
+function getResumeEditParam() {
+    if (typeof window === 'undefined' || !window.location) {
+        return null;
+    }
+
+    const parseParams = (paramString) => {
+        if (typeof paramString !== 'string' || paramString.length === 0) {
+            return null;
+        }
+        const params = new URLSearchParams(paramString);
+        return params.has('edit') ? params.get('edit') : null;
+    };
+
+    const searchValue = parseParams(window.location.search);
+    if (searchValue !== null) {
+        return searchValue;
+    }
+
+    const hash = window.location.hash;
+    if (typeof hash === 'string' && hash.length > 0) {
+        const queryStart = hash.search(/[?&]/);
+        if (queryStart !== -1) {
+            const hashParams = hash.slice(queryStart + 1);
+            const hashValue = parseParams(hashParams);
+            if (hashValue !== null) {
+                return hashValue;
+            }
+        }
+    }
+
+    return null;
+}
+
 function setupMode() {
-    const params = new URLSearchParams(window.location.search);
-    const editMode = params.get('edit') === 'true';
+    const editValue = getResumeEditParam();
+    const editMode = typeof editValue === 'string' && editValue.toLowerCase() === 'true';
     const form = document.querySelector('#resumePage .form-container');
-    if (!editMode && form) form.style.display = 'none';
+    if (form) {
+        form.style.display = editMode ? '' : 'none';
+    }
 }
 
 function prepareAndPrintResume() {
