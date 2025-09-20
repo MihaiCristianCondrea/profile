@@ -989,14 +989,91 @@
         return Promise.all(animations.map((animation) => whenAnimationFinished(animation))).then(() => { });
     }
 
+    function resolveHomeTimeline() {
+        const context = getMotionContext();
+        const reduce = shouldReduceMotion();
+
+        const windowSize = context.windowSize || currentWindowSizeClass;
+        const orientation = context.orientation || currentOrientation;
+        const pointer = context.pointer || currentPointerType;
+
+        if (reduce) {
+            return {
+                heroDelay: 0,
+                chipsDelay: 0,
+                sectionsDelay: 0,
+                socialDelay: 0,
+                chipGap: 32,
+                sectionGap: 60,
+                socialGap: 32
+            };
+        }
+
+        const baseLeadIn = windowSize === 'expanded'
+            ? 150
+            : windowSize === 'medium'
+                ? 120
+                : 90;
+
+        let chipsDelay = baseLeadIn;
+        let sectionsDelay = baseLeadIn + (windowSize === 'expanded' ? 140 : windowSize === 'medium' ? 110 : 95);
+        let socialDelay = sectionsDelay + (windowSize === 'expanded' ? 110 : windowSize === 'medium' ? 90 : 70);
+
+        let chipGap = windowSize === 'expanded' ? 56 : windowSize === 'medium' ? 44 : 36;
+        let sectionGap = windowSize === 'expanded' ? 128 : windowSize === 'medium' ? 108 : 96;
+        let socialGap = windowSize === 'expanded' ? 62 : windowSize === 'medium' ? 54 : 46;
+
+        if (orientation === ORIENTATION.landscape) {
+            chipsDelay = Math.round(chipsDelay * 0.85);
+            sectionsDelay = Math.round(sectionsDelay * 0.88);
+            socialDelay = Math.round(socialDelay * 0.9);
+
+            chipGap = Math.round(chipGap * 0.92);
+            sectionGap = Math.round(sectionGap * 0.92);
+            socialGap = Math.round(socialGap * 0.92);
+        }
+
+        if (pointer === 'fine' && windowSize !== 'compact') {
+            chipsDelay = Math.max(0, chipsDelay - 24);
+            sectionsDelay = Math.max(chipsDelay + 72, sectionsDelay - 16);
+            socialDelay = Math.max(sectionsDelay + 72, socialDelay - 12);
+
+            chipGap = Math.max(28, chipGap - 6);
+            sectionGap = Math.max(80, sectionGap - 12);
+            socialGap = Math.max(30, socialGap - 6);
+        } else if (pointer === 'coarse') {
+            sectionsDelay += 20;
+            socialDelay += 28;
+        }
+
+        chipsDelay = Math.max(0, Math.round(chipsDelay));
+        sectionsDelay = Math.max(chipsDelay + 60, Math.round(sectionsDelay));
+        socialDelay = Math.max(sectionsDelay + 60, Math.round(socialDelay));
+
+        chipGap = Math.max(24, Math.round(chipGap));
+        sectionGap = Math.max(chipGap, Math.round(sectionGap));
+        socialGap = Math.max(24, Math.round(socialGap));
+
+        return {
+            heroDelay: 0,
+            chipsDelay,
+            sectionsDelay,
+            socialDelay,
+            chipGap,
+            sectionGap,
+            socialGap
+        };
+    }
+
     function animateHome(container) {
         if (!container) {
             return Promise.resolve();
         }
 
+        const timeline = resolveHomeTimeline();
         const heroCard = container.querySelector('.profile-card');
         const heroAnimation = heroCard
-            ? animateElement(heroCard, KEYFRAMES.hero, null, {
+            ? animateElement(heroCard, KEYFRAMES.hero, { delay: timeline.heroDelay }, {
                 scheme: 'expressive',
                 type: 'spatial',
                 speed: 'slow'
@@ -1007,29 +1084,34 @@
         const supportingSections = container.querySelectorAll('.achievement-card, .profile-card-actions, .podcast-embed, .news-section, .contribute-card');
         const socialLinks = container.querySelectorAll('.social-icons a');
 
-        return whenAnimationFinished(heroAnimation)
-            .then(() => Promise.all([
-                animateSequence(chipElements, KEYFRAMES.pop, { delay: 40 }, 40, {
-                    scheme: 'expressive',
-                    type: 'spatial',
-                    speed: 'fast'
-                }),
-                animateSequence(supportingSections, KEYFRAMES.rise, { delay: 80 }, 96, {
-                    scheme: 'expressive',
-                    type: 'spatial',
-                    speed: 'default'
-                })
-            ]))
-            .then(() => animateSequence(socialLinks, KEYFRAMES.pop, { delay: 120 }, 48, {
-                scheme: 'expressive',
-                type: 'spatial',
-                speed: 'fast'
-            }))
-            .catch((error) => {
-                if (error) {
-                    console.error('SiteAnimations: Home animation sequence failed', error);
-                }
-            });
+        const chipSequence = animateSequence(chipElements, KEYFRAMES.pop, { delay: timeline.chipsDelay }, timeline.chipGap, {
+            scheme: 'expressive',
+            type: 'spatial',
+            speed: 'fast'
+        });
+
+        const supportingSequence = animateSequence(supportingSections, KEYFRAMES.subtleRise, { delay: timeline.sectionsDelay }, timeline.sectionGap, {
+            scheme: 'expressive',
+            type: 'spatial',
+            speed: 'default'
+        });
+
+        const socialSequence = animateSequence(socialLinks, KEYFRAMES.pop, { delay: timeline.socialDelay }, timeline.socialGap, {
+            scheme: 'expressive',
+            type: 'spatial',
+            speed: 'fast'
+        });
+
+        return Promise.all([
+            whenAnimationFinished(heroAnimation),
+            chipSequence,
+            supportingSequence,
+            socialSequence
+        ]).catch((error) => {
+            if (error) {
+                console.error('SiteAnimations: Home animation sequence failed', error);
+            }
+        });
     }
 
     function animateResume(container) {
