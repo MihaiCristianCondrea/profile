@@ -429,12 +429,27 @@ describe('RouterRoutes registry', () => {
       onLoad
     });
 
-    expect(registered).toEqual({
+    expect(registered).toEqual(expect.objectContaining({
       id: 'custom-route',
       path: 'pages/custom.html',
       title: 'Custom Route',
-      onLoad
-    });
+      onLoad,
+      metadata: expect.objectContaining({
+        description: expect.any(String),
+        canonicalSlug: 'custom-route',
+        openGraph: expect.objectContaining({
+          title: 'Custom Route',
+          description: expect.any(String)
+        }),
+        twitter: expect.objectContaining({
+          title: 'Custom Route',
+          description: expect.any(String)
+        })
+      })
+    }));
+
+    expect(Array.isArray(registered.metadata.keywords)).toBe(true);
+    expect(registered.metadata.keywords.length).toBeGreaterThan(0);
 
     expect(RouterRoutes.hasRoute('#custom-route')).toBe(true);
 
@@ -445,6 +460,11 @@ describe('RouterRoutes registry', () => {
       title: 'Custom Route',
       onLoad
     });
+    expect(storedRoute.metadata).toEqual(expect.objectContaining({
+      canonicalSlug: 'custom-route'
+    }));
+    expect(Array.isArray(storedRoute.metadata.keywords)).toBe(true);
+    expect(storedRoute.metadata.openGraph.title).toBe('Custom Route');
 
     expect(registered).not.toBe(storedRoute);
     expect(RouterRoutes.normalizeRouteId('  #custom-route ')).toBe('custom-route');
@@ -452,7 +472,12 @@ describe('RouterRoutes registry', () => {
     const allRoutes = RouterRoutes.getRoutes();
     expect(allRoutes).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ id: 'custom-route', path: 'pages/custom.html', title: 'Custom Route' })
+        expect.objectContaining({
+          id: 'custom-route',
+          path: 'pages/custom.html',
+          title: 'Custom Route',
+          metadata: expect.any(Object)
+        })
       ])
     );
   });
