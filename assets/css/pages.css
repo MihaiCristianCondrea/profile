@@ -883,7 +883,7 @@
 #termsOfServiceAppsPageContainer h2,
 #codeOfConductPageContainer h2 {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.75rem;
   line-height: 1.35;
   flex-wrap: wrap;
@@ -896,21 +896,26 @@
 #termsOfServiceAppsPageContainer h2::before,
 #codeOfConductPageContainer h2::before {
   counter-increment: privacySections;
-  content: url('../icons/privacy-section.svg') / 'Section '
-    counter(privacySections);
+  content: 'privacy_tip';
+  font-family: 'Material Symbols Outlined';
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+  font-size: 1.75rem;
+  line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
   flex-shrink: 0;
   border-radius: 999px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container-high);
-  padding: 0.35rem;
-  margin-top: 0.1rem;
-  color: var(--md-sys-color-primary);
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  box-shadow: 0 8px 24px rgba(61, 220, 132, 0.2);
   box-sizing: border-box;
 }
 
@@ -930,9 +935,9 @@
   #privacyPolicyAppsPageContainer h2::before,
   #termsOfServiceAppsPageContainer h2::before,
   #codeOfConductPageContainer h2::before {
-    width: 2.1rem;
-    height: 2.1rem;
-    padding: 0.25rem;
+    width: 2.35rem;
+    height: 2.35rem;
+    font-size: 1.5rem;
   }
 }
 
