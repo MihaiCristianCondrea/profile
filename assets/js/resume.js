@@ -1,5 +1,5 @@
 // Resume builder functionality
-export function createInputGroupElement({
+function createInputGroupElement({
     id,
     labelText,
     value = '',
@@ -40,7 +40,7 @@ export function createInputGroupElement({
 }
 
 // Real-time updates for form inputs
-export function setupRealtimeUpdates() {
+function setupRealtimeUpdates() {
     const set = (id, cb) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', cb);
@@ -66,7 +66,7 @@ export function setupRealtimeUpdates() {
     }
 }
 
-export function addListItem(sectionId, value = '') {
+function addListItem(sectionId, value = '') {
     const container = document.getElementById(`${sectionId}-form`);
     if (!container) return;
     const capitalName = sectionId.charAt(0).toUpperCase() + sectionId.slice(1, -1);
@@ -95,7 +95,7 @@ export function addListItem(sectionId, value = '') {
     updateList(sectionId);
 }
 
-export function addInterestItem(value = '', isProject = false) {
+function addInterestItem(value = '', isProject = false) {
     const container = document.getElementById('interests-form');
     const itemId = `interests-${Date.now()}`;
     const listItem = document.createElement('div');
@@ -134,12 +134,12 @@ export function addInterestItem(value = '', isProject = false) {
     updateList('interests');
 }
 
-export function removeListItem(itemId, sectionId) {
+function removeListItem(itemId, sectionId) {
     document.getElementById(itemId).remove();
     updateList(sectionId);
 }
 
-export function updateList(sectionId) {
+function updateList(sectionId) {
     const listElement = document.querySelector(`#resume-${sectionId} ul`);
     listElement.innerHTML = '';
     if (sectionId === 'interests') {
@@ -163,7 +163,7 @@ export function updateList(sectionId) {
     }
 }
 
-export function addComplexItem(sectionId, data = {}) {
+function addComplexItem(sectionId, data = {}) {
     const container = document.getElementById(`${sectionId}-form`);
     const itemId = `${sectionId}-${Date.now()}`;
     const formWrapper = document.createElement('div');
@@ -275,12 +275,12 @@ export function addComplexItem(sectionId, data = {}) {
 const addWorkItem = (t,c,s,e,d) => addComplexItem('work',{title:t,company:c,start:s,end:e,desc:d});
 const addEducationItem = (d,s,st,e) => addComplexItem('education',{degree:d,school:s,start:st,end:e});
 
-export function removeItem(itemId, sectionId) {
+function removeItem(itemId, sectionId) {
     document.getElementById(itemId).remove();
     updateComplexList(sectionId);
 }
 
-export function updateComplexList(sectionId) {
+function updateComplexList(sectionId) {
     const container = document.getElementById(`resume-${sectionId}`);
     const h2 = container.querySelector('h2');
     container.innerHTML = '';
@@ -317,7 +317,7 @@ export function updateComplexList(sectionId) {
 }
 
 
-export function initialize() {
+function initialize() {
     document.getElementById('name').value = 'Mihai-Cristian Condrea';
     document.getElementById('job-title').value = 'Android Developer';
     document.getElementById('phone').value = '+40751029091';
@@ -341,7 +341,7 @@ export function initialize() {
     document.getElementById('photo-preview').style.backgroundImage = "url('assets/images/profile/cv_profile_pic.png')";
 }
 
-export function getResumeEditParam() {
+function getResumeEditParam() {
     if (typeof window === 'undefined' || !window.location) {
         return null;
     }
@@ -374,7 +374,7 @@ export function getResumeEditParam() {
     return null;
 }
 
-export function setupMode() {
+function setupMode() {
     const editValue = getResumeEditParam();
     const editMode = typeof editValue === 'string' && editValue.toLowerCase() === 'true';
     const form = document.querySelector('#resumePage .form-container');
@@ -383,7 +383,7 @@ export function setupMode() {
     }
 }
 
-export function setupResumeControls() {
+function setupResumeControls() {
     document.querySelectorAll('[data-add-list]').forEach(button => {
         if (button.dataset.resumeBound === 'true') return;
         const sectionId = button.dataset.addList;
@@ -413,7 +413,7 @@ export function setupResumeControls() {
     }
 }
 
-export function prepareAndPrintResume() {
+function prepareAndPrintResume() {
     const cvElement = document.getElementById('resume-preview');
     if (!cvElement) {
         window.print();
@@ -446,7 +446,7 @@ export function prepareAndPrintResume() {
 
 let markedLoadPromise;
 
-export function ensureMarkedLoaded() {
+function ensureMarkedLoaded() {
     if (window.marked) return Promise.resolve();
     if (markedLoadPromise) return markedLoadPromise;
     markedLoadPromise = new Promise(resolve => {
@@ -459,7 +459,7 @@ export function ensureMarkedLoaded() {
     return markedLoadPromise;
 }
 
-export function ensureResumeStyles() {
+function ensureResumeStyles() {
     const head = document.head;
     if (!document.querySelector('link[href="assets/css/resume.css"]')) {
         const link = document.createElement('link');
@@ -476,7 +476,7 @@ export function ensureResumeStyles() {
     }
 }
 
-export function initResumePage() {
+function initResumePage() {
     ensureResumeStyles();
     ensureMarkedLoaded().then(() => {
         setupResumeControls();
@@ -485,9 +485,3 @@ export function initResumePage() {
         document.fonts.ready.then(initialize);
     });
 }
-
-export default {
-  initResumePage,
-  ensureMarkedLoaded,
-  ensureResumeStyles
-};

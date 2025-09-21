@@ -1,10 +1,10 @@
-import {
+const {
   getNestedValue,
   extractFirstImageFromHtml,
   getDynamicElement,
   showPageLoadingOverlay,
   hidePageLoadingOverlay
-} from '../assets/js/core/utils.js';
+} = require('../assets/js/utils.js');
 
 describe('getNestedValue', () => {
   test('retrieves nested values with dot notation', () => {
