@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Mihai's Profile</title>
     <meta
       name="description"
@@ -15,10 +12,7 @@
       name="keywords"
       content="Mihai Cristian Condrea, Android developer portfolio, Jetpack Compose apps, Kotlin UI design, Material You projects"
     />
-    <meta
-      property="og:title"
-      content="Mihai-Cristian Condrea | Android Developer Portfolio"
-    />
+    <meta property="og:title" content="Mihai-Cristian Condrea | Android Developer Portfolio" />
     <meta
       property="og:description"
       content="Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools."
@@ -28,24 +22,12 @@
       property="og:image"
       content="https://mihaicristiancondrea.github.io/profile/assets/images/profile/cv_profile_pic.png"
     />
-    <meta
-      property="og:image:alt"
-      content="Portrait of Android developer Mihai-Cristian Condrea"
-    />
-    <meta
-      property="og:url"
-      content="https://mihaicristiancondrea.github.io/profile/"
-    />
+    <meta property="og:image:alt" content="Portrait of Android developer Mihai-Cristian Condrea" />
+    <meta property="og:url" content="https://mihaicristiancondrea.github.io/profile/" />
     <meta property="og:site_name" content="Mihai's Profile" />
-    <link
-      rel="canonical"
-      href="https://mihaicristiancondrea.github.io/profile/"
-    />
+    <link rel="canonical" href="https://mihaicristiancondrea.github.io/profile/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Mihai-Cristian Condrea | Android Developer Portfolio"
-    />
+    <meta name="twitter:title" content="Mihai-Cristian Condrea | Android Developer Portfolio" />
     <meta
       name="twitter:description"
       content="Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools."
@@ -105,8 +87,16 @@
   </head>
 
   <body class="bg-surface-container-lowest">
+    <a class="skip-link" href="#pageContentArea">Skip to main content</a>
     <div id="drawerOverlay" class="drawer-overlay" aria-hidden="true"></div>
-    <div id="pageLoadingOverlay" class="page-loading-overlay">
+    <div
+      id="pageLoadingOverlay"
+      class="page-loading-overlay"
+      role="status"
+      aria-live="polite"
+      aria-busy="false"
+      aria-hidden="true"
+    >
       <md-circular-progress indeterminate></md-circular-progress>
     </div>
 
@@ -120,22 +110,14 @@
       >
         <div class="drawer-header">
           <h2>Menu</h2>
-          <md-icon-button
-            id="closeDrawerButton"
-            aria-label="Close menu"
-            aria-controls="navDrawer"
-          >
-            <md-icon
-              ><span class="material-symbols-outlined">close</span></md-icon
-            >
+          <md-icon-button id="closeDrawerButton" aria-label="Close menu" aria-controls="navDrawer">
+            <md-icon><span class="material-symbols-outlined">close</span></md-icon>
           </md-icon-button>
         </div>
         <div class="drawer-content">
           <md-list>
             <md-list-item href="#home" id="navHomeLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">home</span></md-icon
-              >
+              <md-icon slot="start"><span class="material-symbols-outlined">home</span></md-icon>
               <div slot="headline">Home</div>
             </md-list-item>
             <md-list-item
@@ -143,28 +125,20 @@
               target="_blank"
               rel="noopener noreferrer"
             >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">article</span></md-icon
-              >
+              <md-icon slot="start"><span class="material-symbols-outlined">article</span></md-icon>
               <div slot="headline">Blogs</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >open_in_new</span
-                ></md-icon
-              >
+              <md-icon slot="end">
+                <span class="material-symbols-outlined">open_in_new</span>
+              </md-icon>
             </md-list-item>
             <md-list-item href="#songs" id="navSongsLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined"
-                  >music_note</span
-                ></md-icon
-              >
+              <md-icon slot="start">
+                <span class="material-symbols-outlined">music_note</span>
+              </md-icon>
               <div slot="headline">Music</div>
             </md-list-item>
             <md-list-item href="#projects" id="navProjectsLink">
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">work</span></md-icon
-              >
+              <md-icon slot="start"><span class="material-symbols-outlined">work</span></md-icon>
               <div slot="headline">Projects</div>
             </md-list-item>
             <md-divider></md-divider>
@@ -175,22 +149,13 @@
               aria-expanded="true"
               class="expanded"
             >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">info</span></md-icon
-              >
+              <md-icon slot="start"><span class="material-symbols-outlined">info</span></md-icon>
               <div slot="headline">Profile</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >expand_more</span
-                ></md-icon
-              >
+              <md-icon slot="end">
+                <span class="material-symbols-outlined">expand_more</span>
+              </md-icon>
             </md-list-item>
-            <div
-              class="nested-list open"
-              id="aboutContent"
-              role="group"
-              aria-hidden="false"
-            >
+            <div class="nested-list open" id="aboutContent" role="group" aria-hidden="false">
               <md-list>
                 <md-list-item href="#contact" id="navContactLink">
                   <div slot="headline">Contact</div>
@@ -208,22 +173,13 @@
               aria-expanded="true"
               class="expanded"
             >
-              <md-icon slot="start"
-                ><span class="material-symbols-outlined">apps</span></md-icon
-              >
+              <md-icon slot="start"><span class="material-symbols-outlined">apps</span></md-icon>
               <div slot="headline">Android Apps</div>
-              <md-icon slot="end"
-                ><span class="material-symbols-outlined"
-                  >expand_more</span
-                ></md-icon
-              >
+              <md-icon slot="end">
+                <span class="material-symbols-outlined">expand_more</span>
+              </md-icon>
             </md-list-item>
-            <div
-              class="nested-list open"
-              id="androidAppsContent"
-              role="group"
-              aria-hidden="false"
-            >
+            <div class="nested-list open" id="androidAppsContent" role="group" aria-hidden="false">
               <md-list>
                 <md-list-item href="#ads-help-center" id="navAdsHelpCenterLink">
                   <div slot="headline">Ads Help Center</div>
@@ -245,38 +201,14 @@
         <div class="drawer-footer">
           <div class="theme-toggle-title">Theme</div>
           <div class="theme-button-container">
-            <md-icon-button
-              id="lightThemeButton"
-              aria-label="Light theme"
-              data-theme="light"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >light_mode</span
-                ></md-icon
-              >
+            <md-icon-button id="lightThemeButton" aria-label="Light theme" data-theme="light">
+              <md-icon><span class="material-symbols-outlined">light_mode</span></md-icon>
             </md-icon-button>
-            <md-icon-button
-              id="darkThemeButton"
-              aria-label="Dark theme"
-              data-theme="dark"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >dark_mode</span
-                ></md-icon
-              >
+            <md-icon-button id="darkThemeButton" aria-label="Dark theme" data-theme="dark">
+              <md-icon><span class="material-symbols-outlined">dark_mode</span></md-icon>
             </md-icon-button>
-            <md-icon-button
-              id="autoThemeButton"
-              aria-label="Auto theme"
-              data-theme="auto"
-            >
-              <md-icon
-                ><span class="material-symbols-outlined"
-                  >brightness_auto</span
-                ></md-icon
-              >
+            <md-icon-button id="autoThemeButton" aria-label="Auto theme" data-theme="auto">
+              <md-icon><span class="material-symbols-outlined">brightness_auto</span></md-icon>
             </md-icon-button>
           </div>
           <div class="drawer-legal-links text-gray-500/90">
@@ -288,22 +220,24 @@
       </md-navigation-drawer>
     </nav>
 
-    <md-top-app-bar id="topAppBar" data-drawer-inert-target>
-      <md-icon-button
-        id="menuButton"
-        slot="navigationIcon"
-        aria-label="Open menu"
-        aria-controls="navDrawer"
-        aria-expanded="false"
-        aria-haspopup="dialog"
-      >
-        <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
-      </md-icon-button>
-      <span slot="headline" id="appBarHeadline">Mihai's Profile</span>
-    </md-top-app-bar>
+    <header>
+      <md-top-app-bar id="topAppBar" data-drawer-inert-target>
+        <md-icon-button
+          id="menuButton"
+          slot="navigationIcon"
+          aria-label="Open menu"
+          aria-controls="navDrawer"
+          aria-expanded="false"
+          aria-haspopup="dialog"
+        >
+          <md-icon><span class="material-symbols-outlined">menu</span></md-icon>
+        </md-icon-button>
+        <span slot="headline" id="appBarHeadline">Mihai's Profile</span>
+      </md-top-app-bar>
+    </header>
 
-    <div class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
-      <div id="mainContentPage" class="page-section active">
+    <main class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
+      <section id="mainContentPage" class="page-section active">
         <md-filled-card class="profile-card">
           <div class="card-content">
             <div class="profile-header">
@@ -320,20 +254,19 @@
             </div>
             <p class="profile-about">
               Part-time Android Developer at
-              <a
-                href="https://www.digi.ro/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Digi România</a
-              >
+              <a href="https://www.digi.ro/" target="_blank" rel="noopener noreferrer">
+                Digi România
+              </a>
               and creator of
               <a
                 href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner"
                 target="_blank"
                 rel="noopener noreferrer"
-                >Smart Cleaner for Android</a
-              >. Passionate about UI/UX design, animations, and building great
-              mobile experiences using Kotlin and Jetpack Compose.
+              >
+                Smart Cleaner for Android
+              </a>
+              . Passionate about UI/UX design, animations, and building great mobile experiences
+              using Kotlin and Jetpack Compose.
             </p>
             <h3 class="section-title">Skills & Technologies</h3>
             <md-chip-set>
@@ -356,25 +289,14 @@
             <div class="achievement-content">
               <h3>GitHub Committers Ranking</h3>
               <p class="achievement-rank" id="committers-rank">—</p>
-              <p
-                class="achievement-status"
-                id="committers-status"
-                role="status"
-                aria-live="polite"
-              >
+              <p class="achievement-status" id="committers-status" role="status" aria-live="polite">
                 Checking latest ranking...
               </p>
-              <p class="achievement-updated" id="committers-updated">
-                Last updated: —
-              </p>
+              <p class="achievement-updated" id="committers-updated">Last updated: —</p>
             </div>
           </div>
           <div class="achievement-actions">
-            <a
-              href="https://committers.top/romania"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://committers.top/romania" target="_blank" rel="noopener noreferrer">
               <md-text-button>
                 <md-icon slot="icon">open_in_new</md-icon>
                 View ranking
@@ -396,17 +318,11 @@
               My Apps on Google Play
             </md-outlined-button>
           </a>
-          <a
-            href="https://g.dev/Mihai-Cristian-Condrea"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://g.dev/Mihai-Cristian-Condrea" target="_blank" rel="noopener noreferrer">
             <md-outlined-button>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined"
-                  >code_blocks</span
-                ></md-icon
-              >
+              <md-icon slot="icon">
+                <span class="material-symbols-outlined">code_blocks</span>
+              </md-icon>
               Google Developer Profile
             </md-outlined-button>
           </a>
@@ -421,6 +337,7 @@
             frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
+            title="By Design Podcast audio player"
           ></iframe>
         </div>
 
@@ -433,18 +350,12 @@
             </div>
           </div>
           <div class="view-all-posts-container">
-            <a
-              href="https://d4rk7355608.blogspot.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://d4rk7355608.blogspot.com/" target="_blank" rel="noopener noreferrer">
               <md-outlined-button trailing-icon>
                 View All Posts
-                <md-icon slot="icon" aria-hidden="true"
-                  ><span class="material-symbols-outlined"
-                    >arrow_forward</span
-                  ></md-icon
-                >
+                <md-icon slot="icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">arrow_forward</span>
+                </md-icon>
               </md-outlined-button>
             </a>
           </div>
@@ -454,10 +365,9 @@
         <md-elevated-card class="contribute-card">
           <h3>Do you like my projects?</h3>
           <p>
-            Your support helps me dedicate more time to developing and
-            maintaining open-source apps and libraries. You can show your
-            appreciation by opening a short ad link, every visit makes a
-            difference. Thank you for supporting independent development.
+            Your support helps me dedicate more time to developing and maintaining open-source apps
+            and libraries. You can show your appreciation by opening a short ad link, every visit
+            makes a difference. Thank you for supporting independent development.
           </p>
 
           <div class="contribute-actions">
@@ -467,9 +377,7 @@
               rel="noopener noreferrer"
             >
               <md-filled-button>
-                <md-icon slot="icon" class="material-symbols-outlined"
-                  >volunteer_activism</md-icon
-                >
+                <md-icon slot="icon" class="material-symbols-outlined">volunteer_activism</md-icon>
                 Open Short Ad
               </md-filled-button>
             </a>
@@ -527,9 +435,7 @@
             title="Email"
           >
             <md-icon-button>
-              <md-icon
-                ><span class="material-symbols-outlined">email</span></md-icon
-              >
+              <md-icon><span class="material-symbols-outlined">email</span></md-icon>
             </md-icon-button>
           </a>
           <a
@@ -566,33 +472,31 @@
             </md-icon-button>
           </a>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
 
     <footer class="app-footer">
       <span id="copyright-message"></span>
     </footer>
 
-    <script src="assets/js/utils.js" defer></script>
-    <script src="assets/js/theme.js" defer></script>
-    <script src="assets/js/navigationDrawer.js" defer></script>
-    <script src="assets/js/bloggerApi.js" defer></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"
-      defer
-    ></script>
-    <script src="assets/js/resume.js" defer></script>
-    <script src="assets/js/contact.js" defer></script>
-    <script src="assets/js/songs.js" defer></script>
-    <script src="assets/js/projects.js" defer></script>
-    <script src="assets/js/router/routes.js" defer></script>
-    <script src="assets/js/router/animation.js" defer></script>
-    <script src="assets/js/animations.js" defer></script>
-    <script src="assets/js/router/contentLoader.js" defer></script>
-    <script src="assets/js/metadataManager.js" defer></script>
-    <script src="assets/js/router/history.js" defer></script>
-    <script src="assets/js/router.js" defer></script>
-    <script src="assets/js/committers.js" defer></script>
-    <script src="assets/js/app.js" defer></script>
+    <script src="assets/js/modules/moduleRegistry.js" defer></script>
+    <script src="assets/js/modules/utils.js" defer></script>
+    <script src="assets/js/modules/metadata.js" defer></script>
+    <script src="assets/js/modules/theme.js" defer></script>
+    <script src="assets/js/modules/navigationDrawer.js" defer></script>
+    <script src="assets/js/modules/animations.js" defer></script>
+    <script src="assets/js/modules/bloggerApi.js" defer></script>
+    <script src="assets/js/modules/committers.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js" defer></script>
+    <script src="assets/js/pages/resume.js" defer></script>
+    <script src="assets/js/pages/contact.js" defer></script>
+    <script src="assets/js/pages/songs.js" defer></script>
+    <script src="assets/js/pages/projects.js" defer></script>
+    <script src="assets/js/modules/router/routes.js" defer></script>
+    <script src="assets/js/modules/router/animation.js" defer></script>
+    <script src="assets/js/modules/router/contentLoader.js" defer></script>
+    <script src="assets/js/modules/router/history.js" defer></script>
+    <script src="assets/js/modules/router/index.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
   </body>
 </html>
