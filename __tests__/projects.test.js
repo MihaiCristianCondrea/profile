@@ -9,12 +9,12 @@ describe('ensureProjectsMarkedLoaded', () => {
   test('appends the marked script at most once', async () => {
     const appendSpy = jest.spyOn(document.head, 'appendChild');
     let appendedScript;
-    appendSpy.mockImplementation(node => {
+    appendSpy.mockImplementation((node) => {
       appendedScript = node;
       return node;
     });
 
-    const { ensureProjectsMarkedLoaded } = require('../assets/js/projects.js');
+    const { ensureProjectsMarkedLoaded } = require('../assets/js/pages/projects.js');
 
     const firstCall = ensureProjectsMarkedLoaded();
     expect(appendSpy).toHaveBeenCalledTimes(1);
@@ -63,7 +63,7 @@ describe('initProjectsPage interactions', () => {
         <div data-md>Sample **markdown**</div>
       </div>
     `;
-    window.marked = { parse: jest.fn(text => `<p>${text}</p>`) };
+    window.marked = { parse: jest.fn((text) => `<p>${text}</p>`) };
   });
 
   afterEach(() => {
@@ -78,14 +78,14 @@ describe('initProjectsPage interactions', () => {
     const animationResolvers = [];
     projectsList.animate = jest.fn(() => {
       let resolver;
-      const finished = new Promise(resolve => {
+      const finished = new Promise((resolve) => {
         resolver = resolve;
       });
       animationResolvers.push(resolver);
       return { finished };
     });
 
-    const { initProjectsPage } = require('../assets/js/projects.js');
+    const { initProjectsPage } = require('../assets/js/pages/projects.js');
     await initProjectsPage();
 
     const markdownElement = document.querySelector('[data-md]');
@@ -130,7 +130,7 @@ describe('initProjectsPage interactions', () => {
     expect(projectsList.animate).toHaveBeenCalledTimes(2);
 
     const firstSlides = firstCarousel.querySelectorAll('.carousel-slide');
-    firstSlides.forEach(slide => {
+    firstSlides.forEach((slide) => {
       slide.dispatchEvent(new window.Event('load'));
     });
     await Promise.resolve();

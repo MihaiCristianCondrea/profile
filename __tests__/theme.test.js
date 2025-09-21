@@ -1,17 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const vm = require('vm');
-
-const themeSource = fs.readFileSync(
-  path.resolve(__dirname, '../assets/js/theme.js'),
-  'utf-8'
-);
-const themeScript = new vm.Script(themeSource, { filename: 'theme.js' });
+const moduleRegistryPath = require.resolve('../assets/js/modules/moduleRegistry.js');
+const themeModulePath = require.resolve('../assets/js/modules/theme.js');
 
 function createLocalStorageMock(initial = {}) {
-  let store = Object.keys(initial).reduce((acc, key) => {
-    acc[key] = String(initial[key]);
-    return acc;
+  let store = Object.keys(initial).reduce((accumulator, key) => {
+    accumulator[key] = String(initial[key]);
+    return accumulator;
   }, {});
 
   return {
@@ -27,8 +20,7 @@ function createLocalStorageMock(initial = {}) {
     clear: jest.fn(() => {
       store = {};
     }),
-    peek: (key) =>
-      Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null,
+    peek: (key) => (Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null)
   };
 }
 
@@ -42,20 +34,22 @@ function createMatchMediaMock(initialMatches = false) {
       return matches;
     },
     addEventListener: jest.fn((event, listener) => {
-      if (event === 'change') listeners.add(listener);
+      if (event === 'change') {
+        listeners.add(listener);
+      }
     }),
     removeEventListener: jest.fn((event, listener) => {
-      if (event === 'change') listeners.delete(listener);
-    }),
+      if (event === 'change') {
+        listeners.delete(listener);
+      }
+    })
   };
 
   const matchMedia = jest.fn(() => mediaQueryList);
 
   matchMedia.setMatches = (value) => {
     matches = value;
-    listeners.forEach((listener) =>
-      listener({ matches: value, media: mediaQueryList.media })
-    );
+    listeners.forEach((listener) => listener({ matches: value, media: mediaQueryList.media }));
   };
 
   matchMedia.getListenerCount = () => listeners.size;
@@ -65,6 +59,7 @@ function createMatchMediaMock(initialMatches = false) {
 }
 
 function setupThemeTest({ savedTheme, mediaMatches = false } = {}) {
+  jest.resetModules();
   document.body.innerHTML = `
     <button id="lightThemeButton" data-theme="light"></button>
     <button id="darkThemeButton" data-theme="dark"></button>
@@ -72,112 +67,123 @@ function setupThemeTest({ savedTheme, mediaMatches = false } = {}) {
   `;
   document.documentElement.className = '';
 
-  const initialStore = {};
-  if (savedTheme !== undefined) {
-    initialStore.theme = savedTheme;
-  }
-
+  const initialStore = savedTheme !== undefined ? { theme: savedTheme } : {};
   const localStorageMock = createLocalStorageMock(initialStore);
   const matchMediaMock = createMatchMediaMock(mediaMatches);
 
-  const windowMock = {
-    document,
-    matchMedia: matchMediaMock,
-    localStorage: localStorageMock,
-  };
+  const originalMatchMedia = window.matchMedia;
+  const originalLocalStorage = window.localStorage;
 
-  const context = {
-    window: windowMock,
-    document,
-    localStorage: localStorageMock,
-    getDynamicElement: (id) => document.getElementById(id),
-    console,
-  };
+  Object.defineProperty(window, 'matchMedia', {
+    configurable: true,
+    value: matchMediaMock
+  });
+  Object.defineProperty(window, 'localStorage', {
+    configurable: true,
+    value: localStorageMock
+  });
 
-  windowMock.getDynamicElement = context.getDynamicElement;
-
-  const vmContext = vm.createContext(context);
-  themeScript.runInContext(vmContext);
+  const ModuleRegistry = require(moduleRegistryPath);
+  ModuleRegistry.reset();
+  const themeModule = require(themeModulePath);
 
   const buttons = {
     light: document.getElementById('lightThemeButton'),
     dark: document.getElementById('darkThemeButton'),
-    auto: document.getElementById('autoThemeButton'),
+    auto: document.getElementById('autoThemeButton')
   };
 
-  return {
-    context: vmContext,
-    localStorageMock,
-    matchMediaMock,
-    buttons,
+  const restore = () => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: originalMatchMedia
+    });
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      value: originalLocalStorage
+    });
   };
+
+  return { themeModule, localStorageMock, matchMediaMock, buttons, restore };
 }
 
-describe('theme.js', () => {
-  beforeEach(() => {
+describe('theme module', () => {
+  afterEach(() => {
     document.body.innerHTML = '';
     document.documentElement.className = '';
   });
 
-  test('initTheme applies the saved preference and wires up the buttons', () => {
-    const { context, localStorageMock, matchMediaMock, buttons } = setupThemeTest({
+  test('initTheme applies saved preference and wires up the buttons', () => {
+    const resources = setupThemeTest({
       savedTheme: 'dark',
-      mediaMatches: false,
+      mediaMatches: false
     });
 
-    context.initTheme();
+    const { themeModule, localStorageMock, matchMediaMock, buttons, restore } = resources;
 
-    expect(localStorageMock.getItem).toHaveBeenCalledWith('theme');
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(buttons.dark.classList.contains('selected')).toBe(true);
-    expect(buttons.light.classList.contains('selected')).toBe(false);
-    expect(buttons.auto.classList.contains('selected')).toBe(false);
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
-    expect(matchMediaMock).toHaveBeenCalledWith('(prefers-color-scheme: dark)');
-    expect(matchMediaMock.mediaQueryList.addEventListener).toHaveBeenCalledWith(
-      'change',
-      expect.any(Function)
-    );
+    try {
+      themeModule.initTheme();
 
-    buttons.light.dispatchEvent(new global.window.Event('click', { bubbles: true }));
+      expect(localStorageMock.getItem).toHaveBeenCalledWith('theme');
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(buttons.dark.classList.contains('selected')).toBe(true);
+      expect(buttons.light.classList.contains('selected')).toBe(false);
+      expect(buttons.auto.classList.contains('selected')).toBe(false);
+      expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
+      expect(matchMediaMock).toHaveBeenCalledWith('(prefers-color-scheme: dark)');
+      expect(matchMediaMock.mediaQueryList.addEventListener).toHaveBeenCalledWith(
+        'change',
+        expect.any(Function)
+      );
 
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(buttons.light.classList.contains('selected')).toBe(true);
-    expect(buttons.dark.classList.contains('selected')).toBe(false);
-    expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'light');
-    expect(localStorageMock.peek('theme')).toBe('light');
+      buttons.light.dispatchEvent(new window.Event('click', { bubbles: true }));
+
+      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(buttons.light.classList.contains('selected')).toBe(true);
+      expect(buttons.dark.classList.contains('selected')).toBe(false);
+      expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'light');
+      expect(localStorageMock.peek('theme')).toBe('light');
+    } finally {
+      restore();
+    }
   });
 
-  test('applyTheme("auto") tracks media preference changes and keeps storage in sync', () => {
-    const { context, localStorageMock, matchMediaMock, buttons } = setupThemeTest({
+  test('applyTheme("auto") responds to media preference changes and keeps storage in sync', () => {
+    const resources = setupThemeTest({
       savedTheme: 'auto',
-      mediaMatches: false,
+      mediaMatches: false
     });
 
-    context.initTheme();
+    const { themeModule, localStorageMock, matchMediaMock, buttons, restore } = resources;
 
-    expect(buttons.auto.classList.contains('selected')).toBe(true);
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(localStorageMock.peek('theme')).toBe('auto');
+    try {
+      themeModule.initTheme();
 
-    const baselineSetCalls = localStorageMock.setItem.mock.calls.length;
-    const baselineGetCalls = localStorageMock.getItem.mock.calls.length;
+      expect(buttons.auto.classList.contains('selected')).toBe(true);
+      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(localStorageMock.peek('theme')).toBe('auto');
 
-    matchMediaMock.setMatches(true);
+      const baselineSetCalls = localStorageMock.setItem.mock.calls.length;
+      const baselineGetCalls = localStorageMock.getItem.mock.calls.length;
 
-    expect(localStorageMock.getItem.mock.calls.length).toBe(baselineGetCalls + 1);
-    expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(buttons.auto.classList.contains('selected')).toBe(true);
-    expect(localStorageMock.setItem.mock.calls.length).toBe(baselineSetCalls + 1);
-    expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'auto');
-    expect(localStorageMock.peek('theme')).toBe('auto');
+      matchMediaMock.setMatches(true);
 
-    matchMediaMock.setMatches(false);
+      expect(localStorageMock.getItem.mock.calls.length).toBe(baselineGetCalls + 1);
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
+      expect(buttons.auto.classList.contains('selected')).toBe(true);
+      expect(localStorageMock.setItem.mock.calls.length).toBe(baselineSetCalls + 1);
+      expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'auto');
+      expect(localStorageMock.peek('theme')).toBe('auto');
 
-    expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(buttons.auto.classList.contains('selected')).toBe(true);
-    expect(localStorageMock.setItem.mock.calls.length).toBe(baselineSetCalls + 2);
-    expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'auto');
-    expect(localStorageMock.peek('theme')).toBe('auto');
+      matchMediaMock.setMatches(false);
+
+      expect(document.documentElement.classList.contains('dark')).toBe(false);
+      expect(buttons.auto.classList.contains('selected')).toBe(true);
+      expect(localStorageMock.setItem.mock.calls.length).toBe(baselineSetCalls + 2);
+      expect(localStorageMock.setItem).toHaveBeenLastCalledWith('theme', 'auto');
+      expect(localStorageMock.peek('theme')).toBe('auto');
+    } finally {
+      restore();
+    }
   });
 });
