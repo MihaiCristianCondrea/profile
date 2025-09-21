@@ -135,7 +135,8 @@ md-chip-set {
 md-assist-chip {
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
-  --md-assist-chip-label-text-font: 'Poppins', sans-serif;
+  --md-assist-chip-label-text-font: 'JYMPDD+ProductSans-Regular',
+    'Poppins', sans-serif;
 }
 
 /* --- Achievement Card --- */
@@ -647,7 +648,8 @@ md-list-item {
   --md-list-item-supporting-text-color: var(--app-secondary-text-color);
   --md-list-item-leading-icon-color: var(--app-text-color);
   --md-list-item-trailing-icon-color: var(--app-text-color);
-  --md-list-item-label-text-font: 'Poppins', sans-serif;
+  --md-list-item-label-text-font: 'JYMPDD+ProductSans-Regular',
+    'Poppins', sans-serif;
 }
 
 .navigation-drawer md-list {
@@ -667,7 +669,8 @@ md-list-item {
   --md-list-item-supporting-text-color: var(--md-sys-color-on-surface-variant);
   --md-list-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
   --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
-  --md-list-item-label-text-font: 'Poppins', sans-serif;
+  --md-list-item-label-text-font: 'JYMPDD+ProductSans-Regular',
+    'Poppins', sans-serif;
   --md-list-item-leading-space: 16px;
   --md-list-item-trailing-space: 16px;
   --md-list-item-one-line-container-height: 56px;

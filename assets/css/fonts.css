@@ -1,4 +1,23 @@
 @font-face {
+  font-family: 'JYMPDD+ProductSans-Regular';
+  src: url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.eot');
+  src:
+    url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.eot?#iefix')
+      format('embedded-opentype'),
+    url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.woff2')
+      format('woff2'),
+    url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.woff')
+      format('woff'),
+    url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.ttf')
+      format('truetype'),
+    url('https://db.onlinewebfonts.com/t/ab0f2f4d22ea179f449ca6a60f5e599c.svg#JYMPDD+ProductSans-Regular')
+      format('svg');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Material Symbols Outlined';
   font-style: normal;
   font-weight: 100 700;
