@@ -1,23 +1,9 @@
-const globalScope = typeof window !== 'undefined' ? window : globalThis;
-const ModuleRegistry =
-  typeof module === 'object' && typeof module.exports === 'object'
-    ? require('../modules/moduleRegistry.js')
-    : globalScope.ModuleRegistry;
-
-if (!ModuleRegistry || typeof ModuleRegistry.register !== 'function') {
-  throw new Error('Projects page module requires ModuleRegistry.');
-}
-
-const AnimationsModule = ModuleRegistry.has('animations')
-  ? ModuleRegistry.require('animations')
-  : globalScope.SiteAnimations || null;
-
 let markedLoadPromiseProjects;
 
 function ensureProjectsMarkedLoaded() {
   if (window.marked) return Promise.resolve();
   if (markedLoadPromiseProjects) return markedLoadPromiseProjects;
-  markedLoadPromiseProjects = new Promise((resolve) => {
+  markedLoadPromiseProjects = new Promise(resolve => {
     const script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
     script.onload = resolve;
@@ -28,17 +14,16 @@ function ensureProjectsMarkedLoaded() {
 }
 
 function resolveProjectsEasing(preferred, fallback) {
-  const animationsApi = AnimationsModule;
+  const animationsApi = typeof SiteAnimations !== 'undefined' && SiteAnimations ? SiteAnimations : null;
   if (animationsApi && typeof animationsApi.resolveEasing === 'function') {
     return animationsApi.resolveEasing(preferred, fallback);
   }
 
-  const css =
-    typeof CSS !== 'undefined' && CSS && typeof CSS.supports === 'function'
-      ? CSS
-      : typeof window !== 'undefined' && window.CSS && typeof window.CSS.supports === 'function'
-        ? window.CSS
-        : null;
+  const css = (typeof CSS !== 'undefined' && CSS && typeof CSS.supports === 'function')
+    ? CSS
+    : (typeof window !== 'undefined' && window.CSS && typeof window.CSS.supports === 'function'
+      ? window.CSS
+      : null);
 
   if (preferred && css && css.supports('animation-timing-function', 'linear(0,0.5,1)')) {
     return preferred;
@@ -49,7 +34,7 @@ function resolveProjectsEasing(preferred, fallback) {
 
 function initProjectsPage() {
   return ensureProjectsMarkedLoaded().then(() => {
-    document.querySelectorAll('#projectsPageContainer [data-md]').forEach((el) => {
+    document.querySelectorAll('#projectsPageContainer [data-md]').forEach(el => {
       if (window.marked) {
         el.innerHTML = marked.parse(el.textContent.trim());
       }
@@ -58,7 +43,7 @@ function initProjectsPage() {
     const tabs = document.querySelectorAll('#projectsFilterTabs md-primary-tab');
     const projects = document.querySelectorAll('.project-entry');
     const projectsList = document.querySelector('.projects-list');
-    const animationsApi = AnimationsModule;
+    const animationsApi = typeof SiteAnimations !== 'undefined' && SiteAnimations ? SiteAnimations : null;
     const projectsListEasing = resolveProjectsEasing(
       animationsApi && animationsApi.easings ? animationsApi.easings.spring : null,
       'cubic-bezier(0.4,0,0.2,1)'
@@ -71,23 +56,17 @@ function initProjectsPage() {
           const dir = idx > activeTabIndex ? 1 : -1;
           try {
             await projectsList.animate(
-              [
-                { opacity: 1, transform: 'translateX(0)' },
-                { opacity: 0, transform: `translateX(${-20 * dir}px)` }
-              ],
+              [{ opacity: 1, transform: 'translateX(0)' }, { opacity: 0, transform: `translateX(${ -20 * dir }px)` }],
               { duration: 150, easing: projectsListEasing, fill: 'forwards' }
             ).finished;
           } catch (e) {}
         }
 
-        tabs.forEach((t) => t.removeAttribute('active'));
+        tabs.forEach(t => t.removeAttribute('active'));
         tab.setAttribute('active', '');
         const cat = tab.dataset.category;
-        projects.forEach((p) => {
-          if (cat === 'all') {
-            p.style.display = '';
-            return;
-          }
+        projects.forEach(p => {
+          if (cat === 'all') { p.style.display = ''; return; }
           p.style.display = p.dataset.category.includes(cat) ? '' : 'none';
         });
 
@@ -95,20 +74,17 @@ function initProjectsPage() {
           const dir = idx > activeTabIndex ? 1 : -1;
           try {
             await projectsList.animate(
-              [
-                { opacity: 0, transform: `translateX(${20 * dir}px)` },
-                { opacity: 1, transform: 'translateX(0)' }
-              ],
+              [{ opacity: 0, transform: `translateX(${20 * dir}px)` }, { opacity: 1, transform: 'translateX(0)' }],
               { duration: 150, easing: projectsListEasing, fill: 'forwards' }
             ).finished;
           } catch (e) {}
         }
         activeTabIndex = idx;
 
-        if (AnimationsModule && typeof AnimationsModule.animateProjectCards === 'function') {
+        if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateProjectCards === 'function') {
           try {
-            const visibleProjects = Array.from(projects).filter((p) => p.style.display !== 'none');
-            AnimationsModule.animateProjectCards(visibleProjects);
+            const visibleProjects = Array.from(projects).filter(p => p.style.display !== 'none');
+            SiteAnimations.animateProjectCards(visibleProjects);
           } catch (animationError) {
             console.error('Projects: Failed to animate filtered project cards.', animationError);
           }
@@ -116,7 +92,7 @@ function initProjectsPage() {
       });
     });
 
-    document.querySelectorAll('.carousel').forEach((carousel) => {
+    document.querySelectorAll('.carousel').forEach(carousel => {
       const slides = carousel.querySelectorAll('.carousel-slide');
       const prevBtn = carousel.querySelector('.prev');
       const nextBtn = carousel.querySelector('.next');
@@ -125,10 +101,7 @@ function initProjectsPage() {
       const loading = document.createElement('div');
       loading.classList.add('carousel-loading');
       const loader = document.createElement('dotlottie-wc');
-      loader.setAttribute(
-        'src',
-        'https://lottie.host/ed183b18-bffe-4e7f-a222-d554908e33b8/FhsNasBleM.lottie'
-      );
+      loader.setAttribute('src', 'https://lottie.host/ed183b18-bffe-4e7f-a222-d554908e33b8/FhsNasBleM.lottie');
       loader.setAttribute('autoplay', '');
       loader.setAttribute('loop', '');
       loader.setAttribute('speed', '1');
@@ -173,7 +146,7 @@ function initProjectsPage() {
         }
       };
 
-      slides.forEach((img) => {
+      slides.forEach(img => {
         if (img.complete) {
           hideLoading();
         } else {
@@ -187,18 +160,15 @@ function initProjectsPage() {
       slides.forEach((_, i) => {
         const dot = document.createElement('button');
         dot.classList.add('carousel-dot');
-        dot.addEventListener('click', () => {
-          index = i;
-          update();
-        });
+        dot.addEventListener('click', () => { index = i; update(); });
         dotsContainer.appendChild(dot);
       });
       carousel.appendChild(dotsContainer);
       const dots = dotsContainer.querySelectorAll('.carousel-dot');
 
       const update = () => {
-        slides.forEach((s, i) => s.classList.toggle('active', i === index));
-        dots.forEach((d, i) => d.classList.toggle('active', i === index));
+        slides.forEach((s,i) => s.classList.toggle('active', i===index));
+        dots.forEach((d,i) => d.classList.toggle('active', i===index));
       };
       update();
 
@@ -218,26 +188,23 @@ function initProjectsPage() {
       hideControls();
 
       prevBtn.addEventListener('click', () => {
-        index = (index - 1 + slides.length) % slides.length;
-        update();
+        index = (index - 1 + slides.length) % slides.length; update();
       });
       nextBtn.addEventListener('click', () => {
-        index = (index + 1) % slides.length;
-        update();
+        index = (index + 1) % slides.length; update();
       });
 
       const loadingFinished = () => {
         hideLoadingOverlay();
         showControls();
       };
+
     });
 
-    if (AnimationsModule && typeof AnimationsModule.animateProjectCards === 'function') {
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateProjectCards === 'function') {
       try {
-        const cardsToAnimate = projectsList
-          ? projectsList.querySelectorAll('.project-entry')
-          : projects;
-        AnimationsModule.animateProjectCards(cardsToAnimate);
+        const cardsToAnimate = projectsList ? projectsList.querySelectorAll('.project-entry') : projects;
+        SiteAnimations.animateProjectCards(cardsToAnimate);
       } catch (animationError) {
         console.error('Projects: Failed to animate project cards.', animationError);
       }
@@ -245,15 +212,12 @@ function initProjectsPage() {
   });
 }
 
-const ProjectsPageModule = { ensureProjectsMarkedLoaded, initProjectsPage };
+document.addEventListener('DOMContentLoaded', () => {
+  if (document.getElementById('projectsPageContainer')) {
+    initProjectsPage();
+  }
+});
 
-ModuleRegistry.register('page.projects', ProjectsPageModule, { alias: 'ProjectsPage' });
-
-if (typeof module === 'object' && typeof module.exports === 'object') {
-  module.exports = ProjectsPageModule;
-}
-
-if (typeof window !== 'undefined') {
-  window.ensureProjectsMarkedLoaded = ProjectsPageModule.ensureProjectsMarkedLoaded;
-  window.initProjectsPage = ProjectsPageModule.initProjectsPage;
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { ensureProjectsMarkedLoaded, initProjectsPage };
 }

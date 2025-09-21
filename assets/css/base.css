@@ -15,27 +15,6 @@ body {
   min-height: 100dvh;
 }
 
-.skip-link {
-  position: absolute;
-  top: -3rem;
-  left: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--md-sys-color-surface, #ffffff);
-  color: inherit;
-  border-radius: 0 0 0.75rem 0.75rem;
-  text-decoration: none;
-  z-index: 1000;
-  transition:
-    top var(--app-motion-duration-short, 150ms)
-      var(--app-motion-ease-standard, cubic-bezier(0.4, 0, 0.2, 1));
-}
-
-.skip-link:focus {
-  top: 1rem;
-  outline: 2px solid var(--md-sys-color-primary, #6750a4);
-  outline-offset: 4px;
-}
-
 button,
 input,
 select,

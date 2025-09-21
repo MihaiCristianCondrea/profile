@@ -1,23 +1,18 @@
-const animationScriptPath = '../assets/js/modules/router/animation.js';
-const historyScriptPath = '../assets/js/modules/router/history.js';
-const moduleRegistryPath = require.resolve('../assets/js/modules/moduleRegistry.js');
+const animationScriptPath = '../assets/js/router/animation.js';
+const historyScriptPath = '../assets/js/router/history.js';
 
 function loadHelpers() {
-  const ModuleRegistry = require(moduleRegistryPath);
-  ModuleRegistry.reset();
   require(animationScriptPath);
   require(historyScriptPath);
   return {
-    RouterAnimation: ModuleRegistry.require('router.animation'),
-    RouterHistory: ModuleRegistry.require('router.history')
+    RouterAnimation: window.RouterAnimation,
+    RouterHistory: window.RouterHistory
   };
 }
 
 describe('router helper scripts', () => {
   beforeEach(() => {
     jest.resetModules();
-    const ModuleRegistry = require(moduleRegistryPath);
-    ModuleRegistry.reset();
     delete window.RouterAnimation;
     delete global.RouterAnimation;
     delete window.RouterHistory;
