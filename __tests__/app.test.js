@@ -1,199 +1,271 @@
-const moduleRegistryPath = require.resolve('../assets/js/modules/moduleRegistry.js');
-const mainModulePath = require.resolve('../assets/js/main.js');
+const APP_PATH = '../assets/js/app.js';
 
-function setupAppModule({ includeDependencies = true } = {}) {
-  jest.resetModules();
+const OPTIONAL_GLOBALS = [
+  'showPageLoadingOverlay',
+  'hidePageLoadingOverlay',
+  'closeDrawer',
+  'fetchBlogPosts',
+  'fetchCommittersRanking',
+  'loadSongs',
+  'initProjectsPage',
+  'initResumePage'
+];
 
-  document.body.innerHTML = `
-    <main id="pageContentArea" data-drawer-inert-target>
-      <section id="mainContentPage"><p>Welcome!</p></section>
-    </main>
-    <h1 id="appBarHeadline"></h1>
-    <header id="topAppBar"></header>
-    <div id="songsGrid"></div>
-    <div id="newsGrid"></div>
-    <div id="committers-rank"></div>
-    <div id="committers-status"></div>
-    <div class="achievement-card"></div>
-    <a id="navProjectsLink" href="#projects">Projects</a>
-    <a id="navSongsLink" href="#songs">Songs</a>
-  `;
+const CORE_GLOBALS = [
+  'getDynamicElement',
+  'initRouter',
+  'initTheme',
+  'initNavigationDrawer',
+  'loadPageContent',
+  'normalizePageId',
+  'RouterRoutes',
+  'setCopyrightYear'
+];
 
-  window.location.hash = '#projects';
+let documentEventSpy;
+let windowEventSpy;
+let registeredDocumentHandlers = [];
+let registeredWindowHandlers = [];
 
-  const ModuleRegistry = require(moduleRegistryPath);
-  ModuleRegistry.reset();
-
-  const mocks = {
-    getDynamicElementMock: jest.fn((id) => document.getElementById(id)),
-    showOverlayMock: jest.fn(),
-    hideOverlayMock: jest.fn(),
-    closeDrawerMock: jest.fn(),
-    setCopyrightYearMock: jest.fn(),
-    initThemeMock: jest.fn(),
-    initNavigationDrawerMock: jest.fn(),
-    initRouterMock: jest.fn(),
-    loadPageContentMock: jest.fn(),
-    normalizePageIdMock: jest.fn((value) =>
-      typeof value === 'string' && value.startsWith('#') ? value.slice(1) : value
-    ),
-    fetchBlogPostsMock: jest.fn().mockResolvedValue(undefined),
-    fetchCommittersRankingMock: jest.fn().mockResolvedValue(undefined),
-    loadSongsHandlerMock: jest.fn().mockResolvedValue(undefined),
-    initProjectsPageMock: jest.fn().mockResolvedValue(undefined),
-    initResumePageMock: jest.fn().mockResolvedValue(undefined),
-    initContactPageMock: jest.fn().mockResolvedValue(undefined),
-    siteAnimationsInitMock: jest.fn(),
-    routesHasRouteMock: jest.fn(() => true),
-    routesGetRouteMock: jest.fn((id) => (id ? { id, title: id } : null))
-  };
-
-  ModuleRegistry.register('utils', {
-    getDynamicElement: mocks.getDynamicElementMock,
-    setCopyrightYear: mocks.setCopyrightYearMock,
-    showPageLoadingOverlay: mocks.showOverlayMock,
-    hidePageLoadingOverlay: mocks.hideOverlayMock
+function clearGlobals() {
+  [...OPTIONAL_GLOBALS, ...CORE_GLOBALS].forEach((key) => {
+    delete global[key];
   });
-  ModuleRegistry.register('theme', { initTheme: mocks.initThemeMock });
-  ModuleRegistry.register('navigationDrawer', {
-    initNavigationDrawer: mocks.initNavigationDrawerMock,
-    closeDrawer: mocks.closeDrawerMock
-  });
-  ModuleRegistry.register('router.core', {
-    initRouter: mocks.initRouterMock,
-    loadPageContent: mocks.loadPageContentMock,
-    normalizePageId: mocks.normalizePageIdMock
-  });
-  ModuleRegistry.register('router.routes', {
-    hasRoute: mocks.routesHasRouteMock,
-    getRoute: mocks.routesGetRouteMock,
-    PAGE_ROUTES: { home: { id: 'home' }, projects: { id: 'projects' }, songs: { id: 'songs' } }
-  });
-  ModuleRegistry.register('animations', { init: mocks.siteAnimationsInitMock });
-
-  if (includeDependencies) {
-    ModuleRegistry.register('bloggerApi', { fetchBlogPosts: mocks.fetchBlogPostsMock });
-    ModuleRegistry.register('committers', {
-      fetchCommittersRanking: mocks.fetchCommittersRankingMock
-    });
-    ModuleRegistry.register('page.songs', { loadSongs: mocks.loadSongsHandlerMock });
-    ModuleRegistry.register('page.projects', { initProjectsPage: mocks.initProjectsPageMock });
-    ModuleRegistry.register('page.resume', { initResumePage: mocks.initResumePageMock });
-    ModuleRegistry.register('page.contact', { initContactPage: mocks.initContactPageMock });
-  }
-
-  const MainAppModule = require(mainModulePath);
-
-  return { MainAppModule, mocks };
 }
 
-afterEach(() => {
-  document.body.innerHTML = '';
-  window.location.hash = '';
-  jest.useRealTimers();
-});
+function stubNormalizePageId(value) {
+  if (typeof value !== 'string') {
+    return 'home';
+  }
+  const withoutHash = value.startsWith('#') ? value.slice(1) : value;
+  return withoutHash === '' ? 'home' : withoutHash;
+}
 
-describe('app/main module', () => {
-  test('buildRouterOptions wires callbacks and page handlers when provided', async () => {
-    const { MainAppModule, mocks } = setupAppModule({ includeDependencies: true });
+function loadAppModule() {
+  jest.isolateModules(() => {
+    require(APP_PATH);
+  });
+}
 
-    const routerOptions = MainAppModule.buildRouterOptions();
+function removeRegisteredHandlers() {
+  registeredDocumentHandlers.forEach(({ type, listener, options }) => {
+    document.removeEventListener(type, listener, options);
+  });
+  registeredWindowHandlers.forEach(({ type, listener, options }) => {
+    window.removeEventListener(type, listener, options);
+  });
+  registeredDocumentHandlers = [];
+  registeredWindowHandlers = [];
+}
+
+describe('app.js bootstrap integration', () => {
+  beforeEach(() => {
+    jest.resetModules();
+    clearGlobals();
+    document.body.innerHTML = '';
+    window.location.hash = '#home';
+
+    registeredDocumentHandlers = [];
+    registeredWindowHandlers = [];
+
+    const originalDocumentAddEventListener = document.addEventListener.bind(document);
+    documentEventSpy = jest.spyOn(document, 'addEventListener').mockImplementation((type, listener, options) => {
+      originalDocumentAddEventListener(type, listener, options);
+      registeredDocumentHandlers.push({ type, listener, options });
+    });
+
+    const originalWindowAddEventListener = window.addEventListener.bind(window);
+    windowEventSpy = jest.spyOn(window, 'addEventListener').mockImplementation((type, listener, options) => {
+      originalWindowAddEventListener(type, listener, options);
+      registeredWindowHandlers.push({ type, listener, options });
+    });
+  });
+
+  afterEach(() => {
+    removeRegisteredHandlers();
+    if (documentEventSpy) {
+      documentEventSpy.mockRestore();
+    }
+    if (windowEventSpy) {
+      windowEventSpy.mockRestore();
+    }
+    clearGlobals();
+    document.body.innerHTML = '';
+    jest.restoreAllMocks();
+  });
+
+  test('buildRouterOptions wires available callbacks and page handlers', () => {
+    document.body.innerHTML = `
+      <main id="pageContentArea"></main>
+      <section id="mainContentPage"><p>Welcome!</p></section>
+      <h1 id="appBarHeadline"></h1>
+      <header id="topAppBar"></header>
+      <div id="newsGrid"></div>
+      <div id="committers-rank"></div>
+      <div id="songsGrid"></div>
+    `;
+
+    const initRouter = jest.fn();
+    const loadPageContent = jest.fn();
+
+    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
+    global.initTheme = jest.fn();
+    global.initNavigationDrawer = jest.fn();
+    global.setCopyrightYear = jest.fn();
+    global.initRouter = initRouter;
+    global.loadPageContent = loadPageContent;
+    global.normalizePageId = jest.fn(stubNormalizePageId);
+    global.RouterRoutes = { hasRoute: jest.fn(() => true) };
+
+    const showPageLoadingOverlay = jest.fn();
+    const hidePageLoadingOverlay = jest.fn();
+    const closeDrawer = jest.fn();
+    const fetchBlogPosts = jest.fn();
+    const fetchCommittersRanking = jest.fn();
+    const loadSongs = jest.fn();
+    const initProjectsPage = jest.fn();
+    const initResumePage = jest.fn();
+
+    Object.assign(global, {
+      showPageLoadingOverlay,
+      hidePageLoadingOverlay,
+      closeDrawer,
+      fetchBlogPosts,
+      fetchCommittersRanking,
+      loadSongs,
+      initProjectsPage,
+      initResumePage
+    });
+
+    loadAppModule();
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+
+    expect(initRouter).toHaveBeenCalledTimes(1);
+    const routerOptions = initRouter.mock.calls[0][3];
 
     expect(routerOptions.showOverlay).toBeInstanceOf(Function);
     expect(routerOptions.hideOverlay).toBeInstanceOf(Function);
     expect(routerOptions.closeDrawer).toBeInstanceOf(Function);
     expect(routerOptions.onHomeLoad).toBeInstanceOf(Function);
-    expect(routerOptions.pageHandlers).toEqual(
-      expect.objectContaining({
-        songs: expect.any(Function),
-        projects: expect.any(Function),
-        resume: expect.any(Function),
-        contact: expect.any(Function)
-      })
-    );
-
-    await routerOptions.showOverlay();
-    await routerOptions.hideOverlay();
-    await routerOptions.closeDrawer();
-    routerOptions.onHomeLoad();
-    await routerOptions.pageHandlers.songs();
-    await routerOptions.pageHandlers.projects();
-    await routerOptions.pageHandlers.resume();
-    await routerOptions.pageHandlers.contact();
-
-    expect(mocks.showOverlayMock).toHaveBeenCalledTimes(1);
-    expect(mocks.hideOverlayMock).toHaveBeenCalledTimes(1);
-    expect(mocks.closeDrawerMock).toHaveBeenCalledTimes(1);
-    expect(mocks.fetchBlogPostsMock).toHaveBeenCalledTimes(1);
-    expect(mocks.fetchCommittersRankingMock).toHaveBeenCalledTimes(1);
-    expect(mocks.loadSongsHandlerMock).toHaveBeenCalledTimes(1);
-    expect(mocks.initProjectsPageMock).toHaveBeenCalledTimes(1);
-    expect(mocks.initResumePageMock).toHaveBeenCalledTimes(1);
-    expect(mocks.initContactPageMock).toHaveBeenCalledTimes(1);
-  });
-
-  test('buildRouterOptions omits handlers when dependencies are missing', () => {
-    const { MainAppModule } = setupAppModule({ includeDependencies: false });
-
-    const routerOptions = MainAppModule.buildRouterOptions();
-    expect(routerOptions.onHomeLoad).toBeUndefined();
-    expect(routerOptions.pageHandlers).toBeUndefined();
-  });
-
-  test('initializeApplication bootstraps the SPA shell with defaults', () => {
-    const { MainAppModule, mocks } = setupAppModule({ includeDependencies: true });
-    const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
-
-    MainAppModule.initializeApplication();
-
-    expect(mocks.setCopyrightYearMock).toHaveBeenCalledTimes(1);
-    expect(mocks.initThemeMock).toHaveBeenCalledTimes(1);
-    expect(mocks.initNavigationDrawerMock).toHaveBeenCalledTimes(1);
-    expect(mocks.siteAnimationsInitMock).toHaveBeenCalledTimes(1);
-
-    expect(mocks.initRouterMock).toHaveBeenCalledTimes(1);
-    const [contentArea, headlineElement, initialHtml, routerOptions] =
-      mocks.initRouterMock.mock.calls[0];
-
-    expect(contentArea).toBeInstanceOf(HTMLElement);
-    expect(contentArea.id).toBe('pageContentArea');
-    expect(headlineElement.id).toBe('appBarHeadline');
-    expect(initialHtml).toContain('<section id="mainContentPage"');
-    expect(routerOptions).toEqual(
-      expect.objectContaining({
-        showOverlay: expect.any(Function),
-        hideOverlay: expect.any(Function),
-        closeDrawer: expect.any(Function),
-        onHomeLoad: expect.any(Function),
-        pageHandlers: expect.objectContaining({
-          songs: expect.any(Function),
-          projects: expect.any(Function),
-          resume: expect.any(Function),
-          contact: expect.any(Function)
-        })
-      })
-    );
+    expect(routerOptions.pageHandlers).toEqual(expect.objectContaining({
+      songs: expect.any(Function),
+      projects: initProjectsPage,
+      resume: initResumePage
+    }));
 
     routerOptions.showOverlay();
+    expect(showPageLoadingOverlay).toHaveBeenCalledTimes(1);
+
     routerOptions.hideOverlay();
+    expect(hidePageLoadingOverlay).toHaveBeenCalledTimes(1);
+
     routerOptions.closeDrawer();
+    expect(closeDrawer).toHaveBeenCalledTimes(1);
 
-    expect(mocks.showOverlayMock).toHaveBeenCalledTimes(1);
-    expect(mocks.hideOverlayMock).toHaveBeenCalledTimes(1);
-    expect(mocks.closeDrawerMock).toHaveBeenCalledTimes(1);
+    routerOptions.onHomeLoad();
+    expect(fetchBlogPosts).toHaveBeenCalledTimes(1);
+    expect(fetchCommittersRanking).toHaveBeenCalledTimes(1);
 
-    expect(mocks.loadPageContentMock).toHaveBeenCalledWith('#projects', false);
-    expect(addEventListenerSpy).toHaveBeenCalledWith('popstate', expect.any(Function));
-    expect(addEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
+    routerOptions.pageHandlers.songs();
+    expect(loadSongs).toHaveBeenCalledTimes(1);
+  });
 
-    const navProjectsLink = document.getElementById('navProjectsLink');
-    const clickEvent = new window.MouseEvent('click', { bubbles: true, cancelable: true });
-    navProjectsLink.dispatchEvent(clickEvent);
+  test('navigation interception delegates to loadPageContent and avoids duplicate registration', () => {
+    document.body.innerHTML = `
+      <main id="pageContentArea"></main>
+      <section id="mainContentPage"></section>
+      <h1 id="appBarHeadline"></h1>
+      <header id="topAppBar"></header>
+      <a id="songsLink" href="#songs"><span>Songs</span></a>
+      <a id="missingLink" href="#missing"><span>Missing</span></a>
+      <a id="externalLink" href="#home" target="_blank">External</a>
+      <md-list-item id="projectsItem" href="#projects"></md-list-item>
+    `;
 
-    expect(clickEvent.defaultPrevented).toBe(true);
-    expect(mocks.routesHasRouteMock).toHaveBeenCalledWith('projects');
-    expect(mocks.loadPageContentMock).toHaveBeenCalledWith('projects');
+    const loadPageContent = jest.fn();
+    const hasRoute = jest.fn((id) => ['home', 'songs', 'projects'].includes(id));
 
-    addEventListenerSpy.mockRestore();
+    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
+    global.initTheme = jest.fn();
+    global.initNavigationDrawer = jest.fn();
+    global.setCopyrightYear = jest.fn();
+    global.initRouter = jest.fn();
+    global.loadPageContent = loadPageContent;
+    global.normalizePageId = jest.fn(stubNormalizePageId);
+    global.RouterRoutes = { hasRoute };
+
+    loadAppModule();
+
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(loadPageContent).toHaveBeenCalledWith('#home', false);
+    loadPageContent.mockClear();
+    hasRoute.mockClear();
+
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    expect(loadPageContent).toHaveBeenCalledWith('#home', false);
+    loadPageContent.mockClear();
+    hasRoute.mockClear();
+
+    const songsLinkSpan = document.querySelector('#songsLink span');
+    songsLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    expect(hasRoute).toHaveBeenCalledTimes(1);
+    expect(hasRoute).toHaveBeenCalledWith('songs');
+    expect(loadPageContent).toHaveBeenCalledTimes(1);
+    expect(loadPageContent).toHaveBeenCalledWith('songs');
+
+    loadPageContent.mockClear();
+    hasRoute.mockClear();
+
+    const projectsItem = document.getElementById('projectsItem');
+    projectsItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    expect(hasRoute).toHaveBeenCalledTimes(1);
+    expect(hasRoute).toHaveBeenCalledWith('projects');
+    expect(loadPageContent).toHaveBeenCalledTimes(1);
+    expect(loadPageContent).toHaveBeenCalledWith('projects');
+
+    loadPageContent.mockClear();
+    hasRoute.mockClear();
+
+    const missingLinkSpan = document.querySelector('#missingLink span');
+    missingLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    expect(hasRoute).toHaveBeenCalledTimes(1);
+    expect(hasRoute).toHaveBeenCalledWith('missing');
+    expect(loadPageContent).not.toHaveBeenCalled();
+
+    loadPageContent.mockClear();
+    hasRoute.mockClear();
+
+    const externalLink = document.getElementById('externalLink');
+    externalLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    expect(hasRoute).not.toHaveBeenCalled();
+    expect(loadPageContent).not.toHaveBeenCalled();
+  });
+
+  test('buildRouterOptions omits callbacks when optional globals are unavailable', () => {
+    document.body.innerHTML = `
+      <main id="pageContentArea"></main>
+      <section id="mainContentPage"></section>
+      <h1 id="appBarHeadline"></h1>
+      <header id="topAppBar"></header>
+    `;
+
+    const initRouter = jest.fn();
+    const loadPageContent = jest.fn();
+
+    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
+    global.initTheme = jest.fn();
+    global.initNavigationDrawer = jest.fn();
+    global.setCopyrightYear = jest.fn();
+    global.initRouter = initRouter;
+    global.loadPageContent = loadPageContent;
+    global.normalizePageId = jest.fn(stubNormalizePageId);
+    global.RouterRoutes = { hasRoute: jest.fn(() => false) };
+
+    loadAppModule();
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+
+    expect(initRouter).toHaveBeenCalledTimes(1);
+    const routerOptions = initRouter.mock.calls[0][3];
+    expect(routerOptions).toEqual({});
   });
 });
