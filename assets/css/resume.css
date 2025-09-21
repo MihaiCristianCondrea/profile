@@ -1,5 +1,5 @@
 #resumePage {
-  font-family: 'JYMPDD+ProductSans-Regular', 'Poppins', sans-serif;
+  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
   margin-top: 70px;
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
@@ -226,7 +226,7 @@
   margin-bottom: 30px;
 }
 #resumePage .resume-section h2 {
-  font-family: 'JYMPDD+ProductSans-Regular', 'Poppins', sans-serif;
+  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
   font-size: 16px;
   color: #333;
   margin-bottom: 16px;
@@ -247,7 +247,7 @@
   border-bottom-color: var(--md-sys-color-primary);
 }
 #resumePage #resume-name {
-  font-family: 'JYMPDD+ProductSans-Regular', 'Poppins', sans-serif;
+  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
   font-size: 36px;
   font-weight: 700;
   color: #111;
@@ -255,7 +255,7 @@
   letter-spacing: -0.5px;
 }
 #resumePage #resume-job-title {
-  font-family: 'JYMPDD+ProductSans-Regular', 'Poppins', sans-serif;
+  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
   font-size: 20px;
   color: var(--md-sys-color-secondary);
   margin-bottom: 24px;
