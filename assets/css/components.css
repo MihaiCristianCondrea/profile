@@ -1100,6 +1100,57 @@ md-divider.profile-section-divider {
   text-decoration: none;
 }
 
+.projects-android {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.projects-loading,
+.projects-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  text-align: center;
+  color: var(--app-secondary-text-color);
+}
+
+.projects-loading md-circular-progress {
+  --md-circular-progress-size: 48px;
+}
+
+.projects-error {
+  color: var(--md-sys-color-error);
+}
+
+.project-app-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  margin-bottom: 0.75rem;
+  object-fit: cover;
+  box-shadow: var(--app-elevation-2);
+}
+
+.project-category-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--app-secondary-text-color);
+}
+
+.carousel-empty {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--app-secondary-text-color);
+}
+
 @media (max-width: 480px) {
   .project-actions {
     flex-direction: column;
