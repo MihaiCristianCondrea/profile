@@ -491,10 +491,8 @@ md-elevated-card.contribute-card {
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background-color: var(--app-overlay-bg-color);
-  background-color: color-mix(
+    min-height: 100dvh;
+    background-color: color-mix(
     in srgb,
     var(--md-sys-color-scrim) 32%,
     transparent
@@ -551,9 +549,8 @@ body.drawer-is-open {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 24px 28px 16px;
-  padding-top: calc(24px + var(--safe-area-inset-top));
-  padding-inline-start: calc(28px + var(--safe-area-inset-left));
+    padding: calc(24px + var(--safe-area-inset-top)) 28px 16px;
+    padding-inline-start: calc(28px + var(--safe-area-inset-left));
   padding-inline-end: calc(28px + var(--safe-area-inset-right));
   border-bottom: 1px solid var(--app-border-color);
   flex-shrink: 0;
@@ -568,16 +565,14 @@ body.drawer-is-open {
 
 .drawer-content {
   flex-grow: 1;
-  padding: 8px 0 16px;
-  padding-bottom: calc(16px + var(--safe-area-max-inset-bottom));
-  overflow-y: auto;
+    padding: 8px 0 calc(16px + var(--safe-area-max-inset-bottom));
+    overflow-y: auto;
   scrollbar-gutter: stable;
 }
 
 .drawer-footer {
-  padding: 16px 28px 20px;
-  padding-bottom: calc(20px + var(--safe-area-max-inset-bottom));
-  padding-inline-start: calc(28px + var(--safe-area-inset-left));
+    padding: 16px 28px calc(20px + var(--safe-area-max-inset-bottom));
+    padding-inline-start: calc(28px + var(--safe-area-inset-left));
   padding-inline-end: calc(28px + var(--safe-area-inset-right));
   border-top: 1px solid var(--app-border-color);
   flex-shrink: 0;
@@ -1285,8 +1280,7 @@ md-dialog {
   position: fixed;
   inset: 0;
   min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
+    display: flex;
   justify-content: center;
   align-items: center;
   padding: var(--safe-area-inset-top) var(--safe-area-inset-right)
