@@ -262,6 +262,7 @@ md-filled-card.achievement-card {
   margin-top: 1.5rem;
 }
 
+
 .faq-item {
   border-radius: 18px;
   background-color: var(--app-card-bg-color);
@@ -271,7 +272,7 @@ md-filled-card.achievement-card {
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-.faq-item[open] {
+.faq-item.is-open {
   border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
 }
 
@@ -282,6 +283,13 @@ md-filled-card.achievement-card {
   padding: 1rem 1.25rem;
   list-style: none;
   cursor: pointer;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  appearance: none;
 }
 
 .faq-summary::-webkit-details-marker {
@@ -319,15 +327,29 @@ md-filled-card.achievement-card {
   color: var(--app-secondary-text-color);
 }
 
-.faq-item[open] .faq-summary {
+.faq-item.is-open .faq-summary {
   border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 60%, transparent);
 }
 
-.faq-item[open] .expand-icon {
+.faq-item.is-open .expand-icon {
   transform: rotate(180deg);
 }
 
 .faq-answer {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0.2, 0, 0, 1)),
+    opacity var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.faq-item.is-open .faq-answer {
+  opacity: 1;
+}
+
+.faq-answer-content {
   padding: 0 1.25rem 1.25rem;
   display: grid;
   gap: 0.75rem;

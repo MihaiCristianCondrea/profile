@@ -84,23 +84,43 @@ function buildRouterOptions() {
         };
     }
 
-    if (typeof fetchBlogPosts === 'function' || typeof fetchCommittersRanking === 'function') {
-        options.onHomeLoad = () => {
-            if (typeof fetchBlogPosts === 'function') {
-                const newsGrid = document.getElementById('newsGrid');
-                if (newsGrid) {
-                    fetchBlogPosts();
-                }
-            }
+    const homeLoadCallbacks = [];
 
-            if (typeof fetchCommittersRanking === 'function') {
-                const rankingCardPresent = document.getElementById('committers-rank')
-                    || document.getElementById('committers-status')
-                    || document.querySelector('.achievement-card');
-                if (rankingCardPresent) {
-                    fetchCommittersRanking();
-                }
+    if (typeof fetchBlogPosts === 'function') {
+        homeLoadCallbacks.push(() => {
+            const newsGrid = document.getElementById('newsGrid');
+            if (newsGrid) {
+                fetchBlogPosts();
             }
+        });
+    }
+
+    if (typeof fetchCommittersRanking === 'function') {
+        homeLoadCallbacks.push(() => {
+            const rankingCardPresent = document.getElementById('committers-rank')
+                || document.getElementById('committers-status')
+                || document.querySelector('.achievement-card');
+            if (rankingCardPresent) {
+                fetchCommittersRanking();
+            }
+        });
+    }
+
+    if (typeof renderHomeFaqSection === 'function') {
+        homeLoadCallbacks.push(() => {
+            renderHomeFaqSection();
+        });
+    }
+
+    if (homeLoadCallbacks.length > 0) {
+        options.onHomeLoad = () => {
+            homeLoadCallbacks.forEach((callback) => {
+                try {
+                    callback();
+                } catch (error) {
+                    console.error('App.js: Error running home load callback.', error);
+                }
+            });
         };
     }
 
@@ -125,6 +145,10 @@ function buildRouterOptions() {
 
     if (typeof initContactPage === 'function') {
         pageHandlers.contact = initContactPage;
+    }
+
+    if (typeof initFaqPage === 'function') {
+        pageHandlers.faqs = initFaqPage;
     }
 
     if (Object.keys(pageHandlers).length > 0) {
