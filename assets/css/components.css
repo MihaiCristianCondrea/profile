@@ -251,6 +251,88 @@ md-filled-card.achievement-card {
   margin-bottom: 2.5rem;
 }
 
+.faq-section {
+  margin: 3rem 0 2.5rem;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+md-elevated-card.faq-card {
+  --md-elevated-card-container-shape: 20px;
+  border-radius: 20px;
+  background-color: var(--app-card-bg-color);
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-card-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.faq-card-heading h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  color: var(--app-primary-text-color);
+}
+
+.faq-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.faq-anchor-link {
+  margin-left: auto;
+  color: var(--app-secondary-text-color);
+  display: inline-flex;
+  padding: 0.25rem;
+  border-radius: 999px;
+  transition: color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    background-color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+.faq-anchor-link i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.faq-anchor-link:hover,
+.faq-anchor-link:focus-visible {
+  color: var(--md-sys-color-primary);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
+
+.faq-card p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  line-height: 1.55;
+}
+
+.faq-card a {
+  color: var(--md-sys-color-primary);
+  font-weight: 500;
+}
+
+.view-all-faqs-container {
+  margin-top: 1.75rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.view-all-faqs-container a {
+  text-decoration: none;
+}
+
 .news-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
