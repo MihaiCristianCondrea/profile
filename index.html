@@ -465,165 +465,101 @@
           <h2 class="page-section-title" id="faqSectionTitle">
             FAQ &amp; Support Highlights
           </h2>
-          <div class="faq-grid">
-            <md-elevated-card class="faq-card" id="faq-gms">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">🧠</span>
-                <h3>Why do your apps require Google Play Services?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-gms"
-                  aria-label="Copy link to Google Play Services FAQ"
+          <div class="faq-accordion" role="list">
+            <details class="faq-item" id="faq-gms" role="listitem">
+              <summary class="faq-summary">
+                <span class="faq-icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">forum</span>
+                </span>
+                <span class="faq-question">Why do your apps require Google Play Services?</span>
+                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
+                  >expand_more</span
                 >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  My apps rely on Firebase tools, Google Ads / AdMob, in-app updates,
+                  and in-app reviews to deliver analytics, crash reporting, and
+                  monetization features that keep development sustainable.
+                </p>
+                <p>
+                  Without Play Services, ads, update prompts, or performance
+                  telemetry would stop working, so the Play Store build remains the
+                  most stable way to ship new features.
+                </p>
               </div>
-              <p>
-                My apps rely on Firebase tools, Google Ads / AdMob, in-app updates,
-                and in-app reviews to deliver analytics, crash reporting, and
-                monetization features that keep development sustainable.
-              </p>
-              <p>
-                Without Play Services, ads, update prompts, or performance
-                telemetry would stop working, so the Play Store build remains the
-                most stable way to ship new features.
-              </p>
-            </md-elevated-card>
+            </details>
 
-            <md-elevated-card class="faq-card" id="faq-fdroid">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">📦</span>
-                <h3>Why aren’t your apps on F-Droid or other stores?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-fdroid"
-                  aria-label="Copy link to app store availability FAQ"
+            <details class="faq-item" id="faq-fdroid" role="listitem">
+              <summary class="faq-summary">
+                <span class="faq-icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">forum</span>
+                </span>
+                <span class="faq-question">Why aren’t your apps on F-Droid or other stores?</span>
+                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
+                  >expand_more</span
                 >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  F-Droid’s policies exclude proprietary SDKs like Play Services,
+                  AdMob, and Firebase—exactly the technologies that power my apps’
+                  analytics and compliance.
+                </p>
+                <p>
+                  To guarantee verified, policy-compliant builds, I distribute
+                  exclusively through Google Play and mirrored releases on GitHub.
+                </p>
               </div>
-              <p>
-                F-Droid’s policies exclude proprietary SDKs like Play Services,
-                AdMob, and Firebase—exactly the technologies that power my apps’
-                analytics and compliance.
-              </p>
-              <p>
-                To guarantee verified, policy-compliant builds, I distribute
-                exclusively through Google Play and mirrored releases on GitHub.
-              </p>
-            </md-elevated-card>
+            </details>
 
-            <md-elevated-card class="faq-card" id="faq-analytics">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">📊</span>
-                <h3>Why do you use analytics and ads at all?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-analytics"
-                  aria-label="Copy link to analytics and ads FAQ"
+            <details class="faq-item" id="faq-analytics" role="listitem">
+              <summary class="faq-summary">
+                <span class="faq-icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">forum</span>
+                </span>
+                <span class="faq-question">Why do you use analytics and ads at all?</span>
+                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
+                  >expand_more</span
                 >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  Building and maintaining apps involves hosting, testing devices,
+                  and tool licenses. Ads and anonymous analytics keep projects
+                  funded while revealing crashes or slowdowns before they affect
+                  everyone.
+                </p>
+                <p>
+                  I keep placements minimal and respectful so the experience stays
+                  focused on utility—not interruptions.
+                </p>
               </div>
-              <p>
-                Building and maintaining apps involves hosting, testing devices,
-                and tool licenses. Ads and anonymous analytics keep projects
-                funded while revealing crashes or slowdowns before they affect
-                everyone.
-              </p>
-              <p>
-                I keep placements minimal and respectful so the experience stays
-                focused on utility—not interruptions.
-              </p>
-            </md-elevated-card>
+            </details>
 
-            <md-elevated-card class="faq-card" id="faq-privacy">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">🔐</span>
-                <h3>Do you collect personal data?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-privacy"
-                  aria-label="Copy link to privacy FAQ"
+            <details class="faq-item" id="faq-privacy" role="listitem">
+              <summary class="faq-summary">
+                <span class="faq-icon" aria-hidden="true">
+                  <span class="material-symbols-outlined">forum</span>
+                </span>
+                <span class="faq-question">Do you collect personal data?</span>
+                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
+                  >expand_more</span
                 >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
+              </summary>
+              <div class="faq-answer">
+                <p>
+                  I don’t sell or personally collect user data. Google’s SDKs handle
+                  analytics and ads according to their privacy policy, while I only
+                  review aggregated trends like active installs or crash types.
+                </p>
+                <p>
+                  Read the full details in my
+                  <a href="#privacy-policy">Privacy Policy</a> for transparency on
+                  data processing.
+                </p>
               </div>
-              <p>
-                I don’t sell or personally collect user data. Google’s SDKs handle
-                analytics and ads according to their privacy policy, while I only
-                review aggregated trends like active installs or crash types.
-              </p>
-              <p>
-                Read the full details in my
-                <a href="#privacy-policy">Privacy Policy</a> for transparency on
-                data processing.
-              </p>
-            </md-elevated-card>
-
-            <md-elevated-card class="faq-card" id="faq-gms-free">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">🛠️</span>
-                <h3>Will you ever ship GMS-free or F-Droid builds?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-gms-free"
-                  aria-label="Copy link to alternate build FAQ"
-                >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
-              </div>
-              <p>
-                A minimalist, offline build is on the brainstorming board, but
-                maintaining parallel versions would split focus and slow releases
-                for the primary Play Store audience.
-              </p>
-              <p>
-                Right now I prioritize one stable build that taps modern APIs like
-                Firebase, Play Integrity, and in-app reviews.
-              </p>
-            </md-elevated-card>
-
-            <md-elevated-card class="faq-card" id="faq-support">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">💡</span>
-                <h3>How can you support the work without ads?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-support"
-                  aria-label="Copy link to support FAQ"
-                >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
-              </div>
-              <p>
-                Leave a heartfelt review on Google Play, share the apps with
-                friends, or explore my music projects under D4rK Rekords—every bit
-                of encouragement keeps the roadmap moving.
-              </p>
-            </md-elevated-card>
-
-            <md-elevated-card class="faq-card" id="faq-downloads">
-              <div class="faq-card-heading">
-                <span class="faq-icon" aria-hidden="true">📥</span>
-                <h3>Where can you find official builds?</h3>
-                <a
-                  class="faq-anchor-link"
-                  href="#faq-downloads"
-                  aria-label="Copy link to official builds FAQ"
-                >
-                  <i class="fas fa-link" aria-hidden="true"></i>
-                </a>
-              </div>
-              <p>
-                Always download from the Google Play Store or the matching GitHub
-                Releases. Other mirrors may be outdated or unsafe.
-              </p>
-              <p>
-                Those channels guarantee you’re running verified packages signed
-                and updated directly by me.
-              </p>
-            </md-elevated-card>
+            </details>
           </div>
 
           <div class="view-all-faqs-container">

@@ -255,72 +255,99 @@ md-filled-card.achievement-card {
   margin: 3rem 0 2.5rem;
 }
 
-.faq-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-md-elevated-card.faq-card {
-  --md-elevated-card-container-shape: 20px;
-  border-radius: 20px;
-  background-color: var(--app-card-bg-color);
-  padding: 1.25rem 1.5rem 1.5rem;
+.faq-accordion {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.faq-card-heading {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-
-.faq-card-heading h3 {
-  margin: 0;
-  font-size: 1.15rem;
-  line-height: 1.35;
-  color: var(--app-primary-text-color);
-}
-
-.faq-icon {
-  font-size: 1.75rem;
-  line-height: 1;
-}
-
-.faq-anchor-link {
-  margin-left: auto;
-  color: var(--app-secondary-text-color);
-  display: inline-flex;
-  padding: 0.25rem;
-  border-radius: 999px;
-  transition: color var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    background-color var(--app-motion-duration-medium, 300ms)
+.faq-item {
+  border-radius: 18px;
+  background-color: var(--app-card-bg-color);
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 60%, transparent);
+  overflow: hidden;
+  transition: border-color var(--app-motion-duration-medium, 300ms)
       var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
 }
 
-.faq-anchor-link i {
-  font-size: 1rem;
+.faq-item[open] {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+}
+
+.faq-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
+  color: var(--md-sys-color-primary);
+  flex-shrink: 0;
+}
+
+.faq-icon .material-symbols-outlined {
+  font-size: 1.5rem;
   line-height: 1;
 }
 
-.faq-anchor-link:hover,
-.faq-anchor-link:focus-visible {
-  color: var(--md-sys-color-primary);
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+.faq-question {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--app-primary-text-color);
 }
 
-.faq-card p {
-  margin: 0;
+.expand-icon {
+  font-size: 1.5rem;
+  transition: transform var(--app-motion-duration-medium, 300ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  color: var(--app-secondary-text-color);
+}
+
+.faq-item[open] .faq-summary {
+  border-bottom: 1px solid color-mix(in srgb, var(--md-sys-color-outline-variant) 60%, transparent);
+}
+
+.faq-item[open] .expand-icon {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 1.25rem 1.25rem;
+  display: grid;
+  gap: 0.75rem;
   color: var(--app-secondary-text-color);
   line-height: 1.55;
 }
 
-.faq-card a {
+.faq-answer a {
   color: var(--md-sys-color-primary);
   font-weight: 500;
+}
+
+.faq-item:focus-within,
+.faq-item:hover {
+  border-color: color-mix(in srgb, var(--md-sys-color-primary) 35%, transparent);
+}
+
+.faq-summary:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 4px;
 }
 
 .view-all-faqs-container {
