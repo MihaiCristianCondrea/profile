@@ -1170,3 +1170,168 @@
     font-size: 1rem;
   }
 }
+
+/* --- FAQ Support Page Styles --- */
+#faqsPageContainer {
+  background-color: var(--app-card-bg-color);
+  border-radius: 16px;
+  padding: 1.75rem clamp(1.25rem, 4vw, 2.5rem);
+  margin-top: 1.5rem;
+  color: var(--app-text-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+#faqsPageContainer .last-updated-text {
+  color: var(--app-secondary-text-color);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+#faqsPageContainer .page-banner-image {
+  max-width: min(560px, 100%);
+  border-radius: 24px;
+  align-self: center;
+  border: 1px solid var(--app-border-color);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+#faqsPageContainer p {
+  margin: 0;
+  color: var(--app-secondary-text-color);
+  line-height: 1.6;
+}
+
+#faqsPageContainer a {
+  color: var(--md-sys-color-primary);
+  font-weight: 500;
+}
+
+#faqsPageContainer .faq-page-nav {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+  border-radius: 20px;
+  padding: clamp(1rem, 4vw, 1.5rem);
+}
+
+#faqsPageContainer .faq-page-nav h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--app-primary-text-color);
+}
+
+#faqsPageContainer .faq-page-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem 1.5rem;
+}
+
+#faqsPageContainer .faq-page-nav li a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: inherit;
+}
+
+#faqsPageContainer .faq-page-nav li a::before {
+  content: '➜';
+  font-size: 0.9rem;
+  color: var(--md-sys-color-primary);
+}
+
+#faqsPageContainer md-divider {
+  margin: 0;
+}
+
+#faqsPageContainer .faq-page-section {
+  scroll-margin-top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#faqsPageContainer .faq-page-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+#faqsPageContainer .faq-page-heading h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  color: var(--app-primary-text-color);
+}
+
+#faqsPageContainer .faq-page-icon {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+#faqsPageContainer .faq-page-anchor {
+  margin-left: auto;
+  color: var(--app-secondary-text-color);
+  display: inline-flex;
+  padding: 0.25rem;
+  border-radius: 999px;
+  transition: color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
+    background-color var(--app-motion-duration-medium, 300ms)
+      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+#faqsPageContainer .faq-page-anchor i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+#faqsPageContainer .faq-page-anchor:hover,
+#faqsPageContainer .faq-page-anchor:focus-visible {
+  color: var(--md-sys-color-primary);
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 12%, transparent);
+}
+
+#faqsPageContainer .faq-page-section ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--app-secondary-text-color);
+  display: grid;
+  gap: 0.5rem;
+}
+
+#faqsPageContainer .faq-page-section li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+#faqsPageContainer .faq-support-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+#faqsPageContainer .faq-support-cta a {
+  text-decoration: none;
+}
+
+#faqsPageContainer .faq-support-cta .material-symbols-outlined {
+  margin-right: 0.35rem;
+}
+
+@media (max-width: 720px) {
+  #faqsPageContainer {
+    padding: 1.25rem;
+  }
+
+  #faqsPageContainer .faq-page-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  #faqsPageContainer .faq-page-anchor {
+    margin-left: 0;
+  }
+}

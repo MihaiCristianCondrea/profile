@@ -415,6 +415,30 @@
             }
         },
         {
+            id: 'faqs',
+            path: 'pages/drawer/more/faqs.html',
+            title: 'FAQ & Support',
+            metadata: {
+                description: 'Find answers to frequently asked questions about Mihai-Cristian Condrea\'s Android apps, including Google Play Services requirements, analytics usage, privacy, and official download sources.',
+                keywords: [
+                    'Mihai Cristian Condrea FAQ',
+                    'Android app support questions',
+                    'Google Play Services requirement',
+                    'AdMob and Firebase analytics info'
+                ],
+                canonicalSlug: 'faqs',
+                openGraph: {
+                    title: 'FAQ & Support | Mihai-Cristian Condrea',
+                    description: 'Find answers to frequently asked questions about Mihai-Cristian Condrea\'s Android apps, including Google Play Services requirements, analytics usage, privacy, and official download sources.',
+                    type: 'article'
+                },
+                twitter: {
+                    title: 'FAQ & Support | Mihai-Cristian Condrea',
+                    description: 'Find answers to frequently asked questions about Mihai-Cristian Condrea\'s Android apps, including Google Play Services requirements, analytics usage, privacy, and official download sources.'
+                }
+            }
+        },
+        {
             id: 'ads-help-center',
             path: 'pages/drawer/more/apps/ads-help-center.html',
             title: 'Ads Help Center',
