@@ -465,102 +465,12 @@
           <h2 class="page-section-title" id="faqSectionTitle">
             FAQ &amp; Support Highlights
           </h2>
-          <div class="faq-accordion" role="list">
-            <details class="faq-item" id="faq-gms" role="listitem">
-              <summary class="faq-summary">
-                <span class="faq-icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">forum</span>
-                </span>
-                <span class="faq-question">Why do your apps require Google Play Services?</span>
-                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
-                  >expand_more</span
-                >
-              </summary>
-              <div class="faq-answer">
-                <p>
-                  My apps rely on Firebase tools, Google Ads / AdMob, in-app updates,
-                  and in-app reviews to deliver analytics, crash reporting, and
-                  monetization features that keep development sustainable.
-                </p>
-                <p>
-                  Without Play Services, ads, update prompts, or performance
-                  telemetry would stop working, so the Play Store build remains the
-                  most stable way to ship new features.
-                </p>
-              </div>
-            </details>
-
-            <details class="faq-item" id="faq-fdroid" role="listitem">
-              <summary class="faq-summary">
-                <span class="faq-icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">forum</span>
-                </span>
-                <span class="faq-question">Why aren’t your apps on F-Droid or other stores?</span>
-                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
-                  >expand_more</span
-                >
-              </summary>
-              <div class="faq-answer">
-                <p>
-                  F-Droid’s policies exclude proprietary SDKs like Play Services,
-                  AdMob, and Firebase—exactly the technologies that power my apps’
-                  analytics and compliance.
-                </p>
-                <p>
-                  To guarantee verified, policy-compliant builds, I distribute
-                  exclusively through Google Play and mirrored releases on GitHub.
-                </p>
-              </div>
-            </details>
-
-            <details class="faq-item" id="faq-analytics" role="listitem">
-              <summary class="faq-summary">
-                <span class="faq-icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">forum</span>
-                </span>
-                <span class="faq-question">Why do you use analytics and ads at all?</span>
-                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
-                  >expand_more</span
-                >
-              </summary>
-              <div class="faq-answer">
-                <p>
-                  Building and maintaining apps involves hosting, testing devices,
-                  and tool licenses. Ads and anonymous analytics keep projects
-                  funded while revealing crashes or slowdowns before they affect
-                  everyone.
-                </p>
-                <p>
-                  I keep placements minimal and respectful so the experience stays
-                  focused on utility—not interruptions.
-                </p>
-              </div>
-            </details>
-
-            <details class="faq-item" id="faq-privacy" role="listitem">
-              <summary class="faq-summary">
-                <span class="faq-icon" aria-hidden="true">
-                  <span class="material-symbols-outlined">forum</span>
-                </span>
-                <span class="faq-question">Do you collect personal data?</span>
-                <span class="material-symbols-outlined expand-icon" aria-hidden="true"
-                  >expand_more</span
-                >
-              </summary>
-              <div class="faq-answer">
-                <p>
-                  I don’t sell or personally collect user data. Google’s SDKs handle
-                  analytics and ads according to their privacy policy, while I only
-                  review aggregated trends like active installs or crash types.
-                </p>
-                <p>
-                  Read the full details in my
-                  <a href="#privacy-policy">Privacy Policy</a> for transparency on
-                  data processing.
-                </p>
-              </div>
-            </details>
-          </div>
+          <div
+            class="faq-accordion"
+            role="list"
+            id="homeFaqList"
+            aria-live="polite"
+          ></div>
 
           <div class="view-all-faqs-container">
             <a href="#faqs">
@@ -707,6 +617,7 @@
       src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"
       defer
     ></script>
+    <script src="assets/js/faq.js" defer></script>
     <script src="assets/js/resume.js" defer></script>
     <script src="assets/js/contact.js" defer></script>
     <script src="assets/js/songs.js" defer></script>

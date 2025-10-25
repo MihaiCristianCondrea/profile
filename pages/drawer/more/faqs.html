@@ -11,199 +11,36 @@
 
   <p>
     This hub gathers answers to the most common questions I receive about my
-    Android apps, distribution choices, and privacy commitments. Use the quick
-    links below to jump straight to the topic you need, or browse the full list
-    for deeper context and supporting resources.
+    Android apps, distribution choices, and privacy commitments. Use the search
+    bar to quickly filter the list, or browse everything for deeper context and
+    supporting resources.
   </p>
 
-  <nav class="faq-page-nav" aria-label="FAQ quick links">
-    <h2>Jump to a topic</h2>
-    <ul>
-      <li><a href="#faq-gms">Why the apps depend on Google Play Services</a></li>
-      <li><a href="#faq-fdroid">Availability on F-Droid or alternative stores</a></li>
-      <li><a href="#faq-analytics">Use of analytics and ads</a></li>
-      <li><a href="#faq-privacy">Data collection and privacy practices</a></li>
-      <li><a href="#faq-gms-free">Plans for GMS-free builds</a></li>
-      <li><a href="#faq-support">Supporting development without ads</a></li>
-      <li><a href="#faq-downloads">Finding official, safe downloads</a></li>
-    </ul>
-  </nav>
+  <div class="faq-search" role="search">
+    <md-outlined-text-field
+      id="faqSearchField"
+      label="Search questions"
+      aria-label="Search frequently asked questions"
+      spellcheck="false"
+      clear-button-visible
+    >
+      <md-icon slot="leading" aria-hidden="true">
+        <span class="material-symbols-outlined">search</span>
+      </md-icon>
+    </md-outlined-text-field>
+  </div>
 
-  <md-divider></md-divider>
+  <p id="faqSearchHint" class="faq-search-hint">
+    Tip: keywords such as “privacy”, “GMS-free”, or “analytics” instantly narrow
+    down the list.
+  </p>
 
-  <section class="faq-page-section" id="faq-gms" aria-labelledby="faq-gms-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">🧠</span>
-      <h2 id="faq-gms-heading">Why do your apps require Google Play Services?</h2>
-      <a class="faq-page-anchor" href="#faq-gms" aria-label="Copy link to Google Play Services FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      My apps integrate several components from Google Play Services because they
-      provide reliable, well-maintained solutions for everyday needs:
-    </p>
-    <ul>
-      <li><strong>Firebase Analytics, Performance, and Crashlytics</strong> keep me informed about stability issues and feature adoption.</li>
-      <li><strong>Google Ads / AdMob</strong> offsets the costs of hosting, design tools, and test devices.</li>
-      <li><strong>In-App Reviews &amp; Play In-App Updates</strong> help deliver a polished experience without forcing manual store checks.</li>
-    </ul>
-    <p>
-      Removing these SDKs would mean rewriting entire systems from scratch and
-      losing the telemetry that keeps the apps healthy. For now, the Play Store
-      build remains the most sustainable option for both me and the people using
-      the apps every day.
-    </p>
-  </section>
+  <div class="faq-page-accordion" id="faqPageList" role="list" aria-live="polite"></div>
 
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-fdroid" aria-labelledby="faq-fdroid-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">📦</span>
-      <h2 id="faq-fdroid-heading">Why aren’t your apps on F-Droid or other alternative stores?</h2>
-      <a class="faq-page-anchor" href="#faq-fdroid" aria-label="Copy link to alternative stores FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      I love the open-source mindset behind F-Droid and similar stores. However,
-      their repository policies prevent shipping binaries that rely on
-      proprietary SDKs like Play Services, AdMob, or Firebase.
-    </p>
-    <p>
-      Because those SDKs are essential to my workflow, the apps currently would
-      not pass F-Droid’s inclusion checks. To avoid confusing, unverified builds
-      scattered across the web, I focus distribution on:
-    </p>
-    <ul>
-      <li><strong>Google Play Store</strong> for the primary, auto-updated release.</li>
-      <li><strong>GitHub Releases</strong> for developers who prefer sideloading directly from me.</li>
-    </ul>
-    <p>
-      That combination guarantees fast updates, verified signatures, and clear
-      communication around policy changes.
-    </p>
-  </section>
-
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-analytics" aria-labelledby="faq-analytics-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">📊</span>
-      <h2 id="faq-analytics-heading">Why do you use analytics and ads at all?</h2>
-      <a class="faq-page-anchor" href="#faq-analytics" aria-label="Copy link to analytics and ads FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      Independent development involves recurring costs: domain renewals, build
-      tooling, Firebase quotas, music licensing, and a growing fleet of test
-      devices. Anonymous analytics and respectful advertising make it possible to
-      keep the apps free while still covering those expenses.
-    </p>
-    <p>
-      Metrics such as screen load time, crash frequency, and feature usage help
-      me prioritize fixes and improvements. Ads are placed sparingly and follow
-      Google’s content policies so they remain as unobtrusive as possible.
-    </p>
-  </section>
-
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-privacy" aria-labelledby="faq-privacy-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">🔐</span>
-      <h2 id="faq-privacy-heading">Do you collect personal data?</h2>
-      <a class="faq-page-anchor" href="#faq-privacy" aria-label="Copy link to privacy FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      I do not personally collect, store, or sell any individual user data. All
-      analytics and advertising are handled by Google’s SDKs under their
-      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
-    </p>
-    <p>
-      The dashboards I see only include aggregated, anonymous information—for
-      example, how many people opened the app this week or which device model is
-      crashing after a new release. You can always review the
-      <a href="#privacy-policy">website privacy policy</a> for the full breakdown
-      of how data is processed and how you can opt out.
-    </p>
-  </section>
-
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-gms-free" aria-labelledby="faq-gms-free-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">🛠️</span>
-      <h2 id="faq-gms-free-heading">Will you ever make GMS-free or F-Droid builds?</h2>
-      <a class="faq-page-anchor" href="#faq-gms-free" aria-label="Copy link to GMS-free builds FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      I have explored prototypes of lightweight, offline-friendly builds. The
-      challenge is maintaining two separate release pipelines, testing matrices,
-      and support documents—effectively doubling the workload for every update.
-    </p>
-    <p>
-      For now, consolidating around a single Play Store release lets me deliver
-      modern APIs such as Firebase Remote Config, Play Integrity, and in-app
-      reviews faster. If a practical, sustainable path to a GMS-free edition
-      appears, I will share updates in the news feed and on GitHub.
-    </p>
-  </section>
-
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-support" aria-labelledby="faq-support-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">💡</span>
-      <h2 id="faq-support-heading">How can I support your work without ads?</h2>
-      <a class="faq-page-anchor" href="#faq-support" aria-label="Copy link to support FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      If you prefer ad-free support, here are the most impactful options:
-    </p>
-    <ul>
-      <li>Leave a positive review or rating on the Google Play Store.</li>
-      <li>Share the apps with friends, family, or communities that may benefit.</li>
-      <li>Explore my music and creative projects released under <strong>D4rK Rekords</strong>.</li>
-    </ul>
-    <p>
-      Every signal of support fuels future updates and allows me to experiment
-      with new ideas that benefit the entire community.
-    </p>
-  </section>
-
-  <md-divider></md-divider>
-
-  <section class="faq-page-section" id="faq-downloads" aria-labelledby="faq-downloads-heading">
-    <div class="faq-page-heading">
-      <span class="faq-page-icon" aria-hidden="true">📥</span>
-      <h2 id="faq-downloads-heading">Where can I find official builds?</h2>
-      <a class="faq-page-anchor" href="#faq-downloads" aria-label="Copy link to official builds FAQ">
-        <i class="fas fa-link" aria-hidden="true"></i>
-      </a>
-    </div>
-    <p>
-      Stick to these trusted sources to ensure you are downloading authentic,
-      malware-free builds directly from me:
-    </p>
-    <ul>
-      <li><strong>Google Play Store</strong> – the primary distribution channel with automatic updates.</li>
-      <li><strong>GitHub Releases</strong> – mirrors the Play build for sideloading or archival purposes.</li>
-    </ul>
-    <p>
-      Third-party APK mirrors are not verified or monitored, so they might host
-      outdated versions or tampered packages. When in doubt, always circle back
-      to the official listings above.
-    </p>
-  </section>
+  <p id="faqEmptyMessage" class="faq-empty-message" hidden>
+    No matching questions yet. Try different keywords or reset the search to
+    view the full list again.
+  </p>
 
   <div class="faq-support-cta">
     <a href="#contact">
