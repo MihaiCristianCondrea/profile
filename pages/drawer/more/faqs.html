@@ -17,17 +17,20 @@
   </p>
 
   <div class="faq-search" role="search">
-    <md-outlined-text-field
-      id="faqSearchField"
-      label="Search questions"
-      aria-label="Search frequently asked questions"
-      spellcheck="false"
-      clear-button-visible
-    >
-      <md-icon slot="leading" aria-hidden="true">
-        <span class="material-symbols-outlined">search</span>
-      </md-icon>
-    </md-outlined-text-field>
+    <div class="faq-search-field">
+      <span class="faq-search-icon material-symbols-outlined" aria-hidden="true">
+        search
+      </span>
+      <input
+        id="faqSearchField"
+        class="faq-search-input"
+        type="search"
+        placeholder="Search questions"
+        aria-label="Search frequently asked questions"
+        spellcheck="false"
+        autocomplete="off"
+      />
+    </div>
   </div>
 
   <p id="faqSearchHint" class="faq-search-hint">
