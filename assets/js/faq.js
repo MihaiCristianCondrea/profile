@@ -1,200 +1,103 @@
 (function (global) {
     const reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-
-    const FAQ_ITEMS = [
-        {
-            id: 'faq-gms',
-            question: 'Why do your apps require Google Play Services?',
-            iconSymbol: 'support_agent',
-            featured: true,
-            homeAnswerHtml: `
-                <p>
-                  My apps rely on Firebase tools, Google Ads / AdMob, in-app updates,
-                  and in-app reviews to deliver analytics, crash reporting, and
-                  monetization features that keep development sustainable.
-                </p>
-                <p>
-                  Without Play Services, ads, update prompts, or performance
-                  telemetry would stop working, so the Play Store build remains the
-                  most stable way to ship new features.
-                </p>
-            `,
-            answerHtml: `
-                <p>
-                  My apps integrate several components from Google Play Services because they
-                  provide reliable, well-maintained solutions for everyday needs:
-                </p>
-                <ul>
-                  <li><strong>Firebase Analytics, Performance, and Crashlytics</strong> keep me informed about stability issues and feature adoption.</li>
-                  <li><strong>Google Ads / AdMob</strong> offsets the costs of hosting, design tools, and test devices.</li>
-                  <li><strong>In-App Reviews &amp; Play In-App Updates</strong> help deliver a polished experience without forcing manual store checks.</li>
-                </ul>
-                <p>
-                  Removing these SDKs would mean rewriting entire systems from scratch and
-                  losing the telemetry that keeps the apps healthy. For now, the Play Store
-                  build remains the most sustainable option for both me and the people using
-                  the apps every day.
-                </p>
-            `
-        },
-        {
-            id: 'faq-fdroid',
-            question: 'Why aren’t your apps on F-Droid or other stores?',
-            iconSymbol: 'storefront',
-            featured: true,
-            homeAnswerHtml: `
-                <p>
-                  F-Droid’s policies exclude proprietary SDKs like Play Services,
-                  AdMob, and Firebase—exactly the technologies that power my apps’
-                  analytics and compliance.
-                </p>
-                <p>
-                  To guarantee verified, policy-compliant builds, I distribute
-                  exclusively through Google Play and mirrored releases on GitHub.
-                </p>
-            `,
-            answerHtml: `
-                <p>
-                  I love the open-source mindset behind F-Droid and similar stores. However,
-                  their repository policies prevent shipping binaries that rely on
-                  proprietary SDKs like Play Services, AdMob, or Firebase.
-                </p>
-                <p>
-                  Because those SDKs are essential to my workflow, the apps currently would
-                  not pass F-Droid’s inclusion checks. To avoid confusing, unverified builds
-                  scattered across the web, I focus distribution on:
-                </p>
-                <ul>
-                  <li><strong>Google Play Store</strong> for the primary, auto-updated release.</li>
-                  <li><strong>GitHub Releases</strong> for developers who prefer sideloading directly from me.</li>
-                </ul>
-                <p>
-                  That combination guarantees fast updates, verified signatures, and clear
-                  communication around policy changes.
-                </p>
-            `
-        },
-        {
-            id: 'faq-analytics',
-            question: 'Why do you use analytics and ads at all?',
-            iconSymbol: 'insights',
-            featured: true,
-            homeAnswerHtml: `
-                <p>
-                  Building and maintaining apps involves hosting, testing devices,
-                  and tool licenses. Ads and anonymous analytics keep projects
-                  funded while revealing crashes or slowdowns before they affect
-                  everyone.
-                </p>
-                <p>
-                  I keep placements minimal and respectful so the experience stays
-                  focused on utility—not interruptions.
-                </p>
-            `,
-            answerHtml: `
-                <p>
-                  Independent development involves recurring costs: domain renewals, build
-                  tooling, Firebase quotas, music licensing, and a growing fleet of test
-                  devices. Anonymous analytics and respectful advertising make it possible to
-                  keep the apps free while still covering those expenses.
-                </p>
-                <p>
-                  Metrics such as screen load time, crash frequency, and feature usage help
-                  me prioritize fixes and improvements. Ads are placed sparingly and follow
-                  Google’s content policies so they remain as unobtrusive as possible.
-                </p>
-            `
-        },
-        {
-            id: 'faq-privacy',
-            question: 'Do you collect personal data?',
-            iconSymbol: 'shield_person',
-            featured: true,
-            homeAnswerHtml: `
-                <p>
-                  I don’t sell or personally collect user data. Google’s SDKs handle
-                  analytics and ads according to their privacy policy, while I only
-                  review aggregated trends like active installs or crash types.
-                </p>
-                <p>
-                  Read the full details in my
-                  <a href="#privacy-policy">Privacy Policy</a> for transparency on
-                  data processing.
-                </p>
-            `,
-            answerHtml: `
-                <p>
-                  I do not personally collect, store, or sell any individual user data. All
-                  analytics and advertising are handled by Google’s SDKs under their
-                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
-                </p>
-                <p>
-                  The dashboards I see only include aggregated, anonymous information—for
-                  example, how many people opened the app this week or which device model is
-                  crashing after a new release. You can always review the
-                  <a href="#privacy-policy">website privacy policy</a> for the full breakdown
-                  of how data is processed and how you can opt out.
-                </p>
-            `
-        },
-        {
-            id: 'faq-gms-free',
-            question: 'Will you ever make GMS-free or F-Droid builds?',
-            iconSymbol: 'build',
-            answerHtml: `
-                <p>
-                  I have explored prototypes of lightweight, offline-friendly builds. The
-                  challenge is maintaining two separate release pipelines, testing matrices,
-                  and support documents—effectively doubling the workload for every update.
-                </p>
-                <p>
-                  For now, consolidating around a single Play Store release lets me deliver
-                  modern APIs such as Firebase Remote Config, Play Integrity, and in-app
-                  reviews faster. If a practical, sustainable path to a GMS-free edition
-                  appears, I will share updates in the news feed and on GitHub.
-                </p>
-            `
-        },
-        {
-            id: 'faq-support',
-            question: 'How can I support your work without ads?',
-            iconSymbol: 'volunteer_activism',
-            answerHtml: `
-                <p>
-                  If you prefer ad-free support, here are the most impactful options:
-                </p>
-                <ul>
-                  <li>Leave a positive review or rating on the Google Play Store.</li>
-                  <li>Share the apps with friends, family, or communities that may benefit.</li>
-                  <li>Explore my music and creative projects released under <strong>D4rK Rekords</strong>.</li>
-                </ul>
-                <p>
-                  Every signal of support fuels future updates and allows me to experiment
-                  with new ideas that benefit the entire community.
-                </p>
-            `
-        },
-        {
-            id: 'faq-downloads',
-            question: 'Where can I find official builds?',
-            iconSymbol: 'cloud_download',
-            answerHtml: `
-                <p>
-                  Stick to these trusted sources to ensure you are downloading authentic,
-                  malware-free builds directly from me:
-                </p>
-                <ul>
-                  <li><strong>Google Play Store</strong> – the primary distribution channel with automatic updates.</li>
-                  <li><strong>GitHub Releases</strong> – mirrors the Play build for sideloading or archival purposes.</li>
-                </ul>
-                <p>
-                  Third-party APK mirrors are not verified or monitored, so they might host
-                  outdated versions or tampered packages. When in doubt, always circle back
-                  to the official listings above.
-                </p>
-            `
+    const FAQ_DATA_URL = (() => {
+        if (typeof document === 'undefined') {
+            return 'assets/data/faqs.json';
         }
-    ];
+
+        let baseUrl = '';
+        const currentScript = document.currentScript;
+        if (currentScript && currentScript.src) {
+            baseUrl = currentScript.src;
+        } else {
+            const scripts = document.getElementsByTagName('script');
+            for (let index = scripts.length - 1; index >= 0; index -= 1) {
+                const script = scripts[index];
+                if (script && script.src && script.src.includes('faq.js')) {
+                    baseUrl = script.src;
+                    break;
+                }
+            }
+
+            if (!baseUrl && scripts.length) {
+                const fallbackScript = scripts[scripts.length - 1];
+                if (fallbackScript && fallbackScript.src) {
+                    baseUrl = fallbackScript.src;
+                }
+            }
+        }
+
+        try {
+            return baseUrl ? new URL('../data/faqs.json', baseUrl).toString() : 'assets/data/faqs.json';
+        } catch (error) {
+            return 'assets/data/faqs.json';
+        }
+    })();
+
+    let faqItemsCache = null;
+    let faqDataPromise = null;
+
+    function normalizeFaqItem(item, index) {
+        if (!item || typeof item !== 'object') {
+            return null;
+        }
+
+        const normalized = {
+            id: typeof item.id === 'string' ? item.id.trim() : '',
+            question: typeof item.question === 'string' ? item.question.trim() : '',
+            iconSymbol: typeof item.iconSymbol === 'string' && item.iconSymbol.trim() ? item.iconSymbol.trim() : 'help',
+            featured: Boolean(item.featured),
+            answerHtml: typeof item.answerHtml === 'string' ? item.answerHtml.trim() : '',
+            homeAnswerHtml: typeof item.homeAnswerHtml === 'string' ? item.homeAnswerHtml.trim() : ''
+        };
+
+        if (!normalized.id) {
+            const safeQuestion = normalized.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            normalized.id = safeQuestion ? `faq-${safeQuestion}` : `faq-item-${index}`;
+        }
+
+        return normalized.question && normalized.answerHtml ? normalized : null;
+    }
+
+    function loadFaqData() {
+        if (faqItemsCache) {
+            return Promise.resolve(faqItemsCache);
+        }
+
+        if (faqDataPromise) {
+            return faqDataPromise;
+        }
+
+        faqDataPromise = fetch(FAQ_DATA_URL)
+            .then((response) => {
+                if (!response || !response.ok) {
+                    throw new Error(`FAQ: Failed to fetch data (${response ? response.status : 'no response'})`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (!Array.isArray(data)) {
+                    throw new Error('FAQ: FAQ data is not an array.');
+                }
+
+                const normalizedItems = data
+                    .map((item, index) => normalizeFaqItem(item, index))
+                    .filter((item) => item);
+
+                if (!normalizedItems.length) {
+                    throw new Error('FAQ: No valid FAQ entries found.');
+                }
+
+                faqItemsCache = normalizedItems;
+                return faqItemsCache;
+            })
+            .catch((error) => {
+                faqDataPromise = null;
+                throw error;
+            });
+
+        return faqDataPromise;
+    }
 
     function createFaqItem(item, context) {
         const faqItemEl = document.createElement('div');
@@ -352,8 +255,9 @@
 
         container.innerHTML = '';
         const renderedItems = [];
+        const list = Array.isArray(items) ? items : [];
 
-        items.forEach((item) => {
+        list.forEach((item) => {
             const faqElement = createFaqItem(item, context);
             container.appendChild(faqElement);
             renderedItems.push({
@@ -371,8 +275,15 @@
             return;
         }
 
-        const featuredItems = FAQ_ITEMS.filter((item) => item.featured);
-        renderFaqList(container, featuredItems, 'home');
+        loadFaqData()
+            .then((items) => {
+                const featuredItems = items.filter((item) => item.featured);
+                renderFaqList(container, featuredItems, 'home');
+            })
+            .catch((error) => {
+                container.innerHTML = '';
+                console.error('FAQ: Failed to render home FAQ section.', error);
+            });
     }
 
     function initFaqPage() {
@@ -381,47 +292,55 @@
             return;
         }
 
-        const renderedItems = renderFaqList(container, FAQ_ITEMS, 'page');
         const emptyMessageEl = document.getElementById('faqEmptyMessage');
         const searchField = document.getElementById('faqSearchField');
 
-        const updateVisibility = (searchTerm) => {
-            const normalizedTerm = (searchTerm || '').trim().toLowerCase();
-            let visibleCount = 0;
+        loadFaqData()
+            .then((items) => {
+                const renderedItems = renderFaqList(container, items, 'page');
 
-            renderedItems.forEach(({ element }) => {
-                if (!normalizedTerm) {
-                    element.hidden = false;
-                    element.setAttribute('aria-hidden', 'false');
-                    visibleCount += 1;
-                    return;
-                }
+                const updateVisibility = (searchTerm) => {
+                    const normalizedTerm = (searchTerm || '').trim().toLowerCase();
+                    let visibleCount = 0;
 
-                const matches = element.dataset.searchText.includes(normalizedTerm);
-                element.hidden = !matches;
-                element.setAttribute('aria-hidden', matches ? 'false' : 'true');
-                if (matches) {
-                    visibleCount += 1;
-                } else if (element.classList.contains('is-open')) {
-                    element.dispatchEvent(new Event('faq:close'));
+                    renderedItems.forEach(({ element }) => {
+                        if (!normalizedTerm) {
+                            element.hidden = false;
+                            element.setAttribute('aria-hidden', 'false');
+                            visibleCount += 1;
+                            return;
+                        }
+
+                        const matches = element.dataset.searchText.includes(normalizedTerm);
+                        element.hidden = !matches;
+                        element.setAttribute('aria-hidden', matches ? 'false' : 'true');
+                        if (matches) {
+                            visibleCount += 1;
+                        } else if (element.classList.contains('is-open')) {
+                            element.dispatchEvent(new Event('faq:close'));
+                        }
+                    });
+
+                    if (emptyMessageEl) {
+                        emptyMessageEl.hidden = visibleCount !== 0;
+                    }
+                };
+
+                updateVisibility('');
+
+                if (searchField) {
+                    const applySearch = () => {
+                        updateVisibility(searchField.value);
+                    };
+
+                    searchField.addEventListener('input', applySearch);
+                    searchField.addEventListener('change', applySearch);
                 }
+            })
+            .catch((error) => {
+                container.innerHTML = '';
+                console.error('FAQ: Failed to initialize FAQ page.', error);
             });
-
-            if (emptyMessageEl) {
-                emptyMessageEl.hidden = visibleCount !== 0;
-            }
-        };
-
-        updateVisibility('');
-
-        if (searchField) {
-            const applySearch = () => {
-                updateVisibility(searchField.value);
-            };
-
-            searchField.addEventListener('input', applySearch);
-            searchField.addEventListener('change', applySearch);
-        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
