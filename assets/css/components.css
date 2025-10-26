@@ -911,6 +911,21 @@ md-filled-button {
   );
 }
 
+md-filled-tonal-button {
+  --md-filled-tonal-button-with-leading-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-tonal-button-with-leading-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-tonal-button-with-trailing-icon-leading-space: var(
+    --app-button-icon-inline-padding
+  );
+  --md-filled-tonal-button-with-trailing-icon-trailing-space: var(
+    --app-button-icon-inline-padding
+  );
+}
+
 md-outlined-button {
   --md-outlined-button-with-leading-icon-leading-space: var(
     --app-button-icon-inline-padding
@@ -926,7 +941,7 @@ md-outlined-button {
   );
 }
 
-:is(md-filled-button, md-outlined-button)[has-icon] {
+:is(md-filled-button, md-filled-tonal-button, md-outlined-button)[has-icon] {
   padding-inline-start: var(--app-button-icon-inline-padding);
   padding-inline-end: var(--app-button-icon-inline-padding);
 }
