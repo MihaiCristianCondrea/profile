@@ -1215,6 +1215,16 @@
 
 #faqsPageContainer .faq-search md-outlined-text-field {
   width: min(520px, 100%);
+  --md-outlined-text-field-container-shape: 999px;
+  --md-outlined-text-field-container-shape-start-start: 999px;
+  --md-outlined-text-field-container-shape-start-end: 999px;
+  --md-outlined-text-field-container-shape-end-start: 999px;
+  --md-outlined-text-field-container-shape-end-end: 999px;
+  --md-outlined-field-container-shape-start-start: 999px;
+  --md-outlined-field-container-shape-start-end: 999px;
+  --md-outlined-field-container-shape-end-start: 999px;
+  --md-outlined-field-container-shape-end-end: 999px;
+  --md-sys-shape-corner-full: 999px;
 }
 
 #faqsPageContainer .faq-search-hint {
