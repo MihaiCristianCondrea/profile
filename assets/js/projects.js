@@ -1,6 +1,6 @@
 let markedLoadPromiseProjects;
 
-const ANDROID_APPS_ENDPOINT = 'https://raw.githubusercontent.com/MihaiCristianCondrea/com.d4rk.apis/refs/heads/main/App%20Toolkit/release/en/home/api_android_apps.json';
+const ANDROID_APPS_ENDPOINT = 'https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v2/release/en/home/api_android_apps.json';
 
 function ensureProjectsMarkedLoaded() {
   if (window.marked) return Promise.resolve();
@@ -60,12 +60,72 @@ function isSixteenNine(width, height) {
   return Math.abs(ratio - target) <= 0.02;
 }
 
-async function filterSixteenNineScreenshots(urls) {
-  if (!Array.isArray(urls) || !urls.length) return [];
-  const results = await Promise.all(urls.map(url => loadImageDimensions(url)));
-  return results
-    .filter(result => result && isSixteenNine(result.width, result.height))
-    .map(result => result.url);
+function isSixteenNineLabel(ratioLabel) {
+  if (!ratioLabel) return false;
+  const normalized = String(ratioLabel)
+    .replace(/\s+/g, '')
+    .replace(/[×x]/gi, ':')
+    .replace(/\//g, ':');
+  if (!normalized.includes(':')) {
+    const numeric = Number(normalized);
+    if (Number.isNaN(numeric) || numeric <= 0) return false;
+    return Math.abs(numeric - 16 / 9) <= 0.02;
+  }
+  const parts = normalized.split(':').map(Number);
+  if (parts.length !== 2 || parts.some(num => Number.isNaN(num) || num <= 0)) {
+    return false;
+  }
+  return Math.abs(parts[0] / parts[1] - 16 / 9) <= 0.02;
+}
+
+function normalizeScreenshots(screenshots) {
+  if (!Array.isArray(screenshots)) return [];
+  return screenshots
+    .map(item => {
+      if (!item) return null;
+      if (typeof item === 'string') {
+        return { url: item, aspectRatio: null };
+      }
+      if (typeof item === 'object' && item.url) {
+        const ratioValue = typeof item.aspectRatio !== 'undefined' ? item.aspectRatio : item.ratio;
+        const ratio = typeof ratioValue === 'string' ? ratioValue.trim() : ratioValue;
+        return { url: item.url, aspectRatio: ratio || null };
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+
+async function filterSixteenNineScreenshots(screenshots) {
+  const normalized = normalizeScreenshots(screenshots);
+  if (!normalized.length) return [];
+
+  const immediateMatches = [];
+  const pendingChecks = [];
+
+  normalized.forEach((item, index) => {
+    if (isSixteenNineLabel(item.aspectRatio)) {
+      immediateMatches.push({ index, url: item.url });
+    } else if (!item.aspectRatio) {
+      pendingChecks.push({ index, url: item.url });
+    }
+  });
+
+  if (!pendingChecks.length) {
+    return immediateMatches.map(item => item.url);
+  }
+
+  const dimensionResults = await Promise.all(pendingChecks.map(entry => loadImageDimensions(entry.url)));
+  const dimensionMatches = dimensionResults
+    .map((result, resultIndex) => {
+      if (!result || !isSixteenNine(result.width, result.height)) return null;
+      return pendingChecks[resultIndex];
+    })
+    .filter(Boolean);
+
+  const combined = immediateMatches.concat(dimensionMatches);
+  combined.sort((a, b) => a.index - b.index);
+  return combined.map(item => item.url);
 }
 
 function initializeCarousel(carousel) {
@@ -229,10 +289,13 @@ async function createAndroidProjectCard(app) {
   title.textContent = app.name || 'Android App';
   info.appendChild(title);
 
-  if (app.category) {
+  if (app.category || app.categoryLabel) {
     const categoryTag = document.createElement('div');
     categoryTag.classList.add('project-category-label');
-    categoryTag.textContent = app.category;
+    const categoryLabel = app.category
+      ? (app.category.label || app.category.category_id || app.category)
+      : app.categoryLabel;
+    categoryTag.textContent = categoryLabel || '';
     info.appendChild(categoryTag);
   }
 
