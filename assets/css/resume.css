@@ -22,12 +22,41 @@
   max-width: 550px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+#resumePage .resume-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
 #resumePage .form-container h1 {
   font-size: 24px;
   font-weight: 700;
   text-align: center;
   color: var(--md-sys-color-primary);
-  margin-bottom: 24px;
+  margin: 0;
+}
+#resumePage .resume-header h1 {
+  flex: 1;
+  text-align: left;
+}
+#resumePage .resume-language-toggle {
+  display: inline-flex;
+  gap: 8px;
+}
+#resumePage .resume-language-toggle .resume-flag-btn {
+  padding: 6px 10px;
+  font-size: 20px;
+  border-radius: 999px;
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container-high);
+  box-shadow: none;
+  line-height: 1;
+}
+#resumePage .resume-language-toggle .resume-flag-btn[aria-pressed='true'] {
+  border-color: var(--md-sys-color-primary);
+  background-color: var(--md-sys-color-primary-container);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 #resumePage .form-section {
   margin-bottom: 24px;
