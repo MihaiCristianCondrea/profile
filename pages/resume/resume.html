@@ -12,7 +12,13 @@
         <input type="text" id="job-title" placeholder=" " />
         <label for="job-title">Job Title</label>
       </div>
-      <input type="file" id="photo" accept="image/*" />
+      <div class="resume-photo-controls">
+        <label class="resume-file-label" for="photo">Profile Photo</label>
+        <input type="file" id="photo" accept="image/*" />
+        <button type="button" class="secondary-btn" id="removePhotoButton">
+          Remove Photo
+        </button>
+      </div>
       <div class="input-group">
         <input type="tel" id="phone" placeholder=" " />
         <label for="phone">Phone</label>
@@ -28,6 +34,42 @@
       <div class="input-group">
         <textarea id="summary" placeholder=" "></textarea>
         <label for="summary">Professional Summary</label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Design</h2>
+      <div class="color-grid">
+        <div class="color-input">
+          <label for="accent-color">Accent Color</label>
+          <input type="color" id="accent-color" data-resume-color="--resume-accent" />
+          <span class="color-value" data-color-value-for="accent-color"></span>
+        </div>
+        <div class="color-input">
+          <label for="secondary-color">Secondary Color</label>
+          <input type="color" id="secondary-color" data-resume-color="--resume-secondary" />
+          <span class="color-value" data-color-value-for="secondary-color"></span>
+        </div>
+        <div class="color-input">
+          <label for="left-bg-color">Left Panel</label>
+          <input type="color" id="left-bg-color" data-resume-color="--resume-left-bg" />
+          <span class="color-value" data-color-value-for="left-bg-color"></span>
+        </div>
+        <div class="color-input">
+          <label for="right-bg-color">Right Panel</label>
+          <input type="color" id="right-bg-color" data-resume-color="--resume-right-bg" />
+          <span class="color-value" data-color-value-for="right-bg-color"></span>
+        </div>
+        <div class="color-input">
+          <label for="text-color">Text Color</label>
+          <input type="color" id="text-color" data-resume-color="--resume-text" />
+          <span class="color-value" data-color-value-for="text-color"></span>
+        </div>
+        <div class="color-input">
+          <label for="muted-color">Muted Text</label>
+          <input type="color" id="muted-color" data-resume-color="--resume-muted" />
+          <span class="color-value" data-color-value-for="muted-color"></span>
+        </div>
       </div>
     </div>
 
@@ -66,6 +108,19 @@
       <button type="button" class="add-btn" data-add-interest="true">
         Add Interest
       </button>
+    </div>
+
+    <div class="form-section">
+      <h2>Export / Import</h2>
+      <div class="resume-json-actions">
+        <button type="button" class="secondary-btn" id="exportResumeJson">
+          Export Resume JSON
+        </button>
+        <button type="button" class="secondary-btn" id="importResumeJson">
+          Import Resume JSON
+        </button>
+        <input type="file" id="resume-json-file" accept="application/json" />
+      </div>
     </div>
   </div>
 

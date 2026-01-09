@@ -1,4 +1,11 @@
 // Resume builder functionality
+const RESUME_STORAGE_KEY = 'resume-builder-state-v1';
+const DEFAULT_PHOTO_URL = 'assets/images/profile/cv_profile_pic.png';
+
+let resumeEditMode = false;
+let resumeAutoSaveEnabled = false;
+let resumeSaveTimeout;
+
 function createInputGroupElement({
     id,
     labelText,
@@ -43,7 +50,10 @@ function createInputGroupElement({
 function setupRealtimeUpdates() {
     const set = (id, cb) => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', cb);
+        if (el) el.addEventListener('input', (event) => {
+            cb(event);
+            scheduleResumeSave();
+        });
     };
     set('name', e => document.getElementById('resume-name').innerText = e.target.value);
     set('job-title', e => document.getElementById('resume-job-title').innerText = e.target.value);
@@ -59,11 +69,23 @@ function setupRealtimeUpdates() {
         photoInput.addEventListener('change', evt => {
             if (evt.target.files && evt.target.files[0]) {
                 const reader = new FileReader();
-                reader.onload = e => document.getElementById('photo-preview').style.backgroundImage = `url(${e.target.result})`;
+                reader.onload = e => {
+                    updatePhotoPreview(e.target.result);
+                    scheduleResumeSave();
+                };
                 reader.readAsDataURL(evt.target.files[0]);
             }
         });
     }
+
+    document.querySelectorAll('[data-resume-color]').forEach(input => {
+        input.addEventListener('input', event => {
+            const target = event.target;
+            applyResumeColor(target.dataset.resumeColor, target.value);
+            updateColorValueDisplay(target.id, target.value);
+            scheduleResumeSave();
+        });
+    });
 }
 
 function addListItem(sectionId, value = '') {
@@ -93,6 +115,7 @@ function addListItem(sectionId, value = '') {
     listItem.append(wrapper, removeButton);
     container.insertBefore(listItem, container.querySelector('.add-btn'));
     updateList(sectionId);
+    scheduleResumeSave();
 }
 
 function addInterestItem(value = '', isProject = false) {
@@ -132,11 +155,13 @@ function addInterestItem(value = '', isProject = false) {
     listItem.append(wrapper, checkbox, checkboxLabel, removeButton);
     container.insertBefore(listItem, container.querySelector('.add-btn'));
     updateList('interests');
+    scheduleResumeSave();
 }
 
 function removeListItem(itemId, sectionId) {
     document.getElementById(itemId).remove();
     updateList(sectionId);
+    scheduleResumeSave();
 }
 
 function updateList(sectionId) {
@@ -161,6 +186,7 @@ function updateList(sectionId) {
             }
         });
     }
+    scheduleResumeSave();
 }
 
 function addComplexItem(sectionId, data = {}) {
@@ -270,6 +296,7 @@ function addComplexItem(sectionId, data = {}) {
 
     container.insertBefore(formWrapper, container.querySelector('.add-btn'));
     updateComplexList(sectionId);
+    scheduleResumeSave();
 }
 
 const addWorkItem = (t,c,s,e,d) => addComplexItem('work',{title:t,company:c,start:s,end:e,desc:d});
@@ -278,6 +305,7 @@ const addEducationItem = (d,s,st,e) => addComplexItem('education',{degree:d,scho
 function removeItem(itemId, sectionId) {
     document.getElementById(itemId).remove();
     updateComplexList(sectionId);
+    scheduleResumeSave();
 }
 
 function updateComplexList(sectionId) {
@@ -314,6 +342,7 @@ function updateComplexList(sectionId) {
             }
         }
     });
+    scheduleResumeSave();
 }
 
 
@@ -338,7 +367,7 @@ function initialize() {
     addComplexItem('work',{title:'Android Developer',company:'Personal Projects, Bucharest',start:'2020',end:'Current',desc:`- Android Developer specializing in the full app lifecycle, from UI/UX design to Google Play publishing, utilizing Jetpack Compose, Kotlin, and Firebase. As a music producer, I bring a creative and user-centric approach to development.\n- Launched over 10 Android apps, managing everything from UI/UX design to development and publishing.\n- Focused on a Google-centric design, using Material Design principles for intuitive and consistent apps.`});
     addComplexItem('education',{degree:'University',school:'Faculty of Industrial and Robotics Engineering',start:'2020',end:'Current'});
     addComplexItem('education',{degree:'High School',school:'Hristo Botev Bulgarian Theoretical High School',start:'2016',end:'2020'});
-    document.getElementById('photo-preview').style.backgroundImage = "url('assets/images/profile/cv_profile_pic.png')";
+    updatePhotoPreview(DEFAULT_PHOTO_URL);
 }
 
 function getResumeEditParam() {
@@ -381,6 +410,9 @@ function setupMode() {
     if (form) {
         form.style.display = editMode ? '' : 'none';
     }
+    resumeEditMode = editMode;
+    resumeAutoSaveEnabled = editMode;
+    return editMode;
 }
 
 function setupResumeControls() {
@@ -410,6 +442,42 @@ function setupResumeControls() {
     if (downloadButton && downloadButton.dataset.resumeBound !== 'true') {
         downloadButton.addEventListener('click', prepareAndPrintResume);
         downloadButton.dataset.resumeBound = 'true';
+    }
+
+    const removePhotoButton = document.getElementById('removePhotoButton');
+    if (removePhotoButton && removePhotoButton.dataset.resumeBound !== 'true') {
+        removePhotoButton.addEventListener('click', () => {
+            updatePhotoPreview(DEFAULT_PHOTO_URL);
+            const photoInput = document.getElementById('photo');
+            if (photoInput) {
+                photoInput.value = '';
+            }
+            scheduleResumeSave();
+        });
+        removePhotoButton.dataset.resumeBound = 'true';
+    }
+
+    const exportButton = document.getElementById('exportResumeJson');
+    if (exportButton && exportButton.dataset.resumeBound !== 'true') {
+        exportButton.addEventListener('click', exportResumeJson);
+        exportButton.dataset.resumeBound = 'true';
+    }
+
+    const importButton = document.getElementById('importResumeJson');
+    if (importButton && importButton.dataset.resumeBound !== 'true') {
+        importButton.addEventListener('click', () => {
+            const fileInput = document.getElementById('resume-json-file');
+            if (fileInput) {
+                fileInput.click();
+            }
+        });
+        importButton.dataset.resumeBound = 'true';
+    }
+
+    const importFile = document.getElementById('resume-json-file');
+    if (importFile && importFile.dataset.resumeBound !== 'true') {
+        importFile.addEventListener('change', handleResumeJsonImport);
+        importFile.dataset.resumeBound = 'true';
     }
 }
 
@@ -459,6 +527,262 @@ function ensureMarkedLoaded() {
     return markedLoadPromise;
 }
 
+function updatePhotoPreview(value) {
+    const preview = document.getElementById('photo-preview');
+    if (preview) {
+        preview.style.backgroundImage = value ? `url(${value})` : '';
+        preview.dataset.photo = value || '';
+    }
+}
+
+function applyResumeColor(cssVar, value) {
+    if (!cssVar) return;
+    const preview = document.getElementById('resume-preview');
+    if (preview) {
+        preview.style.setProperty(cssVar, value);
+    }
+}
+
+function updateColorValueDisplay(inputId, value) {
+    if (!inputId) return;
+    const label = document.querySelector(`[data-color-value-for="${inputId}"]`);
+    if (label) {
+        label.textContent = value;
+    }
+}
+
+function normalizeHex(value) {
+    if (!value) return '';
+    const trimmed = value.trim();
+    if (trimmed.startsWith('#')) return trimmed;
+    return trimmed;
+}
+
+function rgbToHex(value) {
+    const result = /rgba?\((\d+),\s*(\d+),\s*(\d+)/i.exec(value);
+    if (!result) return '';
+    const toHex = (num) => Number(num).toString(16).padStart(2, '0');
+    return `#${toHex(result[1])}${toHex(result[2])}${toHex(result[3])}`;
+}
+
+function resolveColorValue(value) {
+    if (!value) return '';
+    if (value.startsWith('#')) return value;
+    if (value.startsWith('rgb')) return rgbToHex(value);
+    return value;
+}
+
+function setColorInputValue(inputId, value) {
+    const input = document.getElementById(inputId);
+    if (!input || !value) return;
+    input.value = normalizeHex(resolveColorValue(value));
+    updateColorValueDisplay(inputId, input.value);
+}
+
+function collectListValues(sectionId) {
+    const values = [];
+    document.querySelectorAll(`#${sectionId}-form .list-item input[type='text']`).forEach(input => {
+        if (input.value.trim()) {
+            values.push(input.value.trim());
+        }
+    });
+    return values;
+}
+
+function collectInterestValues() {
+    const values = [];
+    document.querySelectorAll('#interests-form .list-item').forEach(item => {
+        const input = item.querySelector('input[type="text"]');
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (input && input.value.trim()) {
+            values.push({ text: input.value.trim(), isProject: checkbox ? checkbox.checked : false });
+        }
+    });
+    return values;
+}
+
+function collectComplexValues(sectionId, mapping) {
+    const values = [];
+    document.querySelectorAll(`.complex-item-form[id^="${sectionId}-"]`).forEach(item => {
+        const entry = {};
+        Object.entries(mapping).forEach(([key, selector]) => {
+            const input = item.querySelector(selector);
+            entry[key] = input ? input.value : '';
+        });
+        values.push(entry);
+    });
+    return values;
+}
+
+function getResumeData() {
+    const preview = document.getElementById('resume-preview');
+    const previewStyles = preview ? getComputedStyle(preview) : null;
+    const photoPreview = document.getElementById('photo-preview');
+    return {
+        personal: {
+            name: document.getElementById('name')?.value || '',
+            jobTitle: document.getElementById('job-title')?.value || '',
+            phone: document.getElementById('phone')?.value || '',
+            email: document.getElementById('email')?.value || '',
+            address: document.getElementById('address')?.value || '',
+            summary: document.getElementById('summary')?.value || '',
+            photo: photoPreview?.dataset.photo || ''
+        },
+        colors: {
+            accent: previewStyles?.getPropertyValue('--resume-accent').trim() || '',
+            secondary: previewStyles?.getPropertyValue('--resume-secondary').trim() || '',
+            leftBg: previewStyles?.getPropertyValue('--resume-left-bg').trim() || '',
+            rightBg: previewStyles?.getPropertyValue('--resume-right-bg').trim() || '',
+            text: previewStyles?.getPropertyValue('--resume-text').trim() || '',
+            muted: previewStyles?.getPropertyValue('--resume-muted').trim() || ''
+        },
+        skills: collectListValues('skills'),
+        languages: collectListValues('languages'),
+        interests: collectInterestValues(),
+        work: collectComplexValues('work', {
+            title: '.work-title',
+            company: '.work-company',
+            start: '.work-start',
+            end: '.work-end',
+            desc: '.work-desc'
+        }),
+        education: collectComplexValues('education', {
+            degree: '.edu-degree',
+            school: '.edu-school',
+            start: '.edu-start',
+            end: '.edu-end'
+        })
+    };
+}
+
+function clearList(sectionId) {
+    const container = document.getElementById(`${sectionId}-form`);
+    if (!container) return;
+    container.querySelectorAll('.list-item').forEach(item => item.remove());
+}
+
+function clearComplex(sectionId) {
+    const container = document.getElementById(`${sectionId}-form`);
+    if (!container) return;
+    container.querySelectorAll('.complex-item-form').forEach(item => item.remove());
+}
+
+function applyResumeData(data) {
+    if (!data || typeof data !== 'object') return;
+    const personal = data.personal || {};
+    const colors = data.colors || {};
+
+    const setValue = (id, value) => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.value = value || '';
+            input.dispatchEvent(new Event('input'));
+        }
+    };
+
+    setValue('name', personal.name);
+    setValue('job-title', personal.jobTitle);
+    setValue('phone', personal.phone);
+    setValue('email', personal.email);
+    setValue('address', personal.address);
+    setValue('summary', personal.summary);
+    updatePhotoPreview(personal.photo || DEFAULT_PHOTO_URL);
+
+    if (colors.accent) {
+        applyResumeColor('--resume-accent', colors.accent);
+        setColorInputValue('accent-color', colors.accent);
+    }
+    if (colors.secondary) {
+        applyResumeColor('--resume-secondary', colors.secondary);
+        setColorInputValue('secondary-color', colors.secondary);
+    }
+    if (colors.leftBg) {
+        applyResumeColor('--resume-left-bg', colors.leftBg);
+        setColorInputValue('left-bg-color', colors.leftBg);
+    }
+    if (colors.rightBg) {
+        applyResumeColor('--resume-right-bg', colors.rightBg);
+        setColorInputValue('right-bg-color', colors.rightBg);
+    }
+    if (colors.text) {
+        applyResumeColor('--resume-text', colors.text);
+        setColorInputValue('text-color', colors.text);
+    }
+    if (colors.muted) {
+        applyResumeColor('--resume-muted', colors.muted);
+        setColorInputValue('muted-color', colors.muted);
+    }
+
+    clearList('skills');
+    (data.skills || []).forEach(value => addListItem('skills', value));
+
+    clearList('languages');
+    (data.languages || []).forEach(value => addListItem('languages', value));
+
+    clearList('interests');
+    (data.interests || []).forEach(item => addInterestItem(item.text || '', item.isProject));
+
+    clearComplex('work');
+    (data.work || []).forEach(item => addComplexItem('work', item));
+
+    clearComplex('education');
+    (data.education || []).forEach(item => addComplexItem('education', item));
+}
+
+function scheduleResumeSave() {
+    if (!resumeAutoSaveEnabled) return;
+    clearTimeout(resumeSaveTimeout);
+    resumeSaveTimeout = setTimeout(() => {
+        const data = getResumeData();
+        try {
+            localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(data));
+        } catch (error) {
+            console.warn('Unable to save resume data.', error);
+        }
+    }, 300);
+}
+
+function loadResumeFromStorage() {
+    try {
+        const stored = localStorage.getItem(RESUME_STORAGE_KEY);
+        if (!stored) return null;
+        return JSON.parse(stored);
+    } catch (error) {
+        console.warn('Unable to load resume data.', error);
+        return null;
+    }
+}
+
+function exportResumeJson() {
+    const data = getResumeData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'resume.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+}
+
+function handleResumeJsonImport(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const data = JSON.parse(e.target.result);
+            applyResumeData(data);
+            scheduleResumeSave();
+        } catch (error) {
+            console.warn('Unable to parse resume JSON.', error);
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
 function ensureResumeStyles() {
     const head = document.head;
     if (!document.querySelector('link[href="assets/css/resume.css"]')) {
@@ -481,7 +805,25 @@ function initResumePage() {
     ensureMarkedLoaded().then(() => {
         setupResumeControls();
         setupRealtimeUpdates();
-        setupMode();
-        document.fonts.ready.then(initialize);
+        const editMode = setupMode();
+        document.fonts.ready.then(() => {
+            initialize();
+            if (editMode) {
+                const saved = loadResumeFromStorage();
+                if (saved) {
+                    applyResumeData(saved);
+                }
+            }
+            const preview = document.getElementById('resume-preview');
+            if (preview) {
+                const styles = getComputedStyle(preview);
+                setColorInputValue('accent-color', styles.getPropertyValue('--resume-accent'));
+                setColorInputValue('secondary-color', styles.getPropertyValue('--resume-secondary'));
+                setColorInputValue('left-bg-color', styles.getPropertyValue('--resume-left-bg'));
+                setColorInputValue('right-bg-color', styles.getPropertyValue('--resume-right-bg'));
+                setColorInputValue('text-color', styles.getPropertyValue('--resume-text'));
+                setColorInputValue('muted-color', styles.getPropertyValue('--resume-muted'));
+            }
+        });
     });
 }
