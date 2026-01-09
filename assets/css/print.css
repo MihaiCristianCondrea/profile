@@ -7,6 +7,8 @@ body * {
 #resume-preview,
 #resume-preview * {
   visibility: visible;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
 /* Position the CV preview to take up the entire printed page */
