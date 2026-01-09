@@ -1,14 +1,184 @@
 // Resume builder functionality
 const RESUME_STORAGE_KEY = 'resume-builder-state-v1';
+const RESUME_LANGUAGE_KEY = 'resume-builder-language-v1';
 const DEFAULT_PHOTO_URL = 'assets/images/profile/cv_profile_pic.png';
+
+const RESUME_I18N = {
+    en: {
+        title: 'Resume Builder',
+        personalInfo: 'Personal Info',
+        design: 'Design',
+        skills: 'Skills',
+        workHistory: 'Work History',
+        education: 'Education',
+        languages: 'Languages',
+        interests: 'Interests',
+        exportImport: 'Export / Import',
+        fullName: 'Full Name',
+        jobTitle: 'Job Title',
+        profilePhoto: 'Profile Photo',
+        removePhoto: 'Remove Photo',
+        phone: 'Phone',
+        email: 'Email',
+        address: 'Address',
+        summary: 'Professional Summary',
+        accentColor: 'Accent Color',
+        secondaryColor: 'Secondary Color',
+        leftPanel: 'Left Panel',
+        rightPanel: 'Right Panel',
+        textColor: 'Text Color',
+        mutedText: 'Muted Text',
+        addSkill: 'Add Skill',
+        addWork: 'Add Work Experience',
+        addEducation: 'Add Education',
+        addLanguage: 'Add Language',
+        addInterest: 'Add Interest',
+        exportJson: 'Export Resume JSON',
+        importJson: 'Import Resume JSON',
+        download: 'Download Resume as PDF',
+        skillsPreview: 'Skills',
+        languagesPreview: 'Languages',
+        interestsPreview: 'Interests',
+        workHistoryPreview: 'Work history',
+        educationPreview: 'Education',
+        skillItem: 'Skill',
+        languageItem: 'Language',
+        interestItem: 'Interest or Project',
+        isProject: 'Is Project?',
+        workTitle: 'Job Title',
+        companyLocation: 'Company & Location',
+        startYear: 'Start Year',
+        endYear: 'End Year',
+        description: 'Description (Markdown supported)',
+        degree: 'Degree / Certificate',
+        schoolLocation: 'School / University',
+        removeItem: 'Remove item',
+        removeInterest: 'Remove interest',
+        removeEntry: 'Remove entry',
+        projectLabel: 'Project:',
+        current: 'Current',
+        item: 'Item'
+    },
+    ro: {
+        title: 'Constructor CV',
+        personalInfo: 'Informații personale',
+        design: 'Design',
+        skills: 'Competențe',
+        workHistory: 'Experiență profesională',
+        education: 'Educație',
+        languages: 'Limbi',
+        interests: 'Interese',
+        exportImport: 'Export / Import',
+        fullName: 'Nume complet',
+        jobTitle: 'Titlu profesional',
+        profilePhoto: 'Fotografie de profil',
+        removePhoto: 'Elimină fotografia',
+        phone: 'Telefon',
+        email: 'E-mail',
+        address: 'Adresă',
+        summary: 'Rezumat profesional',
+        accentColor: 'Culoare accent',
+        secondaryColor: 'Culoare secundară',
+        leftPanel: 'Panou stânga',
+        rightPanel: 'Panou dreapta',
+        textColor: 'Culoare text',
+        mutedText: 'Text estompat',
+        addSkill: 'Adaugă competență',
+        addWork: 'Adaugă experiență',
+        addEducation: 'Adaugă educație',
+        addLanguage: 'Adaugă limbă',
+        addInterest: 'Adaugă interes',
+        exportJson: 'Exportă CV JSON',
+        importJson: 'Importă CV JSON',
+        download: 'Descarcă CV-ul ca PDF',
+        skillsPreview: 'Competențe',
+        languagesPreview: 'Limbi',
+        interestsPreview: 'Interese',
+        workHistoryPreview: 'Experiență profesională',
+        educationPreview: 'Educație',
+        skillItem: 'Competență',
+        languageItem: 'Limbă',
+        interestItem: 'Interes sau proiect',
+        isProject: 'Este proiect?',
+        workTitle: 'Titlu job',
+        companyLocation: 'Companie & locație',
+        startYear: 'An început',
+        endYear: 'An sfârșit',
+        description: 'Descriere (suport Markdown)',
+        degree: 'Diplomă / Certificat',
+        schoolLocation: 'Școală / Universitate',
+        removeItem: 'Elimină element',
+        removeInterest: 'Elimină interes',
+        removeEntry: 'Elimină intrare',
+        projectLabel: 'Proiect:',
+        current: 'Prezent',
+        item: 'Element'
+    }
+};
 
 let resumeEditMode = false;
 let resumeAutoSaveEnabled = false;
 let resumeSaveTimeout;
+let resumeLanguage = 'en';
+
+function getResumeText(key) {
+    return RESUME_I18N[resumeLanguage]?.[key] || RESUME_I18N.en[key] || key;
+}
+
+function applyResumeLanguage(language) {
+    if (!RESUME_I18N[language]) return;
+    resumeLanguage = language;
+    document.querySelectorAll('[data-resume-i18n]').forEach(element => {
+        const key = element.dataset.resumeI18n;
+        const value = getResumeText(key);
+        if (value) {
+            element.textContent = value;
+        }
+    });
+    document.querySelectorAll('[data-resume-i18n-aria]').forEach(element => {
+        const key = element.dataset.resumeI18nAria;
+        const value = getResumeText(key);
+        if (value) {
+            element.setAttribute('aria-label', value);
+        }
+    });
+    document.querySelectorAll('[data-resume-lang]').forEach(button => {
+        const isActive = button.dataset.resumeLang === resumeLanguage;
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    updateList('interests');
+    updateComplexList('work');
+    updateComplexList('education');
+    try {
+        localStorage.setItem(RESUME_LANGUAGE_KEY, resumeLanguage);
+    } catch (error) {
+        console.warn('Unable to save resume language preference.', error);
+    }
+}
+
+function setupResumeLanguage() {
+    const buttons = document.querySelectorAll('[data-resume-lang]');
+    if (!buttons.length) return;
+    buttons.forEach(button => {
+        if (button.dataset.resumeBound === 'true') return;
+        button.addEventListener('click', () => {
+            applyResumeLanguage(button.dataset.resumeLang);
+        });
+        button.dataset.resumeBound = 'true';
+    });
+    let storedLanguage = 'en';
+    try {
+        storedLanguage = localStorage.getItem(RESUME_LANGUAGE_KEY) || 'en';
+    } catch (error) {
+        console.warn('Unable to load resume language preference.', error);
+    }
+    applyResumeLanguage(storedLanguage);
+}
 
 function createInputGroupElement({
     id,
     labelText,
+    labelKey,
     value = '',
     control = 'input',
     type = 'text',
@@ -40,6 +210,9 @@ function createInputGroupElement({
     const label = document.createElement('label');
     label.setAttribute('for', id);
     label.textContent = labelText;
+    if (labelKey) {
+        label.dataset.resumeI18n = labelKey;
+    }
 
     wrapper.append(inputElement, label);
 
@@ -88,18 +261,29 @@ function setupRealtimeUpdates() {
     });
 }
 
+function getListItemLabel(sectionId) {
+    if (sectionId === 'skills') return getResumeText('skillItem');
+    if (sectionId === 'languages') return getResumeText('languageItem');
+    return getResumeText('item');
+}
+
 function addListItem(sectionId, value = '') {
     const container = document.getElementById(`${sectionId}-form`);
     if (!container) return;
-    const capitalName = sectionId.charAt(0).toUpperCase() + sectionId.slice(1, -1);
     const itemId = `${sectionId}-${Date.now()}`;
     const listItem = document.createElement('div');
     listItem.className = 'list-item';
     listItem.id = itemId;
 
+    const labelKey = sectionId === 'skills'
+        ? 'skillItem'
+        : sectionId === 'languages'
+            ? 'languageItem'
+            : 'item';
     const { wrapper } = createInputGroupElement({
         id: `input-${itemId}`,
-        labelText: capitalName,
+        labelText: getListItemLabel(sectionId),
+        labelKey,
         value,
         wrapperClass: 'input-group resume-inline-group',
         onInput: () => updateList(sectionId)
@@ -108,7 +292,8 @@ function addListItem(sectionId, value = '') {
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'remove-btn';
-    removeButton.setAttribute('aria-label', 'Remove item');
+    removeButton.setAttribute('aria-label', getResumeText('removeItem'));
+    removeButton.dataset.resumeI18nAria = 'removeItem';
     removeButton.textContent = '×';
     removeButton.addEventListener('click', () => removeListItem(itemId, sectionId));
 
@@ -127,7 +312,8 @@ function addInterestItem(value = '', isProject = false) {
 
     const { wrapper } = createInputGroupElement({
         id: `input-${itemId}`,
-        labelText: 'Interest or Project',
+        labelText: getResumeText('interestItem'),
+        labelKey: 'interestItem',
         value,
         wrapperClass: 'input-group resume-inline-group',
         onInput: () => updateList('interests')
@@ -143,12 +329,14 @@ function addInterestItem(value = '', isProject = false) {
     const checkboxLabel = document.createElement('label');
     checkboxLabel.setAttribute('for', checkbox.id);
     checkboxLabel.className = 'resume-checkbox-label';
-    checkboxLabel.textContent = 'Is Project?';
+    checkboxLabel.textContent = getResumeText('isProject');
+    checkboxLabel.dataset.resumeI18n = 'isProject';
 
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'remove-btn';
-    removeButton.setAttribute('aria-label', 'Remove interest');
+    removeButton.setAttribute('aria-label', getResumeText('removeInterest'));
+    removeButton.dataset.resumeI18nAria = 'removeInterest';
     removeButton.textContent = '×';
     removeButton.addEventListener('click', () => removeListItem(itemId, 'interests'));
 
@@ -173,7 +361,8 @@ function updateList(sectionId) {
             const checkbox = item.querySelector('input[type="checkbox"]');
             if (input.value.trim()) {
                 const li = document.createElement('li');
-                li.innerHTML = checkbox.checked ? `<strong>Project:</strong> ${input.value}` : input.value;
+                const projectLabel = getResumeText('projectLabel');
+                li.innerHTML = checkbox.checked ? `<strong>${projectLabel}</strong> ${input.value}` : input.value;
                 listElement.appendChild(li);
             }
         });
@@ -205,35 +394,40 @@ function addComplexItem(sectionId, data = {}) {
     if (sectionId === 'work') {
         const titleGroup = createInputGroupElement({
             id: `${itemId}-title`,
-            labelText: 'Job Title',
+            labelText: getResumeText('workTitle'),
+            labelKey: 'workTitle',
             value: data.title || '',
             inputClasses: ['work-title'],
             onInput: handleInput
         });
         const companyGroup = createInputGroupElement({
             id: `${itemId}-company`,
-            labelText: 'Company & Location',
+            labelText: getResumeText('companyLocation'),
+            labelKey: 'companyLocation',
             value: data.company || '',
             inputClasses: ['work-company'],
             onInput: handleInput
         });
         const startGroup = createInputGroupElement({
             id: `${itemId}-start`,
-            labelText: 'Start Year',
+            labelText: getResumeText('startYear'),
+            labelKey: 'startYear',
             value: data.start || '',
             inputClasses: ['work-start'],
             onInput: handleInput
         });
         const endGroup = createInputGroupElement({
             id: `${itemId}-end`,
-            labelText: 'End Year',
+            labelText: getResumeText('endYear'),
+            labelKey: 'endYear',
             value: data.end || '',
             inputClasses: ['work-end'],
             onInput: handleInput
         });
         const descriptionGroup = createInputGroupElement({
             id: `${itemId}-desc`,
-            labelText: 'Description (Markdown supported)',
+            labelText: getResumeText('description'),
+            labelKey: 'description',
             value: data.desc || '',
             control: 'textarea',
             inputClasses: ['work-desc'],
@@ -250,28 +444,32 @@ function addComplexItem(sectionId, data = {}) {
     } else if (sectionId === 'education') {
         const degreeGroup = createInputGroupElement({
             id: `${itemId}-degree`,
-            labelText: 'Degree / Certificate',
+            labelText: getResumeText('degree'),
+            labelKey: 'degree',
             value: data.degree || '',
             inputClasses: ['edu-degree'],
             onInput: handleInput
         });
         const schoolGroup = createInputGroupElement({
             id: `${itemId}-school`,
-            labelText: 'School / University',
+            labelText: getResumeText('schoolLocation'),
+            labelKey: 'schoolLocation',
             value: data.school || '',
             inputClasses: ['edu-school'],
             onInput: handleInput
         });
         const startGroup = createInputGroupElement({
             id: `${itemId}-start`,
-            labelText: 'Start Year',
+            labelText: getResumeText('startYear'),
+            labelKey: 'startYear',
             value: data.start || '',
             inputClasses: ['edu-start'],
             onInput: handleInput
         });
         const endGroup = createInputGroupElement({
             id: `${itemId}-end`,
-            labelText: 'End Year',
+            labelText: getResumeText('endYear'),
+            labelKey: 'endYear',
             value: data.end || '',
             inputClasses: ['edu-end'],
             onInput: handleInput
@@ -288,7 +486,8 @@ function addComplexItem(sectionId, data = {}) {
     const removeButton = document.createElement('button');
     removeButton.type = 'button';
     removeButton.className = 'remove-btn';
-    removeButton.setAttribute('aria-label', 'Remove entry');
+    removeButton.setAttribute('aria-label', getResumeText('removeEntry'));
+    removeButton.dataset.resumeI18nAria = 'removeEntry';
     removeButton.textContent = '×';
     removeButton.addEventListener('click', () => removeItem(itemId, sectionId));
 
@@ -326,7 +525,8 @@ function updateComplexList(sectionId) {
             };
             if (data.title || data.company) {
                 const descHtml = DOMPurify.sanitize(marked.parse(data.desc));
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
+                const currentLabel = getResumeText('current');
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || currentLabel}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
                 container.appendChild(div);
             }
         } else if (sectionId === 'education') {
@@ -337,7 +537,8 @@ function updateComplexList(sectionId) {
                 end: item.querySelector('.edu-end').value
             };
             if (data.degree || data.school) {
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${data.start} - ${data.end || 'Current'}</span></div><p><strong>${data.school}</strong></p>`;
+                const currentLabel = getResumeText('current');
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${data.start} - ${data.end || currentLabel}</span></div><p><strong>${data.school}</strong></p>`;
                 container.appendChild(div);
             }
         }
@@ -802,6 +1003,7 @@ function ensureResumeStyles() {
 
 function initResumePage() {
     ensureResumeStyles();
+    setupResumeLanguage();
     ensureMarkedLoaded().then(() => {
         setupResumeControls();
         setupRealtimeUpdates();

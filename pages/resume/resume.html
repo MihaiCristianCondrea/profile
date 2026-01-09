@@ -1,72 +1,82 @@
 <div id="resumePage">
   <div class="form-container">
-    <h1>Resume Builder</h1>
-
-    <div class="form-section">
-      <h2>Personal Info</h2>
-      <div class="input-group">
-        <input type="text" id="name" placeholder=" " />
-        <label for="name">Full Name</label>
-      </div>
-      <div class="input-group">
-        <input type="text" id="job-title" placeholder=" " />
-        <label for="job-title">Job Title</label>
-      </div>
-      <div class="resume-photo-controls">
-        <label class="resume-file-label" for="photo">Profile Photo</label>
-        <input type="file" id="photo" accept="image/*" />
-        <button type="button" class="secondary-btn" id="removePhotoButton">
-          Remove Photo
+    <div class="resume-header">
+      <h1 data-resume-i18n="title">Resume Builder</h1>
+      <div class="resume-language-toggle" role="group" aria-label="Resume language">
+        <button type="button" class="resume-flag-btn" data-resume-lang="en" aria-pressed="true" title="English">
+          🇬🇧
         </button>
-      </div>
-      <div class="input-group">
-        <input type="tel" id="phone" placeholder=" " />
-        <label for="phone">Phone</label>
-      </div>
-      <div class="input-group">
-        <input type="email" id="email" placeholder=" " />
-        <label for="email">Email</label>
-      </div>
-      <div class="input-group">
-        <input type="text" id="address" placeholder=" " />
-        <label for="address">Address</label>
-      </div>
-      <div class="input-group">
-        <textarea id="summary" placeholder=" "></textarea>
-        <label for="summary">Professional Summary</label>
+        <button type="button" class="resume-flag-btn" data-resume-lang="ro" aria-pressed="false" title="Română">
+          🇷🇴
+        </button>
       </div>
     </div>
 
     <div class="form-section">
-      <h2>Design</h2>
+      <h2><span data-resume-i18n="personalInfo">Personal Info</span></h2>
+      <div class="input-group">
+        <input type="text" id="name" placeholder=" " />
+        <label for="name" data-resume-i18n="fullName">Full Name</label>
+      </div>
+      <div class="input-group">
+        <input type="text" id="job-title" placeholder=" " />
+        <label for="job-title" data-resume-i18n="jobTitle">Job Title</label>
+      </div>
+      <div class="resume-photo-controls">
+        <label class="resume-file-label" for="photo" data-resume-i18n="profilePhoto">Profile Photo</label>
+        <input type="file" id="photo" accept="image/*" />
+        <button type="button" class="secondary-btn" id="removePhotoButton">
+          <span data-resume-i18n="removePhoto">Remove Photo</span>
+        </button>
+      </div>
+      <div class="input-group">
+        <input type="tel" id="phone" placeholder=" " />
+        <label for="phone" data-resume-i18n="phone">Phone</label>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" placeholder=" " />
+        <label for="email" data-resume-i18n="email">Email</label>
+      </div>
+      <div class="input-group">
+        <input type="text" id="address" placeholder=" " />
+        <label for="address" data-resume-i18n="address">Address</label>
+      </div>
+      <div class="input-group">
+        <textarea id="summary" placeholder=" "></textarea>
+        <label for="summary" data-resume-i18n="summary">Professional Summary</label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2><span data-resume-i18n="design">Design</span></h2>
       <div class="color-grid">
         <div class="color-input">
-          <label for="accent-color">Accent Color</label>
+          <label for="accent-color" data-resume-i18n="accentColor">Accent Color</label>
           <input type="color" id="accent-color" data-resume-color="--resume-accent" />
           <span class="color-value" data-color-value-for="accent-color"></span>
         </div>
         <div class="color-input">
-          <label for="secondary-color">Secondary Color</label>
+          <label for="secondary-color" data-resume-i18n="secondaryColor">Secondary Color</label>
           <input type="color" id="secondary-color" data-resume-color="--resume-secondary" />
           <span class="color-value" data-color-value-for="secondary-color"></span>
         </div>
         <div class="color-input">
-          <label for="left-bg-color">Left Panel</label>
+          <label for="left-bg-color" data-resume-i18n="leftPanel">Left Panel</label>
           <input type="color" id="left-bg-color" data-resume-color="--resume-left-bg" />
           <span class="color-value" data-color-value-for="left-bg-color"></span>
         </div>
         <div class="color-input">
-          <label for="right-bg-color">Right Panel</label>
+          <label for="right-bg-color" data-resume-i18n="rightPanel">Right Panel</label>
           <input type="color" id="right-bg-color" data-resume-color="--resume-right-bg" />
           <span class="color-value" data-color-value-for="right-bg-color"></span>
         </div>
         <div class="color-input">
-          <label for="text-color">Text Color</label>
+          <label for="text-color" data-resume-i18n="textColor">Text Color</label>
           <input type="color" id="text-color" data-resume-color="--resume-text" />
           <span class="color-value" data-color-value-for="text-color"></span>
         </div>
         <div class="color-input">
-          <label for="muted-color">Muted Text</label>
+          <label for="muted-color" data-resume-i18n="mutedText">Muted Text</label>
           <input type="color" id="muted-color" data-resume-color="--resume-muted" />
           <span class="color-value" data-color-value-for="muted-color"></span>
         </div>
@@ -74,50 +84,63 @@
     </div>
 
     <div class="form-section dynamic-list" id="skills-form">
-      <h2><span class="material-symbols-outlined">build</span> Skills</h2>
+      <h2>
+        <span class="material-symbols-outlined">build</span>
+        <span data-resume-i18n="skills">Skills</span>
+      </h2>
       <button type="button" class="add-btn" data-add-list="skills">
-        Add Skill
+        <span data-resume-i18n="addSkill">Add Skill</span>
       </button>
     </div>
 
     <div class="form-section" id="work-form">
-      <h2><span class="material-symbols-outlined">work</span> Work History</h2>
+      <h2>
+        <span class="material-symbols-outlined">work</span>
+        <span data-resume-i18n="workHistory">Work History</span>
+      </h2>
       <button type="button" class="add-btn" data-add-complex="work">
-        Add Work Experience
+        <span data-resume-i18n="addWork">Add Work Experience</span>
       </button>
     </div>
 
     <div class="form-section" id="education-form">
-      <h2><span class="material-symbols-outlined">school</span> Education</h2>
+      <h2>
+        <span class="material-symbols-outlined">school</span>
+        <span data-resume-i18n="education">Education</span>
+      </h2>
       <button type="button" class="add-btn" data-add-complex="education">
-        Add Education
+        <span data-resume-i18n="addEducation">Add Education</span>
       </button>
     </div>
 
     <div class="form-section dynamic-list" id="languages-form">
-      <h2><span class="material-symbols-outlined">language</span> Languages</h2>
+      <h2>
+        <span class="material-symbols-outlined">language</span>
+        <span data-resume-i18n="languages">Languages</span>
+      </h2>
       <button type="button" class="add-btn" data-add-list="languages">
-        Add Language
+        <span data-resume-i18n="addLanguage">Add Language</span>
       </button>
     </div>
 
     <div class="form-section" id="interests-form">
       <h2>
-        <span class="material-symbols-outlined">interests</span> Interests
+        <span class="material-symbols-outlined">interests</span>
+        <span data-resume-i18n="interests">Interests</span>
       </h2>
       <button type="button" class="add-btn" data-add-interest="true">
-        Add Interest
+        <span data-resume-i18n="addInterest">Add Interest</span>
       </button>
     </div>
 
     <div class="form-section">
-      <h2>Export / Import</h2>
+      <h2><span data-resume-i18n="exportImport">Export / Import</span></h2>
       <div class="resume-json-actions">
         <button type="button" class="secondary-btn" id="exportResumeJson">
-          Export Resume JSON
+          <span data-resume-i18n="exportJson">Export Resume JSON</span>
         </button>
         <button type="button" class="secondary-btn" id="importResumeJson">
-          Import Resume JSON
+          <span data-resume-i18n="importJson">Import Resume JSON</span>
         </button>
         <input type="file" id="resume-json-file" accept="application/json" />
       </div>
@@ -134,18 +157,23 @@
           <p id="resume-address"></p>
         </div>
         <div class="resume-section" id="resume-skills">
-          <h2><span class="material-symbols-outlined">build</span> Skills</h2>
+          <h2>
+            <span class="material-symbols-outlined">build</span>
+            <span data-resume-i18n="skillsPreview">Skills</span>
+          </h2>
           <ul></ul>
         </div>
         <div class="resume-section" id="resume-languages">
           <h2>
-            <span class="material-symbols-outlined">language</span> Languages
+            <span class="material-symbols-outlined">language</span>
+            <span data-resume-i18n="languagesPreview">Languages</span>
           </h2>
           <ul></ul>
         </div>
         <div class="resume-section" id="resume-interests">
           <h2>
-            <span class="material-symbols-outlined">interests</span> Interests
+            <span class="material-symbols-outlined">interests</span>
+            <span data-resume-i18n="interestsPreview">Interests</span>
           </h2>
           <ul></ul>
         </div>
@@ -157,12 +185,14 @@
 
         <div class="resume-section" id="resume-work">
           <h2>
-            <span class="material-symbols-outlined">work</span>Work history
+            <span class="material-symbols-outlined">work</span>
+            <span data-resume-i18n="workHistoryPreview">Work history</span>
           </h2>
         </div>
         <div class="resume-section" id="resume-education">
           <h2>
-            <span class="material-symbols-outlined">school</span> Education
+            <span class="material-symbols-outlined">school</span>
+            <span data-resume-i18n="educationPreview">Education</span>
           </h2>
         </div>
       </div>
@@ -171,7 +201,7 @@
   <div class="resume-download">
     <button type="button" id="downloadResumeButton">
       <span class="material-symbols-outlined">download</span
-      ><span>Download Resume as PDF</span>
+      ><span data-resume-i18n="download">Download Resume as PDF</span>
     </button>
   </div>
 </div>
