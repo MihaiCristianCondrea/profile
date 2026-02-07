@@ -4,8 +4,7 @@ const appConfig = {
         url: 'https://d4rk7355608.blogspot.com/',
         maxResults: 4,
         _getApiKey: function() {
-            const keyParts = ["QUl6YVN5Qj", "llZDFmR1puOFd", "yWXdjWmsta1V", "ERG1mclRZUGFY", "YVJz"];
-            const encodedKey = keyParts.join('');
+            const encodedKey = 'QUl6YVN5QXVqb0dXcUhIR1ZuYjh6eXZDUEdLWnJkajc5TFRCUFQw';
             return typeof window !== 'undefined' && window.atob ? window.atob(encodedKey) : '';
         }
     }
