@@ -1,8 +1,4 @@
 <div id="smartCleanerPageContainer" class="page-section active">
-  <div class="smart-cleaner-bg-shape is-one" aria-hidden="true"></div>
-  <div class="smart-cleaner-bg-shape is-two" aria-hidden="true"></div>
-  <div class="smart-cleaner-bg-shape is-three" aria-hidden="true"></div>
-
   <section class="smart-cleaner-hero smart-cleaner-reveal" id="smartCleanerHero">
     <div class="smart-cleaner-hero-copy">
       <h1><span class="smart-cleaner-headline-pill">Cleaner storage.<br />Smoother Android.</span></h1>
@@ -22,11 +18,18 @@
             loading="lazy"
           />
         </a>
+        <a
+          href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="smart-cleaner-secondary-link"
+        >
+          View on GitHub
+        </a>
       </div>
     </div>
 
     <div class="smart-cleaner-hero-visual" aria-label="Smart Cleaner app preview">
-      <div class="smart-cleaner-gradient-orb" aria-hidden="true"></div>
       <div class="smart-cleaner-phone-frame" data-parallax>
         <img
           src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png"
@@ -41,58 +44,91 @@
     <h2>Storage shouldn’t feel stressful.</h2>
     <p>When space runs low, your phone should still feel simple. Smart Cleaner turns storage chaos into a clear next step.</p>
 
-    <div class="smart-cleaner-before-after" id="smartCleanerBeforeAfter" aria-label="Before and after cleanup transformation">
-      <div class="smart-cleaner-morph-screen is-before" aria-hidden="true">
-        <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_main.png" alt="Messy storage view before cleanup" loading="lazy" />
-      </div>
-      <div class="smart-cleaner-morph-screen is-after" aria-hidden="true">
-        <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/3-screenshot_main_memory_manager.png" alt="Clean storage view after cleanup" loading="lazy" />
-      </div>
-      <div class="smart-cleaner-morph-labels" aria-live="polite">
-        <span>Before</span>
-        <span>After</span>
-      </div>
+    <div class="smart-cleaner-before-after" aria-label="Before and after cleanup illustration">
+      <span class="smart-cleaner-floating-icon is-sad" aria-hidden="true">😟</span>
+      <span class="smart-cleaner-floating-icon is-alert" aria-hidden="true">😵‍💫</span>
+      <span class="smart-cleaner-floating-icon is-happy" aria-hidden="true">✨</span>
+
+      <article class="state before">
+        <h3>
+          <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+          Before
+        </h3>
+        <p>Storage feels cluttered and difficult to manage.</p>
+      </article>
+
+      <article class="state after">
+        <h3>
+          <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+          After
+        </h3>
+        <p>Cleaner space, calmer decisions, better flow.</p>
+      </article>
     </div>
   </section>
 
-  <section class="smart-cleaner-feature-journey smart-cleaner-reveal" id="smartCleanerFeatureJourney">
-    <div class="smart-cleaner-feature-sticky">
-      <div class="smart-cleaner-story-visual" data-parallax>
-        <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png" alt="Smart Cleaner feature walkthrough" loading="lazy" />
-      </div>
+  <section class="smart-cleaner-story-section smart-cleaner-reveal" id="smartCleanerLargeFiles">
+    <div class="smart-cleaner-story-visual" data-parallax>
+      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/3-screenshot_main_memory_manager.png" alt="Large files cleaning screenshot" loading="lazy" />
     </div>
+    <article class="smart-cleaner-story-copy">
+      <h2>Clean what matters.</h2>
+      <p>See what’s taking space in seconds, then clear the files that move the needle.</p>
+      <ul>
+        <li>Spot oversized files instantly</li>
+        <li>Preview before every action</li>
+        <li>Cleanups that feel safe and deliberate</li>
+      </ul>
+    </article>
+  </section>
 
-    <div class="smart-cleaner-feature-steps">
-      <article class="smart-cleaner-story-copy smart-cleaner-step">
-        <h2>Clean what matters.</h2>
-        <p>See what’s taking space in seconds, then clear the files that move the needle.</p>
-        <ul>
-          <li><span class="material-symbols-outlined" aria-hidden="true">cleaning_services</span>Spot oversized files instantly</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>Preview before every action</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">delete_outline</span>Cleanups that feel safe and deliberate</li>
-        </ul>
-      </article>
-
-      <article class="smart-cleaner-story-copy smart-cleaner-step">
-        <h2>Find duplicates instantly.</h2>
-        <p>Repeated photos and files stop hiding. Keep the copy you want and remove the rest in one flow.</p>
-        <ul>
-          <li><span class="material-symbols-outlined" aria-hidden="true">folder_delete</span>Fast duplicate matching</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">auto_fix_high</span>Clear, confident recommendations</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>One-tap cleanup when you’re ready</li>
-        </ul>
-      </article>
-
-      <article class="smart-cleaner-story-copy smart-cleaner-step">
-        <h2>Protect your digital traces.</h2>
-        <p>Clear clipboard leftovers and shared links with the same simple rhythm as storage cleanup.</p>
-        <ul>
-          <li><span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>Clipboard cleanup in moments</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">folder_delete</span>Link history cleanup made simple</li>
-          <li><span class="material-symbols-outlined" aria-hidden="true">cleaning_services</span>Transparent controls at every step</li>
-        </ul>
-      </article>
+  <section class="smart-cleaner-story-section is-reverse smart-cleaner-reveal" id="smartCleanerDuplicates">
+    <div class="smart-cleaner-story-visual" data-parallax>
+      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_main.png" alt="Duplicate files detection screenshot" loading="lazy" />
     </div>
+    <article class="smart-cleaner-story-copy">
+      <h2>Find duplicates instantly.</h2>
+      <p>Repeated photos and files stop hiding. Keep the copy you want and remove the rest in one flow.</p>
+      <ul>
+        <li>Fast duplicate matching</li>
+        <li>Clear, confident recommendations</li>
+        <li>One-tap cleanup when you’re ready</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="smart-cleaner-story-section smart-cleaner-reveal" id="smartCleanerWhatsapp">
+    <div class="smart-cleaner-story-visual" data-parallax>
+      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png" alt="WhatsApp storage cleaner screenshot" loading="lazy" />
+    </div>
+    <article class="smart-cleaner-story-copy">
+      <h2>WhatsApp storage under control.</h2>
+      <p>Recover space from chat media without digging through folders or losing control of what stays.</p>
+      <ul>
+        <li>Focus on media-heavy conversations</li>
+        <li>Reduce manual folder hunting</li>
+        <li>Keep messaging storage clean over time</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="smart-cleaner-story-section is-reverse smart-cleaner-reveal" id="smartCleanerPrivacy">
+    <div class="smart-cleaner-story-visual" data-parallax>
+      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/5-screenshot_trash.png" alt="Privacy cleanup screenshot" loading="lazy" />
+    </div>
+    <article class="smart-cleaner-story-copy">
+      <h2>Protect your digital traces.</h2>
+      <p>Clear clipboard leftovers and shared links with the same simple rhythm as storage cleanup.</p>
+      <ul>
+        <li>Clipboard cleanup in moments</li>
+        <li>Link history cleanup made simple</li>
+        <li>Transparent controls at every step</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="smart-cleaner-breathing smart-cleaner-reveal">
+    <p>Clean your storage.<br />Keep your clarity.</p>
   </section>
 
   <section class="smart-cleaner-trust smart-cleaner-reveal">
@@ -101,17 +137,10 @@
     <p class="smart-cleaner-ads-note">Contains ads to support development.</p>
   </section>
 
-  <section class="smart-cleaner-breathing smart-cleaner-reveal" aria-label="Smart Cleaner focus statement">
-    <p>Clean your storage.<br />Keep your clarity.</p>
-  </section>
-
   <section class="smart-cleaner-performance smart-cleaner-reveal" aria-label="Performance story section">
     <h2>Fast by design.</h2>
     <p>Quick scans, smooth transitions, and lightweight behavior built for daily use.</p>
-    <div class="smart-cleaner-performance-stage">
-      <div class="smart-cleaner-scanline" aria-hidden="true"></div>
-      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/4-screenshot_main_app_manager.png" alt="Performance-focused Smart Cleaner screen" loading="lazy" />
-    </div>
+    <div class="smart-cleaner-scanline" aria-hidden="true"></div>
   </section>
 
   <section class="smart-cleaner-screens smart-cleaner-reveal" id="smartCleanerScreenshots">
@@ -142,27 +171,6 @@
         loading="lazy"
       />
     </a>
-    <div class="smart-cleaner-cta-secondary-actions">
-      <a
-        href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="smart-cleaner-ghost-btn"
-        aria-label="View Smart Cleaner on GitHub"
-      >
-        View on GitHub
-      </a>
-      <a
-        href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="smart-cleaner-ghost-btn"
-        aria-label="Smart Cleaner for Windows in development"
-      >
-        <span class="material-symbols-outlined" aria-hidden="true">desktop_windows</span>
-        Windows version <span class="smart-cleaner-windows-status">(In development)</span>
-      </a>
-    </div>
   </section>
 
   <section class="smart-cleaner-section smart-cleaner-reveal">

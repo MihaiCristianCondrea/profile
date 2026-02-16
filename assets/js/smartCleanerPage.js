@@ -5,40 +5,12 @@
         items.forEach((item) => item.classList.add('is-visible'));
     }
 
-
-    function prepareRevealChildren(sections) {
-        sections.forEach((section) => {
-            const children = Array.from(section.children).filter((child) => !child.classList.contains('smart-cleaner-bg-shape'));
-
-            children.forEach((child, index) => {
-                child.classList.add('smart-cleaner-reveal-item');
-                child.style.setProperty('--smart-reveal-delay', `${(index + 1) * 100}ms`);
-            });
-        });
-    }
-
-        prepareRevealChildren(sections);
-
-    function prepareRevealChildren(sections) {
-        sections.forEach((section) => {
-            const children = Array.from(section.children)
-                .filter((child) => !child.hasAttribute('data-parallax'));
-
-            children.forEach((child, index) => {
-                child.classList.add('smart-cleaner-reveal-item');
-                child.style.setProperty('--smart-reveal-delay', `${(index + 1) * 100}ms`);
-            });
-        });
-    }
-
     function initScrollReveal(page, prefersReducedMotion) {
         const sections = Array.from(page.querySelectorAll('.smart-cleaner-reveal'));
 
         if (!sections.length) {
             return;
         }
-
-        prepareRevealChildren(sections);
 
         if (prefersReducedMotion || typeof global.IntersectionObserver !== 'function') {
             revealImmediately(sections);
@@ -61,45 +33,21 @@
         sections.forEach((section) => sectionObserver.observe(section));
     }
 
-    function initBeforeAfter(page, prefersReducedMotion) {
-        const block = page.querySelector('#smartCleanerBeforeAfter');
-        if (!block) {
+    function initBeforeAfter(page) {
+        const block = page.querySelector('.smart-cleaner-before-after');
+        if (!block || typeof global.IntersectionObserver !== 'function') {
             return;
         }
 
-        const setProgress = (progress) => {
-            const normalized = Math.max(0, Math.min(1, progress));
-            page.style.setProperty('--smart-cleaner-progress', normalized.toFixed(3));
-        };
-
-        if (prefersReducedMotion) {
-            setProgress(1);
-            return;
-        }
-
-        const onScroll = () => {
-            const rect = block.getBoundingClientRect();
-            const start = Math.min(global.innerHeight * 0.72, global.innerHeight - 40);
-            const distance = 30;
-            const rawProgress = (start - rect.top) / distance;
-            setProgress(rawProgress);
-        };
-
-        let ticking = false;
-        const updateOnScroll = () => {
-            if (ticking) {
-                return;
-            }
-            ticking = true;
-            global.requestAnimationFrame(() => {
-                onScroll();
-                ticking = false;
+        const observer = new global.IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                block.classList.toggle('is-clean', entry.isIntersecting);
             });
-        };
+        }, {
+            threshold: 0.65
+        });
 
-        onScroll();
-        global.addEventListener('scroll', updateOnScroll, { passive: true });
-        global.addEventListener('resize', updateOnScroll);
+        observer.observe(block);
     }
 
     function initGallery(page) {
@@ -154,7 +102,7 @@
     }
 
     function initParallax(page, prefersReducedMotion) {
-        const elements = Array.from(page.querySelectorAll('[data-parallax], .smart-cleaner-bg-shape'));
+        const elements = Array.from(page.querySelectorAll('[data-parallax]'));
         if (!elements.length || prefersReducedMotion) {
             return;
         }
@@ -166,15 +114,8 @@
                 const rect = element.getBoundingClientRect();
                 const elementCenter = rect.top + (rect.height / 2);
                 const delta = (elementCenter - viewportCenter) / Math.max(global.innerHeight, 1);
-
-                if (element.classList.contains('smart-cleaner-bg-shape')) {
-                    const offset = Math.max(-10, Math.min(10, -delta * 10));
-                    element.style.setProperty('--smart-shape-shift-y', `${offset.toFixed(2)}px`);
-                    return;
-                }
-
-                const offset = Math.max(-20, Math.min(20, -delta * 20));
-                element.style.setProperty('--smart-cleaner-parallax-y', `${offset.toFixed(2)}px`);
+                const offset = Math.max(-8, Math.min(8, -delta * 12));
+                element.style.transform = `translateY(${offset.toFixed(2)}px)`;
             });
         };
 
@@ -211,7 +152,7 @@
         const prefersReducedMotion = !!(reduceMotionQuery && reduceMotionQuery.matches);
 
         initScrollReveal(page, prefersReducedMotion);
-        initBeforeAfter(page, prefersReducedMotion);
+        initBeforeAfter(page);
         initGallery(page);
         initParallax(page, prefersReducedMotion);
     }
