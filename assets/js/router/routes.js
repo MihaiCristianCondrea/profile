@@ -266,6 +266,12 @@
         }
     }
 
+    function runSmartCleanerOnLoad() {
+        if (typeof initSmartCleanerPage === 'function') {
+            initSmartCleanerPage();
+        }
+    }
+
     const defaultRoutes = [
         {
             id: 'home',
@@ -435,6 +441,34 @@
                 twitter: {
                     title: 'FAQ & Support | Mihai-Cristian Condrea',
                     description: 'Find answers to frequently asked questions about Mihai-Cristian Condrea\'s Android apps, including Google Play Services requirements, analytics usage, privacy, and official download sources.'
+                }
+            }
+        },
+        {
+            id: 'smart-cleaner-for-android',
+            path: 'pages/drawer/more/apps/smart-cleaner-for-android.html',
+            title: 'Smart Cleaner for Android',
+            onLoad: runSmartCleanerOnLoad,
+            metadata: {
+                description: 'Discover Smart Cleaner for Android, an open-source one-tap cleaner that helps remove junk files, optimize storage, and keep your phone responsive.',
+                keywords: [
+                    'Smart Cleaner for Android',
+                    'Android junk cleaner app',
+                    'open source storage cleaner',
+                    'Google Play phone cleaner'
+                ],
+                canonicalSlug: 'smart-cleaner-for-android',
+                openGraph: {
+                    title: 'Smart Cleaner for Android | App Presentation',
+                    description: 'Discover Smart Cleaner for Android, an open-source one-tap cleaner that helps remove junk files, optimize storage, and keep your phone responsive.',
+                    type: 'website',
+                    image: 'https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/refs/heads/master/.idea/icon.svg',
+                    imageAlt: 'Smart Cleaner for Android app icon'
+                },
+                twitter: {
+                    title: 'Smart Cleaner for Android | App Presentation',
+                    description: 'Discover Smart Cleaner for Android, an open-source one-tap cleaner that helps remove junk files, optimize storage, and keep your phone responsive.',
+                    image: 'https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/refs/heads/master/.idea/icon.svg'
                 }
             }
         },

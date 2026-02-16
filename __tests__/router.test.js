@@ -482,6 +482,23 @@ describe('RouterRoutes registry', () => {
     );
   });
 
+  test('includes smart cleaner presentation route metadata', () => {
+    const smartCleanerRoute = RouterRoutes.getRoute('smart-cleaner-for-android');
+
+    expect(smartCleanerRoute).toEqual(expect.objectContaining({
+      id: 'smart-cleaner-for-android',
+      path: 'pages/drawer/more/apps/smart-cleaner-for-android.html',
+      title: 'Smart Cleaner for Android',
+      onLoad: expect.any(Function),
+      metadata: expect.objectContaining({
+        canonicalSlug: 'smart-cleaner-for-android',
+        openGraph: expect.objectContaining({
+          imageAlt: 'Smart Cleaner for Android app icon'
+        })
+      })
+    }));
+  });
+
   test('warns when overriding a registered route', () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
