@@ -5,6 +5,20 @@
         items.forEach((item) => item.classList.add('is-visible'));
     }
 
+
+    function prepareRevealChildren(sections) {
+        sections.forEach((section) => {
+            const children = Array.from(section.children).filter((child) => !child.classList.contains('smart-cleaner-bg-shape'));
+
+            children.forEach((child, index) => {
+                child.classList.add('smart-cleaner-reveal-item');
+                child.style.setProperty('--smart-reveal-delay', `${(index + 1) * 100}ms`);
+            });
+        });
+    }
+
+        prepareRevealChildren(sections);
+
     function prepareRevealChildren(sections) {
         sections.forEach((section) => {
             const children = Array.from(section.children)

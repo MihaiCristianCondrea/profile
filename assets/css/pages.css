@@ -1805,3 +1805,16 @@
   }
 }
 
+  transform: translateY(40px);
+  transition: opacity 600ms ease, transform 600ms ease;
+#smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 600ms ease, transform 600ms ease;
+  transition-delay: var(--smart-reveal-delay, 0ms);
+}
+
+#smartCleanerPageContainer .smart-cleaner-reveal.is-visible,
+#smartCleanerPageContainer .smart-cleaner-reveal.is-visible .smart-cleaner-reveal-item {
+  transition: opacity 600ms ease 130ms, transform 600ms ease 130ms;
+  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item,
