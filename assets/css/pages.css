@@ -1318,3 +1318,544 @@
     margin-top: 0;
   }
 }
+
+/* --- Smart Cleaner Presentation Page --- */
+#smartCleanerPageContainer {
+  --smart-cleaner-accent: color-mix(in srgb, var(--md-sys-color-primary) 74%, #22c55e 26%);
+  color: var(--app-text-color);
+  padding: 0.6rem 0 3rem;
+  position: relative;
+}
+
+#smartCleanerPageContainer section {
+  border-radius: 24px;
+  margin-top: 1rem;
+}
+
+#smartCleanerPageContainer h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4.8vw, 3.4rem);
+  line-height: 1.1;
+}
+
+#smartCleanerPageContainer h2 {
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+}
+
+#smartCleanerPageContainer p,
+#smartCleanerPageContainer li {
+  line-height: 1.65;
+  color: var(--app-secondary-text-color);
+}
+
+#smartCleanerPageContainer .smart-cleaner-hero,
+#smartCleanerPageContainer .smart-cleaner-problem,
+#smartCleanerPageContainer .smart-cleaner-trust,
+#smartCleanerPageContainer .smart-cleaner-screens,
+#smartCleanerPageContainer .smart-cleaner-timeline-wrap,
+#smartCleanerPageContainer .smart-cleaner-cta,
+#smartCleanerPageContainer .smart-cleaner-section {
+  padding: 1.55rem;
+  border: 1px solid var(--app-border-color);
+  background: var(--app-card-bg-color);
+}
+
+#smartCleanerPageContainer .smart-cleaner-section-tint {
+  background: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--smart-cleaner-accent) 11%, var(--app-card-bg-color)),
+    var(--app-card-bg-color)
+  );
+}
+
+#smartCleanerPageContainer .smart-cleaner-hero {
+  display: grid;
+  grid-template-columns: 1.15fr minmax(220px, 370px);
+  gap: 1.4rem;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--smart-cleaner-accent) 16%, transparent), transparent 62%),
+    var(--app-card-bg-color);
+}
+
+#smartCleanerPageContainer .smart-cleaner-kicker {
+  color: var(--smart-cleaner-accent);
+  font-size: 0.81rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  display: inline-flex;
+}
+
+#smartCleanerPageContainer .smart-cleaner-subtitle {
+  margin: 0.95rem 0 1.2rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+#smartCleanerPageContainer .smart-cleaner-play-badge,
+#smartCleanerPageContainer .smart-cleaner-cta-badge img,
+#smartCleanerPageContainer .smart-cleaner-sticky-cta img {
+  width: min(220px, 100%);
+  display: block;
+}
+
+#smartCleanerPageContainer .smart-cleaner-secondary-link {
+  text-decoration: none;
+  border: 1px solid color-mix(in srgb, var(--md-sys-color-primary) 36%, var(--app-border-color));
+  border-radius: 999px;
+  padding: 0.6rem 0.9rem;
+  font-weight: 600;
+  color: var(--md-sys-color-primary);
+}
+
+#smartCleanerPageContainer .smart-cleaner-secondary-link:hover {
+  background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-chips,
+#smartCleanerPageContainer .smart-cleaner-cta-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-chips {
+  margin-top: 1rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-chips span,
+#smartCleanerPageContainer .smart-cleaner-cta-chips span {
+  border: 1px solid var(--app-border-color);
+  border-radius: 999px;
+  padding: 0.33rem 0.7rem;
+  color: var(--app-text-color);
+  font-size: 0.82rem;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 78%, var(--app-card-bg-color));
+}
+
+#smartCleanerPageContainer .smart-cleaner-hero-visual {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#smartCleanerPageContainer .smart-cleaner-shape {
+  position: absolute;
+  inset: 14% 8% auto;
+  height: 66%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--smart-cleaner-accent) 17%, transparent);
+  filter: blur(14px);
+}
+
+#smartCleanerPageContainer .smart-cleaner-floating-icon {
+  position: absolute;
+  width: clamp(84px, 10vw, 126px);
+  top: -14px;
+  right: 6%;
+  z-index: 2;
+  filter: drop-shadow(0 12px 30px color-mix(in srgb, var(--smart-cleaner-accent) 35%, transparent));
+}
+
+#smartCleanerPageContainer .smart-cleaner-phone-frame {
+  width: min(275px, 94%);
+  border: 8px solid color-mix(in srgb, var(--app-border-color) 68%, #111827);
+  border-radius: 32px;
+  overflow: hidden;
+  background: #0f172a;
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 1;
+  animation: smartCleanerPhoneFloat 6s ease-in-out infinite;
+}
+
+#smartCleanerPageContainer .smart-cleaner-phone-frame img {
+  display: block;
+  width: 100%;
+}
+
+#smartCleanerPageContainer .smart-cleaner-problem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+#smartCleanerPageContainer .smart-cleaner-problem ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after {
+  border: 1px solid var(--app-border-color);
+  border-radius: 18px;
+  padding: 0.9rem;
+  background: var(--md-sys-color-surface-container);
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after .state {
+  border-radius: 14px;
+  padding: 0.8rem;
+  transition: transform var(--app-motion-duration-medium, 380ms) ease, opacity var(--app-motion-duration-medium, 380ms) ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after .before {
+  background: color-mix(in srgb, #ef4444 18%, var(--md-sys-color-surface-container));
+  opacity: 1;
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after .after {
+  margin-top: 0.7rem;
+  background: color-mix(in srgb, #10b981 20%, var(--md-sys-color-surface-container));
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after.is-clean .before {
+  opacity: 0.42;
+  transform: translateY(-8px);
+}
+
+#smartCleanerPageContainer .smart-cleaner-before-after.is-clean .after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlights {
+  display: grid;
+  grid-template-columns: minmax(240px, 330px) 1fr;
+  gap: 1rem;
+  border: 1px solid var(--app-border-color);
+  padding: 1.1rem;
+  border-radius: 24px;
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-visual-wrap {
+  position: relative;
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-visual {
+  position: sticky;
+  top: 88px;
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-content {
+  display: grid;
+  gap: 0.85rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-item {
+  border: 1px solid var(--app-border-color);
+  border-radius: 16px;
+  padding: 1rem;
+  background: var(--app-card-bg-color);
+  transition: border-color var(--app-motion-duration-medium, 320ms) ease, transform var(--app-motion-duration-medium, 320ms) ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-item.is-active {
+  border-color: color-mix(in srgb, var(--smart-cleaner-accent) 42%, var(--app-border-color));
+  transform: translateY(-2px);
+}
+
+#smartCleanerPageContainer .smart-cleaner-spotlight-item ul {
+  margin: 0.6rem 0 0;
+  padding-left: 1rem;
+}
+
+#smartCleanerPageContainer .spotlight-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+  display: inline-block;
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust {
+  text-align: center;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--smart-cleaner-accent) 16%, var(--app-card-bg-color)),
+    var(--app-card-bg-color)
+  );
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-callouts {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  text-align: left;
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-callouts > div {
+  border: 1px solid var(--app-border-color);
+  border-radius: 16px;
+  padding: 0.9rem;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container) 82%, var(--app-card-bg-color));
+}
+
+#smartCleanerPageContainer .smart-cleaner-trust-callouts h3 {
+  margin: 0 0 0.3rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-ads-note {
+  margin: 1rem 0 0;
+  font-size: 0.84rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 300px);
+  gap: 0.7rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 0.2rem;
+  scrollbar-width: thin;
+}
+
+#smartCleanerPageContainer .smart-cleaner-shot {
+  margin: 0;
+  border: 1px solid var(--app-border-color);
+  border-radius: 18px;
+  overflow: hidden;
+  scroll-snap-align: center;
+  transform: scale(0.92);
+  opacity: 0.75;
+  transition: transform var(--app-motion-duration-medium, 320ms) ease, opacity var(--app-motion-duration-medium, 320ms) ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-shot.is-featured {
+  transform: scale(1);
+  opacity: 1;
+}
+
+#smartCleanerPageContainer .smart-cleaner-shot img {
+  width: 100%;
+  display: block;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery-nav {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: 1px solid var(--app-border-color);
+  background: var(--app-card-bg-color);
+  color: var(--app-text-color);
+  cursor: pointer;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery-dots {
+  margin-top: 0.7rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery-dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in srgb, var(--app-text-color) 30%, transparent);
+  cursor: pointer;
+  padding: 0;
+}
+
+#smartCleanerPageContainer .smart-cleaner-gallery-dots button.is-active {
+  width: 20px;
+  background: var(--smart-cleaner-accent);
+}
+
+#smartCleanerPageContainer .smart-cleaner-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-step {
+  border: 1px solid var(--app-border-color);
+  border-radius: 16px;
+  padding: 0.95rem;
+  background: var(--md-sys-color-surface-container);
+  position: relative;
+}
+
+#smartCleanerPageContainer .smart-cleaner-step::after {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--smart-cleaner-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform var(--app-motion-duration-medium, 320ms) ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-step.is-active::after {
+  transform: scaleX(1);
+}
+
+#smartCleanerPageContainer .smart-cleaner-step-icon {
+  display: inline-block;
+  margin-bottom: 0.25rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-cta {
+  text-align: center;
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--smart-cleaner-accent) 21%, var(--app-card-bg-color)),
+    var(--app-card-bg-color)
+  );
+}
+
+#smartCleanerPageContainer .smart-cleaner-cta-chips {
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+#smartCleanerPageContainer .smart-cleaner-cta-badge {
+  display: inline-flex;
+}
+
+#smartCleanerPageContainer .smart-cleaner-sticky-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 5;
+  border: 1px solid var(--app-border-color);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--app-card-bg-color) 85%, transparent);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  padding: 0.45rem;
+  display: grid;
+  justify-items: center;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity var(--app-motion-duration-medium, 320ms) ease, transform var(--app-motion-duration-medium, 320ms) ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-sticky-cta p {
+  margin: 0.1rem 0 0.2rem;
+  font-size: 0.72rem;
+  color: var(--app-text-color);
+}
+
+#smartCleanerPageContainer.sticky-cta-visible .smart-cleaner-sticky-cta {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#smartCleanerPageContainer .smart-cleaner-reveal,
+#smartCleanerPageContainer .smart-cleaner-reveal-item {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#smartCleanerPageContainer .smart-cleaner-reveal {
+  transition: opacity 420ms ease, transform 420ms ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-reveal-item {
+  transition: opacity 360ms ease, transform 360ms ease;
+}
+
+#smartCleanerPageContainer .smart-cleaner-reveal.is-visible,
+#smartCleanerPageContainer .smart-cleaner-reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes smartCleanerPhoneFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 980px) {
+  #smartCleanerPageContainer .smart-cleaner-hero,
+  #smartCleanerPageContainer .smart-cleaner-problem,
+  #smartCleanerPageContainer .smart-cleaner-spotlights {
+    grid-template-columns: 1fr;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-hero-visual {
+    order: -1;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-spotlight-visual {
+    position: static;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-trust-callouts,
+  #smartCleanerPageContainer .smart-cleaner-timeline {
+    grid-template-columns: 1fr;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-gallery-nav {
+    display: none;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-sticky-cta {
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: 0.65rem;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-sticky-cta img {
+    width: min(210px, 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #smartCleanerPageContainer .smart-cleaner-phone-frame,
+  #smartCleanerPageContainer .smart-cleaner-reveal,
+  #smartCleanerPageContainer .smart-cleaner-reveal-item,
+  #smartCleanerPageContainer .smart-cleaner-sticky-cta,
+  #smartCleanerPageContainer .smart-cleaner-before-after .state,
+  #smartCleanerPageContainer .smart-cleaner-shot,
+  #smartCleanerPageContainer .smart-cleaner-step::after,
+  #smartCleanerPageContainer .smart-cleaner-spotlight-item {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
