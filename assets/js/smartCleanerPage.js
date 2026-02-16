@@ -5,12 +5,26 @@
         items.forEach((item) => item.classList.add('is-visible'));
     }
 
+    function prepareRevealChildren(sections) {
+        sections.forEach((section) => {
+            const children = Array.from(section.children)
+                .filter((child) => !child.hasAttribute('data-parallax'));
+
+            children.forEach((child, index) => {
+                child.classList.add('smart-cleaner-reveal-item');
+                child.style.setProperty('--smart-reveal-delay', `${(index + 1) * 100}ms`);
+            });
+        });
+    }
+
     function initScrollReveal(page, prefersReducedMotion) {
         const sections = Array.from(page.querySelectorAll('.smart-cleaner-reveal'));
 
         if (!sections.length) {
             return;
         }
+
+        prepareRevealChildren(sections);
 
         if (prefersReducedMotion || typeof global.IntersectionObserver !== 'function') {
             revealImmediately(sections);
@@ -39,39 +53,21 @@
             return;
         }
 
-        const impactSpace = page.querySelector('#smartCleanerImpactSpace');
-        const impactFiles = page.querySelector('#smartCleanerImpactFiles');
-        const impactUsed = page.querySelector('#smartCleanerImpactUsed');
-
         const setProgress = (progress) => {
             const normalized = Math.max(0, Math.min(1, progress));
             page.style.setProperty('--smart-cleaner-progress', normalized.toFixed(3));
-
-            if (impactSpace) {
-                const reclaimed = 4.6 * normalized;
-                impactSpace.textContent = `${reclaimed.toFixed(1)} GB`;
-            }
-
-            if (impactFiles) {
-                const removed = Math.round(1480 * normalized);
-                impactFiles.textContent = removed.toLocaleString();
-            }
-
-            if (impactUsed) {
-                const used = Math.round(82 - (33 * normalized));
-                impactUsed.textContent = `${used}%`;
-            }
         };
 
-        if (prefersReducedMotion || typeof global.IntersectionObserver !== 'function') {
+        if (prefersReducedMotion) {
             setProgress(1);
             return;
         }
 
         const onScroll = () => {
             const rect = block.getBoundingClientRect();
-            const viewportHeight = Math.max(global.innerHeight, 1);
-            const rawProgress = (viewportHeight - rect.top) / (viewportHeight + rect.height * 0.75);
+            const start = Math.min(global.innerHeight * 0.72, global.innerHeight - 40);
+            const distance = 30;
+            const rawProgress = (start - rect.top) / distance;
             setProgress(rawProgress);
         };
 
@@ -156,10 +152,15 @@
                 const rect = element.getBoundingClientRect();
                 const elementCenter = rect.top + (rect.height / 2);
                 const delta = (elementCenter - viewportCenter) / Math.max(global.innerHeight, 1);
-                const offset = element.classList.contains('smart-cleaner-bg-shape')
-                    ? Math.max(-10, Math.min(10, -delta * 8))
-                    : Math.max(-8, Math.min(8, -delta * 12));
-                element.style.transform = `translateY(${offset.toFixed(2)}px)`;
+
+                if (element.classList.contains('smart-cleaner-bg-shape')) {
+                    const offset = Math.max(-10, Math.min(10, -delta * 10));
+                    element.style.setProperty('--smart-shape-shift-y', `${offset.toFixed(2)}px`);
+                    return;
+                }
+
+                const offset = Math.max(-20, Math.min(20, -delta * 20));
+                element.style.setProperty('--smart-cleaner-parallax-y', `${offset.toFixed(2)}px`);
             });
         };
 
@@ -178,55 +179,6 @@
         applyParallax();
         global.addEventListener('scroll', onScroll, { passive: true });
         global.addEventListener('resize', onScroll);
-    }
-
-    function initStickyCta(page, prefersReducedMotion) {
-        const sticky = page.querySelector('#smartCleanerStickyCta');
-        const finalCta = page.querySelector('#smartCleanerFinalCta');
-
-        if (!sticky || !finalCta || typeof global.IntersectionObserver !== 'function') {
-            return;
-        }
-
-        const setVisibility = (isVisible) => {
-            sticky.classList.toggle('is-visible', isVisible);
-            sticky.setAttribute('aria-hidden', isVisible ? 'false' : 'true');
-        };
-
-        if (prefersReducedMotion) {
-            setVisibility(false);
-            return;
-        }
-
-        let pastThreshold = false;
-        let nearFooter = false;
-
-        const updateState = () => {
-            setVisibility(pastThreshold && !nearFooter);
-        };
-
-        const thresholdObserver = new global.IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                pastThreshold = !entry.isIntersecting;
-                updateState();
-            });
-        }, {
-            threshold: 0,
-            rootMargin: '-25% 0px 0px 0px'
-        });
-
-        thresholdObserver.observe(page.querySelector('#smartCleanerHero') || page);
-
-        const footerObserver = new global.IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                nearFooter = entry.isIntersecting;
-                updateState();
-            });
-        }, {
-            threshold: 0.2
-        });
-
-        footerObserver.observe(finalCta);
     }
 
     function initSmartCleanerPage() {
@@ -248,7 +200,6 @@
         initBeforeAfter(page, prefersReducedMotion);
         initGallery(page);
         initParallax(page, prefersReducedMotion);
-        initStickyCta(page, prefersReducedMotion);
     }
 
     global.initSmartCleanerPage = initSmartCleanerPage;
