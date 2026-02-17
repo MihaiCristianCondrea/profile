@@ -1326,10 +1326,13 @@
   padding: 0.8rem 0 4.5rem;
   position: relative;
   overflow: clip;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 1rem;
 }
 
 #smartCleanerPageContainer section {
   margin-top: clamp(2.25rem, 5.5vw, 5rem);
+  scroll-snap-align: start;
 }
 
 #smartCleanerPageContainer h1 {
@@ -1546,7 +1549,7 @@
 
 #smartCleanerPageContainer .smart-cleaner-story-visual {
   position: sticky;
-  top: 96px;
+  top: clamp(1rem, 8vh, 96px);
 }
 
 #smartCleanerPageContainer .smart-cleaner-story-visual img {
@@ -1656,6 +1659,33 @@
     ),
     radial-gradient(circle at 50% 40%, color-mix(in srgb, #22c55e 18%, transparent), transparent 56%);
   animation: smartCleanerScanline 8s linear infinite;
+}
+
+@supports (animation-timeline: view()) {
+  #smartCleanerPageContainer .smart-cleaner-reveal,
+  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
+    opacity: 1;
+    transform: none;
+    animation: smartCleanerAppear 1ms linear both;
+    animation-timeline: view(block);
+    animation-range: entry 15% cover 35%;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
+    animation-delay: var(--smart-reveal-delay, 0ms);
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-phone-frame {
+    animation: smartCleanerPhoneFloat 1ms linear both;
+    animation-timeline: view(block);
+    animation-range: entry 5% cover 70%;
+  }
+
+  #smartCleanerPageContainer .smart-cleaner-scanline {
+    animation: smartCleanerScanline 8s linear infinite, smartCleanerSweep 1ms linear both;
+    animation-timeline: auto, view(block);
+    animation-range: normal, entry 10% cover 85%;
+  }
 }
 
 #smartCleanerPageContainer .smart-cleaner-screens h2 {
@@ -1828,6 +1858,40 @@
 
   50% {
     transform: rotate(180deg) translateY(-8px);
+  }
+}
+
+@keyframes smartCleanerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes smartCleanerPhoneFloat {
+  from {
+    transform: translateY(24px) scale(0.96);
+  }
+
+  to {
+    transform: translateY(-6px) scale(1);
+  }
+}
+
+@keyframes smartCleanerSweep {
+  from {
+    opacity: 0.35;
+    transform: scaleY(0.72);
+  }
+
+  to {
+    opacity: 0.85;
+    transform: scaleY(1);
   }
 }
 
