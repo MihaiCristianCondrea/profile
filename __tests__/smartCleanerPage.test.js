@@ -70,7 +70,48 @@ describe('smartCleanerPage scroll reveal', () => {
       {
         target: section,
         isIntersecting: false,
-        boundingClientRect: { top: 920 }
+        boundingClientRect: { top: 1020, bottom: 1400 }
+      }
+    ]);
+
+    expect(section.classList.contains('is-visible')).toBe(false);
+  });
+
+  test('removes visibility when section leaves viewport above while scrolling down', () => {
+    document.body.innerHTML = `
+      <div id="smartCleanerPageContainer">
+        <section class="smart-cleaner-reveal" id="target-section">
+          <h2>Overview</h2>
+          <p>Details</p>
+        </section>
+      </div>
+    `;
+
+    window.scrollY = 100;
+
+    loadScript();
+    window.initSmartCleanerPage();
+
+    const section = document.getElementById('target-section');
+
+    intersectionCallback([
+      {
+        target: section,
+        isIntersecting: true,
+        boundingClientRect: { top: 200, bottom: 600 }
+      }
+    ]);
+
+    expect(section.classList.contains('is-visible')).toBe(true);
+
+    window.scrollY = 250;
+    window.dispatchEvent(new Event('scroll'));
+
+    intersectionCallback([
+      {
+        target: section,
+        isIntersecting: false,
+        boundingClientRect: { top: -700, bottom: -20 }
       }
     ]);
 

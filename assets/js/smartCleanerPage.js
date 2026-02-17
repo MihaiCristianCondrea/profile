@@ -41,22 +41,24 @@
         }, { passive: true });
 
         const sectionObserver = new global.IntersectionObserver((entries) => {
-            const isScrollingUp = currentScrollDirection === 'up';
-
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
                     return;
                 }
 
-                const isBelowViewport = entry.boundingClientRect.top >= global.innerHeight * 0.9;
-                if (isScrollingUp && isBelowViewport) {
+                const exitedAboveViewport = entry.boundingClientRect.bottom <= 0;
+                const exitedBelowViewport = entry.boundingClientRect.top >= global.innerHeight;
+                const shouldHideOnScrollDown = currentScrollDirection === 'down' && exitedAboveViewport;
+                const shouldHideOnScrollUp = currentScrollDirection === 'up' && exitedBelowViewport;
+
+                if (shouldHideOnScrollDown || shouldHideOnScrollUp) {
                     entry.target.classList.remove('is-visible');
                 }
             });
         }, {
-            threshold: 0.2,
-            rootMargin: '0px 0px -10% 0px'
+            threshold: 0.08,
+            rootMargin: '0px'
         });
 
         sections.forEach((section) => sectionObserver.observe(section));
