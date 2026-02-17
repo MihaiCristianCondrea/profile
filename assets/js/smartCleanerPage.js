@@ -31,15 +31,17 @@
             return;
         }
 
-        let lastScrollY = global.scrollY || global.pageYOffset || 0;
+        let previousScrollY = global.scrollY || global.pageYOffset || 0;
+        let currentScrollDirection = 'down';
 
         global.addEventListener('scroll', () => {
-            lastScrollY = global.scrollY || global.pageYOffset || lastScrollY;
+            const nextScrollY = global.scrollY || global.pageYOffset || previousScrollY;
+            currentScrollDirection = nextScrollY < previousScrollY ? 'up' : 'down';
+            previousScrollY = nextScrollY;
         }, { passive: true });
 
         const sectionObserver = new global.IntersectionObserver((entries) => {
-            const currentScrollY = global.scrollY || global.pageYOffset || lastScrollY;
-            const isScrollingUp = currentScrollY < lastScrollY;
+            const isScrollingUp = currentScrollDirection === 'up';
 
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
@@ -52,8 +54,6 @@
                     entry.target.classList.remove('is-visible');
                 }
             });
-
-            lastScrollY = currentScrollY;
         }, {
             threshold: 0.2,
             rootMargin: '0px 0px -10% 0px'
