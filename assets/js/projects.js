@@ -320,7 +320,7 @@ async function createAndroidProjectCard(app) {
     playLink.href = `https://play.google.com/store/apps/details?id=${app.packageName}`;
     playLink.target = '_blank';
     playLink.rel = 'noopener noreferrer';
-    const installButton = document.createElement('md-filled-button');
+    const installButton = document.createElement('md-outlined-button');
     installButton.textContent = 'Install App';
     playLink.appendChild(installButton);
     actions.appendChild(playLink);
@@ -354,16 +354,16 @@ async function createAndroidProjectCard(app) {
     carousel.appendChild(emptyState);
   }
 
-  const prevBtn = document.createElement('button');
+  const prevBtn = document.createElement('md-icon-button');
   prevBtn.classList.add('prev');
   prevBtn.setAttribute('aria-label', 'Previous');
-  prevBtn.innerHTML = '<span class="material-symbols-outlined">chevron_left</span>';
+  prevBtn.innerHTML = '<md-icon><span class="material-symbols-outlined">chevron_left</span></md-icon>';
   carousel.appendChild(prevBtn);
 
-  const nextBtn = document.createElement('button');
+  const nextBtn = document.createElement('md-icon-button');
   nextBtn.classList.add('next');
   nextBtn.setAttribute('aria-label', 'Next');
-  nextBtn.innerHTML = '<span class="material-symbols-outlined">chevron_right</span>';
+  nextBtn.innerHTML = '<md-icon><span class="material-symbols-outlined">chevron_right</span></md-icon>';
   carousel.appendChild(nextBtn);
 
   return { card, carousel };

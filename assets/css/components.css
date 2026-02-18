@@ -1028,6 +1028,7 @@ md-divider.profile-section-divider {
 }
 
 .profile-card-actions a md-outlined-button,
+.profile-card-actions a md-filled-tonal-button,
 .profile-card-actions a md-filled-button,
 .achievement-card .achievement-actions md-text-button {
   box-shadow: none;
@@ -1056,6 +1057,8 @@ md-divider.profile-section-divider {
 
 .profile-card-actions a md-outlined-button:hover,
 .profile-card-actions a md-outlined-button:focus-visible,
+.profile-card-actions a md-filled-tonal-button:hover,
+.profile-card-actions a md-filled-tonal-button:focus-visible,
 .profile-card-actions a md-filled-button:hover,
 .profile-card-actions a md-filled-button:focus-visible,
 .achievement-card .achievement-actions md-text-button:hover,
@@ -1066,6 +1069,7 @@ md-divider.profile-section-divider {
 
 @media (prefers-reduced-motion: reduce) {
   .profile-card-actions a md-outlined-button,
+  .profile-card-actions a md-filled-tonal-button,
   .profile-card-actions a md-filled-button,
   .achievement-card .achievement-actions md-text-button {
     transition:
@@ -1076,6 +1080,8 @@ md-divider.profile-section-divider {
 
   .profile-card-actions a md-outlined-button:hover,
   .profile-card-actions a md-outlined-button:focus-visible,
+  .profile-card-actions a md-filled-tonal-button:hover,
+  .profile-card-actions a md-filled-tonal-button:focus-visible,
   .profile-card-actions a md-filled-button:hover,
   .profile-card-actions a md-filled-button:focus-visible,
   .achievement-card .achievement-actions md-text-button:hover,
@@ -1091,6 +1097,7 @@ md-divider.profile-section-divider {
     align-items: stretch;
   }
   .profile-card-actions a md-outlined-button,
+  .profile-card-actions a md-filled-tonal-button,
   .profile-card-actions a md-filled-button {
     width: 100%;
     justify-content: center;
@@ -1313,6 +1320,7 @@ md-divider.profile-section-divider {
     align-items: stretch;
   }
   .project-actions a md-filled-button,
+  .project-actions a md-filled-tonal-button,
   .project-actions a md-outlined-button {
     width: 100%;
     justify-content: center;
@@ -1337,7 +1345,8 @@ md-divider.profile-section-divider {
   display: block;
 }
 
-.carousel button {
+.carousel .prev,
+.carousel .next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -1348,12 +1357,23 @@ md-divider.profile-section-divider {
   padding: 4px;
 }
 
-.carousel button.prev {
+.carousel .prev {
   left: 4px;
 }
 
-.carousel button.next {
+.carousel .next {
   right: 4px;
+}
+
+.carousel md-icon-button.prev,
+.carousel md-icon-button.next {
+  --md-icon-button-state-layer-size: 40px;
+  --md-icon-button-icon-size: 24px;
+  --md-icon-button-icon-color: var(--md-sys-color-primary);
+  --md-icon-button-hover-state-layer-color: var(--md-sys-color-primary);
+  --md-icon-button-hover-state-layer-opacity: 0.08;
+  --md-icon-button-pressed-state-layer-color: var(--md-sys-color-primary);
+  --md-icon-button-pressed-state-layer-opacity: 0.12;
 }
 
 .carousel-dots {

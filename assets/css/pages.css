@@ -1424,11 +1424,6 @@
   gap: 1rem;
 }
 
-#smartCleanerPageContainer .smart-cleaner-play-badge,
-#smartCleanerPageContainer .smart-cleaner-cta-badge img {
-  width: min(220px, 100%);
-  display: block;
-}
 
 #smartCleanerPageContainer .smart-cleaner-github-group {
   display: grid;
@@ -1449,33 +1444,19 @@
   gap: 0.65rem;
 }
 
-#smartCleanerPageContainer .smart-cleaner-github-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.38rem;
-  padding: 0.55rem 0.82rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--app-text-color) 34%, transparent);
-  color: var(--app-text-color);
-  text-decoration: none;
-  font-weight: 560;
-  background: transparent;
-  transition: border-color var(--app-motion-duration-medium, 320ms) ease,
-    color var(--app-motion-duration-medium, 320ms) ease,
-    background-color var(--app-motion-duration-medium, 320ms) ease,
-    transform var(--app-motion-duration-medium, 320ms) ease;
+
+#smartCleanerPageContainer .smart-cleaner-hero-actions md-filled-button {
+  --md-filled-button-container-height: 44px;
 }
 
-#smartCleanerPageContainer .smart-cleaner-github-button:hover {
-  border-color: color-mix(in srgb, var(--smart-cleaner-accent) 78%, transparent);
-  color: var(--smart-cleaner-accent);
-  background: color-mix(in srgb, var(--smart-cleaner-accent) 10%, transparent);
-  transform: translateY(-1px);
+#smartCleanerPageContainer .smart-cleaner-github-buttons md-outlined-button {
+  --md-outlined-button-container-height: 40px;
 }
 
-#smartCleanerPageContainer .smart-cleaner-github-button .material-symbols-outlined {
-  font-size: 1.08rem;
+#smartCleanerPageContainer .smart-cleaner-cta md-filled-tonal-button {
+  --md-filled-tonal-button-container-height: 40px;
 }
+
 
 #smartCleanerPageContainer .smart-cleaner-bottom-link {
   display: inline-flex;
@@ -1754,9 +1735,6 @@
   margin: 0.95rem 0 0.8rem;
 }
 
-#smartCleanerPageContainer .smart-cleaner-cta-badge {
-  display: inline-flex;
-}
 
 #smartCleanerPageContainer .smart-cleaner-windows-badge {
   margin: 0.85rem auto 0;
