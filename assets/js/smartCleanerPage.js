@@ -34,6 +34,11 @@
         let previousScrollY = global.scrollY || global.pageYOffset || 0;
         let currentScrollDirection = 'down';
 
+        const applyRevealDirection = (section, direction) => {
+            section.classList.toggle('reveal-from-up', direction === 'up');
+            section.classList.toggle('reveal-from-down', direction !== 'up');
+        };
+
         global.addEventListener('scroll', () => {
             const nextScrollY = global.scrollY || global.pageYOffset || previousScrollY;
             currentScrollDirection = nextScrollY < previousScrollY ? 'up' : 'down';
@@ -43,6 +48,7 @@
         const sectionObserver = new global.IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
+                    applyRevealDirection(entry.target, currentScrollDirection);
                     entry.target.classList.add('is-visible');
                     return;
                 }
@@ -53,6 +59,7 @@
                 const shouldHideOnScrollUp = currentScrollDirection === 'up' && exitedBelowViewport;
 
                 if (shouldHideOnScrollDown || shouldHideOnScrollUp) {
+                    applyRevealDirection(entry.target, shouldHideOnScrollDown ? 'up' : 'down');
                     entry.target.classList.remove('is-visible');
                 }
             });
