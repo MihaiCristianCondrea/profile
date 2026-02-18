@@ -25,7 +25,7 @@
       <div class="resume-photo-controls">
         <label class="resume-file-label" for="photo" data-resume-i18n="profilePhoto">Profile Photo</label>
         <input type="file" id="photo" accept="image/*" />
-        <button type="button" class="secondary-btn" id="removePhotoButton">
+        <button type="button" class="secondary-btn btn-low" id="removePhotoButton">
           <span data-resume-i18n="removePhoto">Remove Photo</span>
         </button>
       </div>
@@ -88,7 +88,7 @@
         <span class="material-symbols-outlined">build</span>
         <span data-resume-i18n="skills">Skills</span>
       </h2>
-      <button type="button" class="add-btn" data-add-list="skills">
+      <button type="button" class="add-btn btn-medium" data-add-list="skills">
         <span data-resume-i18n="addSkill">Add Skill</span>
       </button>
     </div>
@@ -98,7 +98,7 @@
         <span class="material-symbols-outlined">work</span>
         <span data-resume-i18n="workHistory">Work History</span>
       </h2>
-      <button type="button" class="add-btn" data-add-complex="work">
+      <button type="button" class="add-btn btn-medium" data-add-complex="work">
         <span data-resume-i18n="addWork">Add Work Experience</span>
       </button>
     </div>
@@ -108,7 +108,7 @@
         <span class="material-symbols-outlined">school</span>
         <span data-resume-i18n="education">Education</span>
       </h2>
-      <button type="button" class="add-btn" data-add-complex="education">
+      <button type="button" class="add-btn btn-medium" data-add-complex="education">
         <span data-resume-i18n="addEducation">Add Education</span>
       </button>
     </div>
@@ -118,7 +118,7 @@
         <span class="material-symbols-outlined">language</span>
         <span data-resume-i18n="languages">Languages</span>
       </h2>
-      <button type="button" class="add-btn" data-add-list="languages">
+      <button type="button" class="add-btn btn-medium" data-add-list="languages">
         <span data-resume-i18n="addLanguage">Add Language</span>
       </button>
     </div>
@@ -128,7 +128,7 @@
         <span class="material-symbols-outlined">interests</span>
         <span data-resume-i18n="interests">Interests</span>
       </h2>
-      <button type="button" class="add-btn" data-add-interest="true">
+      <button type="button" class="add-btn btn-medium" data-add-interest="true">
         <span data-resume-i18n="addInterest">Add Interest</span>
       </button>
     </div>
@@ -136,10 +136,10 @@
     <div class="form-section">
       <h2><span data-resume-i18n="exportImport">Export / Import</span></h2>
       <div class="resume-json-actions">
-        <button type="button" class="secondary-btn" id="exportResumeJson">
+        <button type="button" class="secondary-btn btn-medium" id="exportResumeJson">
           <span data-resume-i18n="exportJson">Export Resume JSON</span>
         </button>
-        <button type="button" class="secondary-btn" id="importResumeJson">
+        <button type="button" class="secondary-btn btn-medium" id="importResumeJson">
           <span data-resume-i18n="importJson">Import Resume JSON</span>
         </button>
         <input type="file" id="resume-json-file" accept="application/json" />
@@ -199,7 +199,7 @@
     </div>
   </div>
   <div class="resume-download">
-    <button type="button" id="downloadResumeButton">
+    <button type="button" id="downloadResumeButton" class="btn-high">
       <span class="material-symbols-outlined">download</span
       ><span data-resume-i18n="download">Download Resume as PDF</span>
     </button>

@@ -150,26 +150,41 @@
   justify-content: center;
   gap: 8px;
 }
-#resumePage #download-resume {
+#resumePage button.btn-high {
   background-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  width: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
-#resumePage #download-resume:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+#resumePage button.btn-high:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
 }
-#resumePage button.add-btn {
+
+#resumePage button.btn-medium,
+#resumePage button.add-btn,
+#resumePage .secondary-btn.btn-medium {
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
   margin-bottom: 10px;
 }
+
+#resumePage button.btn-low,
 #resumePage button.remove-btn {
   background-color: transparent;
+  color: var(--md-sys-color-primary);
+  box-shadow: none;
+}
+
+#resumePage button.remove-btn {
   color: var(--md-sys-color-error);
   padding: 8px;
   border-radius: 50%;
 }
+
+#resumePage button.btn-low:hover {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+}
+
 #resumePage button.remove-btn:hover {
   background-color: rgba(186, 26, 26, 0.1);
 }
@@ -380,8 +395,7 @@
 }
 
 #resumePage .secondary-btn {
-  background-color: var(--md-sys-color-surface-container-high);
-  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 #resumePage .color-grid {

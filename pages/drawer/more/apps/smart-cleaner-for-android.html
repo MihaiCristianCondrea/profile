@@ -5,40 +5,31 @@
       <p class="smart-cleaner-subtitle">Reclaim space. Remove clutter. Stay in control.</p>
 
       <div class="smart-cleaner-hero-actions">
-        <a
+        <md-filled-button
           href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner"
           target="_blank"
-          rel="noopener noreferrer"
           aria-label="Download Smart Cleaner from Google Play"
         >
-          <img
-            src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-            alt="Get Smart Cleaner on Google Play"
-            class="smart-cleaner-play-badge"
-            loading="lazy"
-          />
-        </a>
+          <md-icon slot="icon"><span class="material-symbols-outlined">download</span></md-icon>
+          Download on Google Play
+        </md-filled-button>
         <div class="smart-cleaner-github-group" aria-label="View Smart Cleaner repositories on GitHub">
-          <p class="smart-cleaner-github-title">View on GitHub</p>
+          <p class="smart-cleaner-github-title">Source code</p>
           <div class="smart-cleaner-github-buttons">
-            <a
+            <md-outlined-button
               href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android"
               target="_blank"
-              rel="noopener noreferrer"
-              class="smart-cleaner-github-button"
             >
-              <span class="material-symbols-outlined" aria-hidden="true">android</span>
-              <span>Android app</span>
-            </a>
-            <a
+              <md-icon slot="icon"><span class="material-symbols-outlined">android</span></md-icon>
+              Android app
+            </md-outlined-button>
+            <md-outlined-button
               href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Windows"
               target="_blank"
-              rel="noopener noreferrer"
-              class="smart-cleaner-github-button"
             >
-              <span class="material-symbols-outlined" aria-hidden="true">desktop_windows</span>
-              <span>Windows app</span>
-            </a>
+              <md-icon slot="icon"><span class="material-symbols-outlined">desktop_windows</span></md-icon>
+              Windows app
+            </md-outlined-button>
           </div>
         </div>
       </div>
@@ -151,19 +142,10 @@
   <section class="smart-cleaner-cta smart-cleaner-reveal" id="smartCleanerFinalCta">
     <h2>Ready for a cleaner phone?</h2>
     <p>Free to use. No subscription required.</p>
-    <a
-      href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="smart-cleaner-cta-badge"
-      aria-label="Download Smart Cleaner from Google Play"
-    >
-      <img
-        src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
-        alt="Get Smart Cleaner on Google Play"
-        loading="lazy"
-      />
-    </a>
+    <md-filled-tonal-button href="#smartCleanerScreenshots" trailing-icon>
+      View Screenshots
+      <md-icon slot="icon"><span class="material-symbols-outlined">arrow_forward</span></md-icon>
+    </md-filled-tonal-button>
   </section>
 
   <section class="smart-cleaner-section smart-cleaner-reveal">
