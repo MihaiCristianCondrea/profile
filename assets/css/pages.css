@@ -1610,6 +1610,34 @@
   margin-inline: auto;
 }
 
+#smartCleanerPageContainer .smart-cleaner-circle-container {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 80%, transparent);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+#smartCleanerPageContainer .smart-cleaner-circle-container h2,
+#smartCleanerPageContainer .smart-cleaner-circle-container p {
+  position: relative;
+  z-index: 1;
+}
+
+#smartCleanerPageContainer .smart-cleaner-circle-container h2 {
+  margin-bottom: 0.5rem;
+}
+
 #smartCleanerPageContainer .smart-cleaner-performance p {
   margin: 1rem auto 0;
   max-width: 55ch;
@@ -1643,19 +1671,6 @@
 }
 
 @supports (animation-timeline: view()) {
-  #smartCleanerPageContainer .smart-cleaner-reveal,
-  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
-    opacity: 1;
-    transform: none;
-    animation: smartCleanerAppear 1ms linear both;
-    animation-timeline: view(block);
-    animation-range: entry 15% cover 35%;
-  }
-
-  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
-    animation-delay: var(--smart-reveal-delay, 0ms);
-  }
-
   #smartCleanerPageContainer .smart-cleaner-phone-frame {
     animation: smartCleanerPhoneFloat 1ms linear both;
     animation-timeline: view(block);
