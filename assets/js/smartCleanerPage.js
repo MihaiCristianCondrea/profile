@@ -47,12 +47,29 @@
 
         const sectionObserver = new global.IntersectionObserver((entries) => {
             entries.forEach((entry) => {
+                const el = entry.target;
+
                 if (entry.isIntersecting) {
-                    applyRevealDirection(entry.target, currentScrollDirection);
-                    entry.target.classList.remove('is-visible');
-                    void entry.target.offsetWidth;
+                    if (el.classList.contains('is-visible')) {
+                        return;
+                    }
+
+                    const items = el.querySelectorAll('.smart-cleaner-reveal-item');
+                    el.style.transition = 'none';
+                    items.forEach((item) => {
+                        item.style.transition = 'none';
+                    });
+
+                    applyRevealDirection(el, currentScrollDirection);
+                    void el.offsetWidth;
+
+                    el.style.transition = '';
+                    items.forEach((item) => {
+                        item.style.transition = '';
+                    });
+
                     global.requestAnimationFrame(() => {
-                        entry.target.classList.add('is-visible');
+                        el.classList.add('is-visible');
                     });
                     return;
                 }
@@ -63,12 +80,12 @@
                 const isFarBelow = rect.top > viewportHeight * 0.9;
 
                 if (isFarAbove || isFarBelow) {
-                    entry.target.classList.remove('is-visible');
+                    el.classList.remove('is-visible');
                 }
             });
         }, {
             threshold: [0, 0.15, 0.35, 0.6],
-            rootMargin: '0px 0px -12% 0px'
+            rootMargin: '0px 0px -10% 0px'
         });
 
         sections.forEach((section) => sectionObserver.observe(section));
