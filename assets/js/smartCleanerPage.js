@@ -12,7 +12,7 @@
 
             children.forEach((child, index) => {
                 child.classList.add('smart-cleaner-reveal-item');
-                child.style.setProperty('--smart-reveal-delay', `${(index + 1) * 100}ms`);
+                child.style.setProperty('--reveal-delay', `${index * 70}ms`);
             });
         });
     }
@@ -35,13 +35,13 @@
         let currentScrollDirection = 'down';
 
         const applyRevealDirection = (section, direction) => {
-            section.classList.toggle('reveal-from-up', direction === 'up');
-            section.classList.toggle('reveal-from-down', direction !== 'up');
+            section.classList.remove('reveal-from-up', 'reveal-from-down');
+            section.classList.add(direction === 'down' ? 'reveal-from-up' : 'reveal-from-down');
         };
 
         global.addEventListener('scroll', () => {
             const nextScrollY = global.scrollY || global.pageYOffset || previousScrollY;
-            currentScrollDirection = nextScrollY < previousScrollY ? 'up' : 'down';
+            currentScrollDirection = nextScrollY > previousScrollY ? 'down' : 'up';
             previousScrollY = nextScrollY;
         }, { passive: true });
 
@@ -49,23 +49,26 @@
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     applyRevealDirection(entry.target, currentScrollDirection);
-                    entry.target.classList.add('is-visible');
+                    entry.target.classList.remove('is-visible');
+                    void entry.target.offsetWidth;
+                    global.requestAnimationFrame(() => {
+                        entry.target.classList.add('is-visible');
+                    });
                     return;
                 }
 
-                const exitedAboveViewport = entry.boundingClientRect.bottom <= 0;
-                const exitedBelowViewport = entry.boundingClientRect.top >= global.innerHeight;
-                const shouldHideOnScrollDown = currentScrollDirection === 'down' && exitedAboveViewport;
-                const shouldHideOnScrollUp = currentScrollDirection === 'up' && exitedBelowViewport;
+                const rect = entry.boundingClientRect;
+                const viewportHeight = global.innerHeight || document.documentElement.clientHeight;
+                const isFarAbove = rect.bottom < viewportHeight * 0.1;
+                const isFarBelow = rect.top > viewportHeight * 0.9;
 
-                if (shouldHideOnScrollDown || shouldHideOnScrollUp) {
-                    applyRevealDirection(entry.target, shouldHideOnScrollDown ? 'up' : 'down');
+                if (isFarAbove || isFarBelow) {
                     entry.target.classList.remove('is-visible');
                 }
             });
         }, {
-            threshold: 0.08,
-            rootMargin: '0px'
+            threshold: [0, 0.15, 0.35, 0.6],
+            rootMargin: '0px 0px -12% 0px'
         });
 
         sections.forEach((section) => sectionObserver.observe(section));
