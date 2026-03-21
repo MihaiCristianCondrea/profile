@@ -68,9 +68,7 @@
                         item.style.transition = '';
                     });
 
-                    global.requestAnimationFrame(() => {
-                        el.classList.add('is-visible');
-                    });
+                    el.classList.add('is-visible');
                     return;
                 }
 
@@ -148,15 +146,33 @@
             return;
         }
 
+        const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
         const applyParallax = () => {
             const viewportCenter = global.innerHeight / 2;
+            const viewportSize = Math.max(global.innerHeight, 1);
 
             elements.forEach((element) => {
                 const rect = element.getBoundingClientRect();
                 const elementCenter = rect.top + (rect.height / 2);
-                const delta = (elementCenter - viewportCenter) / Math.max(global.innerHeight, 1);
-                const offset = Math.max(-8, Math.min(8, -delta * 12));
-                element.style.transform = `translateY(${offset.toFixed(2)}px)`;
+                const delta = (elementCenter - viewportCenter) / viewportSize;
+                const speed = Number.parseFloat(element.dataset.parallaxSpeed || '0.18');
+                const axis = element.dataset.parallaxAxis === 'x' ? 'x' : 'y';
+                const rawOffset = clamp(-delta * (speed * 64), -14, 14);
+                const offset = rawOffset.toFixed(2);
+
+                if (axis === 'x') {
+                    element.style.setProperty('--parallax-x', `${offset}px`);
+                } else {
+                    element.style.setProperty('--parallax-y', `${offset}px`);
+                }
+
+                if (element.classList.contains('smart-cleaner-story-visual') || element.classList.contains('smart-cleaner-phone-frame')) {
+                    const rotateX = clamp(delta * -5.2, -5, 5).toFixed(2);
+                    const rotateY = clamp(delta * 4.1, -4, 4).toFixed(2);
+                    element.style.setProperty('--parallax-rotate-x', `${rotateX}deg`);
+                    element.style.setProperty('--parallax-rotate-y', `${rotateY}deg`);
+                }
             });
         };
 
