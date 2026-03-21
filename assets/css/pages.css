@@ -1468,11 +1468,15 @@
   justify-content: center;
   min-height: 360px;
   position: relative;
+  perspective: 1200px;
 }
 
 #smartCleanerPageContainer .smart-cleaner-gradient-orb {
   position: absolute;
   inset: auto;
+  left: 50%;
+  bottom: 10%;
+  transform: translate3d(-50%, 0, 0);
   width: min(86%, 390px);
   aspect-ratio: 1;
   border-radius: 9999px;
@@ -1481,6 +1485,8 @@
     linear-gradient(130deg, color-mix(in srgb, #22c55e 30%, transparent), color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent));
   opacity: 0.62;
   filter: blur(0.2px);
+  will-change: transform;
+  transition: transform 240ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-gradient-orb::after {
@@ -1493,12 +1499,19 @@
 }
 
 #smartCleanerPageContainer .smart-cleaner-phone-frame {
+  --parallax-y: 0px;
+  --parallax-rotate-x: 0deg;
+  --parallax-rotate-y: 0deg;
   width: min(310px, 100%);
   border-radius: 36px;
   overflow: hidden;
   background: #0f172a;
   box-shadow: 0 28px 52px rgba(0, 0, 0, 0.24);
   position: relative;
+  transform: translate3d(0, var(--parallax-y), 0) rotateX(var(--parallax-rotate-x)) rotateY(var(--parallax-rotate-y));
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-phone-frame img {
@@ -1507,14 +1520,28 @@
 }
 
 #smartCleanerPageContainer .smart-cleaner-problem {
+  position: relative;
   text-align: center;
   max-width: 920px;
   margin-inline: auto;
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  border-radius: clamp(20px, 3vw, 28px);
+  background:
+    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--smart-cleaner-accent) 14%, transparent), transparent 55%),
+    linear-gradient(165deg, color-mix(in srgb, var(--md-sys-color-surface-container) 68%, transparent), transparent 80%);
+  overflow: hidden;
 }
 
 #smartCleanerPageContainer .smart-cleaner-problem p {
   margin: 1rem auto 0;
   max-width: 58ch;
+}
+
+#smartCleanerPageContainer .smart-cleaner-problem-copy {
+  --parallax-y: 0px;
+  transform: translate3d(0, var(--parallax-y), 0);
+  will-change: transform;
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-story-section {
@@ -1529,8 +1556,16 @@
 }
 
 #smartCleanerPageContainer .smart-cleaner-story-visual {
+  --parallax-y: 0px;
+  --parallax-rotate-x: 0deg;
+  --parallax-rotate-y: 0deg;
   position: sticky;
   top: clamp(1rem, 8vh, 96px);
+  transform: translate3d(0, var(--parallax-y), 0) rotateX(var(--parallax-rotate-x)) rotateY(var(--parallax-rotate-y));
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-story-visual img {
@@ -1686,9 +1721,13 @@
 
 #smartCleanerPageContainer .smart-cleaner-screens h2 {
   margin-bottom: 1.1rem;
+  --parallax-y: 0px;
+  transform: translate3d(0, var(--parallax-y), 0);
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-gallery-track {
+  --parallax-x: 0px;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(260px, 390px);
@@ -1698,6 +1737,8 @@
   scroll-behavior: smooth;
   padding-bottom: 0.35rem;
   scrollbar-width: thin;
+  transform: translate3d(var(--parallax-x), 0, 0);
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-shot {
@@ -1744,6 +1785,12 @@
 
 #smartCleanerPageContainer .smart-cleaner-cta {
   text-align: center;
+}
+
+#smartCleanerPageContainer .smart-cleaner-cta-content {
+  --parallax-y: 0px;
+  transform: translate3d(0, var(--parallax-y), 0);
+  transition: transform 260ms ease-out;
 }
 
 #smartCleanerPageContainer .smart-cleaner-cta p {
