@@ -237,6 +237,18 @@
   max-height: none;
   overflow-y: visible;
 }
+
+#resumePage #resume-preview,
+#resumePage #resume-preview * {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#resumePage #resume-preview .material-symbols-outlined {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 #resumePage .resume-content {
   display: flex;
 }

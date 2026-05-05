@@ -691,21 +691,32 @@ function prepareAndPrintResume() {
 
     const originalTransform = cvElement.style.transform;
     const originalOrigin = cvElement.style.transformOrigin;
+    const originalWidth = cvElement.style.width;
+    const originalPrintScale = cvElement.style.getPropertyValue('--resume-print-scale');
 
-    const contentHeight = cvElement.scrollHeight;
-    const targetHeight = 1080; // approximate printable height of an A4 page
+    const printableWidth = 794;
+    const printableHeight = 1123;
+    const widthScale = printableWidth / cvElement.scrollWidth;
+    const heightScale = printableHeight / cvElement.scrollHeight;
+    const printScale = Math.min(1, widthScale, heightScale);
 
-    if (contentHeight > targetHeight) {
-        const scale = targetHeight / contentHeight;
-        cvElement.style.transformOrigin = 'top left';
-        cvElement.style.transform = `scale(${scale})`;
+    cvElement.style.setProperty('--resume-print-scale', printScale.toFixed(4));
+    if (printScale < 1) {
+        cvElement.style.transformOrigin = 'top center';
+        cvElement.style.transform = `scale(${printScale})`;
     } else {
         cvElement.style.transform = '';
+        cvElement.style.width = '210mm';
     }
+
+    document.body.classList.add('resume-printing');
 
     window.onafterprint = () => {
         cvElement.style.transform = originalTransform;
         cvElement.style.transformOrigin = originalOrigin;
+        cvElement.style.width = originalWidth;
+        cvElement.style.setProperty('--resume-print-scale', originalPrintScale);
+        document.body.classList.remove('resume-printing');
         window.onafterprint = null;
     };
 
