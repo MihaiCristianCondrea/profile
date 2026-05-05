@@ -219,6 +219,32 @@ function createInputGroupElement({
     return { wrapper, inputElement };
 }
 
+
+function cleanText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim().replace(/Vaccine Preparation Technicia\b/g, 'Vaccine Preparation Technician');
+}
+
+function cleanMarkdownText(value) {
+    return String(value || '')
+        .replace(/\r\n/g, '\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim()
+        .replace(/Vaccine Preparation Technicia\b/g, 'Vaccine Preparation Technician');
+}
+
+function formatDateRange(start, end) {
+    const currentLabel = getResumeText('current');
+    const normalizedStart = cleanText(start);
+    const normalizedEnd = cleanText(end) || currentLabel;
+    return [normalizedStart, normalizedEnd].filter(Boolean).join(' – ');
+}
+
+function buildContactLine(icon, value) {
+    const text = cleanText(value);
+    if (!text) return '';
+    return `<span class="resume-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="${icon}"></path></svg></span><span>${text}</span>`;
+}
+
 // Real-time updates for form inputs
 function setupRealtimeUpdates() {
     const set = (id, cb) => {
@@ -228,11 +254,11 @@ function setupRealtimeUpdates() {
             scheduleResumeSave();
         });
     };
-    set('name', e => document.getElementById('resume-name').innerText = e.target.value);
-    set('job-title', e => document.getElementById('resume-job-title').innerText = e.target.value);
-    set('phone', e => document.getElementById('resume-phone').innerHTML = e.target.value ? `<span class="material-symbols-outlined">call</span><span>${e.target.value}</span>` : '');
-    set('email', e => document.getElementById('resume-email').innerHTML = e.target.value ? `<span class="material-symbols-outlined">mail</span><span>${e.target.value}</span>` : '');
-    set('address', e => document.getElementById('resume-address').innerHTML = e.target.value ? `<span class="material-symbols-outlined">location_on</span><span>${e.target.value}</span>` : '');
+    set('name', e => document.getElementById('resume-name').textContent = cleanText(e.target.value));
+    set('job-title', e => document.getElementById('resume-job-title').textContent = cleanText(e.target.value));
+    set('phone', e => document.getElementById('resume-phone').innerHTML = buildContactLine('M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.1.37 2.28.56 3.5.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.22.19 2.4.56 3.5a1 1 0 0 1-.24 1.01l-2.2 2.28z', e.target.value));
+    set('email', e => document.getElementById('resume-email').innerHTML = buildContactLine('M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z', e.target.value));
+    set('address', e => document.getElementById('resume-address').innerHTML = buildContactLine('M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z', e.target.value));
     set('summary', e => {
         const parsed = marked.parse(e.target.value);
         document.getElementById('resume-summary').innerHTML = DOMPurify.sanitize(parsed);
@@ -526,7 +552,7 @@ function updateComplexList(sectionId) {
             if (data.title || data.company) {
                 const descHtml = DOMPurify.sanitize(marked.parse(data.desc));
                 const currentLabel = getResumeText('current');
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${data.start} - ${data.end || currentLabel}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${formatDateRange(data.start, data.end)}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
                 container.appendChild(div);
             }
         } else if (sectionId === 'education') {
@@ -538,7 +564,7 @@ function updateComplexList(sectionId) {
             };
             if (data.degree || data.school) {
                 const currentLabel = getResumeText('current');
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${data.start} - ${data.end || currentLabel}</span></div><p><strong>${data.school}</strong></p>`;
+                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${formatDateRange(data.start, data.end)}</span></div><p><strong>${data.school}</strong></p>`;
                 container.appendChild(div);
             }
         }
@@ -550,8 +576,8 @@ function updateComplexList(sectionId) {
 function initialize() {
     document.getElementById('name').value = 'Mihai-Cristian Condrea';
     document.getElementById('job-title').value = 'Android Developer';
-    document.getElementById('phone').value = '+40751029091';
-    document.getElementById('email').value = 'condreamihaicristian10@gmail.com';
+    document.getElementById('phone').value = 'soon';
+    document.getElementById('email').value = 'contact.mihaicristiancondrea@gmail.com';
     document.getElementById('address').value = 'Bucharest, Romania';
     document.getElementById('summary').value = `Android Developer specializing in the full app lifecycle, from UI/UX design to Google Play publishing, utilizing Jetpack Compose, Kotlin, and Firebase. As a music producer, I bring a creative and user-centric approach to development.`;
     ['name','job-title','phone','email','address','summary'].forEach(id=>document.getElementById(id).dispatchEvent(new Event('input')));
@@ -682,47 +708,88 @@ function setupResumeControls() {
     }
 }
 
-function prepareAndPrintResume() {
-    const cvElement = document.getElementById('resume-preview');
-    if (!cvElement) {
-        window.print();
-        return;
+async function waitForResumeFonts(timeoutMs = 1500) {
+    if (!document.fonts || !document.fonts.ready) return;
+    await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, timeoutMs))]);
+}
+
+function setResumePrintPageSize(pageSize) {
+    let style = document.getElementById('resume-print-page-size');
+    if (!style) {
+        style = document.createElement('style');
+        style.id = 'resume-print-page-size';
+        document.head.appendChild(style);
     }
+    style.textContent = `@page { size: ${pageSize} portrait; margin: 0; }`;
+}
 
-    const originalTransform = cvElement.style.transform;
-    const originalOrigin = cvElement.style.transformOrigin;
-    const originalWidth = cvElement.style.width;
-    const originalPrintScale = cvElement.style.getPropertyValue('--resume-print-scale');
+function chooseResumePrintSize() {
+    const preview = document.getElementById('resume-preview');
+    if (!preview) return 'A4';
+    const PX_PER_MM = 96 / 25.4;
+    const fits = (w, h) => (preview.scrollWidth / PX_PER_MM) <= w + 0.5 && (preview.scrollHeight / PX_PER_MM) <= h + 0.5;
+    preview.dataset.printSize = 'a4';
+    if (fits(210, 297)) return 'A4';
+    preview.dataset.printSize = 'a3';
+    return 'A3';
+}
 
-    const printableWidth = 794;
-    const printableHeight = 1123;
-    const widthScale = printableWidth / cvElement.scrollWidth;
-    const heightScale = printableHeight / cvElement.scrollHeight;
-    const printScale = Math.min(1, widthScale, heightScale);
+function normalizeResumeDataForExport(data) {
+    if (!data || typeof data !== 'object') return data;
+    const cleanList = (list = []) => list.map(cleanText).filter(Boolean);
+    const cleanWork = (item = {}) => ({
+        ...item,
+        title: cleanText(item.title),
+        company: cleanText(item.company),
+        start: cleanText(item.start),
+        end: cleanText(item.end),
+        desc: cleanMarkdownText(item.desc)
+    });
+    const cleanEdu = (item = {}) => ({
+        ...item,
+        degree: cleanText(item.degree),
+        school: cleanText(item.school),
+        start: cleanText(item.start),
+        end: cleanText(item.end)
+    });
 
-    cvElement.style.setProperty('--resume-print-scale', printScale.toFixed(4));
-    if (printScale < 1) {
-        cvElement.style.transformOrigin = 'top center';
-        cvElement.style.transform = `scale(${printScale})`;
-    } else {
-        cvElement.style.transform = '';
-        cvElement.style.width = '210mm';
-    }
-
-    document.body.classList.add('resume-printing');
-
-    window.onafterprint = () => {
-        cvElement.style.transform = originalTransform;
-        cvElement.style.transformOrigin = originalOrigin;
-        cvElement.style.width = originalWidth;
-        cvElement.style.setProperty('--resume-print-scale', originalPrintScale);
-        document.body.classList.remove('resume-printing');
-        window.onafterprint = null;
+    return {
+        ...data,
+        personal: {
+            ...data.personal,
+            name: cleanText(data.personal?.name),
+            jobTitle: cleanText(data.personal?.jobTitle),
+            phone: cleanText(data.personal?.phone),
+            email: cleanText(data.personal?.email),
+            address: cleanText(data.personal?.address),
+            summary: cleanMarkdownText(data.personal?.summary)
+        },
+        skills: cleanList(data.skills),
+        languages: cleanList(data.languages),
+        interests: (data.interests || [])
+            .map(item => ({ ...item, text: cleanText(item.text) }))
+            .filter(item => item.text),
+        work: (data.work || []).map(cleanWork).filter(item => item.title || item.company || item.desc),
+        education: (data.education || []).map(cleanEdu).filter(item => item.degree || item.school)
     };
+}
 
+async function prepareAndPrintResume() {
+    const data = getResumeData();
+    applyResumeData(normalizeResumeDataForExport(data));
+    await waitForResumeFonts();
+    const preview = document.getElementById('resume-preview');
+    document.documentElement.classList.add('resume-printing');
+    const pageSize = chooseResumePrintSize();
+    if (preview) preview.dataset.printSize = pageSize.toLowerCase();
+    setResumePrintPageSize(pageSize);
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     window.print();
 }
 
+window.addEventListener('afterprint', () => {
+    document.documentElement.classList.remove('resume-printing');
+});
 
 let markedLoadPromise;
 

@@ -236,6 +236,7 @@
   border: 1px solid var(--resume-border);
   max-height: none;
   overflow-y: visible;
+  font-family: "Google Sans Flex", "Google Sans", "Inter", "Roboto", "Arial", sans-serif;
 }
 
 #resumePage #resume-preview,
@@ -284,6 +285,20 @@
 #resumePage .contact-info .material-symbols-outlined {
   font-size: 20px;
   color: var(--resume-secondary);
+}
+#resumePage .resume-icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--resume-secondary);
+  flex-shrink: 0;
+}
+#resumePage .resume-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
 }
 #resumePage .resume-section {
   margin-bottom: 30px;
