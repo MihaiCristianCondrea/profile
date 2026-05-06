@@ -239,10 +239,25 @@ function formatDateRange(start, end) {
     return [normalizedStart, normalizedEnd].filter(Boolean).join(' – ');
 }
 
-function buildContactLine(icon, value) {
+function renderContactLine(targetId, iconName, value) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    target.replaceChildren();
+
     const text = cleanText(value);
-    if (!text) return '';
-    return `<span class="resume-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="${icon}"></path></svg></span><span>${text}</span>`;
+    if (!text) return;
+
+    const icon = document.createElement('span');
+    icon.className = 'material-symbols-outlined resume-pdf-icon resume-print-icon-text';
+    icon.setAttribute('data-print-icon', iconName);
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = iconName;
+
+    const label = document.createElement('span');
+    label.textContent = text;
+
+    target.append(icon, label);
 }
 
 // Real-time updates for form inputs
@@ -256,9 +271,9 @@ function setupRealtimeUpdates() {
     };
     set('name', e => document.getElementById('resume-name').textContent = cleanText(e.target.value));
     set('job-title', e => document.getElementById('resume-job-title').textContent = cleanText(e.target.value));
-    set('phone', e => document.getElementById('resume-phone').innerHTML = buildContactLine('M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.1.37 2.28.56 3.5.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.3 21 3 13.7 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.22.19 2.4.56 3.5a1 1 0 0 1-.24 1.01l-2.2 2.28z', e.target.value));
-    set('email', e => document.getElementById('resume-email').innerHTML = buildContactLine('M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z', e.target.value));
-    set('address', e => document.getElementById('resume-address').innerHTML = buildContactLine('M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z', e.target.value));
+    set('phone', e => renderContactLine('resume-phone', 'call', e.target.value));
+    set('email', e => renderContactLine('resume-email', 'mail', e.target.value));
+    set('address', e => renderContactLine('resume-address', 'location_on', e.target.value));
     set('summary', e => {
         const parsed = marked.parse(e.target.value);
         document.getElementById('resume-summary').innerHTML = DOMPurify.sanitize(parsed);
@@ -775,15 +790,25 @@ function normalizeResumeDataForExport(data) {
 }
 
 async function prepareAndPrintResume() {
-    const data = getResumeData();
-    applyResumeData(normalizeResumeDataForExport(data));
-    await waitForResumeFonts();
     const preview = document.getElementById('resume-preview');
+    if (!preview) {
+        window.print();
+        return;
+    }
+
+    await waitForResumeFonts();
+
     document.documentElement.classList.add('resume-printing');
-    const pageSize = chooseResumePrintSize();
-    if (preview) preview.dataset.printSize = pageSize.toLowerCase();
+
+    const approximateA4HeightPx = 1123;
+    const shouldUseA3 = preview.scrollHeight > approximateA4HeightPx;
+
+    const pageSize = shouldUseA3 ? 'A3' : 'A4';
+    preview.dataset.printSize = pageSize.toLowerCase();
     setResumePrintPageSize(pageSize);
+
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
     window.print();
 }
 

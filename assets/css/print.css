@@ -7,57 +7,97 @@
   html,
   body {
     width: 100%;
-    min-width: 0 !important;
-    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
     overflow: visible !important;
   }
 
-  body * {
-    visibility: hidden;
-  }
-
-  #resumePage,
-  #resume-preview,
-  #resume-preview * {
-    visibility: visible;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
 
   #resumePage {
+    display: block !important;
+    width: auto !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: transparent !important;
   }
 
   #resumePage .form-container,
   #resumePage .resume-download,
+  #resumePage .resume-json-actions,
   #resumePage .no-print {
     display: none !important;
   }
 
   #resumePage #resume-preview {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    display: block !important;
+    position: static !important;
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
+    outline: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     overflow: hidden !important;
     transform: none !important;
+    transform-origin: top left !important;
     background: var(--resume-right-bg, #fff) !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
   }
 
-  #resumePage #resume-preview[data-print-size="a4"] { width: 210mm !important; min-height: 297mm !important; max-height: 297mm !important; }
-  #resumePage #resume-preview[data-print-size="a3"] { width: 297mm !important; min-height: 420mm !important; max-height: 420mm !important; }
+  #resumePage #resume-preview[data-print-size='a4'] {
+    width: 210mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+  }
 
-  #resumePage #resume-preview .resume-icon,
-  #resumePage #resume-preview svg[aria-hidden="true"] {
+  #resumePage #resume-preview[data-print-size='a3'] {
+    width: 297mm !important;
+    min-height: 420mm !important;
+    max-height: 420mm !important;
+  }
+
+  #resumePage #resume-preview *,
+  #resumePage #resume-preview *::before,
+  #resumePage #resume-preview *::after {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+
+  #resumePage #resume-preview .material-symbols-outlined {
     user-select: none !important;
     -webkit-user-select: none !important;
+  }
+
+  #resumePage #resume-preview .resume-pdf-icon {
+    --resume-print-icon-color: var(--resume-secondary);
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  #resumePage #resume-preview .resume-pdf-icon::before {
+    content: '';
+    display: block;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background-color: var(--resume-print-icon-color);
+    opacity: 0.9;
   }
 }
