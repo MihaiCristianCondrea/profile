@@ -8,7 +8,7 @@
     "build:css": "npx tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.css --minify",
     "verify:seo": "node -e \"['sitemap.xml','robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
     "deploy": "npm run build && npm run verify:seo",
-    "build:material": "npx rollup -p @rollup/plugin-node-resolve index.js -o bundle.js",
+    "build:material": "npx rollup -p @rollup/plugin-node-resolve index.ts -o bundle.js",
     "build:ts": "tsc -p tsconfig.json"
   },
   "keywords": [],
