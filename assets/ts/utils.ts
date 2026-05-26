@@ -1,42 +1,50 @@
-"use strict";
+// @ts-nocheck
+type Indexable = Record<string, unknown> | unknown[];
+
+declare const module: { exports: unknown } | undefined;
+
 /**
  * Safely retrieves a nested value from an object using a path string.
  */
-function getNestedValue(obj, path, defaultValue = undefined) {
-    const travel = (regexp) => String(path)
+function getNestedValue<T = unknown>(obj: Indexable | null | undefined, path: string, defaultValue: T | undefined = undefined): T | undefined {
+    const travel = (regexp: RegExp): unknown => String(path)
         .split(regexp)
         .filter(Boolean)
-        .reduce((res, key) => {
-        if (res === null || res === undefined) {
-            return res;
-        }
-        if (Array.isArray(res)) {
-            const index = Number(key);
-            return Number.isInteger(index) ? res[index] : undefined;
-        }
-        if (typeof res === 'object') {
-            return res[key];
-        }
-        return undefined;
-    }, obj);
+        .reduce<unknown>((res, key) => {
+            if (res === null || res === undefined) {
+                return res;
+            }
+
+            if (Array.isArray(res)) {
+                const index = Number(key);
+                return Number.isInteger(index) ? res[index] : undefined;
+            }
+
+            if (typeof res === 'object') {
+                return (res as Record<string, unknown>)[key];
+            }
+
+            return undefined;
+        }, obj);
+
     const result = travel(/[,[\]]+?/) ?? travel(/[,[\].]+?/);
-    return result === undefined || result === obj ? defaultValue : result;
+    return result === undefined || result === obj ? defaultValue : (result as T);
 }
-function extractFirstImageFromHtml(htmlContent) {
-    if (!htmlContent)
-        return null;
+
+function extractFirstImageFromHtml(htmlContent: string): string | null {
+    if (!htmlContent) return null;
     const imgTagMatch = htmlContent.match(/<img[^>]+src="([^">]+)"/);
-    if (imgTagMatch?.[1] && !imgTagMatch[1].startsWith('data:image'))
-        return imgTagMatch[1];
+    if (imgTagMatch?.[1] && !imgTagMatch[1].startsWith('data:image')) return imgTagMatch[1];
     const bloggerImageMatch = htmlContent.match(/(https?:\/\/[^\"]+\.googleusercontent\.com\/[^\"]+)/);
-    if (bloggerImageMatch?.[1])
-        return bloggerImageMatch[1];
+    if (bloggerImageMatch?.[1]) return bloggerImageMatch[1];
     return null;
 }
-function getDynamicElement(id) {
+
+function getDynamicElement(id: string): HTMLElement | null {
     return document.getElementById(id);
 }
-function setCopyrightYear() {
+
+function setCopyrightYear(): void {
     const copyrightElement = document.getElementById('copyright-message');
     if (copyrightElement) {
         const currentYear = new Date().getFullYear();
@@ -44,14 +52,17 @@ function setCopyrightYear() {
         copyrightElement.textContent = `Copyright © ${yearText}, Mihai-Cristian Condrea`;
     }
 }
-function showPageLoadingOverlay() {
+
+function showPageLoadingOverlay(): void {
     const overlay = document.getElementById('pageLoadingOverlay');
     overlay?.classList.add('active');
 }
-function hidePageLoadingOverlay() {
+
+function hidePageLoadingOverlay(): void {
     const overlay = document.getElementById('pageLoadingOverlay');
     overlay?.classList.remove('active');
 }
+
 if (typeof globalThis !== 'undefined') {
     Object.assign(globalThis, {
         getNestedValue,
@@ -62,6 +73,7 @@ if (typeof globalThis !== 'undefined') {
         hidePageLoadingOverlay
     });
 }
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         getNestedValue,

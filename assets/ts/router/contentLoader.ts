@@ -1,19 +1,23 @@
-"use strict";
 // @ts-nocheck
 (function (global) {
     const DEFAULT_PAGE_TITLE = "Mihai's Profile";
+
     function createErrorHtml(message) {
         return `<div class="page-section active"><p class="error-message text-red-500">${message}</p></div>`;
     }
+
     function createNotFoundHtml(pageId) {
         return `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
     }
+
     async function fetchPageMarkup(pageId, options = {}) {
         const routesApi = global.RouterRoutes;
         const getRoute = routesApi && typeof routesApi.getRoute === 'function'
             ? routesApi.getRoute.bind(routesApi)
             : null;
+
         const routeConfig = getRoute ? getRoute(pageId) : null;
+
         if (!routeConfig) {
             return {
                 status: 'not-found',
@@ -21,12 +25,15 @@
                 html: createNotFoundHtml(pageId)
             };
         }
+
         const pageTitle = routeConfig.title || DEFAULT_PAGE_TITLE;
         const onReadyHook = routeConfig.onLoad || null;
+
         if (!routeConfig.path) {
             if (routeConfig.id !== 'home') {
                 console.warn(`RouterContentLoader: Route "${routeConfig.id}" does not define a path. Using empty content placeholder.`);
             }
+
             return {
                 status: 'success',
                 title: pageTitle,
@@ -35,6 +42,7 @@
                 sourceTitle: pageTitle
             };
         }
+
         try {
             const response = await fetch(routeConfig.path);
             if (!response.ok) {
@@ -48,8 +56,7 @@
                 onReady: onReadyHook,
                 sourceTitle: pageTitle
             };
-        }
-        catch (error) {
+        } catch (error) {
             return {
                 status: 'error',
                 title: 'Error',
@@ -59,6 +66,7 @@
             };
         }
     }
+
     global.RouterContentLoader = {
         fetchPageMarkup,
         DEFAULT_PAGE_TITLE
