@@ -1,4 +1,3 @@
-"use strict";
 // @ts-nocheck
 (function (global) {
     const DEFAULT_TITLE = "Mihai's Profile";
@@ -16,9 +15,11 @@
     const DEFAULT_OG_TYPE = 'website';
     const DEFAULT_TWITTER_CARD = 'summary_large_image';
     const DEFAULT_TWITTER_HANDLE = '@MihaiCrstian';
+
     function isDomAvailable() {
         return typeof document !== 'undefined' && !!document.head;
     }
+
     function ensureMetaByName(name) {
         if (!isDomAvailable()) {
             return null;
@@ -31,6 +32,7 @@
         }
         return element;
     }
+
     function ensureMetaByProperty(property) {
         if (!isDomAvailable()) {
             return null;
@@ -43,6 +45,7 @@
         }
         return element;
     }
+
     function ensureCanonicalLink() {
         if (!isDomAvailable()) {
             return null;
@@ -55,6 +58,7 @@
         }
         return element;
     }
+
     function updateMetaTag(element, content) {
         if (!element) {
             return;
@@ -62,6 +66,7 @@
         const value = typeof content === 'string' ? content : '';
         element.setAttribute('content', value);
     }
+
     function toKeywordString(keywords) {
         if (Array.isArray(keywords) && keywords.length) {
             return keywords.join(', ');
@@ -71,6 +76,7 @@
         }
         return DEFAULT_KEYWORDS.join(', ');
     }
+
     function sanitizeSlug(slug) {
         if (typeof slug !== 'string') {
             return '';
@@ -84,6 +90,7 @@
         }
         return trimmed.replace(/^[/#]+/, '').replace(/[/#]+$/, '');
     }
+
     function buildCanonicalUrl(slug) {
         const sanitized = sanitizeSlug(slug);
         if (!sanitized) {
@@ -94,6 +101,7 @@
         }
         return `${SITE_BASE_URL}#${sanitized}`;
     }
+
     function cloneMetadata(metadata) {
         if (!metadata || typeof metadata !== 'object') {
             return null;
@@ -106,21 +114,27 @@
             twitter: metadata.twitter && typeof metadata.twitter === 'object' ? { ...metadata.twitter } : null
         };
     }
+
     function updateForRoute(routeConfig, options = {}) {
         if (!isDomAvailable()) {
             return null;
         }
+
         const clonedMetadata = cloneMetadata(routeConfig && routeConfig.metadata);
         const fallbackId = options.pageId || (routeConfig && routeConfig.id) || '';
         const fallbackTitle = options.pageTitle || (routeConfig && routeConfig.title) || DEFAULT_TITLE;
+
         const description = clonedMetadata && clonedMetadata.description
             ? clonedMetadata.description
             : DEFAULT_DESCRIPTION;
+
         const keywords = toKeywordString(clonedMetadata && clonedMetadata.keywords);
+
         const canonicalInput = clonedMetadata && Object.prototype.hasOwnProperty.call(clonedMetadata, 'canonicalSlug')
             ? clonedMetadata.canonicalSlug
             : (fallbackId && fallbackId !== 'home' ? fallbackId : '');
         const canonicalUrl = buildCanonicalUrl(canonicalInput);
+
         const openGraph = clonedMetadata && clonedMetadata.openGraph ? clonedMetadata.openGraph : {};
         const ogTitle = typeof openGraph.title === 'string' && openGraph.title.trim()
             ? openGraph.title
@@ -140,6 +154,7 @@
         const ogSiteName = typeof openGraph.siteName === 'string' && openGraph.siteName.trim()
             ? openGraph.siteName
             : DEFAULT_TITLE;
+
         const twitter = clonedMetadata && clonedMetadata.twitter ? clonedMetadata.twitter : {};
         const twitterCard = typeof twitter.card === 'string' && twitter.card.trim()
             ? twitter.card
@@ -159,6 +174,7 @@
         const twitterCreator = typeof twitter.creator === 'string' && twitter.creator.trim()
             ? twitter.creator
             : DEFAULT_TWITTER_HANDLE;
+
         updateMetaTag(ensureMetaByName('description'), description);
         updateMetaTag(ensureMetaByName('keywords'), keywords);
         updateMetaTag(ensureMetaByProperty('og:title'), ogTitle);
@@ -168,16 +184,19 @@
         updateMetaTag(ensureMetaByProperty('og:image'), ogImage);
         updateMetaTag(ensureMetaByProperty('og:image:alt'), ogImageAlt);
         updateMetaTag(ensureMetaByProperty('og:site_name'), ogSiteName);
+
         updateMetaTag(ensureMetaByName('twitter:card'), twitterCard);
         updateMetaTag(ensureMetaByName('twitter:title'), twitterTitle);
         updateMetaTag(ensureMetaByName('twitter:description'), twitterDescription);
         updateMetaTag(ensureMetaByName('twitter:image'), twitterImage);
         updateMetaTag(ensureMetaByName('twitter:site'), twitterSite);
         updateMetaTag(ensureMetaByName('twitter:creator'), twitterCreator);
+
         const canonicalLink = ensureCanonicalLink();
         if (canonicalLink) {
             canonicalLink.setAttribute('href', canonicalUrl);
         }
+
         return {
             canonicalUrl,
             description,
@@ -186,6 +205,7 @@
             twitterTitle
         };
     }
+
     global.SiteMetadata = {
         updateForRoute,
         buildCanonicalUrl

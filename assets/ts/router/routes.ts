@@ -1,4 +1,3 @@
-"use strict";
 // @ts-nocheck
 (function (global) {
     const DEFAULT_ROUTE_TITLE = "Mihai's Profile";
@@ -16,6 +15,7 @@
     const DEFAULT_TWITTER_CARD = 'summary_large_image';
     const DEFAULT_TWITTER_HANDLE = '@MihaiCrstian';
     const PAGE_ROUTES = Object.create(null);
+
     function normalizeRouteId(routeId) {
         if (typeof routeId !== 'string') {
             return '';
@@ -26,54 +26,69 @@
         }
         return trimmed.startsWith('#') ? trimmed.substring(1) : trimmed;
     }
+
     function sanitizeKeywords(value) {
         if (Array.isArray(value)) {
             return value
                 .map(keyword => (typeof keyword === 'string' ? keyword.trim() : ''))
                 .filter(Boolean);
         }
+
         if (typeof value === 'string') {
             return value
                 .split(',')
                 .map(keyword => keyword.trim())
                 .filter(Boolean);
         }
+
         return [];
     }
+
     function sanitizeCanonicalSlug(value, routeId) {
         if (typeof value === 'string') {
             const trimmed = value.trim();
             if (!trimmed || trimmed === '/' || trimmed === '#') {
                 return routeId === 'home' ? '' : routeId;
             }
+
             if (/^https?:\/\//i.test(trimmed)) {
                 return trimmed;
             }
+
             const normalized = trimmed.replace(/^[/#]+/, '').replace(/[/#]+$/, '');
             return normalized || (routeId === 'home' ? '' : routeId);
         }
+
         return routeId === 'home' ? '' : routeId;
     }
+
     function sanitizeOpenGraph(openGraphConfig, route, description) {
         const config = openGraphConfig && typeof openGraphConfig === 'object' ? openGraphConfig : {};
+
         const title = typeof config.title === 'string' && config.title.trim()
             ? config.title.trim()
             : (route.title || DEFAULT_ROUTE_TITLE);
+
         const ogDescription = typeof config.description === 'string' && config.description.trim()
             ? config.description.trim()
             : description;
+
         const type = typeof config.type === 'string' && config.type.trim()
             ? config.type.trim()
             : DEFAULT_OPEN_GRAPH_TYPE;
+
         const image = typeof config.image === 'string' && config.image.trim()
             ? config.image.trim()
             : DEFAULT_SOCIAL_IMAGE;
+
         const imageAlt = typeof config.imageAlt === 'string' && config.imageAlt.trim()
             ? config.imageAlt.trim()
             : DEFAULT_SOCIAL_IMAGE_ALT;
+
         const siteName = typeof config.siteName === 'string' && config.siteName.trim()
             ? config.siteName.trim()
             : DEFAULT_ROUTE_TITLE;
+
         return {
             title,
             description: ogDescription,
@@ -83,26 +98,34 @@
             siteName
         };
     }
+
     function sanitizeTwitter(twitterConfig, openGraph, description) {
         const config = twitterConfig && typeof twitterConfig === 'object' ? twitterConfig : {};
+
         const card = typeof config.card === 'string' && config.card.trim()
             ? config.card.trim()
             : DEFAULT_TWITTER_CARD;
+
         const title = typeof config.title === 'string' && config.title.trim()
             ? config.title.trim()
             : openGraph.title;
+
         const twitterDescription = typeof config.description === 'string' && config.description.trim()
             ? config.description.trim()
             : description;
+
         const image = typeof config.image === 'string' && config.image.trim()
             ? config.image.trim()
             : openGraph.image;
+
         const site = typeof config.site === 'string' && config.site.trim()
             ? config.site.trim()
             : DEFAULT_TWITTER_HANDLE;
+
         const creator = typeof config.creator === 'string' && config.creator.trim()
             ? config.creator.trim()
             : DEFAULT_TWITTER_HANDLE;
+
         return {
             card,
             title,
@@ -112,15 +135,19 @@
             creator
         };
     }
+
     function sanitizeMetadata(metadataConfig, route) {
         const config = metadataConfig && typeof metadataConfig === 'object' ? metadataConfig : {};
+
         const description = typeof config.description === 'string' && config.description.trim()
             ? config.description.trim()
             : DEFAULT_METADATA_DESCRIPTION;
+
         const keywords = sanitizeKeywords(config.keywords);
         const canonicalSlug = sanitizeCanonicalSlug(config.canonicalSlug, route.id);
         const openGraph = sanitizeOpenGraph(config.openGraph, route, description);
         const twitter = sanitizeTwitter(config.twitter, openGraph, description);
+
         return {
             description,
             keywords: keywords.length ? keywords : [...DEFAULT_METADATA_KEYWORDS],
@@ -129,10 +156,12 @@
             twitter
         };
     }
+
     function cloneMetadata(metadata) {
         if (!metadata || typeof metadata !== 'object') {
             return null;
         }
+
         return {
             description: metadata.description,
             keywords: Array.isArray(metadata.keywords) ? [...metadata.keywords] : [],
@@ -145,32 +174,40 @@
                 : null
         };
     }
+
     function cloneRoute(route) {
         if (!route || typeof route !== 'object') {
             return null;
         }
+
         return {
             ...route,
             metadata: cloneMetadata(route.metadata)
         };
     }
+
     function sanitizeRouteConfig(config) {
         if (!config || typeof config !== 'object') {
             throw new TypeError('RouterRoutes: Route configuration must be an object.');
         }
+
         const normalizedId = normalizeRouteId(config.id);
         if (!normalizedId) {
             throw new Error('RouterRoutes: Route configuration requires a non-empty "id".');
         }
+
         const sanitized = {
             id: normalizedId,
             path: typeof config.path === 'string' && config.path.trim() ? config.path.trim() : null,
             title: typeof config.title === 'string' && config.title.trim() ? config.title.trim() : DEFAULT_ROUTE_TITLE,
             onLoad: typeof config.onLoad === 'function' ? config.onLoad : null
         };
+
         sanitized.metadata = sanitizeMetadata(config.metadata, sanitized);
+
         return sanitized;
     }
+
     function registerRoute(config) {
         const sanitized = sanitizeRouteConfig(config);
         const isUpdate = Object.prototype.hasOwnProperty.call(PAGE_ROUTES, sanitized.id);
@@ -180,6 +217,7 @@
         }
         return cloneRoute(sanitized);
     }
+
     function getRoute(routeId) {
         const normalizedId = normalizeRouteId(routeId);
         if (!normalizedId) {
@@ -188,41 +226,53 @@
         const storedRoute = PAGE_ROUTES[normalizedId];
         return cloneRoute(storedRoute);
     }
+
     function hasRoute(routeId) {
         return !!getRoute(routeId);
     }
+
     function getRoutes() {
         return Object.values(PAGE_ROUTES).map(route => cloneRoute(route));
     }
+
     function runHomeOnLoad() {
-        if (typeof fetchBlogPosts === 'function' &&
+        if (
+            typeof fetchBlogPosts === 'function' &&
             typeof document !== 'undefined' &&
-            document.getElementById('newsGrid')) {
+            document.getElementById('newsGrid')
+        ) {
             fetchBlogPosts();
         }
     }
+
     function runSongsOnLoad() {
-        if (typeof loadSongs === 'function' &&
+        if (
+            typeof loadSongs === 'function' &&
             typeof document !== 'undefined' &&
-            document.getElementById('songsGrid')) {
+            document.getElementById('songsGrid')
+        ) {
             loadSongs();
         }
     }
+
     function runProjectsOnLoad() {
         if (typeof initProjectsPage === 'function') {
             initProjectsPage();
         }
     }
+
     function runResumeOnLoad() {
         if (typeof initResumePage === 'function') {
             initResumePage();
         }
     }
+
     function runSmartCleanerOnLoad() {
         if (typeof initSmartCleanerPage === 'function') {
             initSmartCleanerPage();
         }
     }
+
     const defaultRoutes = [
         {
             id: 'home',
@@ -569,7 +619,9 @@
             }
         }
     ];
+
     defaultRoutes.forEach(registerRoute);
+
     const routesApi = {
         registerRoute,
         getRoute,
@@ -578,6 +630,7 @@
         normalizeRouteId,
         PAGE_ROUTES
     };
+
     global.RouterRoutes = routesApi;
     if (typeof global.registerRoute === 'undefined') {
         global.registerRoute = registerRoute;
