@@ -1,4 +1,3 @@
-// @ts-nocheck
 (function (global) {
     const DEFAULT_PAGE_TITLE = "Mihai's Profile";
 

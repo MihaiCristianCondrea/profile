@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 const appConfig = {
     blog: {

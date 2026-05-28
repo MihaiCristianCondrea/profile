@@ -1,4 +1,3 @@
-// @ts-nocheck
 (function (global) {
     const FADE_OUT_EASING_FALLBACK = 'cubic-bezier(0.4, 0, 1, 1)';
     const FADE_IN_EASING_FALLBACK = 'cubic-bezier(0, 0, 0.2, 1)';

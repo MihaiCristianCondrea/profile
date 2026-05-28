@@ -1,4 +1,3 @@
-// @ts-nocheck
 let lightThemeButton, darkThemeButton, autoThemeButton, themeButtons, htmlElement;
 
 /**

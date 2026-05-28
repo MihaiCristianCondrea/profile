@@ -1,4 +1,3 @@
-// @ts-nocheck
 type Indexable = Record<string, unknown> | unknown[];
 
 declare const module: { exports: unknown } | undefined;

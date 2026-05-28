@@ -1,4 +1,3 @@
-// @ts-nocheck
 (function (global) {
     const DEFAULT_ROUTE_TITLE = "Mihai's Profile";
     const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';

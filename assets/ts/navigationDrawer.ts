@@ -1,4 +1,3 @@
-// @ts-nocheck
 let menuButton, navDrawer, closeDrawerButton, drawerOverlay,
     aboutToggle, aboutContent, androidAppsToggle, androidAppsContent,
     inertTargets = [];

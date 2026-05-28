@@ -1,4 +1,3 @@
-// @ts-nocheck
 (function (global) {
     const reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
     const FAQ_DATA_URL = (() => {

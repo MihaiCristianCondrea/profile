@@ -1,4 +1,3 @@
-// @ts-nocheck
 function initContactPage() {
     const openButton = document.getElementById('openContactDialog');
     const contactDialog = document.getElementById('contactDialog');

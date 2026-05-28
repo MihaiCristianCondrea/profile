@@ -1,4 +1,3 @@
-// @ts-nocheck
 const COMMITTERS_RANKING_URL = 'https://committers.top/rank_only/romania.json';
 const COMMITTERS_USERNAME = 'MihaiCristianCondrea';
 const COMMITTERS_UPDATED_FALLBACK = 'Last updated: —';
