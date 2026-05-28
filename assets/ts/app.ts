@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Global DOM element references needed by multiple modules or for initialization
 const PROFILE_AVATAR_FALLBACK_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
@@ -64,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function buildRouterOptions() {
-    const options = {};
+function buildRouterOptions(): RouterOptions {
+    const options: RouterOptions = {};
 
     if (typeof showPageLoadingOverlay === 'function') {
         options.showOverlay = () => {
@@ -85,7 +84,7 @@ function buildRouterOptions() {
         };
     }
 
-    const homeLoadCallbacks = [];
+    const homeLoadCallbacks: HomeLoadCallback[] = [];
 
     if (typeof fetchBlogPosts === 'function') {
         homeLoadCallbacks.push(() => {
@@ -125,7 +124,7 @@ function buildRouterOptions() {
         };
     }
 
-    const pageHandlers = {};
+    const pageHandlers: Record<string, PageLoadCallback> = {};
 
     if (typeof loadSongs === 'function') {
         pageHandlers.songs = () => {
@@ -233,3 +232,4 @@ function initProfileAvatarFallback() {
         applyFallback();
     }
 }
+import type { HomeLoadCallback, PageLoadCallback, RouterOptions } from './types';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 let pageContentArea, appBarHeadline;
 let initialHomepageHTML = '';
 const MINIMUM_LOAD_DURATION = 600;

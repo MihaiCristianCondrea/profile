@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 const ODESLI_API_BASE_URL = 'https://publicapi.dev/songlink';
 const D4RK_REKORDS_ARTIST_ID = 'd4rk-rekords';

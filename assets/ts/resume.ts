@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Resume builder functionality
 const RESUME_STORAGE_KEY = 'resume-builder-state-v1';
 const RESUME_LANGUAGE_KEY = 'resume-builder-language-v1';

@@ -1,6 +1,6 @@
 # Mihai's Profile Website
 
-This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and vanilla JavaScript.
+This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript (compiled to browser JavaScript).
 
 ## Features
 
@@ -8,7 +8,7 @@ This repository contains the source for a personal profile site built as a small
 - **Navigation Drawer** – A slide‑out drawer lists Home, Blogs, Music, Projects and collapsible "Profile" and "Android Apps" sections.
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
-- **Client‑Side Routing** – JavaScript loads internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
+- **Client‑Side Routing** – TypeScript router modules load internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
 - **Navigation Transitions** – Switching pages from the drawer fades content out
   and in using Material Design motion.
 - **Progressive Web App** – Includes a `manifest.json` file and icons so it can be installed as a PWA.
@@ -19,7 +19,8 @@ This repository contains the source for a personal profile site built as a small
 index.html                # Main page of the site
 assets/
   css/                    # Base styles and component styles
-  js/                     # JavaScript modules (router, theme, navigation, Blogger API)
+  ts/                     # TypeScript source modules (authoritative)
+  js/                     # Generated JavaScript build output (do not edit manually)
   images/                 # Illustrations used on various pages
   icons/                  # Favicon and PWA icons
   manifest.json           # Web app manifest
@@ -97,7 +98,7 @@ in the project root so they are included in the published bundle.
 ### Metadata & Social Sharing
 
 - Every client-side route now carries a `metadata` block defined in
-  `assets/js/router/routes.js`. The router sanitizes those values and
+  `assets/ts/router/routes.ts`. The router sanitizes those values and
   a lightweight metadata manager updates `<meta>` and canonical tags each
   time navigation occurs.
 - When registering a new route you **must** provide the following fields to
@@ -135,7 +136,7 @@ in the project root so they are included in the published bundle.
   });
   ```
 
-- The metadata manager lives in `assets/js/metadataManager.js`. It ensures
+- The metadata manager lives in `assets/ts/metadataManager.ts`. It ensures
   the description, keyword, Open Graph, Twitter, and canonical tags always
   reflect the active route while falling back to opinionated defaults.
 
@@ -151,3 +152,16 @@ tracks from the `relatedStreams` array.
 
 This project is distributed under the terms of the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for the full text.
 
+
+
+## TypeScript Architecture
+
+- Source of truth: `assets/ts/` (core/router/features/shared types).
+- Generated artifacts: `assets/js/` produced by `npm run build:ts`.
+- New feature code must be added in `assets/ts/` and validated with `tsc -p tsconfig.json`.
+- Keep `assets/js/` layout mirroring `assets/ts/` for predictable runtime paths.
+
+### Migration status
+
+- Primary app modules have been migrated to TypeScript sources.
+- Legacy global interop remains in some modules and is being phased into explicit typed imports over time.

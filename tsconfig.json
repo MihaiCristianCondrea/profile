@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "none",
-    "strict": true,
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "strict": false,
+    "noImplicitAny": false,
     "noEmitOnError": true,
     "rootDir": "assets/ts",
     "outDir": "assets/js",

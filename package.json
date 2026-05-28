@@ -24,10 +24,15 @@
     "postcss": "^8.5.14",
     "rollup": "^4.59.0",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "ts-jest": "^29.2.5",
+    "@types/jest": "^29.5.14"
   },
   "jest": {
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "transform": {
+      "^.+.ts$": "ts-jest"
+    }
   },
   "dependencies": {
     "@material/web": "^2.3.0"

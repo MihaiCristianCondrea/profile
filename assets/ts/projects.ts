@@ -1,4 +1,3 @@
-// @ts-nocheck
 let markedLoadPromiseProjects;
 
 const ANDROID_APPS_ENDPOINT = 'https://mihaicristiancondrea.github.io/com.d4rk.apis/api/app_toolkit/v2/release/en/home/api_android_apps.json';
