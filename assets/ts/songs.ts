@@ -1,35 +1,53 @@
 // @ts-nocheck
 
-const youtubeChannelId = 'UCtzlWsxUK8FSvLwLDbESw4A';
-async function fetchChannelVideos(channelId) {
-    const url = `https://pipedapi.ducks.party/channel/${channelId}`;
+const ODESLI_API_BASE_URL = 'https://publicapi.dev/songlink';
+const D4RK_REKORDS_ARTIST_ID = 'd4rk-rekords';
+
+function mapTrack(rawTrack) {
+    return {
+        title: rawTrack?.title || rawTrack?.song_name || 'Unknown title',
+        artists: rawTrack?.artists || rawTrack?.artist_name || 'D4rK Rekords',
+        image: rawTrack?.image || rawTrack?.thumbnail || rawTrack?.artwork || null,
+        link: rawTrack?.link || rawTrack?.universal_link || rawTrack?.url || '#'
+    };
+}
+
+async function fetchArtistSongs(artistId) {
+    const url = `${ODESLI_API_BASE_URL}/api/odesli/${encodeURIComponent(artistId)}`;
     const resp = await fetch(url);
+
     if (!resp.ok) {
         const errorText = await resp.text();
         throw new Error(`HTTP error! status: ${resp.status}, message: ${errorText}`);
     }
+
     const data = await resp.json();
-    const streams = data.relatedStreams || [];
-    return streams.map(v => ({
-        title: v.title,
-        artists: v.uploaderName,
-        image: v.thumbnail,
-        link: `https://www.youtube.com${v.url}`
-    }));
+    const songs = Array.isArray(data?.songs)
+        ? data.songs
+        : Array.isArray(data?.tracks)
+            ? data.tracks
+            : Array.isArray(data)
+                ? data
+                : [];
+
+    return songs.map(mapTrack);
 }
 
 async function loadSongs() {
     const grid = document.getElementById('songsGrid');
     const status = document.getElementById('songs-status');
     if (!grid) return;
+
     if (status) status.style.display = 'flex';
     grid.innerHTML = '';
+
     let tracks = [];
     try {
-        tracks = await fetchChannelVideos(youtubeChannelId);
+        tracks = await fetchArtistSongs(D4RK_REKORDS_ARTIST_ID);
     } catch (err) {
-        console.error('Failed to fetch songs list', err);
+        console.error('Failed to fetch songs list from Songlink / Odesli API', err);
     }
+
     for (const track of tracks) {
         const img = track.image || 'assets/images/placeholder.png';
         const title = track.title;
@@ -43,7 +61,7 @@ async function loadSongs() {
             <div class="song-card-content">
                 <h3>${title}</h3>
                 <p>${artists}</p>
-                <div class="song-card-links"><a href="${link}" target="_blank" rel="noopener noreferrer">YouTube</a></div>
+                <div class="song-card-links"><a href="${link}" target="_blank" rel="noopener noreferrer">Open Song</a></div>
             </div>`;
         grid.appendChild(card);
     }
@@ -55,10 +73,10 @@ async function loadSongs() {
             console.error('Songs: Failed to animate song cards.', animationError);
         }
     }
+
     if (status) status.style.display = 'none';
 }
 
-// When router loads the page dynamically
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('songsGrid')) {
         loadSongs();
@@ -67,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        fetchChannelVideos,
+        fetchArtistSongs,
         loadSongs
     };
 }

@@ -14,7 +14,7 @@ describe('songs module', () => {
         delete global.fetch;
     });
 
-    test('fetchChannelVideos throws an error with response message when request fails', async () => {
+    test('fetchArtistSongs throws an error with response message when request fails', async () => {
         const errorText = 'Something went wrong';
         const mockText = jest.fn().mockResolvedValue(errorText);
         const response = {
@@ -25,9 +25,9 @@ describe('songs module', () => {
 
         global.fetch.mockResolvedValue(response);
 
-        const { fetchChannelVideos } = require('../assets/js/songs.js');
+        const { fetchArtistSongs } = require('../assets/js/songs.js');
 
-        await expect(fetchChannelVideos('channel123')).rejects.toThrow(
+        await expect(fetchArtistSongs('artist123')).rejects.toThrow(
             `HTTP error! status: 502, message: ${errorText}`
         );
         expect(mockText).toHaveBeenCalledTimes(1);
@@ -35,18 +35,18 @@ describe('songs module', () => {
 
     test('loadSongs renders fetched tracks, applies fallback image, and hides status indicator', async () => {
         const mockJson = jest.fn().mockResolvedValue({
-            relatedStreams: [
+            songs: [
                 {
-                    title: 'First Song',
-                    uploaderName: 'First Artist',
+                    song_name: 'First Song',
+                    artist_name: 'First Artist',
                     thumbnail: 'https://cdn.example.com/thumb1.jpg',
-                    url: '/watch?v=first'
+                    universal_link: 'https://song.link/first'
                 },
                 {
                     title: 'Second Song',
-                    uploaderName: 'Second Artist',
-                    thumbnail: null,
-                    url: '/watch?v=second'
+                    artists: 'Second Artist',
+                    image: null,
+                    link: 'https://song.link/second'
                 }
             ]
         });
@@ -74,7 +74,7 @@ describe('songs module', () => {
         expect(firstImg.alt).toBe('First Song');
         expect(firstCard.querySelector('h3').textContent).toBe('First Song');
         expect(firstCard.querySelector('p').textContent).toBe('First Artist');
-        expect(firstCard.querySelector('a').href).toBe('https://www.youtube.com/watch?v=first');
+        expect(firstCard.querySelector('a').href).toBe('https://song.link/first');
 
         const secondImg = secondCard.querySelector('img');
         expect(secondImg.src).toContain(PLACEHOLDER_SRC);
