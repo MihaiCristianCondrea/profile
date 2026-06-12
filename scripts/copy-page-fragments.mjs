@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = join(repoRoot, 'src', 'features');
-const outputRoot = join(repoRoot, 'assets', 'content', 'features');
+const outputRoot = join(repoRoot, 'dist', 'content', 'features');
 
 async function collectHtmlFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -30,7 +30,7 @@ async function copyPageFragments() {
     await copyFile(sourcePath, outputPath);
   }));
 
-  console.log(`Copied ${htmlFiles.length} page fragment${htmlFiles.length === 1 ? '' : 's'} to assets/content/features.`);
+  console.log(`Copied ${htmlFiles.length} page fragment${htmlFiles.length === 1 ? '' : 's'} to dist/content/features.`);
 }
 
 copyPageFragments().catch(error => {

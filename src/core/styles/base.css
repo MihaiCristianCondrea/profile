@@ -92,3 +92,16 @@ html.prefers-reduced-motion *::after {
   transition-delay: 0ms !important;
   scroll-behavior: auto !important;
 }
+
+/* Minimal utility classes retained from the former Tailwind build. */
+.bg-surface-container-lowest {
+  background-color: var(--md-sys-color-surface-container-lowest, var(--app-bg-color));
+}
+
+.text-gray-500\/90 {
+  color: rgba(107, 114, 128, 0.9);
+}
+
+.text-red-500 {
+  color: #ef4444;
+}

@@ -1,18 +1,18 @@
 # Deployment
 
-GitHub Pages publishes a generated static site, but Git tracks only source and required static assets.
+GitHub Pages publishes the generated Vite output in `dist/`, while Git tracks only source files and runtime static assets.
 
 ## Generated output
 
-The following paths are build output and are intentionally ignored:
+The generated site lives under `dist/` and is intentionally ignored. `npm run build` recreates it by:
 
-- `bundle.js` from `npm run build:material`
-- `assets/css/tailwind.css` from `npm run build:css`
-- `assets/js/**` from `npm run build:ts`
-- `assets/content/**` from `npm run build:pages`, copied from `src/features/**/presentation/*.html`
-- `_site/`, `.tmp/`, and other cache/build folders
+- running Vite against `index.html` and `src/main.ts`;
+- copying static runtime assets from `public/`;
+- emitting legacy browser-global TypeScript files under `dist/assets/js/**` for the existing script tags;
+- copying route fragments from `src/features/**/presentation/*.html` to `dist/content/features/**/presentation/*.html`;
+- copying root SEO/support files (`robots.txt`, `sitemap.xml`, and `app-ads.txt`) into `dist/`.
 
-Do not edit or commit these files manually. Change TypeScript and feature-owned HTML fragments in `src/`, Tailwind input in `assets/css/tailwind.input.css`, or static assets under `assets/images/`, `assets/icons/`, `assets/data/`, and the root SEO/PWA files instead.
+Do not edit or commit files from `dist/` manually. Change TypeScript, CSS, and feature-owned HTML fragments in `src/`; change runtime static assets in `public/`; and keep root SEO/support files at the repository root.
 
 ## Local release check
 
@@ -24,7 +24,7 @@ npm run build
 npm run deploy
 ```
 
-`npm run deploy` runs the full build, including the page-fragment copy into `assets/content/**`, and verifies required SEO files exist.
+`npm run deploy` runs the full build and verifies the generated `dist/` artifact contains `sitemap.xml`, `robots.txt`, `app-ads.txt`, and `manifest.json`.
 
 ## GitHub Pages workflow
 
@@ -33,8 +33,8 @@ npm run deploy
 1. Check out the repository.
 2. Install dependencies with `npm ci`.
 3. Run the Jest suite against TypeScript source.
-4. Run `npm run deploy`, which regenerates `bundle.js`, `assets/css/tailwind.css`, `assets/js/**`, and `assets/content/**`.
-5. Copy the static site into `_site/` while excluding development-only source, tests, caches, and workflow files.
-6. Upload `_site/` with `actions/upload-pages-artifact` and deploy it with `actions/deploy-pages`.
+4. Run `npm run deploy`, which regenerates `dist/`.
+5. Upload `dist/` with `actions/upload-pages-artifact`.
+6. Deploy the uploaded artifact with `actions/deploy-pages`.
 
-That means the repository stays source-first, while the published GitHub Pages artifact still contains every generated runtime file and route fragment needed by `index.html`.
+That keeps the repository source-first while the published GitHub Pages artifact still contains every runtime file, static asset, and route fragment needed by `index.html`.

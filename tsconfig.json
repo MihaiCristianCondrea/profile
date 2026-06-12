@@ -7,11 +7,14 @@
     "noImplicitAny": false,
     "noEmitOnError": true,
     "rootDir": "src",
-    "outDir": "assets/js",
+    "outDir": "dist/assets/js",
     "allowJs": false,
     "skipLibCheck": true
   },
   "include": [
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/main.ts"
   ]
 }

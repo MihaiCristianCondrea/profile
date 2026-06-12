@@ -1,4 +1,4 @@
-const PLACEHOLDER_SRC = 'assets/images/placeholder.png';
+const PLACEHOLDER_SRC = 'images/placeholder.png';
 const SONG_DATA_SCRIPT = '../src/features/songs/data/SongApiClient';
 const SONG_DOMAIN_SCRIPT = '../src/features/songs/domain/SongMapper';
 const SONG_PRESENTATION_SCRIPT = '../src/features/songs/presentation/SongsPage';

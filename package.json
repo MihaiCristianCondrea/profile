@@ -4,30 +4,26 @@
   "description": "This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript.",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:material && npm run build:css && npm run build:ts && npm run build:pages",
-    "build:css": "npx tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.css --minify",
-    "verify:seo": "node -e \"['sitemap.xml','robots.txt'].forEach((file)=>require('fs').accessSync(file));\"",
-    "deploy": "npm run build && npm run verify:seo",
-    "build:material": "npx rollup -p @rollup/plugin-node-resolve index.ts -o bundle.js",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && npm run build:vite && npm run build:ts && npm run build:pages",
+    "build:vite": "vite build",
     "build:ts": "tsc -p tsconfig.json",
-    "build:pages": "node scripts/copy-page-fragments.mjs"
+    "build:pages": "node scripts/copy-page-fragments.mjs",
+    "verify:seo": "node -e \"['dist/sitemap.xml','dist/robots.txt','dist/app-ads.txt','dist/manifest.json'].forEach((file)=>require('fs').accessSync(file));\"",
+    "deploy": "npm run build && npm run verify:seo",
+    "preview": "vite preview --host 127.0.0.1"
   },
   "keywords": [],
   "author": "",
   "license": "GPL-3.0-or-later",
   "type": "commonjs",
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^16.0.1",
-    "@tailwindcss/cli": "^4.1.13",
-    "@tailwindcss/postcss": "^4.1.13",
     "jest": "^30.1.3",
     "jest-environment-jsdom": "30.1.2",
-    "postcss": "^8.5.14",
-    "rollup": "^4.59.0",
-    "tailwindcss": "^4.1.13",
     "typescript": "^5.9.3",
     "ts-jest": "^29.2.5",
-    "@types/jest": "^29.5.14"
+    "@types/jest": "^29.5.14",
+    "vite": "^7.2.7"
   },
   "jest": {
     "testEnvironment": "jsdom",
