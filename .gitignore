@@ -5,6 +5,7 @@ node_modules/
 bundle.js
 assets/js/
 assets/css/tailwind.css
+assets/content/
 
 # Temporary/cache/build output.
 .tmp/
