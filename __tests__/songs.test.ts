@@ -1,4 +1,15 @@
+const path = require('path');
+
 const PLACEHOLDER_SRC = 'assets/images/placeholder.png';
+const SONG_DATA_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'data', 'songApi.js');
+const SONG_DOMAIN_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'domain', 'songMapper.js');
+const SONG_PRESENTATION_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'presentation', 'songs.js');
+
+function loadSongsModule() {
+    require(SONG_DATA_SCRIPT);
+    require(SONG_DOMAIN_SCRIPT);
+    return require(SONG_PRESENTATION_SCRIPT);
+}
 
 describe('songs module', () => {
     beforeEach(() => {
@@ -25,7 +36,7 @@ describe('songs module', () => {
 
         global.fetch.mockResolvedValue(response);
 
-        const { fetchArtistSongs } = require('../assets/js/songs.js');
+        const { fetchArtistSongs } = loadSongsModule();
 
         await expect(fetchArtistSongs('artist123')).rejects.toThrow(
             `HTTP error! status: 502, message: ${errorText}`
@@ -56,7 +67,7 @@ describe('songs module', () => {
             json: mockJson
         });
 
-        const { loadSongs } = require('../assets/js/songs.js');
+        const { loadSongs } = loadSongsModule();
         const status = document.getElementById('songs-status');
         status.style.display = 'block';
 
