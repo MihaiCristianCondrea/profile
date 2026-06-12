@@ -239,15 +239,15 @@ describe('resume.js browser integration', () => {
     expect(latestWork.querySelector('.description').innerHTML).toBe(`sanitized(parsed(${description}))`);
   });
 
-  test('ensures resume styles are appended once and reused on subsequent initialization', async () => {
+  test('does not append duplicate resume style links during initialization', async () => {
     await runInitResumePage();
-    expect(document.querySelectorAll('link[href="assets/css/resume.css"]').length).toBe(1);
-    expect(document.querySelectorAll('link[href="assets/css/print.css"]').length).toBe(1);
+    expect(document.querySelectorAll('link[href="src/core/styles/resume.css"]').length).toBe(0);
+    expect(document.querySelectorAll('link[href="src/core/styles/print.css"]').length).toBe(0);
 
     document.fonts = { ready: Promise.resolve() };
     await runInitResumePage();
-    expect(document.querySelectorAll('link[href="assets/css/resume.css"]').length).toBe(1);
-    expect(document.querySelectorAll('link[href="assets/css/print.css"]').length).toBe(1);
+    expect(document.querySelectorAll('link[href="src/core/styles/resume.css"]').length).toBe(0);
+    expect(document.querySelectorAll('link[href="src/core/styles/print.css"]').length).toBe(0);
   });
 
   test('toggles edit mode visibility based on the edit query parameter', async () => {

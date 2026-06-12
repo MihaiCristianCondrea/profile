@@ -486,7 +486,7 @@ describe('RouterRoutes registry', () => {
 
     expect(smartCleanerRoute).toEqual(expect.objectContaining({
       id: 'smart-cleaner-for-android',
-      path: 'assets/content/features/apps/smart-cleaner/presentation/smart-cleaner-for-android.html',
+      path: 'content/features/apps/smart-cleaner/presentation/smart-cleaner-for-android.html',
       title: 'Smart Cleaner for Android',
       onLoad: expect.any(Function),
       metadata: expect.objectContaining({

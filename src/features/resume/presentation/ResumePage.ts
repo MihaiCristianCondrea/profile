@@ -2,7 +2,7 @@
 // Resume builder functionality
 const RESUME_STORAGE_KEY = 'resume-builder-state-v1';
 const RESUME_LANGUAGE_KEY = 'resume-builder-language-v1';
-const DEFAULT_PHOTO_URL = 'assets/images/profile/cv_profile_pic.png';
+const DEFAULT_PHOTO_URL = 'images/profile/cv_profile_pic.png';
 
 const RESUME_I18N = {
     en: {
@@ -1089,20 +1089,7 @@ function handleResumeJsonImport(event) {
 }
 
 function ensureResumeStyles() {
-    const head = document.head;
-    if (!document.querySelector('link[href="assets/css/resume.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'assets/css/resume.css';
-        head.appendChild(link);
-    }
-    if (!document.querySelector('link[href="assets/css/print.css"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'assets/css/print.css';
-        link.media = 'print';
-        head.appendChild(link);
-    }
+    // Resume and print styles are bundled by Vite from src/core/styles.
 }
 
 function initResumePage() {

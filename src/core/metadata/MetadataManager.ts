@@ -10,7 +10,7 @@
         'Material Design UI'
     ];
     const SITE_BASE_URL = 'https://mihaicristiancondrea.github.io/profile/';
-    const DEFAULT_IMAGE = 'https://mihaicristiancondrea.github.io/profile/assets/images/profile/cv_profile_pic.png';
+    const DEFAULT_IMAGE = 'https://mihaicristiancondrea.github.io/profile/images/profile/cv_profile_pic.png';
     const DEFAULT_IMAGE_ALT = 'Portrait of Android developer Mihai-Cristian Condrea';
     const DEFAULT_OG_TYPE = 'website';
     const DEFAULT_TWITTER_CARD = 'summary_large_image';

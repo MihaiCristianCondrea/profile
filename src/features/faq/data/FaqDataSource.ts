@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-const FAQ_DATA_URL = 'assets/data/faqs.json';
+const FAQ_DATA_URL = 'data/faqs.json';
 
 let faqItemsCache = null;
 let faqDataPromise = null;

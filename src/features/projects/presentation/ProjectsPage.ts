@@ -156,7 +156,7 @@ function initializeCarousel(carousel) {
   const placeholder = document.createElement('div');
   placeholder.classList.add('carousel-placeholder');
   const placeholderImg = document.createElement('img');
-  placeholderImg.src = 'assets/images/placeholder.png';
+  placeholderImg.src = 'images/placeholder.png';
   placeholder.appendChild(placeholderImg);
   carousel.appendChild(placeholder);
 
