@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             SiteAnimations.init();
         } catch (error) {
-            console.error('App.js: Failed to initialize animations.', error);
+            console.error('App.ts: Failed to initialize animations.', error);
         }
     }
 
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mainContentPageOriginalEl) {
         initialHomeHTMLString = mainContentPageOriginalEl.outerHTML;
     } else {
-        console.error("App.js: Initial home content (#mainContentPage) not found!");
+        console.error("App.ts: Initial home content (#mainContentPage) not found!");
     }
     const routerOptions = buildRouterOptions();
     initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString, routerOptions);
@@ -119,7 +119,7 @@ function buildRouterOptions(): RouterOptions {
                 try {
                     callback();
                 } catch (error) {
-                    console.error('App.js: Error running home load callback.', error);
+                    console.error('App.ts: Error running home load callback.', error);
                 }
             });
         };
@@ -178,7 +178,7 @@ function setupRouteLinkInterception() {
         : null;
 
     if (!hasRoute) {
-        console.warn('App.js: RouterRoutes API unavailable. Route link interception skipped.');
+        console.warn('App.ts: RouterRoutes API unavailable. Route link interception skipped.');
         return;
     }
 

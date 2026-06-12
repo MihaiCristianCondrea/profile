@@ -1,4 +1,4 @@
-const SMART_CLEANER_PAGE_SCRIPT = '../src/features/apps/smart-cleaner/presentation/smartCleanerPage';
+const SMART_CLEANER_PAGE_SCRIPT = '../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
 
 function loadScript() {
   jest.isolateModules(() => {
@@ -6,7 +6,7 @@ function loadScript() {
   });
 }
 
-describe('smartCleanerPage scroll reveal', () => {
+describe('SmartCleanerPage scroll reveal', () => {
   let originalIntersectionObserver;
   let intersectionCallback;
 

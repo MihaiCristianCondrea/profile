@@ -366,8 +366,8 @@ describe('loadPageContent behavior', () => {
 
 /* ===== Additional module-level tests (from other branch) ===== */
 
-const ROUTES_PATH = '../src/app/router/routes';
-const CONTENT_LOADER_PATH = '../src/app/router/contentLoader';
+const ROUTES_PATH = '../src/app/router/RouteRegistry';
+const CONTENT_LOADER_PATH = '../src/app/router/ContentLoader';
 
 const originalGlobalFetch = global.fetch;
 const originalWindowFetch = typeof window !== 'undefined' ? window.fetch : undefined;
