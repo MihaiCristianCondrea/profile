@@ -1,4 +1,4 @@
-const APP_PATH = '../assets/js/app.js';
+const APP_PATH = '../assets/js/app/main.js';
 
 const OPTIONAL_GLOBALS = [
   'showPageLoadingOverlay',

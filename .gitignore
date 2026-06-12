@@ -1,2 +1,6 @@
 node_modules/
 .DS_Store
+
+# Generated TypeScript output. Run `npm run build:ts` to recreate it.
+assets/js/
+.tmp/

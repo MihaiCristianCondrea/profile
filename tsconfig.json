@@ -6,12 +6,12 @@
     "strict": false,
     "noImplicitAny": false,
     "noEmitOnError": true,
-    "rootDir": "assets/ts",
+    "rootDir": "src",
     "outDir": "assets/js",
     "allowJs": false,
     "skipLibCheck": true
   },
   "include": [
-    "assets/ts/**/*.ts"
+    "src/**/*.ts"
   ]
 }

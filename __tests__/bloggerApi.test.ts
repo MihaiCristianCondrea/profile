@@ -4,9 +4,10 @@ const path = require('path');
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../assets/js/utils.js');
+} = require('../assets/js/core/dom/utils.js');
 
-const scriptPath = path.resolve(__dirname, '../assets/js/bloggerApi.js');
+const dataScriptPath = path.resolve(__dirname, '../assets/js/features/blog/data/bloggerApi.js');
+const presentationScriptPath = path.resolve(__dirname, '../assets/js/features/blog/presentation/blogPosts.js');
 
 let shareBlogPost;
 let fetchBlogPosts;
@@ -22,8 +23,10 @@ beforeAll(() => {
   global.extractFirstImageFromHtml = extractFirstImageFromHtml;
   global.getDynamicElement = (id) => document.getElementById(id);
 
-  const scriptContent = fs.readFileSync(scriptPath, 'utf8');
-  window.eval(scriptContent);
+  const dataScriptContent = fs.readFileSync(dataScriptPath, 'utf8');
+  const presentationScriptContent = fs.readFileSync(presentationScriptPath, 'utf8');
+  window.eval(dataScriptContent);
+  window.eval(presentationScriptContent);
 
   shareBlogPost = globalThis.shareBlogPost;
   fetchBlogPosts = globalThis.fetchBlogPosts;
