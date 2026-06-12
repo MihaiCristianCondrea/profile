@@ -101,7 +101,7 @@ ignored generated files (`bundle.js`, `assets/css/tailwind.css`, `assets/js/**`,
 ### Metadata & Social Sharing
 
 - Every client-side route now carries a `metadata` block defined in
-  `src/app/router/routes.ts`. The router sanitizes those values and
+  `src/app/router/RouteRegistry.ts`. The router sanitizes those values and
   a lightweight metadata manager updates `<meta>` and canonical tags each
   time navigation occurs.
 - When registering a new route you **must** provide the following fields to
@@ -139,7 +139,7 @@ ignored generated files (`bundle.js`, `assets/css/tailwind.css`, `assets/js/**`,
   });
   ```
 
-- The metadata manager lives in `src/core/metadata/metadataManager.ts`. It ensures
+- The metadata manager lives in `src/core/metadata/MetadataManager.ts`. It ensures
   the description, keyword, Open Graph, Twitter, and canonical tags always
   reflect the active route while falling back to opinionated defaults.
 

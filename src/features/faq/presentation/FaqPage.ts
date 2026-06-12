@@ -1,7 +1,7 @@
 // @ts-nocheck
 (function (global) {
     const reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-    // FAQ data loading lives in features/faq/data/faqData.ts.
+    // FAQ data loading lives in features/faq/data/FaqDataSource.ts.
 
 
     function createFaqItem(item, context) {

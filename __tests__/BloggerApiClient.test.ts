@@ -3,10 +3,10 @@ const { readTranspiledSource } = require('../test-utils/sourceLoader');
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../src/core/dom/utils');
+} = require('../src/core/dom/DomUtils');
 
-const dataScriptContent = readTranspiledSource('src/features/blog/data/bloggerApi.ts');
-const presentationScriptContent = readTranspiledSource('src/features/blog/presentation/blogPosts.ts');
+const dataScriptContent = readTranspiledSource('src/features/blog/data/BloggerApiClient.ts');
+const presentationScriptContent = readTranspiledSource('src/features/blog/presentation/BlogPosts.ts');
 
 let shareBlogPost;
 let fetchBlogPosts;

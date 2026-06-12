@@ -1,6 +1,6 @@
 const { readTranspiledSource } = require('../test-utils/sourceLoader');
 
-const resumeScript = readTranspiledSource('src/features/resume/presentation/resume.ts');
+const resumeScript = readTranspiledSource('src/features/resume/presentation/ResumePage.ts');
 
 const baseMarkup = `
 <div id="resumePage">

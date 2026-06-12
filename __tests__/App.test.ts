@@ -1,4 +1,4 @@
-const APP_PATH = '../src/app/main';
+const APP_PATH = '../src/app/App';
 
 const OPTIONAL_GLOBALS = [
   'showPageLoadingOverlay',
@@ -58,7 +58,7 @@ function removeRegisteredHandlers() {
   registeredWindowHandlers = [];
 }
 
-describe('app.js bootstrap integration', () => {
+describe('App.ts bootstrap integration', () => {
   beforeEach(() => {
     jest.resetModules();
     clearGlobals();

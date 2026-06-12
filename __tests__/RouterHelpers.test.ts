@@ -1,5 +1,5 @@
-const animationScriptPath = '../src/app/router/animation';
-const historyScriptPath = '../src/app/router/history';
+const animationScriptPath = '../src/app/router/RouteAnimation';
+const historyScriptPath = '../src/app/router/HistoryManager';
 
 function loadHelpers() {
   require(animationScriptPath);

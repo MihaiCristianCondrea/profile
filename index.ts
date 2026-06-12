@@ -1,1 +1,1 @@
-import './src/core/material/registerMaterial.ts';
+import './src/core/material/MaterialRegistry.ts';

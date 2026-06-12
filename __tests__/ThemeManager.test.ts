@@ -1,8 +1,8 @@
 const { readTranspiledSource } = require('../test-utils/sourceLoader');
 const vm = require('vm');
 
-const themeSource = readTranspiledSource('src/core/theme/theme.ts');
-const themeScript = new vm.Script(themeSource, { filename: 'theme.js' });
+const themeSource = readTranspiledSource('src/core/theme/ThemeManager.ts');
+const themeScript = new vm.Script(themeSource, { filename: 'ThemeManager.js' });
 
 function createLocalStorageMock(initial = {}) {
   let store = Object.keys(initial).reduce((acc, key) => {
@@ -109,7 +109,7 @@ function setupThemeTest({ savedTheme, mediaMatches = false } = {}) {
   };
 }
 
-describe('theme.js', () => {
+describe('ThemeManager.js', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
     document.documentElement.className = '';

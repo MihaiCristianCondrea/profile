@@ -27,11 +27,11 @@ scripts/          Build/deployment helpers
 
 Use `src/app/` for application-level wiring only:
 
-- `main.ts` starts the app, captures initial home markup, wires drawer/theme/router integration, and exposes the initialization entry point.
-- `router/routes.ts` owns route registration, route metadata, route IDs, route fragment output paths, and route-specific ready hooks.
-- `router/contentLoader.ts` fetches generated HTML fragments from `assets/content/features/**/presentation/*.html`.
-- `router/history.ts` updates the document title and hash history.
-- `router/animation.ts` isolates route transition helpers.
+- `App.ts` starts the app, captures initial home markup, wires drawer/theme/router integration, and exposes the initialization entry point.
+- `router/RouteRegistry.ts` owns route registration, route metadata, route IDs, route fragment output paths, and route-specific ready hooks.
+- `router/ContentLoader.ts` fetches generated HTML fragments from `assets/content/features/**/presentation/*.html`.
+- `router/HistoryManager.ts` updates the document title and hash history.
+- `router/RouteAnimation.ts` isolates route transition helpers.
 
 Public hash route IDs such as `#projects`, `#resume`, and `#privacy-policy` are the stable URLs. Fragment file paths may change only when routes, tests, docs, and the build copy step are updated together.
 
@@ -73,14 +73,14 @@ Current feature examples:
 
 ## Static route fragments
 
-Static HTML page fragments live beside the feature that owns them, under `src/features/**/presentation/*.html`. The browser does not fetch those source files directly in production. Instead, `npm run build:pages` copies them to ignored generated output under `assets/content/features/**/presentation/*.html`, and `src/app/router/routes.ts` points route `path` values at that generated public location.
+Static HTML page fragments live beside the feature that owns them, under `src/features/**/presentation/*.html`. The browser does not fetch those source files directly in production. Instead, `npm run build:pages` copies them to ignored generated output under `assets/content/features/**/presentation/*.html`, and `src/app/router/RouteRegistry.ts` points route `path` values at that generated public location.
 
 This keeps `src/features/**/presentation/*.html` as the reviewed source while keeping GitHub Pages dead simple: the published artifact includes generated `assets/content/**` and excludes `src/`.
 
 ## Routing flow
 
-1. `index.html` loads Material Web from `bundle.js`; `index.ts` delegates Material registration to `src/core/material/registerMaterial.ts`. It then loads generated feature/app scripts from `assets/js/**`.
-2. `src/app/main.ts` captures the initial home markup and initializes the router.
+1. `index.html` loads Material Web from `bundle.js`; `index.ts` delegates Material registration to `src/core/material/MaterialRegistry.ts`. It then loads generated feature/app scripts from `assets/js/**`.
+2. `src/app/App.ts` captures the initial home markup and initializes the router.
 3. Route links with hash fragments are intercepted and passed to `loadPageContent`.
 4. `Router.ts` asks `RouterContentLoader` for the registered route content.
 5. `RouterContentLoader` fetches the route's generated fragment from `assets/content/features/**/presentation/*.html`.
@@ -100,7 +100,7 @@ This keeps `src/features/**/presentation/*.html` as the reviewed source while ke
 1. Create or choose the owning feature under `src/features/<feature>/`.
 2. Add the static route fragment under `src/features/<feature>/presentation/<page>.html` when the router will load HTML.
 3. Add any feature behavior under `src/features/<feature>/...`, using `data/`, `domain/`, and `presentation/` according to responsibility.
-4. Register the route in `src/app/router/routes.ts`, keeping the public hash route ID stable and pointing `path` at the generated `assets/content/features/<feature>/presentation/<page>.html` copy.
+4. Register the route in `src/app/router/RouteRegistry.ts`, keeping the public hash route ID stable and pointing `path` at the generated `assets/content/features/<feature>/presentation/<page>.html` copy.
 5. Add any shared helper only if at least two features need it.
 6. Add or update tests under `__tests__/`, importing TypeScript from `src/` instead of generated `assets/js/`.
 7. Run `npm test -- --runInBand`, `npm run build:pages`, `npm run build:ts`, `npm run build:css`, and `npm run build` as appropriate for the change.
