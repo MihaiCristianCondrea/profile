@@ -1,13 +1,12 @@
-const fs = require('fs');
-const path = require('path');
+const { readTranspiledSource } = require('../test-utils/sourceLoader');
 
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../assets/js/core/dom/utils.js');
+} = require('../src/core/dom/utils');
 
-const dataScriptPath = path.resolve(__dirname, '../assets/js/features/blog/data/bloggerApi.js');
-const presentationScriptPath = path.resolve(__dirname, '../assets/js/features/blog/presentation/blogPosts.js');
+const dataScriptContent = readTranspiledSource('src/features/blog/data/bloggerApi.ts');
+const presentationScriptContent = readTranspiledSource('src/features/blog/presentation/blogPosts.ts');
 
 let shareBlogPost;
 let fetchBlogPosts;
@@ -23,8 +22,6 @@ beforeAll(() => {
   global.extractFirstImageFromHtml = extractFirstImageFromHtml;
   global.getDynamicElement = (id) => document.getElementById(id);
 
-  const dataScriptContent = fs.readFileSync(dataScriptPath, 'utf8');
-  const presentationScriptContent = fs.readFileSync(presentationScriptPath, 'utf8');
   window.eval(dataScriptContent);
   window.eval(presentationScriptContent);
 

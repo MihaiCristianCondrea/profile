@@ -1,9 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { readTranspiledSource } = require('../test-utils/sourceLoader');
 
 describe('navigationDrawer integration', () => {
-  const scriptPath = path.resolve(__dirname, '../assets/js/features/navigation-drawer/presentation/navigationDrawer.js');
-  const scriptContent = fs.readFileSync(scriptPath, 'utf8');
+  const scriptContent = readTranspiledSource('src/features/navigation-drawer/presentation/navigationDrawer.ts');
   const scriptForTest = `${scriptContent}
 window.__setStandardDrawerLayout = (value) => { isStandardDrawerLayout = Boolean(value); };
 window.__getStandardDrawerLayout = () => isStandardDrawerLayout;

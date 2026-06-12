@@ -1,11 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const { readTranspiledSource } = require('../test-utils/sourceLoader');
 const vm = require('vm');
 
-const themeSource = fs.readFileSync(
-  path.resolve(__dirname, '../assets/js/core/theme/theme.js'),
-  'utf-8'
-);
+const themeSource = readTranspiledSource('src/core/theme/theme.ts');
 const themeScript = new vm.Script(themeSource, { filename: 'theme.js' });
 
 function createLocalStorageMock(initial = {}) {

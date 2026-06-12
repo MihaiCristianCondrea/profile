@@ -22,7 +22,7 @@ src/
   core/                   # Shared DOM, metadata, theme, animation, Material, and type utilities
   features/               # Feature-first TypeScript modules grouped by data/domain/presentation
 assets/
-  css/                    # Base styles, design tokens, component styles, Tailwind output
+  css/                    # Base styles, design tokens, component styles, Tailwind input
   data/                   # Static JSON loaded by the app
   js/                     # Generated TypeScript output (ignored; do not edit manually)
   images/                 # Illustrations used on various pages
@@ -63,7 +63,7 @@ npm install
 npm run build
 ```
 
-The `build` script emits `bundle.js`, minifies `assets/css/tailwind.css`, and regenerates ignored browser scripts under `assets/js/` from `src/`.
+The `build` script emits ignored generated output: `bundle.js`, minified `assets/css/tailwind.css`, and browser scripts under `assets/js/` from `src/`.
 
 Then serve the files with any static HTTP server:
 
@@ -89,7 +89,7 @@ Run `npm run deploy` before publishing. It executes the full build and
 verifies that the SEO metadata files (`sitemap.xml` and `robots.txt`) are present
 in the project root so they are included in the published bundle. The GitHub
 Pages workflow also runs this command before uploading its `_site/` artifact, so
-ignored generated `assets/js/**` files are recreated before deployment.
+ignored generated files (`bundle.js`, `assets/css/tailwind.css`, and `assets/js/**`) are recreated before deployment.
 
 ### Search Engine Indexing
 
@@ -163,9 +163,9 @@ This project is distributed under the terms of the GNU General Public License v3
 ## TypeScript Architecture
 
 - Source of truth: `src/`, organized into `app/`, `core/`, and feature-first modules under `features/`.
-- Generated artifacts: `assets/js/` produced by `npm run build:ts`; this folder is ignored and should not be edited manually.
+- Generated artifacts: `bundle.js`, `assets/css/tailwind.css`, and `assets/js/` are produced by `npm run build`; these paths are ignored and should not be edited manually.
 - New feature code must be added in `src/features/<feature>/`, using `data/`, `domain/`, and `presentation/` folders where those responsibilities are useful; shared helpers belong in `src/core/` only when more than one feature needs them.
-- Generated `assets/js/` paths mirror `src/`; update `index.html` script tags and tests when source files move.
+- Generated `assets/js/` paths mirror `src/`; update `index.html` script tags when source files move. Tests should import `src/` directly or transpile source for browser-global integration cases, not require committed generated JavaScript.
 - See `docs/architecture.md` for source/generated file rules, routing flow, styling rules, static asset ownership, and the new-page checklist.
 
 ### Migration status

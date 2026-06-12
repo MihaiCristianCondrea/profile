@@ -1,9 +1,7 @@
-const path = require('path');
-
 const PLACEHOLDER_SRC = 'assets/images/placeholder.png';
-const SONG_DATA_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'data', 'songApi.js');
-const SONG_DOMAIN_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'domain', 'songMapper.js');
-const SONG_PRESENTATION_SCRIPT = path.join('..', 'assets', 'js', 'features', 'songs', 'presentation', 'songs.js');
+const SONG_DATA_SCRIPT = '../src/features/songs/data/songApi';
+const SONG_DOMAIN_SCRIPT = '../src/features/songs/domain/songMapper';
+const SONG_PRESENTATION_SCRIPT = '../src/features/songs/presentation/songs';
 
 function loadSongsModule() {
     require(SONG_DATA_SCRIPT);

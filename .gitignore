@@ -1,6 +1,16 @@
 node_modules/
 .DS_Store
 
-# Generated TypeScript output. Run `npm run build:ts` to recreate it.
+# Generated browser output. Run `npm run build` to recreate these files.
+bundle.js
 assets/js/
+assets/css/tailwind.css
+
+# Temporary/cache/build output.
 .tmp/
+_site/
+coverage/
+dist/
+build/
+.cache/
+.parcel-cache/

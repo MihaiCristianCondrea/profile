@@ -1,7 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+const { readTranspiledSource } = require('../test-utils/sourceLoader');
 
-const resumeScript = fs.readFileSync(path.resolve(__dirname, '../assets/js/features/resume/presentation/resume.js'), 'utf8');
+const resumeScript = readTranspiledSource('src/features/resume/presentation/resume.ts');
 
 const baseMarkup = `
 <div id="resumePage">

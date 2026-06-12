@@ -14,7 +14,7 @@ describe('ensureProjectsMarkedLoaded', () => {
       return node;
     });
 
-    const { ensureProjectsMarkedLoaded } = require('../assets/js/features/projects/presentation/projects.js');
+    const { ensureProjectsMarkedLoaded } = require('../src/features/projects/presentation/projects');
 
     const firstCall = ensureProjectsMarkedLoaded();
     expect(appendSpy).toHaveBeenCalledTimes(1);
@@ -85,7 +85,7 @@ describe('initProjectsPage interactions', () => {
       return { finished };
     });
 
-    const { initProjectsPage } = require('../assets/js/features/projects/presentation/projects.js');
+    const { initProjectsPage } = require('../src/features/projects/presentation/projects');
     await initProjectsPage();
 
     const markdownElement = document.querySelector('[data-md]');
