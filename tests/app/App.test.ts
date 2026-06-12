@@ -1,4 +1,4 @@
-const APP_PATH = '../src/app/App';
+const APP_PATH = '../../src/app/App';
 
 const OPTIONAL_GLOBALS = [
   'showPageLoadingOverlay',

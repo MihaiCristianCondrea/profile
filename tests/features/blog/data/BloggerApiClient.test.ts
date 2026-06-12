@@ -1,9 +1,9 @@
-const { readTranspiledSource } = require('../test-utils/sourceLoader');
+const { readTranspiledSource } = require('../../../utils/sourceLoader');
 
 const {
   getNestedValue,
   extractFirstImageFromHtml
-} = require('../src/core/dom/DomUtils');
+} = require('../../../../src/core/dom/DomUtils');
 
 const dataScriptContent = readTranspiledSource('src/features/blog/data/BloggerApiClient.ts');
 const presentationScriptContent = readTranspiledSource('src/features/blog/presentation/BlogPosts.ts');

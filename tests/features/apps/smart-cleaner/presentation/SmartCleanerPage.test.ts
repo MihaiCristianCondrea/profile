@@ -1,4 +1,4 @@
-const SMART_CLEANER_PAGE_SCRIPT = '../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
+const SMART_CLEANER_PAGE_SCRIPT = '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
 
 function loadScript() {
   jest.isolateModules(() => {

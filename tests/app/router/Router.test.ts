@@ -1,6 +1,6 @@
 // codex/add-tests-for-router.js-with-jsdom (resolved)
 
-const { readTranspiledSource } = require('../test-utils/sourceLoader');
+const { readTranspiledSource } = require('../../utils/sourceLoader');
 const vm = require('vm');
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
@@ -366,8 +366,8 @@ describe('loadPageContent behavior', () => {
 
 /* ===== Additional module-level tests (from other branch) ===== */
 
-const ROUTES_PATH = '../src/app/router/RouteRegistry';
-const CONTENT_LOADER_PATH = '../src/app/router/ContentLoader';
+const ROUTES_PATH = '../../../src/app/router/RouteRegistry';
+const CONTENT_LOADER_PATH = '../../../src/app/router/ContentLoader';
 
 const originalGlobalFetch = global.fetch;
 const originalWindowFetch = typeof window !== 'undefined' ? window.fetch : undefined;

@@ -1,4 +1,4 @@
-const { readTranspiledSource } = require('../test-utils/sourceLoader');
+const { readTranspiledSource } = require('../../utils/sourceLoader');
 const vm = require('vm');
 
 const themeSource = readTranspiledSource('src/core/theme/ThemeManager.ts');

@@ -1,4 +1,4 @@
-const { readTranspiledSource } = require('../test-utils/sourceLoader');
+const { readTranspiledSource } = require('../../../utils/sourceLoader');
 
 describe('NavigationDrawer integration', () => {
   const scriptContent = readTranspiledSource('src/features/navigation-drawer/presentation/NavigationDrawer.ts');
