@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 describe('navigationDrawer integration', () => {
-  const scriptPath = path.resolve(__dirname, '../assets/js/navigationDrawer.js');
+  const scriptPath = path.resolve(__dirname, '../assets/js/features/navigation-drawer/presentation/navigationDrawer.js');
   const scriptContent = fs.readFileSync(scriptPath, 'utf8');
   const scriptForTest = `${scriptContent}
 window.__setStandardDrawerLayout = (value) => { isStandardDrawerLayout = Boolean(value); };

@@ -9,7 +9,7 @@ global.TextDecoder = TextDecoder;
 
 const { JSDOM } = require('jsdom');
 
-const routerScript = fs.readFileSync(path.resolve(__dirname, '../assets/js/router.js'), 'utf8');
+const routerScript = fs.readFileSync(path.resolve(__dirname, '../assets/js/app/router/Router.js'), 'utf8');
 
 const DEFAULT_HTML = `
 <!DOCTYPE html>
@@ -367,8 +367,8 @@ describe('loadPageContent behavior', () => {
 
 /* ===== Additional module-level tests (from other branch) ===== */
 
-const ROUTES_PATH = '../assets/js/router/routes.js';
-const CONTENT_LOADER_PATH = '../assets/js/router/contentLoader.js';
+const ROUTES_PATH = '../assets/js/app/router/routes.js';
+const CONTENT_LOADER_PATH = '../assets/js/app/router/contentLoader.js';
 
 const originalGlobalFetch = global.fetch;
 const originalWindowFetch = typeof window !== 'undefined' ? window.fetch : undefined;

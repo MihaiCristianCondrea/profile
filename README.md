@@ -17,10 +17,14 @@ This repository contains the source for a personal profile site built as a small
 
 ```
 index.html                # Main page of the site
+src/
+  app/                    # Bootstrap and router orchestration
+  core/                   # Shared DOM, metadata, theme, animation, Material, and type utilities
+  features/               # Feature-first TypeScript modules grouped by data/domain/presentation
 assets/
-  css/                    # Base styles and component styles
-  ts/                     # TypeScript source modules (authoritative)
-  js/                     # Generated JavaScript build output (do not edit manually)
+  css/                    # Base styles, design tokens, component styles, Tailwind output
+  data/                   # Static JSON loaded by the app
+  js/                     # Generated TypeScript output (ignored; do not edit manually)
   images/                 # Illustrations used on various pages
   icons/                  # Favicon and PWA icons
   manifest.json           # Web app manifest
@@ -52,14 +56,14 @@ The router loads pages based on URL fragments (e.g., `#privacy-policy`). Importa
 
 ## Running Locally
 
-The project now compiles Tailwind CSS ahead of time. After cloning the repo, install dependencies and run the Tailwind build:
+The project compiles Material Web, Tailwind CSS, and TypeScript ahead of time. After cloning the repo, install dependencies and run the build:
 
 ```bash
 npm install
 npm run build
 ```
 
-The `build` script simply wraps the Tailwind CLI command so the minified stylesheet is always available before serving the site.
+The `build` script emits `bundle.js`, minifies `assets/css/tailwind.css`, and regenerates ignored browser scripts under `assets/js/` from `src/`.
 
 Then serve the files with any static HTTP server:
 
@@ -81,9 +85,11 @@ resolve to the domain root and result in 404 errors. Keeping the icon
 sources relative ensures they work correctly from the `/profile/`
 subdirectory served by GitHub Pages.
 
-Run `npm run deploy` before publishing. It executes the Tailwind build and
+Run `npm run deploy` before publishing. It executes the full build and
 verifies that the SEO metadata files (`sitemap.xml` and `robots.txt`) are present
-in the project root so they are included in the published bundle.
+in the project root so they are included in the published bundle. The GitHub
+Pages workflow also runs this command before uploading its `_site/` artifact, so
+ignored generated `assets/js/**` files are recreated before deployment.
 
 ### Search Engine Indexing
 
@@ -98,7 +104,7 @@ in the project root so they are included in the published bundle.
 ### Metadata & Social Sharing
 
 - Every client-side route now carries a `metadata` block defined in
-  `assets/ts/router/routes.ts`. The router sanitizes those values and
+  `src/app/router/routes.ts`. The router sanitizes those values and
   a lightweight metadata manager updates `<meta>` and canonical tags each
   time navigation occurs.
 - When registering a new route you **must** provide the following fields to
@@ -136,7 +142,7 @@ in the project root so they are included in the published bundle.
   });
   ```
 
-- The metadata manager lives in `assets/ts/metadataManager.ts`. It ensures
+- The metadata manager lives in `src/core/metadata/metadataManager.ts`. It ensures
   the description, keyword, Open Graph, Twitter, and canonical tags always
   reflect the active route while falling back to opinionated defaults.
 
@@ -156,10 +162,11 @@ This project is distributed under the terms of the GNU General Public License v3
 
 ## TypeScript Architecture
 
-- Source of truth: `assets/ts/` (core/router/features/shared types).
-- Generated artifacts: `assets/js/` produced by `npm run build:ts`.
-- New feature code must be added in `assets/ts/` and validated with `tsc -p tsconfig.json`.
-- Keep `assets/js/` layout mirroring `assets/ts/` for predictable runtime paths.
+- Source of truth: `src/`, organized into `app/`, `core/`, and feature-first modules under `features/`.
+- Generated artifacts: `assets/js/` produced by `npm run build:ts`; this folder is ignored and should not be edited manually.
+- New feature code must be added in `src/features/<feature>/`, using `data/`, `domain/`, and `presentation/` folders where those responsibilities are useful; shared helpers belong in `src/core/` only when more than one feature needs them.
+- Generated `assets/js/` paths mirror `src/`; update `index.html` script tags and tests when source files move.
+- See `docs/architecture.md` for source/generated file rules, routing flow, styling rules, static asset ownership, and the new-page checklist.
 
 ### Migration status
 

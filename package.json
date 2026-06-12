@@ -1,7 +1,7 @@
 {
   "name": "profile",
   "version": "1.0.0",
-  "description": "This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and vanilla JavaScript.",
+  "description": "This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript.",
   "scripts": {
     "test": "jest",
     "build": "npm run build:material && npm run build:css && npm run build:ts",
@@ -31,7 +31,13 @@
   "jest": {
     "testEnvironment": "jsdom",
     "transform": {
-      "^.+.ts$": "ts-jest"
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json",
+          "diagnostics": false
+        }
+      ]
     }
   },
   "dependencies": {

@@ -3,7 +3,7 @@ const path = require('path');
 const vm = require('vm');
 
 const themeSource = fs.readFileSync(
-  path.resolve(__dirname, '../assets/js/theme.js'),
+  path.resolve(__dirname, '../assets/js/core/theme/theme.js'),
   'utf-8'
 );
 const themeScript = new vm.Script(themeSource, { filename: 'theme.js' });
