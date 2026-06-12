@@ -79,7 +79,7 @@ This keeps `src/features/**/presentation/*.html` as reviewed source while keepin
 3. Add any feature behavior under `src/features/<feature>/...`, using `data/`, `domain`, and `presentation/` according to responsibility.
 4. Register the route in `src/app/router/RouteRegistry.ts`, keeping the public hash route ID stable and pointing `path` at the generated `content/features/<feature>/presentation/<page>.html` copy.
 5. Add any shared helper only if at least two features need it.
-6. Add or update tests under `__tests__/`, importing TypeScript from `src/` instead of generated `dist/assets/js/`.
+6. Add or update tests under `tests/`, mirroring `src/` where practical and importing TypeScript from `src/` instead of generated `dist/assets/js/`.
 7. Run `npm test -- --runInBand` and `npm run build` as appropriate for the change.
 
 ## Static assets

@@ -3,7 +3,7 @@ const path = require('path');
 const ts = require('typescript');
 
 function readTranspiledSource(relativePath) {
-  const sourcePath = path.resolve(__dirname, '..', relativePath);
+  const sourcePath = path.resolve(__dirname, '..', '..', relativePath);
   const source = fs.readFileSync(sourcePath, 'utf8');
   return ts.transpileModule(source, {
     compilerOptions: {

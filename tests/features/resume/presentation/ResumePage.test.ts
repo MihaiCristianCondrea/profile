@@ -1,4 +1,4 @@
-const { readTranspiledSource } = require('../test-utils/sourceLoader');
+const { readTranspiledSource } = require('../../../utils/sourceLoader');
 
 const resumeScript = readTranspiledSource('src/features/resume/presentation/ResumePage.ts');
 

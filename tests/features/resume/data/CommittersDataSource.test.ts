@@ -2,7 +2,7 @@ describe('CommittersDataSource helpers', () => {
   beforeAll(() => {
     jest.resetModules();
     // Load the TypeScript source so it attaches helpers to the JSDOM window.
-    require('../src/features/resume/data/CommittersDataSource');
+    require('../../../../src/features/resume/data/CommittersDataSource');
   });
 
   afterEach(() => {
