@@ -1,7 +1,5 @@
-const path = require('path');
-
 describe('SiteMetadata.updateForRoute', () => {
-  const modulePath = path.resolve(__dirname, '../assets/js/core/metadata/metadataManager.js');
+  const modulePath = '../src/core/metadata/metadataManager';
 
   beforeEach(() => {
     jest.resetModules();

@@ -1,7 +1,6 @@
 // codex/add-tests-for-router.js-with-jsdom (resolved)
 
-const fs = require('fs');
-const path = require('path');
+const { readTranspiledSource } = require('../test-utils/sourceLoader');
 const vm = require('vm');
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
@@ -9,7 +8,7 @@ global.TextDecoder = TextDecoder;
 
 const { JSDOM } = require('jsdom');
 
-const routerScript = fs.readFileSync(path.resolve(__dirname, '../assets/js/app/router/Router.js'), 'utf8');
+const routerScript = readTranspiledSource('src/app/router/Router.ts');
 
 const DEFAULT_HTML = `
 <!DOCTYPE html>
@@ -367,8 +366,8 @@ describe('loadPageContent behavior', () => {
 
 /* ===== Additional module-level tests (from other branch) ===== */
 
-const ROUTES_PATH = '../assets/js/app/router/routes.js';
-const CONTENT_LOADER_PATH = '../assets/js/app/router/contentLoader.js';
+const ROUTES_PATH = '../src/app/router/routes';
+const CONTENT_LOADER_PATH = '../src/app/router/contentLoader';
 
 const originalGlobalFetch = global.fetch;
 const originalWindowFetch = typeof window !== 'undefined' ? window.fetch : undefined;

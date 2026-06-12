@@ -1,10 +1,8 @@
-const path = require('path');
-
 describe('committers helpers', () => {
   beforeAll(() => {
     jest.resetModules();
-    // Load the committers script so it attaches helpers to the JSDOM window.
-    require(path.join('..', 'assets', 'js', 'features', 'resume', 'data', 'committers.js'));
+    // Load the TypeScript source so it attaches helpers to the JSDOM window.
+    require('../src/features/resume/data/committers');
   });
 
   afterEach(() => {
