@@ -17,28 +17,25 @@ This repository contains the source for a personal profile site built as a small
 
 ```
 index.html                # Main page of the site
+index.ts                  # Rollup entry for Material Web registration
 src/
-  app/                    # Bootstrap and router orchestration
+  app/                    # Bootstrap, app-level wiring, and router orchestration
   core/                   # Shared DOM, metadata, theme, animation, Material, and type utilities
-  features/               # Feature-first TypeScript modules grouped by data/domain/presentation
+  features/               # Feature-first modules grouped by data/domain/presentation
+    profile/presentation/ # About/contact route fragments
+    projects/presentation/ # Projects behavior and projects.html
+    resume/presentation/  # Resume behavior and resume.html
+    songs/presentation/   # Songs behavior and songs.html
+    apps/                 # App-specific feature and legal fragments
 assets/
+  content/                # Generated route fragments copied from src/features/**/*.html
   css/                    # Base styles, design tokens, component styles, Tailwind input
   data/                   # Static JSON loaded by the app
   js/                     # Generated TypeScript output (ignored; do not edit manually)
   images/                 # Illustrations used on various pages
   icons/                  # Favicon and PWA icons
   manifest.json           # Web app manifest
-pages/
-  drawer/                 # Pages accessible from the navigation drawer
-    songs.html
-    projects.html
-    contact.html
-    more/
-      privacy-policy.html
-      code-of-conduct.html
-      apps/               # App specific pages (ads help, legal notices, etc.)
-  resume/                 # Resume builder module loaded via `#resume`
-    resume.html
+scripts/                  # Build/deploy helper scripts
 LICENSE                   # GPLv3 license
 ```
 
@@ -63,7 +60,7 @@ npm install
 npm run build
 ```
 
-The `build` script emits ignored generated output: `bundle.js`, minified `assets/css/tailwind.css`, and browser scripts under `assets/js/` from `src/`.
+The `build` script emits ignored generated output: `bundle.js`, minified `assets/css/tailwind.css`, browser scripts under `assets/js/`, and route fragments under `assets/content/` copied from `src/features/**/presentation/*.html`.
 
 Then serve the files with any static HTTP server:
 
@@ -89,7 +86,7 @@ Run `npm run deploy` before publishing. It executes the full build and
 verifies that the SEO metadata files (`sitemap.xml` and `robots.txt`) are present
 in the project root so they are included in the published bundle. The GitHub
 Pages workflow also runs this command before uploading its `_site/` artifact, so
-ignored generated files (`bundle.js`, `assets/css/tailwind.css`, and `assets/js/**`) are recreated before deployment.
+ignored generated files (`bundle.js`, `assets/css/tailwind.css`, `assets/js/**`, and `assets/content/**`) are recreated before deployment.
 
 ### Search Engine Indexing
 
@@ -123,7 +120,7 @@ ignored generated files (`bundle.js`, `assets/css/tailwind.css`, and `assets/js/
   ```js
   RouterRoutes.registerRoute({
     id: 'case-study',
-    path: 'pages/case-study.html',
+    path: 'assets/content/features/case-study/presentation/case-study.html',
     title: 'Case Study',
     metadata: {
       description: 'Deep dive into a Compose motion project.',
@@ -163,9 +160,9 @@ This project is distributed under the terms of the GNU General Public License v3
 ## TypeScript Architecture
 
 - Source of truth: `src/`, organized into `app/`, `core/`, and feature-first modules under `features/`.
-- Generated artifacts: `bundle.js`, `assets/css/tailwind.css`, and `assets/js/` are produced by `npm run build`; these paths are ignored and should not be edited manually.
+- Generated artifacts: `bundle.js`, `assets/css/tailwind.css`, `assets/js/`, and `assets/content/` are produced by `npm run build`; these paths are ignored and should not be edited manually.
 - New feature code must be added in `src/features/<feature>/`, using `data/`, `domain/`, and `presentation/` folders where those responsibilities are useful; shared helpers belong in `src/core/` only when more than one feature needs them.
-- Generated `assets/js/` paths mirror `src/`; update `index.html` script tags when source files move. Tests should import `src/` directly or transpile source for browser-global integration cases, not require committed generated JavaScript.
+- Generated `assets/js/` paths mirror `src/`, and generated `assets/content/` paths mirror feature-owned HTML under `src/features/`; update `index.html` script tags or route paths when source files move. Tests should import `src/` directly or transpile source for browser-global integration cases, not require committed generated JavaScript.
 - See `docs/architecture.md` for source/generated file rules, routing flow, styling rules, static asset ownership, and the new-page checklist.
 
 ### Migration status

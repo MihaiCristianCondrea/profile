@@ -301,7 +301,7 @@
         },
         {
             id: 'privacy-policy',
-            path: 'pages/drawer/more/privacy-policy.html',
+            path: 'assets/content/features/legal/presentation/privacy-policy.html',
             title: 'Privacy Policy',
             metadata: {
                 description: 'Review the website privacy policy for Mihai-Cristian Condrea\'s personal site covering analytics, local storage preferences, and data protection practices.',
@@ -325,7 +325,7 @@
         },
         {
             id: 'songs',
-            path: 'pages/drawer/songs.html',
+            path: 'assets/content/features/songs/presentation/songs.html',
             title: 'My Music',
             onLoad: runSongsOnLoad,
             metadata: {
@@ -350,7 +350,7 @@
         },
         {
             id: 'projects',
-            path: 'pages/drawer/projects.html',
+            path: 'assets/content/features/projects/presentation/projects.html',
             title: 'Projects',
             onLoad: runProjectsOnLoad,
             metadata: {
@@ -375,7 +375,7 @@
         },
         {
             id: 'contact',
-            path: 'pages/drawer/contact.html',
+            path: 'assets/content/features/profile/presentation/contact.html',
             title: 'Contact',
             metadata: {
                 description: 'Contact Mihai-Cristian Condrea to discuss Android development collaborations, UI design engagements, or support for open-source apps.',
@@ -399,7 +399,7 @@
         },
         {
             id: 'about-me',
-            path: 'pages/drawer/about-me.html',
+            path: 'assets/content/features/profile/presentation/about-me.html',
             title: 'About Me',
             metadata: {
                 description: 'Learn about Mihai-Cristian Condrea, a Bucharest-based Android developer crafting Jetpack Compose apps, Material Design systems, and community tutorials.',
@@ -423,7 +423,7 @@
         },
         {
             id: 'faqs',
-            path: 'pages/drawer/more/faqs.html',
+            path: 'assets/content/features/faq/presentation/faqs.html',
             title: 'FAQ & Support',
             metadata: {
                 description: 'Find answers to frequently asked questions about Mihai-Cristian Condrea\'s Android apps, including Google Play Services requirements, analytics usage, privacy, and official download sources.',
@@ -447,7 +447,7 @@
         },
         {
             id: 'smart-cleaner-for-android',
-            path: 'pages/drawer/more/apps/smart-cleaner-for-android.html',
+            path: 'assets/content/features/apps/smart-cleaner/presentation/smart-cleaner-for-android.html',
             title: 'Smart Cleaner for Android',
             onLoad: runSmartCleanerOnLoad,
             metadata: {
@@ -475,7 +475,7 @@
         },
         {
             id: 'ads-help-center',
-            path: 'pages/drawer/more/apps/ads-help-center.html',
+            path: 'assets/content/features/apps/legal/presentation/ads-help-center.html',
             title: 'Ads Help Center',
             metadata: {
                 description: 'Understand how Mihai-Cristian Condrea integrates advertising across Android apps, including consent flows, personalization controls, and GDPR compliance.',
@@ -499,7 +499,7 @@
         },
         {
             id: 'legal-notices',
-            path: 'pages/drawer/more/apps/legal-notices.html',
+            path: 'assets/content/features/apps/legal/presentation/legal-notices.html',
             title: 'Legal Notices',
             metadata: {
                 description: 'Review software licenses and third-party acknowledgments for Mihai-Cristian Condrea\'s Android and web applications.',
@@ -523,7 +523,7 @@
         },
         {
             id: 'code-of-conduct',
-            path: 'pages/drawer/more/code-of-conduct.html',
+            path: 'assets/content/features/legal/presentation/code-of-conduct.html',
             title: 'Code of Conduct',
             metadata: {
                 description: 'Read the community code of conduct guiding respectful collaboration across Mihai-Cristian Condrea\'s projects and communication channels.',
@@ -547,7 +547,7 @@
         },
         {
             id: 'privacy-policy-end-user-software',
-            path: 'pages/drawer/more/apps/privacy-policy-apps.html',
+            path: 'assets/content/features/apps/legal/presentation/privacy-policy-apps.html',
             title: 'Privacy Policy – End-User Software',
             metadata: {
                 description: 'Review the privacy policy for Mihai-Cristian Condrea\'s Android applications covering analytics, consent mode, advertising IDs, and crash reporting.',
@@ -571,7 +571,7 @@
         },
         {
             id: 'terms-of-service-end-user-software',
-            path: 'pages/drawer/more/apps/terms-of-service-apps.html',
+            path: 'assets/content/features/apps/legal/presentation/terms-of-service-apps.html',
             title: 'Terms of Service – End-User Software',
             metadata: {
                 description: 'Understand the terms of service governing Mihai-Cristian Condrea\'s Android apps, including licensing, in-app purchases, and user responsibilities.',
@@ -595,7 +595,7 @@
         },
         {
             id: 'resume',
-            path: 'pages/resume/resume.html',
+            path: 'assets/content/features/resume/presentation/resume.html',
             title: "Mihai's Resume",
             onLoad: runResumeOnLoad,
             metadata: {
