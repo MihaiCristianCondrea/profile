@@ -11,7 +11,8 @@
     "build:pages": "node scripts/copy-page-fragments.mjs",
     "verify:seo": "node -e \"['dist/sitemap.xml','dist/robots.txt','dist/app-ads.txt','dist/manifest.json'].forEach((file)=>require('fs').accessSync(file));\"",
     "deploy": "npm run build && npm run verify:seo",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "verify:production-assets": "node scripts/verify-production-assets.mjs"
   },
   "keywords": [],
   "author": "",

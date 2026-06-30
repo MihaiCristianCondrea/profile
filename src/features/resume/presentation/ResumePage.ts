@@ -743,25 +743,14 @@ function ensureResumeFontPreconnects() {
     });
 }
 
-function setResumePrintPageSize(pageSize) {
+function setResumePrintPageSize() {
     let style = document.getElementById('resume-print-page-size');
     if (!style) {
         style = document.createElement('style');
         style.id = 'resume-print-page-size';
         document.head.appendChild(style);
     }
-    style.textContent = `@page { size: ${pageSize} portrait; margin: 0; }`;
-}
-
-function chooseResumePrintSize() {
-    const preview = document.getElementById('resume-preview');
-    if (!preview) return 'A4';
-    const PX_PER_MM = 96 / 25.4;
-    const fits = (w, h) => (preview.scrollWidth / PX_PER_MM) <= w + 0.5 && (preview.scrollHeight / PX_PER_MM) <= h + 0.5;
-    preview.dataset.printSize = 'a4';
-    if (fits(210, 297)) return 'A4';
-    preview.dataset.printSize = 'a3';
-    return 'A3';
+    style.textContent = '@page { size: A4 portrait; margin: 10mm; }';
 }
 
 function normalizeResumeDataForExport(data) {
@@ -819,8 +808,7 @@ async function prepareAndPrintResume() {
     preview.dataset.printSize = 'a4';
     await new Promise(resolve => requestAnimationFrame(resolve));
 
-    const pageSize = chooseResumePrintSize();
-    setResumePrintPageSize(pageSize);
+    setResumePrintPageSize();
 
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 

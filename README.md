@@ -17,7 +17,7 @@ This repository contains the source for a personal profile site built as a small
 
 ```
 index.html                # Main page and Vite HTML entry
-vite.config.js            # Vite build configuration for /profile/ and SEO file copying
+vite.config.js            # Vite build configuration with relative asset paths and SEO file copying
 public/                   # Runtime static assets copied as-is to the generated site
   data/                   # Static JSON loaded by the app
   images/                 # Illustrations used on pages
@@ -63,7 +63,7 @@ npm run build
 
 The `build` script recreates ignored `dist/` output: Vite-bundled CSS and Material registration, static assets copied from `public/`, browser scripts under `dist/assets/js/`, and route fragments under `dist/content/` copied from `src/features/**/presentation/*.html`.
 
-Then serve the generated site with Vite preview or any static HTTP server:
+Then serve the generated site with Vite preview or any static HTTP server. The production build emits relative Vite asset URLs so CSS and the Material registration module load both from the GitHub Pages `/profile/` subpath and from local static servers mounted at `/`:
 
 ```bash
 npm run preview
@@ -80,7 +80,9 @@ paths in `manifest.json` are **relative** (e.g.
 `icons/icon-192.png`). Absolute paths like `/icons/icon-192.png` will
 resolve to the domain root and result in 404 errors. Keeping the icon
 sources relative ensures they work correctly from the `/profile/`
-subdirectory served by GitHub Pages.
+subdirectory served by GitHub Pages. Vite uses the same relative-path
+strategy for bundled CSS and JavaScript assets so a misplaced base path
+does not leave the page unstyled.
 
 Run `npm run deploy` before publishing. It executes the full build and verifies that the generated `dist/` artifact contains the SEO/support files (`sitemap.xml`, `robots.txt`, and `app-ads.txt`) plus `manifest.json`. The GitHub Pages workflow also runs this command before uploading the `dist/` artifact, so generated files are recreated before every deployment.
 

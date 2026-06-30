@@ -1,6 +1,6 @@
 @page {
-  size: A3 portrait;
-  margin: 0;
+  size: A4 portrait;
+  margin: 10mm;
 }
 
 @media print {
@@ -22,8 +22,10 @@
   }
 
   #resumePage {
-    display: block !important;
-    width: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    width: 100% !important;
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -40,7 +42,10 @@
   #resumePage #resume-preview {
     display: block !important;
     position: static !important;
-    margin: 0 !important;
+    width: 190mm !important;
+    max-width: 190mm !important;
+    min-height: 277mm !important;
+    margin: 0 auto !important;
     padding: 0 !important;
     border: 0 !important;
     outline: 0 !important;
@@ -55,18 +60,97 @@
   }
 
   #resumePage #resume-preview[data-print-size='a4'] {
-    width: 210mm !important;
-    min-height: 297mm !important;
-  }
-
-  #resumePage #resume-preview[data-print-size='a3'] {
-    width: 297mm !important;
-    min-height: 420mm !important;
+    width: 190mm !important;
+    max-width: 190mm !important;
+    min-height: 277mm !important;
   }
 
   #resumePage #resume-preview .resume-content {
     min-height: inherit !important;
     align-items: stretch !important;
+  }
+
+  #resumePage #resume-preview .resume-left {
+    padding: 8mm 7mm !important;
+  }
+
+  #resumePage #resume-preview .resume-right {
+    padding: 8mm 7mm !important;
+  }
+
+  #resumePage #resume-preview #photo-preview {
+    width: 30mm !important;
+    height: 30mm !important;
+    margin-bottom: 8mm !important;
+  }
+
+  #resumePage #resume-preview .resume-section {
+    margin-bottom: 6mm !important;
+  }
+
+  #resumePage #resume-preview .resume-section h2 {
+    margin-bottom: 3.5mm !important;
+    padding-bottom: 2mm !important;
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  #resumePage #resume-preview #resume-name {
+    font-size: 28px !important;
+    line-height: 1.1 !important;
+  }
+
+  #resumePage #resume-preview #resume-job-title {
+    font-size: 16px !important;
+    margin-bottom: 6mm !important;
+  }
+
+  #resumePage #resume-preview #resume-summary,
+  #resumePage #resume-preview .resume-item > p,
+  #resumePage #resume-preview .resume-item .description,
+  #resumePage #resume-preview #resume-skills li,
+  #resumePage #resume-preview #resume-languages li,
+  #resumePage #resume-preview #resume-interests li,
+  #resumePage #resume-preview .contact-info p {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+  }
+
+  #resumePage #resume-preview #resume-summary {
+    margin-bottom: 6mm !important;
+  }
+
+  #resumePage #resume-preview .resume-item {
+    margin-bottom: 5mm !important;
+  }
+
+  #resumePage #resume-preview .resume-item-header {
+    gap: 4mm !important;
+  }
+
+  #resumePage #resume-preview .resume-item-header h3 {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+  }
+
+  #resumePage #resume-preview .resume-item-header .date {
+    font-size: 11px !important;
+    padding-left: 0 !important;
+  }
+
+  #resumePage #resume-preview .resume-item .description ul {
+    margin-top: 2mm !important;
+    padding-left: 5mm !important;
+  }
+
+  #resumePage #resume-preview .resume-item .description li,
+  #resumePage #resume-preview #resume-skills li,
+  #resumePage #resume-preview #resume-languages li,
+  #resumePage #resume-preview #resume-interests li,
+  #resumePage #resume-preview .contact-info p {
+    margin-bottom: 2mm !important;
   }
 
   #resumePage #resume-preview .resume-section,
