@@ -37,13 +37,13 @@ const baseMarkup = `
   </div>
   <div id="resume-preview">
     <div class="resume-content">
-      <div class="resume-left">
+      <aside class="resume-left">
         <div id="photo-preview"></div>
-        <div class="contact-info resume-section">
+        <address class="contact-info resume-section">
           <p id="resume-phone"></p>
           <p id="resume-email"></p>
           <p id="resume-address"></p>
-        </div>
+        </address>
         <div class="resume-section" id="resume-skills">
           <h2><span class="material-symbols-outlined">build</span> Skills</h2>
           <ul></ul>
@@ -56,8 +56,8 @@ const baseMarkup = `
           <h2><span class="material-symbols-outlined">interests</span> Interests</h2>
           <ul></ul>
         </div>
-      </div>
-      <div class="resume-right">
+      </aside>
+      <main class="resume-right">
         <h1 id="resume-name"></h1>
         <h2 id="resume-job-title"></h2>
         <div id="resume-summary"></div>
@@ -67,7 +67,7 @@ const baseMarkup = `
         <div class="resume-section" id="resume-education">
           <h2><span class="material-symbols-outlined">school</span> Education</h2>
         </div>
-      </div>
+      </main>
     </div>
   </div>
 </div>
@@ -149,6 +149,8 @@ describe('resume.js browser integration', () => {
     expect(document.getElementById('resume-phone').innerHTML).toContain('call');
     expect(document.getElementById('resume-email').innerHTML).toContain('mail');
     expect(document.getElementById('resume-address').innerHTML).toContain('location_on');
+    expect(document.querySelector('#resume-preview address.contact-info')).not.toBeNull();
+    expect(document.getElementById('resume-preview').getAttribute('lang')).toBe('en');
 
     const summaryValue = document.getElementById('summary').value;
     expect(document.getElementById('resume-summary').innerHTML).toBe(`sanitized(parsed(${summaryValue}))`);
@@ -236,6 +238,7 @@ describe('resume.js browser integration', () => {
     const latestWork = workPreviewItems[workPreviewItems.length - 1];
     expect(latestWork.querySelector('h3').textContent).toBe('QA Engineer');
     expect(latestWork.querySelector('.date').textContent).toBe('2021 - 2023');
+    expect(Array.from(latestWork.querySelectorAll('time')).map(time => time.dateTime)).toEqual(['2021', '2023']);
     expect(latestWork.querySelector('.description').innerHTML).toBe(`sanitized(parsed(${description}))`);
   });
 

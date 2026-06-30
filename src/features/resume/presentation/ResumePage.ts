@@ -145,6 +145,10 @@ function applyResumeLanguage(language) {
             element.setAttribute('aria-label', value);
         }
     });
+    const preview = document.getElementById('resume-preview');
+    if (preview) {
+        preview.setAttribute('lang', language);
+    }
     document.querySelectorAll('[data-resume-lang]').forEach(button => {
         const isActive = button.dataset.resumeLang === resumeLanguage;
         button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
@@ -161,7 +165,6 @@ function applyResumeLanguage(language) {
 
 function setupResumeLanguage() {
     const buttons = document.querySelectorAll('[data-resume-lang]');
-    if (!buttons.length) return;
     buttons.forEach(button => {
         if (button.dataset.resumeBound === 'true') return;
         button.addEventListener('click', () => {
@@ -240,6 +243,38 @@ function formatDateRange(start, end) {
     const normalizedStart = cleanText(start);
     const normalizedEnd = cleanText(end) || currentLabel;
     return [normalizedStart, normalizedEnd].filter(Boolean).join(' - ');
+}
+
+function formatDateTimeValue(value) {
+    const normalized = cleanText(value);
+    return /^\d{4}$/.test(normalized) ? normalized : '';
+}
+
+function createDateRangeElement(start, end) {
+    const currentLabel = getResumeText('current');
+    const normalizedStart = cleanText(start);
+    const normalizedEnd = cleanText(end) || currentLabel;
+    const wrapper = document.createElement('span');
+    wrapper.className = 'date';
+
+    const appendTime = (value) => {
+        if (!value) return;
+        const time = document.createElement('time');
+        const dateTime = formatDateTimeValue(value);
+        if (dateTime) {
+            time.dateTime = dateTime;
+        }
+        time.textContent = value;
+        wrapper.appendChild(time);
+    };
+
+    appendTime(normalizedStart);
+    if (normalizedStart && normalizedEnd) {
+        wrapper.append(' - ');
+    }
+    appendTime(normalizedEnd);
+
+    return wrapper;
 }
 
 function renderContactLine(targetId, iconName, value) {
@@ -568,9 +603,22 @@ function updateComplexList(sectionId) {
                 desc: item.querySelector('.work-desc').value.trim()
             };
             if (data.title || data.company) {
-                const descHtml = DOMPurify.sanitize(marked.parse(data.desc));
-                const currentLabel = getResumeText('current');
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.title}</h3><span class="date">${formatDateRange(data.start, data.end)}</span></div><p><strong>${data.company}</strong></p><div class="description">${descHtml}</div>`;
+                const header = document.createElement('div');
+                header.className = 'resume-item-header';
+                const title = document.createElement('h3');
+                title.textContent = cleanText(data.title);
+                header.append(title, createDateRangeElement(data.start, data.end));
+
+                const company = document.createElement('p');
+                const companyName = document.createElement('strong');
+                companyName.textContent = cleanText(data.company);
+                company.appendChild(companyName);
+
+                const description = document.createElement('div');
+                description.className = 'description';
+                description.innerHTML = DOMPurify.sanitize(marked.parse(data.desc));
+
+                div.append(header, company, description);
                 container.appendChild(div);
             }
         } else if (sectionId === 'education') {
@@ -581,8 +629,18 @@ function updateComplexList(sectionId) {
                 end: item.querySelector('.edu-end').value
             };
             if (data.degree || data.school) {
-                const currentLabel = getResumeText('current');
-                div.innerHTML = `<div class="resume-item-header"><h3>${data.degree}</h3><span class="date">${formatDateRange(data.start, data.end)}</span></div><p><strong>${data.school}</strong></p>`;
+                const header = document.createElement('div');
+                header.className = 'resume-item-header';
+                const degree = document.createElement('h3');
+                degree.textContent = cleanText(data.degree);
+                header.append(degree, createDateRangeElement(data.start, data.end));
+
+                const school = document.createElement('p');
+                const schoolName = document.createElement('strong');
+                schoolName.textContent = cleanText(data.school);
+                school.appendChild(schoolName);
+
+                div.append(header, school);
                 container.appendChild(div);
             }
         }
