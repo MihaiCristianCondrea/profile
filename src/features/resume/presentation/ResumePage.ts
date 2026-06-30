@@ -810,7 +810,7 @@ function setResumePrintPageSize() {
         style.id = 'resume-print-page-size';
         document.head.appendChild(style);
     }
-    style.textContent = '@page { size: A4 portrait; margin: 10mm; }';
+    style.textContent = '@page { size: A4 portrait; margin: 0; }';
 }
 
 function normalizeResumeDataForExport(data) {
