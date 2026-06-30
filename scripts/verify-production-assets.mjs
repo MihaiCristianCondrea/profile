@@ -17,6 +17,29 @@ assert(/<script[^>]+src="\.\/assets\/index-[^"]+\.js"/.test(html), 'production m
 assert(!html.includes('href="/profile/assets/'), 'production CSS must not require the /profile/ deployment base.');
 assert(!html.includes('src="/profile/assets/'), 'production module script must not require the /profile/ deployment base.');
 
+const routeRegistry = read('../src/app/router/RouteRegistry.ts');
+const sourceIndex = read('../index.html');
+const requiredFragments = [
+  'content/features/resume/presentation/resume.html',
+  'content/features/legal/presentation/privacy-policy.html',
+  'content/features/apps/legal/presentation/privacy-policy-apps.html',
+  'content/features/apps/legal/presentation/terms-of-service-apps.html',
+  'content/features/apps/legal/presentation/ads-help-center.html',
+  'content/features/apps/legal/presentation/legal-notices.html',
+  'content/features/legal/presentation/code-of-conduct.html'
+];
+
+requiredFragments.forEach((fragment) => {
+  assert(existsSync(new URL(fragment, distDir)), `missing content fragment: ${fragment}`);
+  assert(routeRegistry.includes(fragment), `route registry does not reference ${fragment}`);
+});
+
+assert(routeRegistry.includes("id: 'resume'") && routeRegistry.includes("id: 'privacy-policy-end-user-software'"), 'navigation route metadata is missing resume or app privacy policy routes.');
+assert(sourceIndex.includes('href="#resume"') || routeRegistry.includes("id: 'resume'"), 'resume navigation metadata is missing.');
+assert(sourceIndex.includes('href="#privacy-policy-end-user-software"'), 'drawer entry for the app privacy policy route is missing.');
+assert(!html.includes('/profile/assets/'), 'index.html must not include hard-coded /profile/assets paths.');
+assert(!routeRegistry.includes('/profile/assets/'), 'route registry must not include hard-coded /profile/assets paths.');
+
 const assetFiles = readdirSync(new URL('assets/', distDir));
 const cssFile = assetFiles.find((file) => /^index-.*\.css$/.test(file));
 assert(cssFile, 'main CSS asset is missing from dist/assets.');
