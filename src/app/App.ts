@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPageContent(pageId, false);
     });
 
+    window.addEventListener('hashchange', () => {
+        loadPageContent(window.location.hash || '#home', false);
+    });
+
     // --- App Bar Scroll Behavior ---
     if (topAppBarEl) {
         window.addEventListener('scroll', () => {
