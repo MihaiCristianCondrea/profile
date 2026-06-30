@@ -18,7 +18,7 @@ function copyRootSeoFiles() {
 }
 
 module.exports = {
-  base: '/profile/',
+  base: './',
   publicDir: 'public',
   build: {
     outDir: 'dist',

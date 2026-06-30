@@ -91,7 +91,7 @@ Runtime static assets live in `public/` and are copied as-is into `dist/` by Vit
 - `public/images/**` → `images/**`
 - `public/data/**` → `data/**`
 
-Keep icon paths in `manifest.json` relative so they continue to work from the `/profile/` GitHub Pages base path.
+Keep icon paths in `manifest.json` relative so they continue to work from the `/profile/` GitHub Pages base path. The Vite build also emits relative bundled CSS and JavaScript asset URLs, allowing the generated `dist/` output to work when served from either `/profile/` on GitHub Pages or `/` in local static previews.
 
 ## GitHub Pages deployment
 
