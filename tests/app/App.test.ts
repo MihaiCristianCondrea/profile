@@ -241,6 +241,36 @@ describe('App.ts bootstrap integration', () => {
     expect(loadPageContent).not.toHaveBeenCalled();
   });
 
+  test('hash changes load the matching route without adding browser history', () => {
+    document.body.innerHTML = `
+      <main id="pageContentArea"></main>
+      <section id="mainContentPage"></section>
+      <h1 id="appBarHeadline"></h1>
+      <header id="topAppBar"></header>
+    `;
+
+    const loadPageContent = jest.fn();
+
+    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
+    global.initTheme = jest.fn();
+    global.initNavigationDrawer = jest.fn();
+    global.setCopyrightYear = jest.fn();
+    global.initRouter = jest.fn();
+    global.loadPageContent = loadPageContent;
+    global.normalizePageId = jest.fn(stubNormalizePageId);
+    global.RouterRoutes = { hasRoute: jest.fn(() => true) };
+
+    loadAppModule();
+    document.dispatchEvent(new Event('DOMContentLoaded'));
+    loadPageContent.mockClear();
+
+    window.location.hash = '#about-me';
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
+
+    expect(loadPageContent).toHaveBeenCalledTimes(1);
+    expect(loadPageContent).toHaveBeenCalledWith('#about-me', false);
+  });
+
   test('buildRouterOptions omits callbacks when optional globals are unavailable', () => {
     document.body.innerHTML = `
       <main id="pageContentArea"></main>
