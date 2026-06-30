@@ -1,0 +1,76 @@
+// ====================================================== //
+// ==================== WebComponent ==================== //
+// ====================================================== //
+
+// This class is used to create your custom web components.
+
+// Usage:
+// -> Extend this class from a component under src/features/*/presentation and provide HTML/CSS strings.
+
+export default abstract class WebComponent extends HTMLElement {
+	html: string;
+	css: string;
+	private hasRendered = false;
+
+	protected constructor(html?: string, css?: string) {
+		super();
+		this.html = html ?? "";
+		this.css = css ?? "";
+		this.attachShadow({ mode: "open" });
+	}
+
+	// Called, when the component is connected to the DOM
+	// Override this method in your component to add listeners, set data, etc.
+	abstract onConnected(): void;
+
+	// Returns the HTML tag name of the component
+	// The returned value is the custom element name registered in the browser.
+	abstract get htmlTagName(): string;
+
+	// Wrapper for making dispatchEvent consistent with the Observer pattern
+	protected notifyAll(eventName: string, data?: any) {
+		const event = new CustomEvent(eventName, { detail: data });
+		this.dispatchEvent(event);
+	}
+
+	// Returns the root element of the component
+	get root(): ShadowRoot {
+		if (this.shadowRoot) return this.shadowRoot;
+		else throw new Error("WebComponent.root is not available yet");
+	}
+
+	// shortcut for this.root.querySelector(selector)
+	select<E extends HTMLElement>(selector: string): E | null {
+		return this.root.querySelector(selector);
+	}
+
+	// shortcut for this.root.querySelectorAll(selector)
+	selectAll<E extends Element = Element>(selectors: string): NodeListOf<E> {
+		return this.root.querySelectorAll(selectors);
+	}
+
+	async connectedCallback() {
+		if (!this.hasRendered) {
+			this.loadStylesheet();
+			this.loadHtml();
+			this.hasRendered = true;
+			this.onConnected();
+		}
+	}
+
+	loadStylesheet() {
+		if (this.css !== "") {
+			const style = document.createElement("style");
+			style.innerHTML = this.css;
+			this.root.appendChild(style);
+		}
+	}
+
+	loadHtml() {
+		if (this.html !== "") {
+			const template = document.createElement("template");
+			template.innerHTML = this.html;
+			this.root.appendChild(template.content.cloneNode(true));
+		}
+	}
+}
