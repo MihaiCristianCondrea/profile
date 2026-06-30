@@ -343,5 +343,16 @@
     global.initRouter = initRouter;
     global.loadPageContent = loadPageContent;
     global.normalizePageId = normalizePageId;
+    global.callCallback = callCallback;
+    global.updateActiveNavLink = updateActiveNavLink;
+    global.__getRouterRuntime = () => routerRuntime;
 
 })(typeof window !== 'undefined' ? window : globalThis);
+
+const routerGlobal = typeof window !== 'undefined' ? window : globalThis;
+const callCallback = routerGlobal.callCallback;
+const normalizePageId = routerGlobal.normalizePageId;
+const initRouter = routerGlobal.initRouter;
+const loadPageContent = routerGlobal.loadPageContent;
+const updateActiveNavLink = routerGlobal.updateActiveNavLink;
+const routerRuntime = routerGlobal.__getRouterRuntime ? routerGlobal.__getRouterRuntime() : undefined;
