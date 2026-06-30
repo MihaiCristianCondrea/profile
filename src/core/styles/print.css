@@ -1,5 +1,5 @@
 @page {
-  size: A4 portrait;
+  size: A3 portrait;
   margin: 0;
 }
 
@@ -46,7 +46,7 @@
     outline: 0 !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     transform: none !important;
     transform-origin: top left !important;
     background: var(--resume-right-bg, #fff) !important;
@@ -57,13 +57,23 @@
   #resumePage #resume-preview[data-print-size='a4'] {
     width: 210mm !important;
     min-height: 297mm !important;
-    max-height: 297mm !important;
   }
 
   #resumePage #resume-preview[data-print-size='a3'] {
     width: 297mm !important;
     min-height: 420mm !important;
-    max-height: 420mm !important;
+  }
+
+  #resumePage #resume-preview .resume-content {
+    min-height: inherit !important;
+    align-items: stretch !important;
+  }
+
+  #resumePage #resume-preview .resume-section,
+  #resumePage #resume-preview .resume-item,
+  #resumePage #resume-preview #photo-preview {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   #resumePage #resume-preview *,
@@ -88,7 +98,7 @@
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   #resumePage #resume-preview .resume-pdf-icon::before {

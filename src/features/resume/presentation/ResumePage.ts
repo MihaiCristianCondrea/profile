@@ -724,9 +724,23 @@ function setupResumeControls() {
     }
 }
 
-async function waitForResumeFonts(timeoutMs = 1500) {
+async function waitForResumeFonts(timeoutMs = 3000) {
     if (!document.fonts || !document.fonts.ready) return;
     await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, timeoutMs))]);
+}
+
+function ensureResumeFontPreconnects() {
+    [
+        ['https://fonts.googleapis.com'],
+        ['https://fonts.gstatic.com', 'anonymous']
+    ].forEach(([href, crossOrigin]) => {
+        if (document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) return;
+        const link = document.createElement('link');
+        link.rel = 'preconnect';
+        link.href = href;
+        if (crossOrigin) link.crossOrigin = crossOrigin;
+        document.head.appendChild(link);
+    });
 }
 
 function setResumePrintPageSize(pageSize) {
@@ -791,6 +805,7 @@ function normalizeResumeDataForExport(data) {
 }
 
 async function prepareAndPrintResume() {
+    ensureResumeFontPreconnects();
     const preview = document.getElementById('resume-preview');
     if (!preview) {
         window.print();
@@ -801,11 +816,10 @@ async function prepareAndPrintResume() {
 
     document.documentElement.classList.add('resume-printing');
 
-    const approximateA4HeightPx = 1123;
-    const shouldUseA3 = preview.scrollHeight > approximateA4HeightPx;
+    preview.dataset.printSize = 'a4';
+    await new Promise(resolve => requestAnimationFrame(resolve));
 
-    const pageSize = shouldUseA3 ? 'A3' : 'A4';
-    preview.dataset.printSize = pageSize.toLowerCase();
+    const pageSize = chooseResumePrintSize();
     setResumePrintPageSize(pageSize);
 
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));

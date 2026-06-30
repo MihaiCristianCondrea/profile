@@ -1,5 +1,5 @@
 #resumePage {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--resume-ui-font-family, 'Google Sans', 'Google Sans Flex', 'Google Sans Regular', 'Poppins', sans-serif);
   margin-top: 70px;
   background-color: var(--app-bg-color);
   color: var(--app-text-color);
@@ -236,7 +236,13 @@
   border: 1px solid var(--resume-border);
   max-height: none;
   overflow-y: visible;
-  font-family: "Google Sans Flex", "Google Sans", "Inter", "Roboto", "Arial", sans-serif;
+  font-family: var(--resume-pdf-font-family, "Google Sans Flex", "Google Sans", "Google Sans Regular", "Inter", "Roboto", "Arial", sans-serif);
+  font-optical-sizing: auto;
+  font-variation-settings:
+    "slnt" 0,
+    "wdth" 100,
+    "GRAD" 0,
+    "ROND" 0;
 }
 
 #resumePage #resume-preview,
@@ -304,7 +310,7 @@
   margin-bottom: 30px;
 }
 #resumePage .resume-section h2 {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--resume-ui-font-family, 'Google Sans', 'Google Sans Flex', 'Google Sans Regular', 'Poppins', sans-serif);
   font-size: 16px;
   color: var(--resume-muted);
   margin-bottom: 16px;
@@ -325,7 +331,7 @@
   border-bottom-color: var(--resume-accent);
 }
 #resumePage #resume-name {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--resume-ui-font-family, 'Google Sans', 'Google Sans Flex', 'Google Sans Regular', 'Poppins', sans-serif);
   font-size: 36px;
   font-weight: 700;
   color: var(--resume-text);
@@ -333,7 +339,7 @@
   letter-spacing: -0.5px;
 }
 #resumePage #resume-job-title {
-  font-family: 'Google Sans Regular', 'Poppins', sans-serif;
+  font-family: var(--resume-ui-font-family, 'Google Sans', 'Google Sans Flex', 'Google Sans Regular', 'Poppins', sans-serif);
   font-size: 20px;
   color: var(--resume-secondary);
   margin-bottom: 24px;
