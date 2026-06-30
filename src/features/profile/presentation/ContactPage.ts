@@ -28,3 +28,7 @@ if (typeof module !== 'undefined' && module.exports) {
         initContactPage
     };
 }
+
+if (typeof globalThis !== 'undefined') {
+    Object.assign(globalThis, { initContactPage });
+}

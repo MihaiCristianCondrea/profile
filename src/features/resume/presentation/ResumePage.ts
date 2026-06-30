@@ -1185,3 +1185,7 @@ function initResumePage() {
         });
     });
 }
+
+if (typeof globalThis !== 'undefined') {
+    Object.assign(globalThis, { initResumePage });
+}

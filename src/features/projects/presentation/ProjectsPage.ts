@@ -550,3 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { ensureProjectsMarkedLoaded, initProjectsPage };
 }
+
+if (typeof globalThis !== 'undefined') {
+  Object.assign(globalThis, { ensureProjectsMarkedLoaded, initProjectsPage });
+}

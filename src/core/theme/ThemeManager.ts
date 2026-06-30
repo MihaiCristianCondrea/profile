@@ -49,3 +49,7 @@ function updateThemeButtonSelection(selectedTheme) {
         button.classList.toggle('selected', button.dataset.theme === selectedTheme);
     });
 }
+
+if (typeof globalThis !== 'undefined') {
+    Object.assign(globalThis, { initTheme, applyTheme, updateThemeButtonSelection });
+}
