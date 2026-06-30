@@ -96,3 +96,33 @@ Keep icon paths in `manifest.json` relative so they continue to work from the `/
 ## GitHub Pages deployment
 
 The repository includes a GitHub Pages workflow at `.github/workflows/pages.yml`. It installs dependencies, runs the Jest suite against `src/`, runs `npm run deploy`, and uploads the generated `dist/` artifact. Generated output stays ignored and is recreated for every deployment.
+
+## Material Web component policy
+
+Use the browser and Material Web as the platform. `@material/web` is the default component system for interactive controls, cards, dividers, dialogs, navigation lists, progress indicators, tabs, and buttons. Site code should compose Material elements directly instead of wrapping them in a second in-house component layer.
+
+Custom CSS is reserved for:
+
+- page layout, responsive structure, and document flow;
+- brand tokens and Material design-token values in `src/core/styles/variables.css`;
+- feature-owned presentation details that Material Web does not own, such as resume document layout or project screenshots;
+- small integration fixes that use documented Material attributes, slots, parts, or CSS custom properties.
+
+Do not:
+
+- edit generated `dist/` files;
+- style Material shadow DOM internals or private classes;
+- clone Material buttons, cards, tabs, switches, lists, or drawers with custom HTML/CSS;
+- add global page-specific hacks when the rule can live in the owning feature or a reusable page pattern;
+- introduce export/rendering workarounds before improving the semantic HTML, CSS, and print stylesheet.
+
+When a Material override is unavoidable, keep it token-based where possible and add a comment explaining the browser or component behavior being preserved. Prefer deleting redundant styles over adding abstractions that only rename Material Web.
+
+### New page/tool checklist
+
+1. Register the route in `src/app/router/RouteRegistry.ts` and add drawer/navigation metadata when the page is user-facing.
+2. Place route fragments under the owning `src/features/**/presentation/` directory; let `npm run build:pages` generate `dist/content/**`.
+3. Use Material Web elements directly for controls and surfaces, with accessible labels and standard slots.
+4. Add custom CSS only for layout, page identity, and tokens; avoid component reinvention.
+5. Keep business logic separate from DOM rendering when the page has non-trivial behavior.
+6. Verify `npm run build`, `npm run verify:production-assets`, and targeted tests before shipping.
