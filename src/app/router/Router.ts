@@ -318,6 +318,12 @@
             item.removeAttribute('aria-current');
             item.removeAttribute('aria-selected');
 
+            // Handle icon filling logic
+            const icon = item.querySelector('md-icon');
+            if (icon) {
+                icon.classList.remove('filled-icon');
+            }
+
             let itemHref = item.getAttribute('href');
             if (itemHref) {
                 const normalizedHref = normalizePageId(itemHref);
@@ -326,6 +332,9 @@
                     item.setAttribute('aria-current', 'page');
                     item.setAttribute('aria-selected', 'true');
                     if (typeof item.active === 'boolean') item.active = true;
+                    if (icon) {
+                        icon.classList.add('filled-icon');
+                    }
 
                     const nestedParent = item.closest('.nested-list');
                     if (nestedParent && nestedParent.id) {

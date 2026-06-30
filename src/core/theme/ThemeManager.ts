@@ -46,7 +46,10 @@ function applyTheme(theme) {
  */
 function updateThemeButtonSelection(selectedTheme) {
     themeButtons.forEach(button => {
-        button.classList.toggle('selected', button.dataset.theme === selectedTheme);
+        const isSelected = button.dataset.theme === selectedTheme;
+        button.classList.toggle('selected', isSelected);
+        button.toggleAttribute('data-active', isSelected);
+        button.setAttribute('aria-pressed', String(isSelected));
     });
 }
 

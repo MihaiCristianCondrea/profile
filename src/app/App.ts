@@ -60,12 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- App Bar Scroll Behavior ---
-    if (topAppBarEl) {
-        window.addEventListener('scroll', () => {
-            const isScrolled = window.scrollY > 0;
-            topAppBarEl.classList.toggle('scrolled', isScrolled);
-        });
-    }
+    // Scroll behavior removed to align with GitHub repo tools architecture
 });
 
 function buildRouterOptions(): RouterOptions {

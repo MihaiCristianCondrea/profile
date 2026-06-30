@@ -1,11 +1,7 @@
 // @ts-nocheck
-let menuButton, navDrawer, closeDrawerButton, drawerOverlay,
+let menuButton, navDrawer, closeDrawerButton, drawerLayer,
     aboutToggle, aboutContent, androidAppsToggle, androidAppsContent,
     inertTargets = [];
-
-const STANDARD_DRAWER_MEDIA_QUERY = '(min-width: 840px)';
-let standardLayoutMatcher = null;
-let isStandardDrawerLayout = false;
 
 /**
  * Initializes the navigation drawer functionality.
@@ -15,7 +11,7 @@ function initNavigationDrawer() {
     menuButton = getDynamicElement('menuButton');
     navDrawer = getDynamicElement('navDrawer');
     closeDrawerButton = getDynamicElement('closeDrawerButton');
-    drawerOverlay = getDynamicElement('drawerOverlay');
+    drawerLayer = getDynamicElement('drawer-layer');
     aboutToggle = getDynamicElement('aboutToggle');
     aboutContent = getDynamicElement('aboutContent');
     androidAppsToggle = getDynamicElement('androidAppsToggle');
@@ -24,15 +20,19 @@ function initNavigationDrawer() {
     inertTargets = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
 
     if (menuButton) {
-        menuButton.addEventListener('click', openDrawer);
+        menuButton.addEventListener('click', () => toggleDrawer());
         menuButton.setAttribute('aria-expanded', 'false');
-        menuButton.setAttribute('aria-controls', 'navDrawer');
     }
     if (closeDrawerButton) {
-        closeDrawerButton.addEventListener('click', closeDrawer);
-        closeDrawerButton.setAttribute('aria-controls', 'navDrawer');
+        closeDrawerButton.addEventListener('click', () => toggleDrawer(false));
     }
-    if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+    if (drawerLayer) {
+        drawerLayer.addEventListener('click', (event) => {
+            if (event.target === drawerLayer) {
+                toggleDrawer(false);
+            }
+        });
+    }
 
     if (navDrawer) {
         navDrawer.addEventListener('navigation-drawer-changed', (event) => {
@@ -44,38 +44,37 @@ function initNavigationDrawer() {
     }
 
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && navDrawer && navDrawer.opened && !isStandardDrawerLayout) {
-            closeDrawer();
+        if (event.key === 'Escape' && navDrawer && navDrawer.opened) {
+            toggleDrawer(false);
         }
     });
 
     _initToggleSection(aboutToggle, aboutContent);
     _initToggleSection(androidAppsToggle, androidAppsContent);
 
-    setupResponsiveDrawerLayout();
     syncDrawerState(Boolean(navDrawer && navDrawer.opened));
 }
 
 /**
- * Opens the navigation drawer.
+ * Toggles the navigation drawer.
  */
-function openDrawer() {
-    if (!navDrawer || isStandardDrawerLayout) return;
-
-    navDrawer.opened = true;
-    syncDrawerState(true);
-    focusFirstNavItem();
+function toggleDrawer(forceOpen) {
+    if (!navDrawer) return;
+    const isOpen = forceOpen !== undefined ? forceOpen : !navDrawer.opened;
+    navDrawer.opened = isOpen;
+    syncDrawerState(isOpen);
 }
 
 /**
  * Closes the navigation drawer.
+ * Exported for router use.
  */
 function closeDrawer() {
-    if (!navDrawer || isStandardDrawerLayout) return;
+    toggleDrawer(false);
+}
 
-    navDrawer.opened = false;
-    syncDrawerState(false);
-    if (menuButton) menuButton.focus();
+function openDrawer() {
+    toggleDrawer(true);
 }
 
 /**
@@ -116,7 +115,7 @@ function _initToggleSection(toggleButton, contentElement) {
 function focusFirstNavItem() {
     if (!navDrawer) return;
 
-    const firstNavItem = navDrawer.querySelector('md-list-item[href]');
+    const firstNavItem = navDrawer.querySelector('.nav-item[href]');
     if (firstNavItem && typeof firstNavItem.focus === 'function') {
         firstNavItem.focus();
         return;
@@ -127,86 +126,33 @@ function focusFirstNavItem() {
     }
 }
 
-function setupResponsiveDrawerLayout() {
-    if (!navDrawer) return;
-
-    const applyLayout = (matches) => {
-        updateDrawerLayout(Boolean(matches));
-    };
-
-    if (typeof window.matchMedia === 'function') {
-        standardLayoutMatcher = window.matchMedia(STANDARD_DRAWER_MEDIA_QUERY);
-        applyLayout(standardLayoutMatcher.matches);
-
-        const handler = (event) => applyLayout(event.matches);
-
-        if (typeof standardLayoutMatcher.addEventListener === 'function') {
-            standardLayoutMatcher.addEventListener('change', handler);
-        } else if (typeof standardLayoutMatcher.addListener === 'function') {
-            standardLayoutMatcher.addListener(handler);
-        }
-    } else {
-        applyLayout(window.innerWidth >= 840);
-        const resizeHandler = () => applyLayout(window.innerWidth >= 840);
-        window.addEventListener('resize', resizeHandler);
-    }
-}
-
-function updateDrawerLayout(shouldUseStandardLayout) {
-    if (!navDrawer) return;
-
-    const shouldUseStandard = false; // Always use modal drawer layout to mirror mobile behavior
-    document.body.dataset.drawerMode = 'modal';
-    document.body.classList.toggle('drawer-standard-mode', shouldUseStandard);
-
-    if (menuButton) menuButton.toggleAttribute('hidden', shouldUseStandard);
-    if (closeDrawerButton) closeDrawerButton.toggleAttribute('hidden', shouldUseStandard);
-
-    isStandardDrawerLayout = shouldUseStandard;
-
-    if (isStandardDrawerLayout) {
-        navDrawer.opened = true;
-    } else {
-        navDrawer.opened = false;
-    }
-
-    syncDrawerState(Boolean(navDrawer.opened));
-}
-
 function syncDrawerState(isOpened) {
     if (!navDrawer) return;
 
     const isDrawerOpen = Boolean(isOpened);
 
-    updateNavDrawerAriaModal();
-    updateModalAccessibilityState(isDrawerOpen);
-
-    if (isStandardDrawerLayout) {
-        if (drawerOverlay) {
-            drawerOverlay.classList.remove('open');
-            drawerOverlay.setAttribute('aria-hidden', 'true');
-        }
-        document.body.classList.remove('drawer-is-open');
-        if (menuButton) menuButton.setAttribute('aria-expanded', 'false');
-        return;
+    if (drawerLayer) {
+        drawerLayer.classList.toggle('open', isDrawerOpen);
+        drawerLayer.setAttribute('aria-hidden', String(!isDrawerOpen));
     }
 
+    updateModalAccessibilityState(isDrawerOpen);
+
     if (isDrawerOpen) {
-        if (drawerOverlay) {
-            drawerOverlay.classList.add('open');
-            drawerOverlay.setAttribute('aria-hidden', 'false');
-        }
         document.body.classList.add('drawer-is-open');
+        focusFirstNavItem();
     } else {
-        if (drawerOverlay) {
-            drawerOverlay.classList.remove('open');
-            drawerOverlay.setAttribute('aria-hidden', 'true');
-        }
         document.body.classList.remove('drawer-is-open');
+        if (menuButton) menuButton.focus();
     }
 
     if (menuButton) {
-        menuButton.setAttribute('aria-expanded', isDrawerOpen ? 'true' : 'false');
+        menuButton.setAttribute('aria-expanded', String(isDrawerOpen));
+        menuButton.setAttribute('aria-label', isDrawerOpen ? 'Close menu' : 'Open menu');
+        const triggerIcon = document.getElementById('menuButtonIcon');
+        if (triggerIcon) {
+            triggerIcon.textContent = isDrawerOpen ? 'menu_open' : 'menu';
+        }
     }
 }
 
@@ -215,7 +161,7 @@ function updateModalAccessibilityState(isOpened) {
         return;
     }
 
-    const shouldDisableTargets = !isStandardDrawerLayout && Boolean(isOpened);
+    const shouldDisableTargets = Boolean(isOpened);
 
     inertTargets.forEach((element) => {
         if (!element) {
@@ -232,14 +178,6 @@ function updateModalAccessibilityState(isOpened) {
     });
 }
 
-function updateNavDrawerAriaModal() {
-    if (!navDrawer) return;
-
-    const ariaModalValue = isStandardDrawerLayout ? 'false' : 'true';
-    navDrawer.setAttribute('aria-modal', ariaModalValue);
-    navDrawer.ariaModal = ariaModalValue;
-}
-
 if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, { initNavigationDrawer, openDrawer, closeDrawer });
+    Object.assign(globalThis, { initNavigationDrawer, toggleDrawer, openDrawer, closeDrawer });
 }
