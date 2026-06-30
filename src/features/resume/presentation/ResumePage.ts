@@ -37,6 +37,7 @@ const RESUME_I18N = {
         exportJson: 'Export Resume JSON',
         importJson: 'Import Resume JSON',
         download: 'Download Resume as PDF',
+        exportNote: 'Exports through browser print / Save as PDF to preserve selectable, searchable resume text for ATS and job portals.',
         skillsPreview: 'Skills',
         languagesPreview: 'Languages',
         interestsPreview: 'Interests',
@@ -92,6 +93,7 @@ const RESUME_I18N = {
         exportJson: 'Exportă CV JSON',
         importJson: 'Importă CV JSON',
         download: 'Descarcă CV-ul ca PDF',
+        exportNote: 'Exportă prin imprimarea browserului / Salvare ca PDF pentru a păstra textul selectabil și căutabil pentru ATS și portaluri de joburi.',
         skillsPreview: 'Competențe',
         languagesPreview: 'Limbi',
         interestsPreview: 'Interese',
@@ -794,6 +796,9 @@ function normalizeResumeDataForExport(data) {
 }
 
 async function prepareAndPrintResume() {
+    // ATS requirement: keep PDF export on the browser print path so Chromium
+    // preserves real selectable/searchable text, links, fonts, and document order.
+    // Do not replace this main path with canvas/image rasterization.
     ensureResumeFontPreconnects();
     const preview = document.getElementById('resume-preview');
     if (!preview) {
