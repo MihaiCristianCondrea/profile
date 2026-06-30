@@ -27,9 +27,9 @@ assert(css.includes('font-family:Material Symbols Outlined') || css.includes('Ma
 assert(css.includes('#resumePage #resume-preview'), 'resume preview styles are missing from bundled CSS.');
 assert(css.includes('@media print'), 'print media rules are missing from bundled CSS.');
 assert(css.includes('#resumePage .form-container,#resumePage .resume-download,#resumePage .resume-json-actions,#resumePage .no-print{display:none!important}') || css.includes('#resumePage .form-container') && css.includes('@media print'), 'print-only hiding rules for resume controls are missing.');
-assert(css.includes('@page{size:A4 portrait;margin:10mm}'), 'print CSS must use A4 with normal 10mm page margins.');
+assert(css.includes('@page{size:A4 portrait;margin:0}'), 'print CSS must use A4 with zero page margins for full-page resume output.');
 assert(!css.includes('size:A3'), 'print CSS must not include an A3 fallback.');
-assert(css.includes('justify-content:center!important') && css.includes('#resumePage #resume-preview') && css.includes('margin:0 auto!important'), 'print CSS must explicitly center the resume preview.');
+assert(css.includes('justify-content:center!important') && css.includes('#resumePage #resume-preview') && css.includes('margin:0!important'), 'print CSS must remove print margins around the resume preview.');
 assert(css.includes('-webkit-print-color-adjust:exact') && css.includes('print-color-adjust:exact'), 'print CSS must preserve background colors for PDF output.');
 assert(!css.includes('html2canvas') && !css.includes('jspdf'), 'production CSS must not indicate a canvas/image PDF export path.');
 
@@ -38,7 +38,7 @@ assert(resumeHtml.includes('id="resume-preview"'), 'resume page fragment is miss
 assert(resumeHtml.includes('id="downloadResumeButton"'), 'resume page fragment is missing the download/print button.');
 
 const resumeJs = read('assets/js/features/resume/presentation/ResumePage.js');
-assert(resumeJs.includes("style.textContent = '@page { size: A4 portrait; margin: 10mm; }';"), 'resume print preparation must inject A4/10mm @page sizing.');
+assert(resumeJs.includes("style.textContent = '@page { size: A4 portrait; margin: 0; }';"), 'resume print preparation must inject A4 zero-margin @page sizing.');
 assert(!resumeJs.includes('A3'), 'resume print preparation must not include the old A3 fallback.');
 assert(resumeJs.includes('window.print()'), 'resume export must continue to use browser print, not canvas/image PDF generation.');
 assert(!resumeJs.includes('html2canvas') && !resumeJs.includes('jsPDF'), 'resume export must not use html2canvas/jsPDF.');
