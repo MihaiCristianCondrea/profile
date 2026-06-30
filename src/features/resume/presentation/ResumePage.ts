@@ -368,16 +368,15 @@ function addListItem(sectionId, value = '') {
         onInput: () => updateList(sectionId)
     });
 
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'remove-btn';
+    const removeButton = document.createElement('md-icon-button');
+    removeButton.className = 'resume-remove-button';
     removeButton.setAttribute('aria-label', getResumeText('removeItem'));
     removeButton.dataset.resumeI18nAria = 'removeItem';
-    removeButton.textContent = '×';
+    removeButton.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">close</span>';
     removeButton.addEventListener('click', () => removeListItem(itemId, sectionId));
 
     listItem.append(wrapper, removeButton);
-    container.insertBefore(listItem, container.querySelector('.add-btn'));
+    container.insertBefore(listItem, container.querySelector('[data-add-list], [data-add-interest]'));
     updateList(sectionId);
     scheduleResumeSave();
 }
@@ -411,16 +410,15 @@ function addInterestItem(value = '', isProject = false) {
     checkboxLabel.textContent = getResumeText('isProject');
     checkboxLabel.dataset.resumeI18n = 'isProject';
 
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'remove-btn';
+    const removeButton = document.createElement('md-icon-button');
+    removeButton.className = 'resume-remove-button';
     removeButton.setAttribute('aria-label', getResumeText('removeInterest'));
     removeButton.dataset.resumeI18nAria = 'removeInterest';
-    removeButton.textContent = '×';
+    removeButton.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">close</span>';
     removeButton.addEventListener('click', () => removeListItem(itemId, 'interests'));
 
     listItem.append(wrapper, checkbox, checkboxLabel, removeButton);
-    container.insertBefore(listItem, container.querySelector('.add-btn'));
+    container.insertBefore(listItem, container.querySelector('[data-add-list], [data-add-interest]'));
     updateList('interests');
     scheduleResumeSave();
 }
@@ -562,17 +560,16 @@ function addComplexItem(sectionId, data = {}) {
         );
     }
 
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'remove-btn';
+    const removeButton = document.createElement('md-icon-button');
+    removeButton.className = 'resume-remove-button';
     removeButton.setAttribute('aria-label', getResumeText('removeEntry'));
     removeButton.dataset.resumeI18nAria = 'removeEntry';
-    removeButton.textContent = '×';
+    removeButton.innerHTML = '<span class="material-symbols-outlined" aria-hidden="true">close</span>';
     removeButton.addEventListener('click', () => removeItem(itemId, sectionId));
 
     innerContainer.appendChild(removeButton);
 
-    container.insertBefore(formWrapper, container.querySelector('.add-btn'));
+    container.insertBefore(formWrapper, container.querySelector('[data-add-complex]'));
     updateComplexList(sectionId);
     scheduleResumeSave();
 }

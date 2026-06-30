@@ -909,6 +909,23 @@ md-list-item[type='button'].expanded md-icon[slot='end'] {
 :root {
   --app-button-icon-inline-padding: 16px;
   --app-text-button-icon-inline-padding: 12px;
+
+  --md-filled-button-container-color: var(--app-button-neutral-container);
+  --md-filled-button-label-text-color: var(--app-button-neutral-label);
+  --md-filled-button-icon-color: var(--app-button-neutral-label);
+  --md-outlined-button-outline-color: var(--app-button-neutral-outline);
+  --md-outlined-button-label-text-color: var(--app-button-neutral-text);
+  --md-outlined-button-icon-color: var(--app-button-neutral-text);
+  --md-text-button-label-text-color: var(--md-sys-color-primary);
+  --md-text-button-icon-color: var(--md-sys-color-primary);
+  --md-filled-tonal-button-container-color: var(--app-button-accent-container);
+  --md-filled-tonal-button-label-text-color: var(--app-button-accent-label);
+  --md-filled-tonal-button-icon-color: var(--app-button-accent-label);
+  --md-icon-button-icon-color: var(--app-button-neutral-text);
+  --md-filled-icon-button-container-color: var(--app-button-neutral-container);
+  --md-filled-icon-button-icon-color: var(--app-button-neutral-label);
+  --md-outlined-icon-button-outline-color: var(--app-button-neutral-outline);
+  --md-outlined-icon-button-icon-color: var(--app-button-neutral-text);
 }
 
 md-filled-button {
@@ -956,10 +973,6 @@ md-outlined-button {
   );
 }
 
-:is(md-filled-button, md-filled-tonal-button, md-outlined-button)[has-icon] {
-  padding-inline-start: var(--app-button-icon-inline-padding);
-  padding-inline-end: var(--app-button-icon-inline-padding);
-}
 
 md-text-button {
   --md-text-button-with-leading-icon-leading-space: var(
@@ -976,10 +989,6 @@ md-text-button {
   );
 }
 
-md-text-button[has-icon] {
-  padding-inline-start: var(--app-text-button-icon-inline-padding);
-  padding-inline-end: var(--app-text-button-icon-inline-padding);
-}
 
 /* --- Footer --- */
 .app-footer {

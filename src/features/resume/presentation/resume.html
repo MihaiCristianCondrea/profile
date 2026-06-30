@@ -3,12 +3,12 @@
     <div class="resume-header">
       <h1 data-resume-i18n="title">Resume Builder</h1>
       <div class="resume-language-toggle" role="group" aria-label="Resume language">
-        <button type="button" class="resume-flag-btn" data-resume-lang="en" aria-pressed="true" title="English">
+        <md-outlined-icon-button class="resume-flag-btn" data-resume-lang="en" aria-pressed="true" title="English" aria-label="English">
           🇬🇧
-        </button>
-        <button type="button" class="resume-flag-btn" data-resume-lang="ro" aria-pressed="false" title="Română">
+        </md-outlined-icon-button>
+        <md-outlined-icon-button class="resume-flag-btn" data-resume-lang="ro" aria-pressed="false" title="Română" aria-label="Română">
           🇷🇴
-        </button>
+        </md-outlined-icon-button>
       </div>
     </div>
 
@@ -25,9 +25,9 @@
       <div class="resume-photo-controls">
         <label class="resume-file-label" for="photo" data-resume-i18n="profilePhoto">Profile Photo</label>
         <input type="file" id="photo" accept="image/*" />
-        <button type="button" class="secondary-btn btn-low" id="removePhotoButton">
+        <md-text-button id="removePhotoButton">
           <span data-resume-i18n="removePhoto">Remove Photo</span>
-        </button>
+        </md-text-button>
       </div>
       <div class="input-group">
         <input type="tel" id="phone" placeholder=" " />
@@ -88,9 +88,9 @@
         <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="build" aria-hidden="true">build</span>
         <span data-resume-i18n="skills">Skills</span>
       </h2>
-      <button type="button" class="add-btn btn-medium" data-add-list="skills">
+      <md-filled-tonal-button data-add-list="skills">
         <span data-resume-i18n="addSkill">Add Skill</span>
-      </button>
+      </md-filled-tonal-button>
     </div>
 
     <div class="form-section" id="work-form">
@@ -98,9 +98,9 @@
         <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="work" aria-hidden="true">work</span>
         <span data-resume-i18n="workHistory">Work History</span>
       </h2>
-      <button type="button" class="add-btn btn-medium" data-add-complex="work">
+      <md-filled-tonal-button data-add-complex="work">
         <span data-resume-i18n="addWork">Add Work Experience</span>
-      </button>
+      </md-filled-tonal-button>
     </div>
 
     <div class="form-section" id="education-form">
@@ -108,9 +108,9 @@
         <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="school" aria-hidden="true">school</span>
         <span data-resume-i18n="education">Education</span>
       </h2>
-      <button type="button" class="add-btn btn-medium" data-add-complex="education">
+      <md-filled-tonal-button data-add-complex="education">
         <span data-resume-i18n="addEducation">Add Education</span>
-      </button>
+      </md-filled-tonal-button>
     </div>
 
     <div class="form-section dynamic-list" id="languages-form">
@@ -118,9 +118,9 @@
         <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="language" aria-hidden="true">language</span>
         <span data-resume-i18n="languages">Languages</span>
       </h2>
-      <button type="button" class="add-btn btn-medium" data-add-list="languages">
+      <md-filled-tonal-button data-add-list="languages">
         <span data-resume-i18n="addLanguage">Add Language</span>
-      </button>
+      </md-filled-tonal-button>
     </div>
 
     <div class="form-section" id="interests-form">
@@ -128,20 +128,20 @@
         <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="interests" aria-hidden="true">interests</span>
         <span data-resume-i18n="interests">Interests</span>
       </h2>
-      <button type="button" class="add-btn btn-medium" data-add-interest="true">
+      <md-filled-tonal-button data-add-interest="true">
         <span data-resume-i18n="addInterest">Add Interest</span>
-      </button>
+      </md-filled-tonal-button>
     </div>
 
     <div class="form-section">
       <h2><span data-resume-i18n="exportImport">Export / Import</span></h2>
       <div class="resume-json-actions">
-        <button type="button" class="secondary-btn btn-medium" id="exportResumeJson">
+        <md-outlined-button id="exportResumeJson">
           <span data-resume-i18n="exportJson">Export Resume JSON</span>
-        </button>
-        <button type="button" class="secondary-btn btn-medium" id="importResumeJson">
+        </md-outlined-button>
+        <md-outlined-button id="importResumeJson">
           <span data-resume-i18n="importJson">Import Resume JSON</span>
-        </button>
+        </md-outlined-button>
         <input type="file" id="resume-json-file" accept="application/json" />
       </div>
     </div>
@@ -200,9 +200,8 @@
   </article>
   <div class="resume-download">
     <p id="resume-export-note" class="resume-export-note" data-resume-i18n="exportNote">Exports through browser print / Save as PDF to preserve selectable, searchable resume text for ATS and job portals.</p>
-    <button type="button" id="downloadResumeButton" class="btn-high" aria-describedby="resume-export-note">
-      <span class="material-symbols-outlined">download</span
-      ><span data-resume-i18n="download">Download Resume as PDF</span>
-    </button>
+    <md-filled-button id="downloadResumeButton" aria-describedby="resume-export-note">
+      <span class="material-symbols-outlined" slot="icon" aria-hidden="true">download</span><span data-resume-i18n="download">Download Resume as PDF</span>
+    </md-filled-button>
   </div>
 </div>

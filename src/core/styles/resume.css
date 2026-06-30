@@ -133,60 +133,19 @@
   color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 16px;
 }
-#resumePage button {
-  border: none;
-  border-radius: 20px;
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    background-color var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1)),
-    box-shadow var(--app-motion-duration-medium, 300ms)
-      var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-#resumePage button.btn-high {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
-}
-
-#resumePage button.btn-high:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
-}
-
-#resumePage button.btn-medium,
-#resumePage button.add-btn,
-#resumePage .secondary-btn.btn-medium {
-  background-color: var(--md-sys-color-secondary-container);
-  color: var(--md-sys-color-on-secondary-container);
+#resumePage md-filled-tonal-button,
+#resumePage md-outlined-button {
   margin-bottom: 10px;
 }
 
-#resumePage button.btn-low,
-#resumePage button.remove-btn {
-  background-color: transparent;
-  color: var(--md-sys-color-primary);
-  box-shadow: none;
+#resumePage .resume-remove-button {
+  --md-icon-button-icon-color: var(--md-sys-color-error);
+  align-self: center;
 }
 
-#resumePage button.remove-btn {
-  color: var(--md-sys-color-error);
-  padding: 8px;
-  border-radius: 50%;
-}
-
-#resumePage button.btn-low:hover {
-  background-color: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
-}
-
-#resumePage button.remove-btn:hover {
-  background-color: rgba(186, 26, 26, 0.1);
+#resumePage .resume-flag-btn[aria-pressed='true'] {
+  --md-outlined-icon-button-outline-color: var(--md-sys-color-primary);
+  --md-outlined-icon-button-icon-color: var(--md-sys-color-primary);
 }
 #resumePage .dynamic-list .list-item {
   display: flex;
@@ -219,7 +178,7 @@
   flex-direction: column;
   gap: 16px;
 }
-#resumePage .complex-item-form .remove-btn {
+#resumePage .complex-item-form .resume-remove-button {
   align-self: flex-end;
 }
 #resumePage #resume-preview {
@@ -439,9 +398,6 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-#resumePage .secondary-btn {
-  border: 1px solid var(--md-sys-color-outline-variant);
-}
 
 #resumePage .color-grid {
   display: grid;

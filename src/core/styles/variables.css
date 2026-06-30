@@ -54,6 +54,12 @@
   --app-theme-button-selected-bg: rgba(61, 220, 132, 0.15);
   --app-footer-text-color: #5f6368;
   --app-link-color: #4285f4;
+  --app-button-neutral-container: #111111;
+  --app-button-neutral-label: #ffffff;
+  --app-button-neutral-outline: #5f6368;
+  --app-button-neutral-text: #202124;
+  --app-button-accent-container: var(--md-sys-color-primary-container);
+  --app-button-accent-label: var(--md-sys-color-on-primary-container);
   --app-dialog-bg-color: var(--md-sys-color-surface-container-low);
   --app-motion-duration-short: 220ms;
   --app-motion-duration-medium: 320ms;
@@ -206,5 +212,11 @@ html.dark {
   --app-theme-button-selected-bg: rgba(150, 222, 161, 0.2);
   --app-footer-text-color: #a0a0a0;
   --app-link-color: #8ab4f8;
+  --app-button-neutral-container: #f1f3f4;
+  --app-button-neutral-label: #111111;
+  --app-button-neutral-outline: #9aa0a6;
+  --app-button-neutral-text: #f1f3f4;
+  --app-button-accent-container: var(--md-sys-color-primary-container);
+  --app-button-accent-label: var(--md-sys-color-on-primary-container);
   --app-dialog-bg-color: var(--md-sys-color-surface-container);
 }

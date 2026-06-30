@@ -1001,23 +1001,6 @@
   min-height: 120px;
 }
 
-#contactPageContainer button {
-  align-self: flex-start;
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color var(--app-motion-duration-short, 200ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-
-#contactPageContainer button:hover {
-  filter: brightness(0.9);
-}
-
 #contactPageContainer .contact-info {
   margin-top: 2rem;
   text-align: left;
