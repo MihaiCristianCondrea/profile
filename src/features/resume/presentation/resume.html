@@ -147,9 +147,27 @@
     </div>
   </div>
 
-  <div id="resume-preview">
+  <article id="resume-preview" aria-label="ATS-friendly resume preview">
     <div class="resume-content">
-      <div class="resume-left">
+      <main class="resume-right" aria-label="Resume main content">
+        <h1 id="resume-name"></h1>
+        <h2 id="resume-job-title"></h2>
+        <div id="resume-summary"></div>
+
+        <div class="resume-section" id="resume-work">
+          <h2>
+            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="work" aria-hidden="true">work</span>
+            <span data-resume-i18n="workHistoryPreview">Work history</span>
+          </h2>
+        </div>
+        <div class="resume-section" id="resume-education">
+          <h2>
+            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="school" aria-hidden="true">school</span>
+            <span data-resume-i18n="educationPreview">Education</span>
+          </h2>
+        </div>
+      </main>
+      <aside class="resume-left" aria-label="Resume contact and skills">
         <div id="photo-preview"></div>
         <div class="contact-info resume-section">
           <p id="resume-phone"></p>
@@ -177,29 +195,12 @@
           </h2>
           <ul></ul>
         </div>
-      </div>
-      <div class="resume-right">
-        <h1 id="resume-name"></h1>
-        <h2 id="resume-job-title"></h2>
-        <div id="resume-summary"></div>
-
-        <div class="resume-section" id="resume-work">
-          <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="work" aria-hidden="true">work</span>
-            <span data-resume-i18n="workHistoryPreview">Work history</span>
-          </h2>
-        </div>
-        <div class="resume-section" id="resume-education">
-          <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="school" aria-hidden="true">school</span>
-            <span data-resume-i18n="educationPreview">Education</span>
-          </h2>
-        </div>
-      </div>
+      </aside>
     </div>
-  </div>
+  </article>
   <div class="resume-download">
-    <button type="button" id="downloadResumeButton" class="btn-high">
+    <p id="resume-export-note" class="resume-export-note" data-resume-i18n="exportNote">Exports through browser print / Save as PDF to preserve selectable, searchable resume text for ATS and job portals.</p>
+    <button type="button" id="downloadResumeButton" class="btn-high" aria-describedby="resume-export-note">
       <span class="material-symbols-outlined">download</span
       ><span data-resume-i18n="download">Download Resume as PDF</span>
     </button>
