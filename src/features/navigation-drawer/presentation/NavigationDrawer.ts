@@ -239,3 +239,7 @@ function updateNavDrawerAriaModal() {
     navDrawer.setAttribute('aria-modal', ariaModalValue);
     navDrawer.ariaModal = ariaModalValue;
 }
+
+if (typeof globalThis !== 'undefined') {
+    Object.assign(globalThis, { initNavigationDrawer, openDrawer, closeDrawer });
+}
