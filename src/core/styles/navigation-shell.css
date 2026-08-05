@@ -1,0 +1,260 @@
+/* Navigation shell aligned with github-dev-tools. */
+:root {
+  --navigation-shell-border: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface) 18%,
+    transparent
+  );
+  --navigation-shell-hover: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface) 8%,
+    transparent
+  );
+  --navigation-shell-selected: color-mix(
+    in srgb,
+    var(--md-sys-color-on-surface) 12%,
+    var(--md-sys-color-surface)
+  );
+}
+
+/* --- Top app bar --- */
+.topbar,
+.topbar.scrolled {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 64px;
+  height: calc(64px + var(--safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--safe-area-inset-top);
+  padding-inline: calc(16px + var(--safe-area-inset-left))
+    calc(16px + var(--safe-area-inset-right));
+  border-bottom: 1px solid var(--navigation-shell-border);
+  border-radius: 0;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: none;
+}
+
+.topbar-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.topbar-title h1 {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar md-icon-button {
+  flex: 0 0 auto;
+  --md-icon-button-icon-color: var(--md-sys-color-on-surface);
+}
+
+/* --- Modal drawer --- */
+.drawer-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.drawer-layer.open {
+  pointer-events: auto;
+}
+
+.drawer {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  --md-navigation-drawer-modal-container-color: var(--md-sys-color-surface);
+  --md-navigation-drawer-modal-scrim-color: var(--md-sys-color-on-surface);
+  --md-navigation-drawer-modal-scrim-opacity: 0.24;
+  --md-sys-color-surface-container-low: var(--md-sys-color-surface);
+  --md-sys-color-surface-container: var(--md-sys-color-surface);
+  --md-sys-color-on-surface: var(--md-sys-color-on-surface);
+  --md-sys-color-outline: var(--md-sys-color-outline);
+}
+
+.drawer-header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--navigation-shell-border);
+}
+
+.drawer-header h2 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.drawer-header md-icon-button {
+  --md-icon-button-icon-color: var(--md-sys-color-on-surface);
+}
+
+.drawer-body {
+  min-block-size: calc(100% - 64px);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  padding: 8px 12px 16px;
+  scrollbar-gutter: stable;
+}
+
+.drawer-content md-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  background: transparent;
+}
+
+.drawer-content > md-list > md-divider {
+  display: none;
+}
+
+.drawer-footer {
+  flex: 0 0 auto;
+  padding: 16px 28px 14px;
+  border-top: 1px solid var(--navigation-shell-border);
+}
+
+.drawer-footer-label {
+  margin: 0 0 8px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.theme-options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.theme-option {
+  border-radius: 999px;
+  --md-icon-button-icon-color: var(--md-sys-color-on-surface);
+}
+
+.theme-option:hover {
+  background: var(--navigation-shell-hover);
+}
+
+.theme-option.selected,
+.theme-option[data-active] {
+  background: var(--navigation-shell-selected);
+  --md-icon-button-icon-color: var(--md-sys-color-on-surface);
+  --md-icon-button-state-layer-color: var(--md-sys-color-on-surface);
+}
+
+.drawer-legal-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 12px;
+}
+
+.drawer-legal-links a {
+  color: var(--md-sys-color-on-surface);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- Drawer navigation items --- */
+.nav-item {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  border-radius: 999px;
+  --md-list-item-container-shape: 999px;
+  --md-list-item-container-color: transparent;
+  --md-list-item-label-text-color: var(--md-sys-color-on-surface);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface);
+  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-list-item-hover-state-layer-color: var(--md-sys-color-on-surface);
+  --md-list-item-hover-state-layer-opacity: 0.08;
+  --md-list-item-focus-state-layer-color: var(--md-sys-color-on-surface);
+  --md-list-item-focus-state-layer-opacity: 0.08;
+  --md-list-item-pressed-state-layer-color: var(--md-sys-color-on-surface);
+  --md-list-item-pressed-state-layer-opacity: 0.12;
+  --md-list-item-leading-space: 16px;
+  --md-list-item-trailing-space: 16px;
+  --md-list-item-top-space: 12px;
+  --md-list-item-bottom-space: 12px;
+  --md-list-item-label-text-font: 'Google Sans Regular', 'Poppins', sans-serif;
+}
+
+.nav-item.nav-item-active {
+  --md-list-item-container-color: var(--navigation-shell-selected);
+  --md-list-item-label-text-color: var(--md-sys-color-on-surface);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface);
+  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface);
+  --md-list-item-label-text-weight: 600;
+}
+
+.nav-item md-icon {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.nav-item md-icon.filled-icon {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.nested-list {
+  margin: 0;
+  padding-inline-start: 16px;
+}
+
+.nested-list md-list {
+  gap: 2px;
+}
+
+.nested-list .nav-item {
+  --md-list-item-leading-space: 20px;
+}
+
+md-list-item.expanded md-icon[slot='end'] {
+  transition: transform var(--app-motion-duration-short, 200ms)
+    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  md-list-item.expanded md-icon[slot='end'] {
+    transition: none;
+  }
+}
