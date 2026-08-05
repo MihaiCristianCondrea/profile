@@ -37,6 +37,7 @@ declare global {
   function loadSongs(): unknown;
   function initProjectsPage(): unknown;
   function initResumePage(): unknown;
+  function initContactPage(): unknown;
   function renderHomeFaqSection(): unknown;
   function initFaqPage(): unknown;
 

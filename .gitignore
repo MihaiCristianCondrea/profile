@@ -1,5 +1,6 @@
 node_modules/
 .DS_Store
+.idea/
 
 # Generated site output. Run `npm run build` to recreate it.
 dist/

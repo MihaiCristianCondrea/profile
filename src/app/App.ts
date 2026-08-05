@@ -1,26 +1,32 @@
-// @ts-nocheck
-// Global DOM element references needed by multiple modules or for initialization
-const PROFILE_AVATAR_FALLBACK_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-let pageContentAreaEl, mainContentPageOriginalEl, appBarHeadlineEl, topAppBarEl;
+import type { HomeLoadCallback, PageLoadCallback, RouterOptions } from '../core/types/index.ts';
 
+const PROFILE_AVATAR_FALLBACK_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+let pageContentAreaEl: HTMLElement | null = null;
+let mainContentPageOriginalEl: HTMLElement | null = null;
+let appBarHeadlineEl: HTMLElement | null = null;
 let routeLinkHandlerRegistered = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-    // --- Get DOM Elements ---
+export function startApp(): void {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp, { once: true });
+        return;
+    }
+
+    initializeApp();
+}
+
+function initializeApp(): void {
     pageContentAreaEl = getDynamicElement('pageContentArea');
     mainContentPageOriginalEl = getDynamicElement('mainContentPage');
     appBarHeadlineEl = getDynamicElement('appBarHeadline');
-    topAppBarEl = getDynamicElement('topAppBar');
 
     initProfileAvatarFallback();
-
-
-    // --- Initialize Modules ---
     setCopyrightYear();
     initTheme();
     initNavigationDrawer();
 
-    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.init === 'function') {
+    if (SiteAnimations?.init) {
         try {
             SiteAnimations.init();
         } catch (error) {
@@ -28,88 +34,61 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    let initialHomeHTMLString = "<p>Error: Home content missing.</p>";
+    let initialHomeHTMLString = '<p>Error: Home content missing.</p>';
     if (mainContentPageOriginalEl) {
         initialHomeHTMLString = mainContentPageOriginalEl.outerHTML;
     } else {
-        console.error("App.ts: Initial home content (#mainContentPage) not found!");
+        console.error('App.ts: Initial home content (#mainContentPage) not found!');
     }
-    const routerOptions = buildRouterOptions();
-    initRouter(pageContentAreaEl, appBarHeadlineEl, initialHomeHTMLString, routerOptions);
 
-    // --- Setup Event Listeners for SPA Navigation ---
+    initRouter(
+        pageContentAreaEl,
+        appBarHeadlineEl,
+        initialHomeHTMLString,
+        buildRouterOptions(),
+    );
     setupRouteLinkInterception();
+    loadPageContent(window.location.hash || '#home', false);
 
-
-    // --- Handle Initial Page Load & Browser History ---
-    const initialPageIdFromHash = window.location.hash || '#home';
-    loadPageContent(initialPageIdFromHash, false);
-
-    window.addEventListener('popstate', (event) => {
-        let pageId = '#home';
-        if (event.state && event.state.page) {
-            pageId = event.state.page;
-        } else if (window.location.hash) {
-            pageId = window.location.hash;
-        }
+    window.addEventListener('popstate', (event: PopStateEvent) => {
+        const pageId = event.state?.page || window.location.hash || '#home';
         loadPageContent(pageId, false);
     });
 
     window.addEventListener('hashchange', () => {
         loadPageContent(window.location.hash || '#home', false);
     });
-
-    // --- App Bar Scroll Behavior ---
-    // Scroll behavior removed to align with GitHub repo tools architecture
-});
+}
 
 function buildRouterOptions(): RouterOptions {
     const options: RouterOptions = {};
 
     if (typeof showPageLoadingOverlay === 'function') {
-        options.showOverlay = () => {
-            showPageLoadingOverlay();
-        };
+        options.showOverlay = showPageLoadingOverlay;
     }
-
     if (typeof hidePageLoadingOverlay === 'function') {
-        options.hideOverlay = () => {
-            hidePageLoadingOverlay();
-        };
+        options.hideOverlay = hidePageLoadingOverlay;
     }
-
     if (typeof closeDrawer === 'function') {
-        options.closeDrawer = () => {
-            closeDrawer();
-        };
+        options.closeDrawer = closeDrawer;
     }
 
     const homeLoadCallbacks: HomeLoadCallback[] = [];
-
     if (typeof fetchBlogPosts === 'function') {
         homeLoadCallbacks.push(() => {
-            const newsGrid = document.getElementById('newsGrid');
-            if (newsGrid) {
-                fetchBlogPosts();
-            }
+            if (document.getElementById('newsGrid')) fetchBlogPosts();
         });
     }
-
     if (typeof fetchCommittersRanking === 'function') {
         homeLoadCallbacks.push(() => {
             const rankingCardPresent = document.getElementById('committers-rank')
                 || document.getElementById('committers-status')
                 || document.querySelector('.achievement-card');
-            if (rankingCardPresent) {
-                fetchCommittersRanking();
-            }
+            if (rankingCardPresent) fetchCommittersRanking();
         });
     }
-
     if (typeof renderHomeFaqSection === 'function') {
-        homeLoadCallbacks.push(() => {
-            renderHomeFaqSection();
-        });
+        homeLoadCallbacks.push(renderHomeFaqSection);
     }
 
     if (homeLoadCallbacks.length > 0) {
@@ -125,54 +104,32 @@ function buildRouterOptions(): RouterOptions {
     }
 
     const pageHandlers: Record<string, PageLoadCallback> = {};
-
     if (typeof loadSongs === 'function') {
         pageHandlers.songs = () => {
-            const songsGrid = document.getElementById('songsGrid');
-            if (songsGrid) {
-                loadSongs();
-            }
+            if (document.getElementById('songsGrid')) loadSongs();
         };
     }
+    if (typeof initProjectsPage === 'function') pageHandlers.projects = initProjectsPage;
+    if (typeof initResumePage === 'function') pageHandlers.resume = initResumePage;
+    if (typeof initContactPage === 'function') pageHandlers.contact = initContactPage;
+    if (typeof initFaqPage === 'function') pageHandlers.faqs = initFaqPage;
 
-    if (typeof initProjectsPage === 'function') {
-        pageHandlers.projects = initProjectsPage;
-    }
-
-    if (typeof initResumePage === 'function') {
-        pageHandlers.resume = initResumePage;
-    }
-
-    if (typeof initContactPage === 'function') {
-        pageHandlers.contact = initContactPage;
-    }
-
-    if (typeof initFaqPage === 'function') {
-        pageHandlers.faqs = initFaqPage;
-    }
-
-    if (Object.keys(pageHandlers).length > 0) {
-        options.pageHandlers = pageHandlers;
-    }
-
+    if (Object.keys(pageHandlers).length > 0) options.pageHandlers = pageHandlers;
     return options;
 }
 
-function setupRouteLinkInterception() {
-    if (routeLinkHandlerRegistered) {
-        return;
-    }
+function setupRouteLinkInterception(): void {
+    if (routeLinkHandlerRegistered) return;
 
     const routesApi = typeof RouterRoutes !== 'undefined' ? RouterRoutes : null;
-    const hasRoute = routesApi
+    const hasRoute: ((routeId: string) => boolean) | null = routesApi
         ? (typeof routesApi.hasRoute === 'function'
             ? routesApi.hasRoute.bind(routesApi)
-            : (routeId) => {
+            : (routeId: string) => {
                 if (typeof routesApi.getRoute === 'function') {
-                    return !!routesApi.getRoute(routeId);
+                    return Boolean(routesApi.getRoute(routeId));
                 }
-                const routeMap = routesApi.PAGE_ROUTES;
-                return !!(routeMap && routeMap[routeId]);
+                return Boolean(routesApi.PAGE_ROUTES?.[routeId]);
             })
         : null;
 
@@ -181,30 +138,18 @@ function setupRouteLinkInterception() {
         return;
     }
 
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', (event: MouseEvent) => {
         const eventTarget = event.target;
-        if (!eventTarget || typeof eventTarget.closest !== 'function') {
-            return;
-        }
+        if (!(eventTarget instanceof Element)) return;
 
         const interactiveElement = eventTarget.closest('a[href^="#"], md-list-item[href^="#"]');
-        if (!interactiveElement) {
-            return;
-        }
-
-        if (interactiveElement.getAttribute('target') === '_blank') {
-            return;
-        }
+        if (!interactiveElement || interactiveElement.getAttribute('target') === '_blank') return;
 
         const rawHref = interactiveElement.getAttribute('href');
-        if (!rawHref) {
-            return;
-        }
+        if (!rawHref) return;
 
         const normalizedId = normalizePageId(rawHref);
-        if (!normalizedId || !hasRoute(normalizedId)) {
-            return;
-        }
+        if (!normalizedId || !hasRoute(normalizedId)) return;
 
         event.preventDefault();
         loadPageContent(normalizedId);
@@ -213,13 +158,11 @@ function setupRouteLinkInterception() {
     routeLinkHandlerRegistered = true;
 }
 
-function initProfileAvatarFallback() {
-    const profileAvatar = document.querySelector('.profile-avatar');
-    if (!profileAvatar) {
-        return;
-    }
+function initProfileAvatarFallback(): void {
+    const profileAvatar = document.querySelector<HTMLImageElement>('.profile-avatar');
+    if (!profileAvatar) return;
 
-    const applyFallback = () => {
+    const applyFallback = (): void => {
         profileAvatar.classList.add('profile-avatar-fallback');
         if (profileAvatar.src !== PROFILE_AVATAR_FALLBACK_SRC) {
             profileAvatar.src = PROFILE_AVATAR_FALLBACK_SRC;
@@ -227,8 +170,5 @@ function initProfileAvatarFallback() {
     };
 
     profileAvatar.addEventListener('error', applyFallback, { once: true });
-
-    if (profileAvatar.complete && profileAvatar.naturalWidth === 0) {
-        applyFallback();
-    }
+    if (profileAvatar.complete && profileAvatar.naturalWidth === 0) applyFallback();
 }

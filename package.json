@@ -5,14 +5,15 @@
   "scripts": {
     "test": "jest",
     "clean": "rimraf dist",
-    "build": "npm run clean && npm run build:vite && npm run build:ts && npm run build:pages",
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "npm run clean && npm run typecheck && npm run build:vite && npm run build:pages",
     "build:vite": "vite build",
-    "build:ts": "tsc -p tsconfig.json",
     "build:pages": "node scripts/copy-page-fragments.mjs",
     "verify:seo": "node -e \"['dist/sitemap.xml','dist/robots.txt','dist/app-ads.txt','dist/manifest.json'].forEach((file)=>require('fs').accessSync(file));\"",
+    "verify:production-assets": "node scripts/verify-production-assets.mjs",
     "deploy": "npm run build && npm run verify:seo",
-    "preview": "vite preview --host 127.0.0.1",
-    "verify:production-assets": "node scripts/verify-production-assets.mjs"
+    "check": "npm test -- --runInBand && npm run deploy && npm run verify:production-assets",
+    "preview": "vite preview --host 127.0.0.1"
   },
   "keywords": [],
   "author": "",
