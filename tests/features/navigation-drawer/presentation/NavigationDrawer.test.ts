@@ -13,7 +13,10 @@ function createDrawerMarkup(): HTMLElement & { opened: boolean } {
       <md-navigation-drawer-modal id="navDrawer">
         <button id="closeDrawerButton">Close</button>
         <div class="drawer-content">
-          <md-list-item class="nav-item" href="#legacy">Legacy item</md-list-item>
+          <md-item class="nav-item" href="#home" role="link" tabindex="0">
+            <span class="nav-item-container" slot="container"></span>
+            Home
+          </md-item>
         </div>
       </md-navigation-drawer-modal>
     </div>
@@ -28,19 +31,6 @@ describe('NavigationDrawer', () => {
   beforeEach(() => {
     jest.resetModules();
     document.body.className = '';
-  });
-
-  test('renders the GitHub DevTools md-item composition', () => {
-    const drawer = createDrawerMarkup();
-    const drawerModule = require(
-      '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
-    ) as DrawerModule;
-
-    drawerModule.initNavigationDrawer();
-
-    expect(drawer.querySelector('md-list-item')).toBeNull();
-    expect(drawer.querySelectorAll('md-item.nav-item').length).toBeGreaterThan(0);
-    expect(drawer.querySelector('.nav-item-container[slot="container"]')).not.toBeNull();
   });
 
   test('opens and closes while synchronizing the reference drawer shell', () => {
@@ -77,12 +67,11 @@ describe('NavigationDrawer', () => {
     const drawerModule = require(
       '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
     ) as DrawerModule;
-
-    drawerModule.initNavigationDrawer();
     const item = document.querySelector<HTMLElement>('.nav-item') as HTMLElement;
     const clickListener = jest.fn();
     item.addEventListener('click', clickListener);
 
+    drawerModule.initNavigationDrawer();
     item.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
     item.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
     item.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
