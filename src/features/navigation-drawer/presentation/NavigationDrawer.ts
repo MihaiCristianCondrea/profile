@@ -1,5 +1,3 @@
-import { NAVIGATION_DRAWER_ITEMS_MARKUP } from './NavigationDrawerMarkup.ts';
-
 interface NavigationDrawerElement extends HTMLElement {
   opened: boolean;
 }
@@ -13,14 +11,6 @@ let navDrawer: NavigationDrawerElement | null = null;
 let closeDrawerButton: HTMLElement | null = null;
 let drawerLayer: HTMLElement | null = null;
 let initialized = false;
-
-function renderNavigationItems(): void {
-  const drawerContent = document.querySelector<HTMLElement>('#navDrawer .drawer-content');
-  if (!drawerContent || drawerContent.dataset.rendered === 'true') return;
-
-  drawerContent.innerHTML = NAVIGATION_DRAWER_ITEMS_MARKUP;
-  drawerContent.dataset.rendered = 'true';
-}
 
 function syncDrawerState(opened: boolean): void {
   drawerLayer?.classList.toggle('open', opened);
@@ -76,8 +66,6 @@ export function openDrawer(): void {
 }
 
 export function initNavigationDrawer(): void {
-  renderNavigationItems();
-
   menuButton = document.getElementById('menuButton');
   navDrawer = document.getElementById('navDrawer') as NavigationDrawerElement | null;
   closeDrawerButton = document.getElementById('closeDrawerButton');
