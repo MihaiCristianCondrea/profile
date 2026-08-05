@@ -19,6 +19,38 @@ Do not use `@material/web/all.js` in production and do not load Material
 elements from a runtime CDN. Register a new element in the registry when the
 application starts using it.
 
+## Card variants
+
+The bundled Material Web source exposes exactly three public card elements:
+
+- `md-elevated-card` for separation created primarily by elevation;
+- `md-filled-card` for tonal separation from the surrounding surface;
+- `md-outlined-card` for separation created primarily by an outline.
+
+There is no public `md-card`, `md-normal-card`, or plain card element. The
+`Card` class under `labs/card/internal` is implementation detail and must not be
+imported by application code.
+
+```html
+<md-elevated-card>
+  <div class="card-content">Elevated content</div>
+</md-elevated-card>
+
+<md-filled-card>
+  <div class="card-content">Filled content</div>
+</md-filled-card>
+
+<md-outlined-card>
+  <div class="card-content">Outlined content</div>
+</md-outlined-card>
+```
+
+Material cards provide the container, outline, shape, and elevation. The
+application may style content layout inside the card, but it must not recreate
+card elevation, outlines, state layers, or shapes with parallel CSS. A static
+card should remain static. Put actions inside the card using Material buttons
+instead of making the whole card zoom, lift, or scale on hover.
+
 ## Navigation actions
 
 Material buttons and icon buttons support link behavior through `href` and
