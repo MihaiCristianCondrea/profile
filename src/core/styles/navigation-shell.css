@@ -88,8 +88,6 @@
   --md-navigation-drawer-modal-scrim-opacity: 0.24;
   --md-sys-color-surface-container-low: var(--md-sys-color-surface);
   --md-sys-color-surface-container: var(--md-sys-color-surface);
-  --md-sys-color-on-surface: var(--md-sys-color-on-surface);
-  --md-sys-color-outline: var(--md-sys-color-outline);
 }
 
 .drawer-header {
