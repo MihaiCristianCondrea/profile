@@ -26,7 +26,7 @@ function initializeApp(): void {
     initTheme();
     initNavigationDrawer();
 
-    if (SiteAnimations?.init) {
+    if (typeof SiteAnimations !== 'undefined' && SiteAnimations?.init) {
         try {
             SiteAnimations.init();
         } catch (error) {
@@ -63,15 +63,9 @@ function initializeApp(): void {
 function buildRouterOptions(): RouterOptions {
     const options: RouterOptions = {};
 
-    if (typeof showPageLoadingOverlay === 'function') {
-        options.showOverlay = showPageLoadingOverlay;
-    }
-    if (typeof hidePageLoadingOverlay === 'function') {
-        options.hideOverlay = hidePageLoadingOverlay;
-    }
-    if (typeof closeDrawer === 'function') {
-        options.closeDrawer = closeDrawer;
-    }
+    if (typeof showPageLoadingOverlay === 'function') options.showOverlay = showPageLoadingOverlay;
+    if (typeof hidePageLoadingOverlay === 'function') options.hideOverlay = hidePageLoadingOverlay;
+    if (typeof closeDrawer === 'function') options.closeDrawer = closeDrawer;
 
     const homeLoadCallbacks: HomeLoadCallback[] = [];
     if (typeof fetchBlogPosts === 'function') {
@@ -87,9 +81,7 @@ function buildRouterOptions(): RouterOptions {
             if (rankingCardPresent) fetchCommittersRanking();
         });
     }
-    if (typeof renderHomeFaqSection === 'function') {
-        homeLoadCallbacks.push(renderHomeFaqSection);
-    }
+    if (typeof renderHomeFaqSection === 'function') homeLoadCallbacks.push(renderHomeFaqSection);
 
     if (homeLoadCallbacks.length > 0) {
         options.onHomeLoad = () => {
@@ -126,9 +118,7 @@ function setupRouteLinkInterception(): void {
         ? (typeof routesApi.hasRoute === 'function'
             ? routesApi.hasRoute.bind(routesApi)
             : (routeId: string) => {
-                if (typeof routesApi.getRoute === 'function') {
-                    return Boolean(routesApi.getRoute(routeId));
-                }
+                if (typeof routesApi.getRoute === 'function') return Boolean(routesApi.getRoute(routeId));
                 return Boolean(routesApi.PAGE_ROUTES?.[routeId]);
             })
         : null;
@@ -164,9 +154,7 @@ function initProfileAvatarFallback(): void {
 
     const applyFallback = (): void => {
         profileAvatar.classList.add('profile-avatar-fallback');
-        if (profileAvatar.src !== PROFILE_AVATAR_FALLBACK_SRC) {
-            profileAvatar.src = PROFILE_AVATAR_FALLBACK_SRC;
-        }
+        if (profileAvatar.src !== PROFILE_AVATAR_FALLBACK_SRC) profileAvatar.src = PROFILE_AVATAR_FALLBACK_SRC;
     };
 
     profileAvatar.addEventListener('error', applyFallback, { once: true });

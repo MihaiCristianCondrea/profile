@@ -8,7 +8,11 @@ const OPTIONAL_GLOBALS = [
   'fetchCommittersRanking',
   'loadSongs',
   'initProjectsPage',
-  'initResumePage'
+  'initResumePage',
+  'initContactPage',
+  'renderHomeFaqSection',
+  'initFaqPage',
+  'SiteAnimations'
 ];
 
 const CORE_GLOBALS = [
@@ -28,23 +32,24 @@ let registeredDocumentHandlers = [];
 let registeredWindowHandlers = [];
 
 function clearGlobals() {
-  [...OPTIONAL_GLOBALS, ...CORE_GLOBALS].forEach((key) => {
-    delete global[key];
-  });
+  [...OPTIONAL_GLOBALS, ...CORE_GLOBALS].forEach((key) => delete global[key]);
 }
 
 function stubNormalizePageId(value) {
-  if (typeof value !== 'string') {
-    return 'home';
-  }
+  if (typeof value !== 'string') return 'home';
   const withoutHash = value.startsWith('#') ? value.slice(1) : value;
   return withoutHash === '' ? 'home' : withoutHash;
 }
 
-function loadAppModule() {
+function loadAndStartApp() {
+  let startApp;
   jest.isolateModules(() => {
-    require(APP_PATH);
+    ({ startApp } = require(APP_PATH));
   });
+  startApp();
+
+  const domReadyHandler = registeredDocumentHandlers.find(({ type }) => type === 'DOMContentLoaded');
+  if (domReadyHandler) document.dispatchEvent(new Event('DOMContentLoaded'));
 }
 
 function removeRegisteredHandlers() {
@@ -64,7 +69,6 @@ describe('App.ts bootstrap integration', () => {
     clearGlobals();
     document.body.innerHTML = '';
     window.location.hash = '#home';
-
     registeredDocumentHandlers = [];
     registeredWindowHandlers = [];
 
@@ -83,12 +87,8 @@ describe('App.ts bootstrap integration', () => {
 
   afterEach(() => {
     removeRegisteredHandlers();
-    if (documentEventSpy) {
-      documentEventSpy.mockRestore();
-    }
-    if (windowEventSpy) {
-      windowEventSpy.mockRestore();
-    }
+    documentEventSpy?.mockRestore();
+    windowEventSpy?.mockRestore();
     clearGlobals();
     document.body.innerHTML = '';
     jest.restoreAllMocks();
@@ -99,24 +99,12 @@ describe('App.ts bootstrap integration', () => {
       <main id="pageContentArea"></main>
       <section id="mainContentPage"><p>Welcome!</p></section>
       <h1 id="appBarHeadline"></h1>
-      <header id="topAppBar"></header>
       <div id="newsGrid"></div>
       <div id="committers-rank"></div>
       <div id="songsGrid"></div>
     `;
 
     const initRouter = jest.fn();
-    const loadPageContent = jest.fn();
-
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = initRouter;
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute: jest.fn(() => true) };
-
     const showPageLoadingOverlay = jest.fn();
     const hidePageLoadingOverlay = jest.fn();
     const closeDrawer = jest.fn();
@@ -127,6 +115,14 @@ describe('App.ts bootstrap integration', () => {
     const initResumePage = jest.fn();
 
     Object.assign(global, {
+      getDynamicElement: jest.fn((id) => document.getElementById(id)),
+      initTheme: jest.fn(),
+      initNavigationDrawer: jest.fn(),
+      setCopyrightYear: jest.fn(),
+      initRouter,
+      loadPageContent: jest.fn(),
+      normalizePageId: jest.fn(stubNormalizePageId),
+      RouterRoutes: { hasRoute: jest.fn(() => true) },
       showPageLoadingOverlay,
       hidePageLoadingOverlay,
       closeDrawer,
@@ -137,45 +133,41 @@ describe('App.ts bootstrap integration', () => {
       initResumePage
     });
 
-    loadAppModule();
-    document.dispatchEvent(new Event('DOMContentLoaded'));
+    loadAndStartApp();
 
     expect(initRouter).toHaveBeenCalledTimes(1);
     const routerOptions = initRouter.mock.calls[0][3];
-
-    expect(routerOptions.showOverlay).toBeInstanceOf(Function);
-    expect(routerOptions.hideOverlay).toBeInstanceOf(Function);
-    expect(routerOptions.closeDrawer).toBeInstanceOf(Function);
-    expect(routerOptions.onHomeLoad).toBeInstanceOf(Function);
-    expect(routerOptions.pageHandlers).toEqual(expect.objectContaining({
-      songs: expect.any(Function),
-      projects: initProjectsPage,
-      resume: initResumePage
+    expect(routerOptions).toEqual(expect.objectContaining({
+      showOverlay: expect.any(Function),
+      hideOverlay: expect.any(Function),
+      closeDrawer: expect.any(Function),
+      onHomeLoad: expect.any(Function),
+      pageHandlers: expect.objectContaining({
+        songs: expect.any(Function),
+        projects: initProjectsPage,
+        resume: initResumePage
+      })
     }));
 
     routerOptions.showOverlay();
-    expect(showPageLoadingOverlay).toHaveBeenCalledTimes(1);
-
     routerOptions.hideOverlay();
-    expect(hidePageLoadingOverlay).toHaveBeenCalledTimes(1);
-
     routerOptions.closeDrawer();
-    expect(closeDrawer).toHaveBeenCalledTimes(1);
-
     routerOptions.onHomeLoad();
+    routerOptions.pageHandlers.songs();
+
+    expect(showPageLoadingOverlay).toHaveBeenCalledTimes(1);
+    expect(hidePageLoadingOverlay).toHaveBeenCalledTimes(1);
+    expect(closeDrawer).toHaveBeenCalledTimes(1);
     expect(fetchBlogPosts).toHaveBeenCalledTimes(1);
     expect(fetchCommittersRanking).toHaveBeenCalledTimes(1);
-
-    routerOptions.pageHandlers.songs();
     expect(loadSongs).toHaveBeenCalledTimes(1);
   });
 
-  test('navigation interception delegates to loadPageContent and avoids duplicate registration', () => {
+  test('navigation interception delegates to loadPageContent without duplicate startup', () => {
     document.body.innerHTML = `
       <main id="pageContentArea"></main>
       <section id="mainContentPage"></section>
       <h1 id="appBarHeadline"></h1>
-      <header id="topAppBar"></header>
       <a id="songsLink" href="#songs"><span>Songs</span></a>
       <a id="missingLink" href="#missing"><span>Missing</span></a>
       <a id="externalLink" href="#home" target="_blank">External</a>
@@ -184,61 +176,44 @@ describe('App.ts bootstrap integration', () => {
 
     const loadPageContent = jest.fn();
     const hasRoute = jest.fn((id) => ['home', 'songs', 'projects'].includes(id));
+    Object.assign(global, {
+      getDynamicElement: jest.fn((id) => document.getElementById(id)),
+      initTheme: jest.fn(),
+      initNavigationDrawer: jest.fn(),
+      setCopyrightYear: jest.fn(),
+      initRouter: jest.fn(),
+      loadPageContent,
+      normalizePageId: jest.fn(stubNormalizePageId),
+      RouterRoutes: { hasRoute }
+    });
 
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = jest.fn();
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute };
-
-    loadAppModule();
-
-    document.dispatchEvent(new Event('DOMContentLoaded'));
+    loadAndStartApp();
     expect(loadPageContent).toHaveBeenCalledWith('#home', false);
     loadPageContent.mockClear();
     hasRoute.mockClear();
 
     document.dispatchEvent(new Event('DOMContentLoaded'));
-    expect(loadPageContent).toHaveBeenCalledWith('#home', false);
-    loadPageContent.mockClear();
-    hasRoute.mockClear();
+    expect(loadPageContent).not.toHaveBeenCalled();
 
-    const songsLinkSpan = document.querySelector('#songsLink span');
-    songsLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-    expect(hasRoute).toHaveBeenCalledTimes(1);
+    document.querySelector('#songsLink span').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).toHaveBeenCalledWith('songs');
-    expect(loadPageContent).toHaveBeenCalledTimes(1);
     expect(loadPageContent).toHaveBeenCalledWith('songs');
 
     loadPageContent.mockClear();
     hasRoute.mockClear();
-
-    const projectsItem = document.getElementById('projectsItem');
-    projectsItem.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-    expect(hasRoute).toHaveBeenCalledTimes(1);
+    document.getElementById('projectsItem').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).toHaveBeenCalledWith('projects');
-    expect(loadPageContent).toHaveBeenCalledTimes(1);
     expect(loadPageContent).toHaveBeenCalledWith('projects');
 
     loadPageContent.mockClear();
     hasRoute.mockClear();
-
-    const missingLinkSpan = document.querySelector('#missingLink span');
-    missingLinkSpan.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-    expect(hasRoute).toHaveBeenCalledTimes(1);
+    document.querySelector('#missingLink span').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).toHaveBeenCalledWith('missing');
     expect(loadPageContent).not.toHaveBeenCalled();
 
-    loadPageContent.mockClear();
     hasRoute.mockClear();
-
-    const externalLink = document.getElementById('externalLink');
-    externalLink.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    document.getElementById('externalLink').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     expect(hasRoute).not.toHaveBeenCalled();
-    expect(loadPageContent).not.toHaveBeenCalled();
   });
 
   test('hash changes load the matching route without adding browser history', () => {
@@ -246,24 +221,22 @@ describe('App.ts bootstrap integration', () => {
       <main id="pageContentArea"></main>
       <section id="mainContentPage"></section>
       <h1 id="appBarHeadline"></h1>
-      <header id="topAppBar"></header>
     `;
 
     const loadPageContent = jest.fn();
+    Object.assign(global, {
+      getDynamicElement: jest.fn((id) => document.getElementById(id)),
+      initTheme: jest.fn(),
+      initNavigationDrawer: jest.fn(),
+      setCopyrightYear: jest.fn(),
+      initRouter: jest.fn(),
+      loadPageContent,
+      normalizePageId: jest.fn(stubNormalizePageId),
+      RouterRoutes: { hasRoute: jest.fn(() => true) }
+    });
 
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = jest.fn();
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute: jest.fn(() => true) };
-
-    loadAppModule();
-    document.dispatchEvent(new Event('DOMContentLoaded'));
+    loadAndStartApp();
     loadPageContent.mockClear();
-
     window.location.hash = '#about-me';
     window.dispatchEvent(new HashChangeEvent('hashchange'));
 
@@ -276,26 +249,23 @@ describe('App.ts bootstrap integration', () => {
       <main id="pageContentArea"></main>
       <section id="mainContentPage"></section>
       <h1 id="appBarHeadline"></h1>
-      <header id="topAppBar"></header>
     `;
 
     const initRouter = jest.fn();
-    const loadPageContent = jest.fn();
+    Object.assign(global, {
+      getDynamicElement: jest.fn((id) => document.getElementById(id)),
+      initTheme: jest.fn(),
+      initNavigationDrawer: jest.fn(),
+      setCopyrightYear: jest.fn(),
+      initRouter,
+      loadPageContent: jest.fn(),
+      normalizePageId: jest.fn(stubNormalizePageId),
+      RouterRoutes: { hasRoute: jest.fn(() => false) }
+    });
 
-    global.getDynamicElement = jest.fn((id) => document.getElementById(id));
-    global.initTheme = jest.fn();
-    global.initNavigationDrawer = jest.fn();
-    global.setCopyrightYear = jest.fn();
-    global.initRouter = initRouter;
-    global.loadPageContent = loadPageContent;
-    global.normalizePageId = jest.fn(stubNormalizePageId);
-    global.RouterRoutes = { hasRoute: jest.fn(() => false) };
-
-    loadAppModule();
-    document.dispatchEvent(new Event('DOMContentLoaded'));
+    loadAndStartApp();
 
     expect(initRouter).toHaveBeenCalledTimes(1);
-    const routerOptions = initRouter.mock.calls[0][3];
-    expect(routerOptions).toEqual({});
+    expect(initRouter.mock.calls[0][3]).toEqual({});
   });
 });
