@@ -199,6 +199,31 @@
   background: var(--navigation-shell-selected);
 }
 
+.drawer-section-divider {
+  margin: 4px 0;
+}
+
+.drawer-section-toggle {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.drawer-section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-section-content[hidden] {
+  display: none;
+}
+
+.drawer-section-content .nested-nav-item {
+  --md-item-leading-space: 32px;
+  --md-item-top-space: 10px;
+  --md-item-bottom-space: 10px;
+}
+
 .nav-item md-icon {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }

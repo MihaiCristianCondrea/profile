@@ -66,6 +66,28 @@ Material buttons and icon buttons support link behavior through `href` and
 Do not wrap a Material button in an anchor and do not place an anchor inside a
 Material button. Standalone icon buttons need an accessible `aria-label`.
 
+## Drawer disclosure groups
+
+Material Web provides the modal drawer and item layout, but it does not provide
+a dedicated accordion API for drawer categories. The profile drawer therefore
+uses app-owned disclosure groups composed around `md-item` elements.
+
+This is an intentional information-architecture choice for shorter scrolling
+and clearer route grouping. It does not modify Material shadow DOM, state
+layers, ripple behavior, drawer elevation, or component shapes.
+
+Each disclosure header must:
+
+- use an `md-item` with `role="button"` and keyboard focus;
+- expose `aria-expanded` and `aria-controls`;
+- support Enter and Space activation;
+- keep the controlled group synchronized with `hidden` and `aria-hidden`;
+- automatically expand when one of its nested routes becomes active.
+
+Dividers, icons, selected states, and drawer surfaces remain Material
+components. Application CSS is limited to hierarchy, indentation, spacing, and
+visibility.
+
 ## Styling contract
 
 Prefer component attributes, slots, and documented custom properties. Authored
