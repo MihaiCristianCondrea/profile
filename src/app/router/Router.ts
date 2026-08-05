@@ -65,19 +65,12 @@ function runPageHandler(pageId: string): void {
 export function updateActiveNavLink(currentPageId: string): void {
   const normalizedCurrentPage = normalizePageId(currentPageId);
 
-  document.querySelectorAll<HTMLElement>('#navDrawer md-list-item[href]').forEach((item) => {
+  document.querySelectorAll<HTMLElement>('#navDrawer .nav-item[href^="#"]').forEach((item) => {
     const selected = normalizePageId(item.getAttribute('href') ?? '') === normalizedCurrentPage;
     item.toggleAttribute('data-active', selected);
-    item.toggleAttribute('aria-current', selected);
     if (selected) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
     item.querySelector('md-icon')?.classList.toggle('filled-icon', selected);
-
-    if (selected) {
-      const nestedParent = item.closest<HTMLElement>('.nested-list');
-      if (nestedParent?.hidden) {
-        document.querySelector<HTMLElement>(`[aria-controls="${nestedParent.id}"]`)?.click();
-      }
-    }
   });
 }
 
