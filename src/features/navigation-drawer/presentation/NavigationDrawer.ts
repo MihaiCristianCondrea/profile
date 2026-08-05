@@ -14,11 +14,12 @@ let inertTargets: HTMLElement[] = [];
 let initialized = false;
 let drawerWasOpen = false;
 
+/* `data-active` marks the selected destination and is owned by the router, so an
+   expanded group is reported through `expanded` and `aria-expanded` only. */
 function syncSection(toggle: HTMLElement, content: HTMLElement, expanded: boolean): void {
   content.classList.toggle('open', expanded);
   content.hidden = !expanded;
   content.setAttribute('aria-hidden', String(!expanded));
-  toggle.toggleAttribute('data-active', expanded);
   toggle.classList.toggle('expanded', expanded);
   toggle.setAttribute('aria-expanded', String(expanded));
 }

@@ -83,6 +83,8 @@ describe('NavigationDrawer', () => {
     expect(toggle.classList.contains('expanded')).toBe(true);
     expect(content.hidden).toBe(false);
     expect(content.getAttribute('aria-hidden')).toBe('false');
+    // `data-active` marks the selected destination and belongs to the router.
+    expect(toggle.hasAttribute('data-active')).toBe(false);
 
     toggle.click();
     expect(toggle.getAttribute('aria-expanded')).toBe('false');

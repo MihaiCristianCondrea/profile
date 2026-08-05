@@ -1,7 +1,8 @@
 :root {
   --navigation-shell-border: color-mix(in srgb, var(--md-sys-color-on-surface) 18%, transparent);
   --navigation-shell-hover: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
-  --navigation-shell-selected: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, var(--md-sys-color-surface));
+  /* Navigation drawer destinations use the Material 3 full shape. */
+  --navigation-shell-item-shape: 28px;
 }
 
 .topbar {
@@ -89,6 +90,7 @@
 }
 
 .drawer-content md-list {
+  gap: 4px;
   --md-list-container-color: transparent;
 }
 
@@ -159,23 +161,30 @@
   user-select: none;
 }
 
+/* Material Web 2.4.1 list items expose no container shape or container color
+   token, so the drawer destination shape and active indicator are set on the
+   host element the app owns. The ripple and state layers inherit that radius. */
 .nav-item {
   width: 100%;
-  --md-list-item-container-color: transparent;
+  border-radius: var(--navigation-shell-item-shape);
   --md-list-item-label-text-color: var(--md-sys-color-on-surface);
   --md-list-item-leading-icon-color: var(--md-sys-color-on-surface-variant);
   --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface-variant);
 }
 
 .nav-item[data-active] {
-  --md-list-item-container-color: var(--navigation-shell-selected);
-  --md-list-item-label-text-color: var(--md-sys-color-on-surface);
-  --md-list-item-leading-icon-color: var(--md-sys-color-on-surface);
-  --md-list-item-trailing-icon-color: var(--md-sys-color-on-surface);
+  background: var(--md-sys-color-secondary-container);
+  --md-list-item-label-text-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-leading-icon-color: var(--md-sys-color-on-secondary-container);
+  --md-list-item-trailing-icon-color: var(--md-sys-color-on-secondary-container);
 }
 
 .nav-item md-icon {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.nav-item.expanded md-icon[slot='end'] {
+  transform: rotate(180deg);
 }
 
 .nav-item md-icon.filled-icon {

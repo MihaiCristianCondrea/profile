@@ -3,12 +3,17 @@
 
 .profile-card,
 .achievement-card,
-.contribute-card,
 .news-card,
 .song-card,
 .project-entry {
   width: 100%;
   --md-outlined-card-outline-color: var(--md-sys-color-outline-variant);
+}
+
+/* Contribute is the page's call to action, so it keeps the filled card
+   container instead of the outlined one used by the browsing surfaces. */
+.contribute-card {
+  width: 100%;
 }
 
 .profile-card,

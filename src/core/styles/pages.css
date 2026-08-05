@@ -86,15 +86,6 @@
   margin-bottom: 0;
 }
 
-#aboutMePageContainer,
-#contactPageContainer,
-#faqsPageContainer,
-#projectsPageContainer,
-#songsPageContainer {
-  width: min(100%, 840px);
-  margin-inline: auto;
-}
-
 #aboutMePageContainer p,
 #aboutMePageContainer li,
 #contactPageContainer p,
@@ -183,11 +174,6 @@
 
 /* Smart Cleaner uses a restrained editorial layout. Decorative parallax,
    reveal, scanline, zoom, and custom button sizing are deliberately absent. */
-#smartCleanerPageContainer {
-  width: min(100%, 960px);
-  margin-inline: auto;
-}
-
 #smartCleanerPageContainer section {
   margin-block: clamp(44px, 8vw, 80px);
 }

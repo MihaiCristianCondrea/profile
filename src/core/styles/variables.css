@@ -35,6 +35,9 @@
   --md-sys-color-surface-container: #ecefef;
   --md-sys-color-surface-container-high: #e6eae9;
   --md-sys-color-surface-container-highest: #e1e4e4;
+  /* Single app content container. Routes fill this width instead of declaring
+     their own, so every screen lines up with the app shell. */
+  --app-content-max-width: 960px;
   --safe-area-inset-top: env(safe-area-inset-top, 0px);
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);

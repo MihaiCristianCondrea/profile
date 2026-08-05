@@ -44,13 +44,19 @@ img {
   display: none !important;
 }
 
+/* The app shell owns the content container. Route fragments are full width
+   inside it and must not re-declare their own width or inline margin. */
 .content-wrapper {
-  width: min(100%, 960px);
+  width: min(100%, var(--app-content-max-width));
   margin-inline: auto;
   padding: 32px max(20px, calc(20px + var(--safe-area-inset-right)))
     calc(40px + var(--safe-area-inset-bottom))
     max(20px, calc(20px + var(--safe-area-inset-left)));
   flex: 1 0 auto;
+}
+
+.content-wrapper > .page-section {
+  width: 100%;
 }
 
 .page-section-title {
