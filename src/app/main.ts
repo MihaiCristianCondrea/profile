@@ -27,6 +27,7 @@ import '../core/styles/base.css';
 import '../core/styles/components.css';
 import '../core/styles/pages.css';
 import '../core/styles/resume.css';
+import '../core/styles/navigation-shell.css';
 import '../core/styles/print.css';
 import { startApp } from './App.ts';
 
