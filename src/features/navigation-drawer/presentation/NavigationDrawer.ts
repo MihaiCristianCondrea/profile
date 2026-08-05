@@ -1,183 +1,114 @@
-// @ts-nocheck
-let menuButton, navDrawer, closeDrawerButton, drawerLayer,
-    aboutToggle, aboutContent, androidAppsToggle, androidAppsContent,
-    inertTargets = [];
+interface NavigationDrawerElement extends HTMLElement {
+  opened: boolean;
+}
 
-/**
- * Initializes the navigation drawer functionality.
- * Must be called after DOM is ready.
- */
-function initNavigationDrawer() {
-    menuButton = getDynamicElement('menuButton');
-    navDrawer = getDynamicElement('navDrawer');
-    closeDrawerButton = getDynamicElement('closeDrawerButton');
-    drawerLayer = getDynamicElement('drawer-layer');
-    aboutToggle = getDynamicElement('aboutToggle');
-    aboutContent = getDynamicElement('aboutContent');
-    androidAppsToggle = getDynamicElement('androidAppsToggle');
-    androidAppsContent = getDynamicElement('androidAppsContent');
+interface NavigationDrawerChangedEvent extends Event {
+  detail?: { opened?: boolean };
+}
 
-    inertTargets = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
+let menuButton: HTMLElement | null = null;
+let navDrawer: NavigationDrawerElement | null = null;
+let closeDrawerButton: HTMLElement | null = null;
+let drawerLayer: HTMLElement | null = null;
+let inertTargets: HTMLElement[] = [];
+let initialized = false;
+let drawerWasOpen = false;
 
-    if (menuButton) {
-        menuButton.addEventListener('click', () => toggleDrawer());
-        menuButton.setAttribute('aria-expanded', 'false');
-    }
-    if (closeDrawerButton) {
-        closeDrawerButton.addEventListener('click', () => toggleDrawer(false));
-    }
-    if (drawerLayer) {
-        drawerLayer.addEventListener('click', (event) => {
-            if (event.target === drawerLayer) {
-                toggleDrawer(false);
-            }
-        });
-    }
+function syncSection(toggle: HTMLElement, content: HTMLElement, expanded: boolean): void {
+  content.classList.toggle('open', expanded);
+  content.hidden = !expanded;
+  content.setAttribute('aria-hidden', String(!expanded));
+  toggle.toggleAttribute('data-active', expanded);
+  toggle.classList.toggle('expanded', expanded);
+  toggle.setAttribute('aria-expanded', String(expanded));
+}
 
-    if (navDrawer) {
-        navDrawer.addEventListener('navigation-drawer-changed', (event) => {
-            const opened = event && event.detail && typeof event.detail.opened === 'boolean'
-                ? event.detail.opened
-                : navDrawer.opened;
-            syncDrawerState(opened);
-        });
-    }
+function initToggleSection(toggle: HTMLElement | null, content: HTMLElement | null): void {
+  if (!toggle || !content || toggle.dataset.sectionInitialized === 'true') return;
 
+  syncSection(toggle, content, toggle.getAttribute('aria-expanded') === 'true');
+  toggle.addEventListener('click', () => {
+    syncSection(toggle, content, toggle.getAttribute('aria-expanded') !== 'true');
+  });
+  toggle.dataset.sectionInitialized = 'true';
+}
+
+function updateModalAccessibilityState(opened: boolean): void {
+  inertTargets.forEach((element) => {
+    element.inert = opened;
+    if (opened) element.setAttribute('aria-hidden', 'true');
+    else element.removeAttribute('aria-hidden');
+  });
+}
+
+function focusFirstNavItem(): void {
+  const firstNavItem = navDrawer?.querySelector<HTMLElement>('.nav-item[href]');
+  (firstNavItem ?? closeDrawerButton)?.focus();
+}
+
+function syncDrawerState(opened: boolean): void {
+  drawerLayer?.classList.toggle('open', opened);
+  drawerLayer?.setAttribute('aria-hidden', String(!opened));
+  document.body.classList.toggle('drawer-is-open', opened);
+  updateModalAccessibilityState(opened);
+
+  menuButton?.setAttribute('aria-expanded', String(opened));
+  menuButton?.setAttribute('aria-label', opened ? 'Close menu' : 'Open menu');
+
+  const triggerIcon = document.getElementById('menuButtonIcon');
+  if (triggerIcon) triggerIcon.textContent = opened ? 'menu_open' : 'menu';
+
+  if (opened) focusFirstNavItem();
+  else if (drawerWasOpen) menuButton?.focus();
+  drawerWasOpen = opened;
+}
+
+export function toggleDrawer(forceOpen?: boolean): void {
+  if (!navDrawer) return;
+  const opened = forceOpen ?? !navDrawer.opened;
+  navDrawer.opened = opened;
+  syncDrawerState(opened);
+}
+
+export function closeDrawer(): void {
+  toggleDrawer(false);
+}
+
+export function openDrawer(): void {
+  toggleDrawer(true);
+}
+
+export function initNavigationDrawer(): void {
+  menuButton = document.getElementById('menuButton');
+  navDrawer = document.getElementById('navDrawer') as NavigationDrawerElement | null;
+  closeDrawerButton = document.getElementById('closeDrawerButton');
+  drawerLayer = document.getElementById('drawer-layer');
+  inertTargets = Array.from(document.querySelectorAll<HTMLElement>('[data-drawer-inert-target]'));
+
+  if (!initialized) {
+    menuButton?.addEventListener('click', () => toggleDrawer());
+    closeDrawerButton?.addEventListener('click', closeDrawer);
+    drawerLayer?.addEventListener('click', (event) => {
+      if (event.target === drawerLayer) closeDrawer();
+    });
+    navDrawer?.addEventListener('navigation-drawer-changed', (event) => {
+      const drawerEvent = event as NavigationDrawerChangedEvent;
+      syncDrawerState(drawerEvent.detail?.opened ?? Boolean(navDrawer?.opened));
+    });
     document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && navDrawer && navDrawer.opened) {
-            toggleDrawer(false);
-        }
+      if (event.key === 'Escape' && navDrawer?.opened) closeDrawer();
     });
+    initialized = true;
+  }
 
-    _initToggleSection(aboutToggle, aboutContent);
-    _initToggleSection(androidAppsToggle, androidAppsContent);
+  initToggleSection(
+    document.getElementById('aboutToggle'),
+    document.getElementById('aboutContent'),
+  );
+  initToggleSection(
+    document.getElementById('androidAppsToggle'),
+    document.getElementById('androidAppsContent'),
+  );
 
-    syncDrawerState(Boolean(navDrawer && navDrawer.opened));
-}
-
-/**
- * Toggles the navigation drawer.
- */
-function toggleDrawer(forceOpen) {
-    if (!navDrawer) return;
-    const isOpen = forceOpen !== undefined ? forceOpen : !navDrawer.opened;
-    navDrawer.opened = isOpen;
-    syncDrawerState(isOpen);
-}
-
-/**
- * Closes the navigation drawer.
- * Exported for router use.
- */
-function closeDrawer() {
-    toggleDrawer(false);
-}
-
-function openDrawer() {
-    toggleDrawer(true);
-}
-
-/**
- * Initializes a toggleable section within the drawer.
- * @private
- * @param {HTMLElement} toggleButton - The button that triggers the toggle.
- * @param {HTMLElement} contentElement - The content element to show/hide.
- */
-function _initToggleSection(toggleButton, contentElement) {
-    if (!toggleButton || !contentElement) return;
-
-    toggleButton.addEventListener('click', () => {
-        const isExpanded = contentElement.classList.contains('open');
-
-        if (contentElement.id === 'aboutContent' && androidAppsContent && androidAppsContent.classList.contains('open')) {
-            androidAppsContent.classList.remove('open');
-            if (androidAppsToggle) {
-                androidAppsToggle.setAttribute('aria-expanded', 'false');
-                androidAppsToggle.classList.remove('expanded');
-            }
-            androidAppsContent.setAttribute('aria-hidden', 'true');
-        } else if (contentElement.id === 'androidAppsContent' && aboutContent && aboutContent.classList.contains('open')) {
-            aboutContent.classList.remove('open');
-            if (aboutToggle) {
-                aboutToggle.setAttribute('aria-expanded', 'false');
-                aboutToggle.classList.remove('expanded');
-            }
-            aboutContent.setAttribute('aria-hidden', 'true');
-        }
-
-        contentElement.classList.toggle('open', !isExpanded);
-        toggleButton.classList.toggle('expanded', !isExpanded);
-        toggleButton.setAttribute('aria-expanded', String(!isExpanded));
-        contentElement.setAttribute('aria-hidden', String(isExpanded));
-    });
-}
-
-function focusFirstNavItem() {
-    if (!navDrawer) return;
-
-    const firstNavItem = navDrawer.querySelector('.nav-item[href]');
-    if (firstNavItem && typeof firstNavItem.focus === 'function') {
-        firstNavItem.focus();
-        return;
-    }
-
-    if (closeDrawerButton && typeof closeDrawerButton.focus === 'function') {
-        closeDrawerButton.focus();
-    }
-}
-
-function syncDrawerState(isOpened) {
-    if (!navDrawer) return;
-
-    const isDrawerOpen = Boolean(isOpened);
-
-    if (drawerLayer) {
-        drawerLayer.classList.toggle('open', isDrawerOpen);
-        drawerLayer.setAttribute('aria-hidden', String(!isDrawerOpen));
-    }
-
-    updateModalAccessibilityState(isDrawerOpen);
-
-    if (isDrawerOpen) {
-        document.body.classList.add('drawer-is-open');
-        focusFirstNavItem();
-    } else {
-        document.body.classList.remove('drawer-is-open');
-        if (menuButton) menuButton.focus();
-    }
-
-    if (menuButton) {
-        menuButton.setAttribute('aria-expanded', String(isDrawerOpen));
-        menuButton.setAttribute('aria-label', isDrawerOpen ? 'Close menu' : 'Open menu');
-        const triggerIcon = document.getElementById('menuButtonIcon');
-        if (triggerIcon) {
-            triggerIcon.textContent = isDrawerOpen ? 'menu_open' : 'menu';
-        }
-    }
-}
-
-function updateModalAccessibilityState(isOpened) {
-    if (!Array.isArray(inertTargets) || inertTargets.length === 0) {
-        return;
-    }
-
-    const shouldDisableTargets = Boolean(isOpened);
-
-    inertTargets.forEach((element) => {
-        if (!element) {
-            return;
-        }
-
-        element.toggleAttribute('inert', shouldDisableTargets);
-
-        if (shouldDisableTargets) {
-            element.setAttribute('aria-hidden', 'true');
-        } else {
-            element.removeAttribute('aria-hidden');
-        }
-    });
-}
-
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, { initNavigationDrawer, toggleDrawer, openDrawer, closeDrawer });
+  syncDrawerState(Boolean(navDrawer?.opened));
 }

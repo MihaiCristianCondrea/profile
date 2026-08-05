@@ -1,34 +1,16 @@
-// @ts-nocheck
-function initContactPage() {
-    const openButton = document.getElementById('openContactDialog');
-    const contactDialog = document.getElementById('contactDialog');
-
-    if (!openButton || !contactDialog) {
-        return false;
-    }
-
-    if (openButton.dataset.dialogInit === 'true') {
-        return true;
-    }
-
-    openButton.addEventListener('click', () => {
-        contactDialog.open = true;
-    });
-    openButton.dataset.dialogInit = 'true';
-
-    return true;
+interface DialogElement extends HTMLElement {
+  open: boolean;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    initContactPage();
-});
+export function initContactPage(): boolean {
+  const openButton = document.getElementById('openContactDialog');
+  const contactDialog = document.getElementById('contactDialog') as DialogElement | null;
+  if (!openButton || !contactDialog) return false;
+  if (openButton.dataset.dialogInitialized === 'true') return true;
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initContactPage
-    };
-}
-
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, { initContactPage });
+  openButton.addEventListener('click', () => {
+    contactDialog.open = true;
+  });
+  openButton.dataset.dialogInitialized = 'true';
+  return true;
 }

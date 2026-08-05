@@ -34,8 +34,7 @@
 
   #resumePage .form-container,
   #resumePage .resume-download,
-  #resumePage .resume-json-actions,
-  #resumePage .no-print {
+  #resumePage .resume-json-actions {
     display: none !important;
   }
 
@@ -52,8 +51,6 @@
     box-shadow: none !important;
     border-radius: 0 !important;
     overflow: visible !important;
-    transform: none !important;
-    transform-origin: top left !important;
     background: var(--resume-right-bg, #fff) !important;
     user-select: text !important;
     -webkit-user-select: text !important;

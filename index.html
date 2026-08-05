@@ -59,31 +59,9 @@
     <link rel="icon" href="icons/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <link rel="manifest" href="manifest.json" />
-    <script
-      src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js"
-      type="module"
-      integrity="sha384-OZP/kBQ09BUzBtJHrUq28uANiSKcAs/R1SZMBoo3IIRdqeuHYaWtly7m+dmPVQcn"
-      crossorigin="anonymous"
-    ></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
     <script type="module" src="/src/main.ts"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=privacy_tip"
-    />
-    <link
-      href="https://db.onlinewebfonts.com/c/000be6a5acfcd4e4a425e9f1bb6c80f0?family=Google+Sans+Regular"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -127,7 +105,6 @@
                 type="link"
                 href="https://d4rk7355608.blogspot.com/"
                 target="_blank"
-                rel="noopener noreferrer"
                 class="nav-item"
               >
                 <md-icon slot="start">article</md-icon>
@@ -212,7 +189,7 @@
               <md-divider></md-divider>
             </md-list>
           </div>
-          <div class="drawer-footer">
+          <div class="drawer-footer" aria-label="Theme and legal settings">
             <p class="drawer-footer-label">Theme</p>
             <div class="theme-options" role="group" aria-label="Theme options">
               <md-icon-button
@@ -243,9 +220,9 @@
                 <md-icon>brightness_auto</md-icon>
               </md-icon-button>
             </div>
-            <div class="drawer-legal-links">
+            <div class="drawer-links">
               <a href="#privacy-policy">Privacy Policy</a>
-              <span>&bull;</span>
+              <span aria-hidden="true">·</span>
               <a href="#code-of-conduct">Code of Conduct</a>
             </div>
           </div>
@@ -269,7 +246,7 @@
 
     <div class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
       <div id="mainContentPage" class="page-section active">
-        <md-filled-card class="profile-card">
+        <md-outlined-card class="profile-card">
           <div class="card-content">
             <div class="profile-header">
               <img
@@ -311,9 +288,9 @@
               <md-assist-chip label="Material Design"></md-assist-chip>
             </md-chip-set>
           </div>
-        </md-filled-card>
+        </md-outlined-card>
 
-        <md-filled-card class="achievement-card">
+        <md-outlined-card class="achievement-card">
           <div class="achievement-body">
             <div class="achievement-icon" aria-hidden="true">
               <svg
@@ -327,7 +304,7 @@
                   d="M134.186 54.5654C165.276 24.4782 214.724 24.4782 245.814 54.5654C255.328 63.7718 266.984 70.4811 279.738 74.0919C321.419 85.8924 346.142 128.586 335.552 170.473C332.312 183.291 332.312 196.709 335.552 209.527C346.142 251.414 321.419 294.108 279.738 305.908C266.984 309.519 255.328 316.228 245.814 325.435C214.724 355.522 165.276 355.522 134.186 325.435C124.672 316.228 113.016 309.519 100.262 305.908C58.5815 294.108 33.8578 251.414 44.4476 209.527C47.6879 196.709 47.6879 183.291 44.4476 170.473C33.8578 128.586 58.5815 85.8924 100.262 74.0919C113.016 70.4811 124.672 63.7718 134.186 54.5654Z"
                 />
               </svg>
-              <span class="material-symbols-outlined">military_tech</span>
+              <md-icon aria-hidden="true">military_tech</md-icon>
             </div>
             <div class="achievement-content">
               <h3>GitHub Committers Ranking</h3>
@@ -346,46 +323,33 @@
             </div>
           </div>
           <div class="achievement-actions">
-            <a
+            <md-text-button
               href="https://committers.top/romania"
               target="_blank"
-              rel="noopener noreferrer"
             >
-              <md-text-button>
-                <md-icon slot="icon">open_in_new</md-icon>
-                View ranking
-              </md-text-button>
-            </a>
+              <md-icon slot="icon">open_in_new</md-icon>
+              View ranking
+            </md-text-button>
           </div>
-        </md-filled-card>
+        </md-outlined-card>
 
         <md-divider class="profile-section-divider"></md-divider>
 
         <div class="profile-card-actions">
-          <a
+          <md-outlined-button
             href="https://play.google.com/store/apps/dev?id=5390214922640123642"
             target="_blank"
-            rel="noopener noreferrer"
           >
-            <md-outlined-button>
-              <md-icon slot="icon"><i class="fab fa-google-play"></i></md-icon>
-              My Apps on Google Play
-            </md-outlined-button>
-          </a>
-          <a
+            <i slot="icon" class="fab fa-google-play" aria-hidden="true"></i>
+            My Apps on Google Play
+          </md-outlined-button>
+          <md-outlined-button
             href="https://g.dev/Mihai-Cristian-Condrea"
             target="_blank"
-            rel="noopener noreferrer"
           >
-            <md-outlined-button>
-              <md-icon slot="icon"
-                ><span class="material-symbols-outlined"
-                  >code_blocks</span
-                ></md-icon
-              >
-              Google Developer Profile
-            </md-outlined-button>
-          </a>
+            <md-icon slot="icon">code_blocks</md-icon>
+            Google Developer Profile
+          </md-outlined-button>
         </div>
 
         <div class="podcast-embed">
@@ -409,20 +373,13 @@
             </div>
           </div>
           <div class="view-all-posts-container">
-            <a
+            <md-filled-tonal-button
               href="https://d4rk7355608.blogspot.com/"
               target="_blank"
-              rel="noopener noreferrer"
             >
-              <md-filled-tonal-button trailing-icon>
-                View All Posts
-                <md-icon slot="icon" aria-hidden="true"
-                  ><span class="material-symbols-outlined"
-                    >arrow_forward</span
-                  ></md-icon
-                >
-              </md-filled-tonal-button>
-            </a>
+              <md-icon slot="icon" aria-hidden="true">open_in_new</md-icon>
+              View all posts
+            </md-filled-tonal-button>
           </div>
         </div>
 
@@ -438,21 +395,15 @@
           ></div>
 
           <div class="view-all-faqs-container">
-            <a href="#faqs">
-              <md-filled-tonal-button trailing-icon>
-                Visit the FAQ Center
-                <md-icon slot="icon" aria-hidden="true"
-                  ><span class="material-symbols-outlined"
-                    >arrow_forward</span
-                  ></md-icon
-                >
-              </md-filled-tonal-button>
-            </a>
+            <md-filled-tonal-button href="#faqs">
+              <md-icon slot="icon" aria-hidden="true">arrow_forward</md-icon>
+              Visit the FAQ Center
+            </md-filled-tonal-button>
           </div>
         </section>
 
         <h2 class="page-section-title">Contribute</h2>
-        <md-elevated-card class="contribute-card">
+        <md-outlined-card class="contribute-card">
           <h3>Do you like my projects?</h3>
           <p>
             Your support helps me dedicate more time to developing and
@@ -462,110 +413,80 @@
           </p>
 
           <div class="contribute-actions">
-            <a
+            <md-filled-button
               href="https://direct-link.net/548212/agOqI73556081341"
               target="_blank"
-              rel="noopener noreferrer"
             >
-              <md-filled-button>
-                <md-icon slot="icon" class="material-symbols-outlined"
-                  >volunteer_activism</md-icon
-                >
-                Open Short Ad
-              </md-filled-button>
-            </a>
+              <md-icon slot="icon">volunteer_activism</md-icon>
+              Open short ad
+            </md-filled-button>
           </div>
-        </md-elevated-card>
+        </md-outlined-card>
 
         <div class="social-icons">
-          <a
+          <md-icon-button
             href="https://github.com/MihaiCristianCondrea"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="GitHub Profile"
             title="GitHub"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-github"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-github" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="https://www.instagram.com/d4rk7355608/"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="Instagram Profile"
             title="Instagram"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-instagram"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="https://www.youtube.com/@D4rK7355608"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="YouTube Channel"
             title="YouTube"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-youtube"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-youtube" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="https://www.pinterest.com/d4rk7355608/"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="Pinterest Profile"
             title="Pinterest"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-pinterest"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-pinterest" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="mailto:contact.mihaicristiancondrea@gmail.com"
             aria-label="Send Email"
             title="Email"
           >
-            <md-icon-button>
-              <md-icon
-                ><span class="material-symbols-outlined">email</span></md-icon
-              >
-            </md-icon-button>
-          </a>
-          <a
+            <md-icon>email</md-icon>
+          </md-icon-button>
+          <md-icon-button
             href="https://www.linkedin.com/in/mihai-cristian-condrea/"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="LinkedIn Profile"
             title="LinkedIn"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-linkedin-in"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="https://x.com/MihaiCrstian"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="X Profile"
             title="X"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-x-twitter"></i></md-icon>
-            </md-icon-button>
-          </a>
-          <a
+            <i class="fab fa-x-twitter" aria-hidden="true"></i>
+          </md-icon-button>
+          <md-icon-button
             href="https://www.facebook.com/d4rk7355608"
             target="_blank"
-            rel="noopener noreferrer"
             aria-label="Facebook Profile"
             title="Facebook"
           >
-            <md-icon-button>
-              <md-icon><i class="fab fa-facebook-f"></i></md-icon>
-            </md-icon-button>
-          </a>
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          </md-icon-button>
         </div>
       </div>
     </div>
@@ -574,9 +495,5 @@
       <span id="copyright-message"></span>
     </footer>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/dompurify@3.0.2/dist/purify.min.js"
-      defer
-    ></script>
   </body>
 </html>

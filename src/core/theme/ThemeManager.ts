@@ -1,58 +1,64 @@
-// @ts-nocheck
-let lightThemeButton, darkThemeButton, autoThemeButton, themeButtons, htmlElement;
+export type ThemePreference = 'light' | 'dark' | 'auto';
 
-/**
- * Initializes theme switching functionality.
- * Must be called after DOM is ready.
- */
-function initTheme() {
-    lightThemeButton = getDynamicElement('lightThemeButton');
-    darkThemeButton = getDynamicElement('darkThemeButton');
-    autoThemeButton = getDynamicElement('autoThemeButton');
-    themeButtons = [lightThemeButton, darkThemeButton, autoThemeButton].filter(Boolean);
-    htmlElement = document.documentElement;
+const THEME_STORAGE_KEY = 'theme';
+const themeQuery = typeof window.matchMedia === 'function'
+  ? window.matchMedia('(prefers-color-scheme: dark)')
+  : null;
+let themeButtons: HTMLElement[] = [];
+let initialized = false;
 
-    themeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            applyTheme(button.dataset.theme);
-        });
-    });
-
-    const savedTheme = localStorage.getItem('theme') || 'auto';
-    applyTheme(savedTheme);
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (localStorage.getItem('theme') === 'auto') {
-            applyTheme('auto');
-        }
-    });
+function isThemePreference(value: string | null): value is ThemePreference {
+  return value === 'light' || value === 'dark' || value === 'auto';
 }
 
-/**
- * Applies the selected theme to the document.
- * @param {string} theme - The theme to apply ('light', 'dark', or 'auto').
- */
-function applyTheme(theme) {
-    if (!htmlElement) return; // Guard if not initialized
-    const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    htmlElement.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', theme === 'auto' ? 'auto' : (isDark ? 'dark' : 'light'));
-    updateThemeButtonSelection(theme);
+function readThemePreference(): ThemePreference {
+  try {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    return isThemePreference(storedTheme) ? storedTheme : 'auto';
+  } catch {
+    return 'auto';
+  }
 }
 
-/**
- * Updates the visual selection state of theme buttons.
- * @param {string} selectedTheme - The currently selected theme.
- */
-function updateThemeButtonSelection(selectedTheme) {
-    themeButtons.forEach(button => {
-        const isSelected = button.dataset.theme === selectedTheme;
-        button.classList.toggle('selected', isSelected);
-        button.toggleAttribute('data-active', isSelected);
-        button.setAttribute('aria-pressed', String(isSelected));
+function storeThemePreference(theme: ThemePreference): void {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // The applied theme still works when storage is unavailable.
+  }
+}
+
+export function updateThemeButtonSelection(selectedTheme: ThemePreference): void {
+  themeButtons.forEach((button) => {
+    const isSelected = button.dataset.theme === selectedTheme;
+    button.toggleAttribute('data-active', isSelected);
+    button.setAttribute('aria-pressed', String(isSelected));
+  });
+}
+
+export function applyTheme(theme: ThemePreference): void {
+  const isDark = theme === 'dark' || (theme === 'auto' && themeQuery?.matches === true);
+  document.documentElement.classList.toggle('dark', isDark);
+  storeThemePreference(theme);
+  updateThemeButtonSelection(theme);
+}
+
+export function initTheme(): void {
+  themeButtons = Array.from(document.querySelectorAll<HTMLElement>('[data-theme]'));
+
+  if (!initialized) {
+    themeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const requestedTheme = button.dataset.theme;
+        if (isThemePreference(requestedTheme ?? null)) applyTheme(requestedTheme);
+      });
     });
-}
 
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, { initTheme, applyTheme, updateThemeButtonSelection });
+    themeQuery?.addEventListener('change', () => {
+      if (readThemePreference() === 'auto') applyTheme('auto');
+    });
+    initialized = true;
+  }
+
+  applyTheme(readThemePreference());
 }

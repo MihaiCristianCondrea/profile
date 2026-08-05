@@ -1,70 +1,79 @@
-// @ts-nocheck
+import {
+  D4RK_REKORDS_ARTIST_ID,
+  fetchArtistSongData,
+} from '../data/SongApiClient.ts';
+import {
+  normalizeSongTracks,
+  type SongTrack,
+} from '../domain/SongMapper.ts';
 
-async function fetchArtistSongs(artistId) {
-    const data = await fetchArtistSongData(artistId);
-    return normalizeSongTracks(data);
+export async function fetchArtistSongs(artistId: string): Promise<SongTrack[]> {
+  return normalizeSongTracks(await fetchArtistSongData(artistId));
 }
 
-async function loadSongs() {
-    const grid = document.getElementById('songsGrid');
-    const status = document.getElementById('songs-status');
-    if (!grid) return;
-
-    if (status) status.style.display = 'flex';
-    grid.innerHTML = '';
-
-    let tracks = [];
-    try {
-        tracks = await fetchArtistSongs(D4RK_REKORDS_ARTIST_ID);
-    } catch (err) {
-        console.error('Failed to fetch songs list from Songlink / Odesli API', err);
-    }
-
-    for (const track of tracks) {
-        const img = track.image || 'images/placeholder.png';
-        const title = track.title;
-        const artists = track.artists;
-        const link = track.link;
-
-        const card = document.createElement('div');
-        card.className = 'song-card';
-        card.innerHTML = `
-            <img src="${img}" alt="${title}" loading="lazy">
-            <div class="song-card-content">
-                <h3>${title}</h3>
-                <p>${artists}</p>
-                <div class="song-card-links"><a href="${link}" target="_blank" rel="noopener noreferrer">Open Song</a></div>
-            </div>`;
-        grid.appendChild(card);
-    }
-
-    if (typeof SiteAnimations !== 'undefined' && SiteAnimations && typeof SiteAnimations.animateSongCards === 'function') {
-        try {
-            SiteAnimations.animateSongCards(grid.querySelectorAll('.song-card'));
-        } catch (animationError) {
-            console.error('Songs: Failed to animate song cards.', animationError);
-        }
-    }
-
-    if (status) status.style.display = 'none';
+function normalizeHttpUrl(value: string | null, fallback: string): string {
+  if (!value) return fallback;
+  try {
+    const url = new URL(value, window.location.href);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : fallback;
+  } catch {
+    return fallback;
+  }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('songsGrid')) {
-        loadSongs();
-    }
-});
+export function createSongCard(track: SongTrack): HTMLElement {
+  const card = document.createElement('md-outlined-card');
+  card.className = 'song-card';
 
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, {
-        fetchArtistSongs,
-        loadSongs
-    });
+  const image = document.createElement('img');
+  image.src = normalizeHttpUrl(track.image, 'images/placeholder.png');
+  image.alt = '';
+  image.loading = 'lazy';
+
+  const content = document.createElement('div');
+  content.className = 'song-card-content';
+
+  const title = document.createElement('h3');
+  title.textContent = track.title;
+  const artists = document.createElement('p');
+  artists.textContent = track.artists;
+
+  const action = document.createElement('md-text-button');
+  const songUrl = normalizeHttpUrl(track.link, '#');
+  action.setAttribute('href', songUrl);
+  action.setAttribute('target', '_blank');
+  action.textContent = 'Open song';
+  if (songUrl === '#') action.setAttribute('disabled', '');
+  const icon = document.createElement('md-icon');
+  icon.slot = 'icon';
+  icon.textContent = 'open_in_new';
+  action.append(icon);
+
+  content.append(title, artists, action);
+  card.append(image, content);
+  return card;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        fetchArtistSongs,
-        loadSongs
-    };
+export async function loadSongs(): Promise<void> {
+  const grid = document.getElementById('songsGrid');
+  const status = document.getElementById('songs-status');
+  if (!grid) return;
+
+  grid.replaceChildren();
+  if (status) {
+    status.hidden = false;
+    status.textContent = 'Loading songs…';
+  }
+
+  try {
+    const tracks = await fetchArtistSongs(D4RK_REKORDS_ARTIST_ID);
+    grid.replaceChildren(...tracks.map(createSongCard));
+    if (status) {
+      status.textContent = tracks.length ? '' : 'No songs are available right now.';
+      status.hidden = tracks.length > 0;
+    }
+  } catch (error) {
+    console.error('Songs: Failed to load the song list.', error);
+    if (status) status.textContent = 'Songs are unavailable right now.';
+  }
 }

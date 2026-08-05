@@ -1,93 +1,62 @@
-const PLACEHOLDER_SRC = 'images/placeholder.png';
-const SONG_DATA_SCRIPT = '../../../../src/features/songs/data/SongApiClient';
-const SONG_DOMAIN_SCRIPT = '../../../../src/features/songs/domain/SongMapper';
-const SONG_PRESENTATION_SCRIPT = '../../../../src/features/songs/presentation/SongsPage';
+import {
+  createSongCard,
+  fetchArtistSongs,
+  loadSongs,
+} from '../../../../src/features/songs/presentation/SongsPage';
 
-function loadSongsModule() {
-    require(SONG_DATA_SCRIPT);
-    require(SONG_DOMAIN_SCRIPT);
-    return require(SONG_PRESENTATION_SCRIPT);
-}
+describe('songs feature', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+    document.body.innerHTML = `
+      <div id="songsGrid"></div>
+      <div id="songs-status"></div>
+    `;
+  });
 
-describe('songs module', () => {
-    beforeEach(() => {
-        jest.resetModules();
-        global.fetch = jest.fn();
-        document.body.innerHTML = `
-            <div id="songsGrid"></div>
-            <div id="songs-status" style="display:none"></div>
-        `;
+  test('reports unsuccessful API responses', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({ ok: false, status: 502 });
+
+    await expect(fetchArtistSongs('artist')).rejects.toThrow(
+      'Unable to load songs (502).',
+    );
+  });
+
+  test('renders normalized tracks as Material cards and link buttons', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({
+        songs: [{
+          song_name: 'First Song',
+          artist_name: 'First Artist',
+          thumbnail: 'https://example.com/cover.png',
+          universal_link: 'https://song.link/first',
+        }],
+      }),
     });
 
-    afterEach(() => {
-        delete global.fetch;
+    await loadSongs();
+
+    const card = document.querySelector('#songsGrid md-outlined-card');
+    expect(card?.querySelector('h3')?.textContent).toBe('First Song');
+    expect(card?.querySelector('p')?.textContent).toBe('First Artist');
+    expect(card?.querySelector('img')?.alt).toBe('');
+    const action = card?.querySelector('md-text-button');
+    expect(action?.getAttribute('href')).toBe('https://song.link/first');
+    expect(action?.closest('a')).toBeNull();
+    expect((document.getElementById('songs-status') as HTMLElement).hidden).toBe(true);
+  });
+
+  test('rejects unsafe image and action schemes', () => {
+    const card = createSongCard({
+      title: 'Unsafe',
+      artists: 'Unknown',
+      image: 'javascript:alert(1)',
+      link: 'javascript:alert(2)',
     });
 
-    test('fetchArtistSongs throws an error with response message when request fails', async () => {
-        const errorText = 'Something went wrong';
-        const mockText = jest.fn().mockResolvedValue(errorText);
-        const response = {
-            ok: false,
-            status: 502,
-            text: mockText
-        };
-
-        global.fetch.mockResolvedValue(response);
-
-        const { fetchArtistSongs } = loadSongsModule();
-
-        await expect(fetchArtistSongs('artist123')).rejects.toThrow(
-            `HTTP error! status: 502, message: ${errorText}`
-        );
-        expect(mockText).toHaveBeenCalledTimes(1);
-    });
-
-    test('loadSongs renders fetched tracks, applies fallback image, and hides status indicator', async () => {
-        const mockJson = jest.fn().mockResolvedValue({
-            songs: [
-                {
-                    song_name: 'First Song',
-                    artist_name: 'First Artist',
-                    thumbnail: 'https://cdn.example.com/thumb1.jpg',
-                    universal_link: 'https://song.link/first'
-                },
-                {
-                    title: 'Second Song',
-                    artists: 'Second Artist',
-                    image: null,
-                    link: 'https://song.link/second'
-                }
-            ]
-        });
-
-        global.fetch.mockResolvedValue({
-            ok: true,
-            json: mockJson
-        });
-
-        const { loadSongs } = loadSongsModule();
-        const status = document.getElementById('songs-status');
-        status.style.display = 'block';
-
-        await loadSongs();
-
-        expect(global.fetch).toHaveBeenCalledTimes(1);
-        expect(mockJson).toHaveBeenCalledTimes(1);
-
-        const cards = document.querySelectorAll('#songsGrid .song-card');
-        expect(cards).toHaveLength(2);
-
-        const [firstCard, secondCard] = cards;
-        const firstImg = firstCard.querySelector('img');
-        expect(firstImg.src).toContain('https://cdn.example.com/thumb1.jpg');
-        expect(firstImg.alt).toBe('First Song');
-        expect(firstCard.querySelector('h3').textContent).toBe('First Song');
-        expect(firstCard.querySelector('p').textContent).toBe('First Artist');
-        expect(firstCard.querySelector('a').href).toBe('https://song.link/first');
-
-        const secondImg = secondCard.querySelector('img');
-        expect(secondImg.src).toContain(PLACEHOLDER_SRC);
-
-        expect(status.style.display).toBe('none');
-    });
+    expect(card.querySelector('img')?.src).toContain('images/placeholder.png');
+    const action = card.querySelector('md-text-button');
+    expect(action?.getAttribute('href')).toBe('#');
+    expect(action?.hasAttribute('disabled')).toBe(true);
+  });
 });

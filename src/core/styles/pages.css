@@ -1,2094 +1,380 @@
-/* --- Privacy Policy Page Specific Styles --- */
-#privacyPolicyPageContainer {
-  padding: 1.5rem;
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  margin-top: 1rem;
-  color: var(--app-text-color);
-}
+/* Route-owned content styles. Material Web hosts are intentionally left to
+   their public attributes, slots, and design tokens. */
 
-#privacyPolicyPageContainer img {
-  max-width: 100%;
-  height: auto;
-  margin: 1.5rem auto;
-  display: block;
-  border-radius: 8px;
-  border: 1px solid var(--app-border-color);
-}
-
-#privacyPolicyPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--app-border-color);
-  padding-bottom: 0.5rem;
-}
-
-#privacyPolicyPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-#privacyPolicyPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-#privacyPolicyPageContainer h4 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1rem;
-  margin-bottom: 0.25rem;
-}
-
-#privacyPolicyPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyPageContainer strong {
-  font-weight: 500;
-}
-
-#privacyPolicyPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: underline;
-  font-weight: 500;
-}
-
-#privacyPolicyPageContainer a:hover,
-#privacyPolicyPageContainer a:focus {
-  text-decoration: none;
-  outline: none;
-}
-
-#privacyPolicyPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#privacyPolicyPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#privacyPolicyPageContainer li p {
-  margin-bottom: 0.25rem;
-}
-
-/* --- Legal Notices Page Specific Styles --- */
-#legalNoticesPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#legalNoticesPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-}
-
-#legalNoticesPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-#legalNoticesPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 0.75rem;
-}
-
-#legalNoticesPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#legalNoticesPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#legalNoticesPageContainer .notice-item {
-  background-color: var(--md-sys-color-surface-container);
-  border: 1px solid var(--app-border-color);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-#legalNoticesPageContainer .notice-item h3 {
-  font-size: 1.15rem;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 0.75rem;
-}
-
-#legalNoticesPageContainer .notice-item p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 0.5rem;
-}
-
-#legalNoticesPageContainer .notice-item p:last-child {
-  margin-bottom: 0;
-}
-
-/* Ensure Copyright line uses primary text color */
-#legalNoticesPageContainer .notice-item p:first-of-type {
-  color: var(--app-text-color);
-}
-#legalNoticesPageContainer .notice-item p:first-of-type strong {
-  color: var(--app-text-color);
-}
-
-#legalNoticesPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-}
-
-#legalNoticesPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#legalNoticesPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#legalNoticesPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#legalNoticesPageContainer a:hover,
-#legalNoticesPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-#legalNoticesPageContainer .last-updated {
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  margin-top: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--app-border-color);
-  text-align: center;
-  margin-bottom: 0;
-}
-
-/* Adjustments for heading spacing */
-#legalNoticesPageContainer h1 + h2,
-#legalNoticesPageContainer p + h2 {
-  margin-top: 2rem;
-}
-
-/* Ensure last paragraph in the main card content has no bottom margin if it's before .last-updated */
-#legalNoticesPageContainer > p:last-of-type:not(.last-updated) {
-  margin-bottom: 0;
-}
-
-/* --- Ads Help Center Page Specific Styles --- */
-#adsHelpCenterPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#adsHelpCenterPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-}
-
-#adsHelpCenterPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-#adsHelpCenterPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-}
-
-#adsHelpCenterPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#adsHelpCenterPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#adsHelpCenterPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#adsHelpCenterPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#adsHelpCenterPageContainer li::marker {
-  color: var(
-    --md-sys-color-primary
-  ); /* Style list bullets with primary color */
-}
-
-/* If a paragraph directly follows a list, reduce its top margin for better flow */
-#adsHelpCenterPageContainer ul + p {
-  margin-top: 0.5rem;
-}
-
-#adsHelpCenterPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#adsHelpCenterPageContainer a:hover,
-#adsHelpCenterPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-/* Specific styling for contact list if needed, but general ul/li should cover it well */
-#adsHelpCenterPageContainer h2#contact + ul li strong {
-  /* If you want the "Email:" part in the contact list to be normal weight */
-  font-weight: normal;
-}
-
-/* Spacing adjustments: if an h3 follows an h2 directly, adjust margin */
-#adsHelpCenterPageContainer h2 + h3 {
-  margin-top: 1.25rem;
-}
-
-/* Ensure the last element within the container has no bottom margin */
-#adsHelpCenterPageContainer > *:last-child {
-  margin-bottom: 0;
-}
-
-#adsHelpCenterPageContainer md-divider,
-#legalNoticesPageContainer md-divider,
-#privacyPolicyPageContainer md-divider {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* --- Privacy Policy Page Specific Styles --- */
-#privacyPolicyPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyPageContainer .last-updated-text {
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-  text-align: left;
-}
-
-#privacyPolicyPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-#privacyPolicyPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-}
-
-#privacyPolicyPageContainer h4 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-#privacyPolicyPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-/* Ensure paragraphs within list items have consistent styling and less bottom margin */
-#privacyPolicyPageContainer li p {
-  margin-bottom: 0.25rem;
-  font-size: inherit;
-  line-height: inherit;
-}
-
-/* Make strong text within li > p also inherit color for consistency */
-#privacyPolicyPageContainer li p strong {
-  color: inherit;
-}
-
-#privacyPolicyPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#privacyPolicyPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#privacyPolicyPageContainer a:hover,
-#privacyPolicyPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-#privacyPolicyPageContainer img {
-  max-width: 100%;
-  height: auto;
-  margin: 1.5rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-/* Spacing adjustments */
-#privacyPolicyPageContainer h2 + h3 {
-  margin-top: 1.25rem;
-}
-
-#privacyPolicyPageContainer ul + p {
-  margin-top: 0.5rem;
-}
-
-#privacyPolicyPageContainer > *:last-child {
-  margin-bottom: 0;
-}
-
-#privacyPolicyPageContainer .page-banner-image,
-#adsHelpCenterPageContainer .page-banner-image,
-#legalNoticesPageContainer .page-banner-image {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-/* If you want ALL images within these containers to have this style,
-   you can keep the more general selector as you had for privacy policy: */
-#privacyPolicyPageContainer img,
-#adsHelpCenterPageContainer img,
-#legalNoticesPageContainer img {
-  max-width: 100%;
-  height: auto;
-  margin: 1.5rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-/* --- Code of Conduct Page Specific Styles --- */
-#codeOfConductPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#codeOfConductPageContainer .last-updated-text {
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-  text-align: left;
-}
-
-#codeOfConductPageContainer .page-banner-image {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-#codeOfConductPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-#codeOfConductPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-/* Adjust if h2 directly follows intro paragraphs without a divider yet */
-#codeOfConductPageContainer p + h2 {
-  margin-top: 2.5rem;
-}
-#codeOfConductPageContainer img + h2 {
-  margin-top: 2rem;
-}
-#codeOfConductPageContainer .last-updated-text + img + p + p + h2,
-#codeOfConductPageContainer .last-updated-text + p + p + h2 {
-  margin-top: 2.5rem;
-}
-
-#codeOfConductPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-}
-
-#codeOfConductPageContainer h4 {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
-
-#codeOfConductPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#codeOfConductPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#codeOfConductPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#codeOfConductPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#codeOfConductPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#codeOfConductPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#codeOfConductPageContainer a:hover,
-#codeOfConductPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-/* Styling for the notice-item used in Enforcement Guidelines */
-#codeOfConductPageContainer .notice-item {
-  background-color: var(--md-sys-color-surface-container);
-  border: 1px solid var(--app-border-color);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-#codeOfConductPageContainer .notice-item p {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 0.25rem;
-}
-#codeOfConductPageContainer .notice-item p:last-child {
-  margin-bottom: 0;
-}
-#codeOfConductPageContainer .notice-item p strong {
-  color: var(--app-secondary-text-color);
-  font-weight: 600;
-}
-
-/* Divider styling is already generic */
-#codeOfConductPageContainer md-divider {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* Spacing adjustments */
-#codeOfConductPageContainer ul + p {
-  margin-top: 0.5rem;
-}
-
-#codeOfConductPageContainer > *:last-child {
-  margin-bottom: 0;
-}
-
-/* --- Privacy Policy (Apps) Page Specific Styles --- */
-#privacyPolicyAppsPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyAppsPageContainer .last-updated-text {
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-  text-align: left;
-}
-
-#privacyPolicyAppsPageContainer .page-banner-image {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-#privacyPolicyAppsPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-#privacyPolicyAppsPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyAppsPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-}
-
-#privacyPolicyAppsPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#privacyPolicyAppsPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyAppsPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#privacyPolicyAppsPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#privacyPolicyAppsPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#privacyPolicyAppsPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#privacyPolicyAppsPageContainer a:hover,
-#privacyPolicyAppsPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-#privacyPolicyAppsPageContainer md-divider {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* Spacing adjustments */
-#privacyPolicyAppsPageContainer .last-updated-text + .page-banner-image + p {
-  margin-top: 1.5rem;
-}
-
-#privacyPolicyAppsPageContainer ul + p {
-  margin-top: 0.5rem;
-}
-
-#privacyPolicyAppsPageContainer > *:last-child {
-  margin-bottom: 0;
-}
-
-/* --- Terms of Service (Apps) Page Specific Styles --- */
-#termsOfServiceAppsPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#termsOfServiceAppsPageContainer .last-updated-text {
-  font-size: 0.9rem;
-  color: var(--app-secondary-text-color);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--app-border-color);
-  text-align: left;
-}
-
-#termsOfServiceAppsPageContainer .page-banner-image {
-  max-width: 100%;
-  height: auto;
-  margin: 1rem auto 2rem auto;
-  display: block;
-  border-radius: 12px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-#termsOfServiceAppsPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 0;
-  margin-bottom: 1.5rem;
-}
-
-#termsOfServiceAppsPageContainer h2 {
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-#termsOfServiceAppsPageContainer h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: var(--app-text-color);
-  margin-top: 1.75rem;
-  margin-bottom: 0.75rem;
-}
-
-#termsOfServiceAppsPageContainer p {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
-}
-
-#termsOfServiceAppsPageContainer strong {
-  font-weight: 600;
-  color: var(--app-text-color);
-}
-
-#termsOfServiceAppsPageContainer ul {
-  list-style: disc;
-  margin-left: 0;
-  padding-left: 1.75rem;
-  margin-bottom: 1.5rem;
-  color: var(--app-text-color);
-}
-
-#termsOfServiceAppsPageContainer li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  padding-left: 0.25rem;
-}
-
-#termsOfServiceAppsPageContainer li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#termsOfServiceAppsPageContainer a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-#termsOfServiceAppsPageContainer a:hover,
-#termsOfServiceAppsPageContainer a:focus {
-  text-decoration: underline;
-  outline: none;
-}
-
-#termsOfServiceAppsPageContainer md-divider {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* Spacing adjustments */
-#termsOfServiceAppsPageContainer .last-updated-text + .page-banner-image + p {
-  margin-top: 1.5rem;
-}
-#termsOfServiceAppsPageContainer .last-updated-text + p {
-  margin-top: 1.5rem;
-}
-
-#termsOfServiceAppsPageContainer ul + p {
-  margin-top: 0.5rem;
-}
-
-#termsOfServiceAppsPageContainer > *:last-child {
-  margin-bottom: 0;
-}
-
-/* Shared legal page heading numbering */
-#privacyPolicyPageContainer,
-#legalNoticesPageContainer,
-#adsHelpCenterPageContainer,
-#privacyPolicyAppsPageContainer,
-#termsOfServiceAppsPageContainer,
-#codeOfConductPageContainer {
-  counter-reset: privacySections;
-}
-
-#privacyPolicyPageContainer h2,
-#legalNoticesPageContainer h2,
-#adsHelpCenterPageContainer h2,
-#privacyPolicyAppsPageContainer h2,
-#termsOfServiceAppsPageContainer h2,
-#codeOfConductPageContainer h2 {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  line-height: 1.35;
-  flex-wrap: wrap;
-}
-
-#privacyPolicyPageContainer h2::before,
-#legalNoticesPageContainer h2::before,
-#adsHelpCenterPageContainer h2::before,
-#privacyPolicyAppsPageContainer h2::before,
-#termsOfServiceAppsPageContainer h2::before,
-#codeOfConductPageContainer h2::before {
-  counter-increment: privacySections;
-  content: 'privacy_tip';
-  font-family: 'Material Symbols Outlined';
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 500,
-    'GRAD' 0,
-    'opsz' 24;
-  font-size: 1.75rem;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  flex-shrink: 0;
-  border-radius: 999px;
-  border: 1px solid var(--md-sys-color-outline);
-  color: var(--md-sys-color-on-primary-container);
-  box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-  #privacyPolicyPageContainer h2,
-  #legalNoticesPageContainer h2,
-  #adsHelpCenterPageContainer h2,
-  #privacyPolicyAppsPageContainer h2,
-  #termsOfServiceAppsPageContainer h2,
-  #codeOfConductPageContainer h2 {
-    gap: 0.6rem;
-  }
-
-  #privacyPolicyPageContainer h2::before,
-  #legalNoticesPageContainer h2::before,
-  #adsHelpCenterPageContainer h2::before,
-  #privacyPolicyAppsPageContainer h2::before,
-  #termsOfServiceAppsPageContainer h2::before,
-  #codeOfConductPageContainer h2::before {
-    width: 2.35rem;
-    height: 2.35rem;
-    font-size: 1.5rem;
-  }
-}
-
-/* --- Contact Page Specific Styles --- */
-#contactPageContainer {
-  background-color: var(--md-sys-color-surface-container-high);
-  border-radius: 16px;
-  padding: 1.5rem 2rem;
-  margin: 1.5rem 0 2rem;
-  color: var(--app-text-color);
-}
-
-#contactPageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--app-border-color);
-}
-
-#contactPageContainer .about-me {
-  margin-top: 1rem;
-  text-align: left;
-}
-
-#contactPageContainer .about-me p {
-  margin: 0 0 1rem;
-}
-
-#contactPageContainer .social-links h2 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-  text-align: center;
-}
-
-#contactPageContainer form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-#contactPageContainer label {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-}
-
-#contactPageContainer input[type='text'],
-#contactPageContainer input[type='email'],
-#contactPageContainer textarea {
+.policy-page-card {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--app-border-color);
-  border-radius: 8px;
-  background-color: var(--md-sys-color-surface-container-lowest);
-  color: var(--app-text-color);
+  padding: clamp(20px, 4vw, 40px);
+  --md-filled-card-container-color: var(--md-sys-color-surface-container-low);
 }
 
-#contactPageContainer textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-#contactPageContainer .contact-info {
-  margin-top: 2rem;
-  text-align: left;
-}
-
-#contactPageContainer .social-links {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-#contactPageContainer p {
-  margin: 0 0 1rem;
-}
-
-#contactPageContainer .social-links ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-#contactPageContainer .social-links a {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: var(--app-text-color);
+.policy-page-card h1,
+#aboutMePageContainer h1,
+#contactPageContainer h1,
+#faqsPageContainer h1,
+#projectsPageContainer h1,
+#songsPageContainer h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
   font-weight: 500;
-  transition: background-color var(--app-motion-duration-short, 200ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
+  line-height: 1.2;
 }
 
-#contactPageContainer .social-links a:hover {
-  background-color: var(--md-sys-color-surface-container-low);
+.policy-page-card h2 {
+  margin: 32px 0 12px;
+  font-size: 1.35rem;
+  font-weight: 500;
 }
 
-#contactPageContainer .social-links a i {
-  font-size: 1.5rem;
-  margin-bottom: 0.25rem;
+.policy-page-card h3 {
+  margin: 24px 0 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-#contactPageContainer .social-links a span {
+.policy-page-card h4 {
+  margin: 20px 0 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.policy-page-card p,
+.policy-page-card li {
+  line-height: 1.7;
+}
+
+.policy-page-card ul,
+.policy-page-card ol {
+  padding-left: 24px;
+}
+
+.policy-page-card li + li {
+  margin-top: 6px;
+}
+
+.policy-page-card md-divider {
+  margin-block: 28px;
+}
+
+.last-updated-text,
+.last-updated {
+  margin: 0 0 24px;
+  color: var(--md-sys-color-on-surface-variant);
   font-size: 0.875rem;
 }
 
-#contactPageContainer .availability {
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-#contactPageContainer .resume-button {
-  margin: 1rem 0;
-}
-
-#contactPageContainer .testimonials {
-  margin-top: 2rem;
-  padding-left: 1rem;
-  border-left: 4px solid var(--md-sys-color-primary);
-  font-style: italic;
-}
-
-#contactPageContainer .testimonial-author {
+.page-banner-image {
   display: block;
-  margin-top: 0.5rem;
-  font-weight: 500;
-  text-align: left;
-}
-/* --- About Me Page Specific Styles --- */
-#aboutMePageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.75rem 2rem;
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
+  width: 100%;
+  max-height: 360px;
+  margin: 24px auto;
+  border-radius: 12px;
+  object-fit: contain;
+  background: var(--md-sys-color-surface-container);
 }
 
-#aboutMePageContainer h1 {
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin: 0 0 1.5rem 0;
-  color: var(--app-text-color);
+.notice-item {
+  margin-block: 16px;
+  border-inline-start: 3px solid var(--md-sys-color-primary);
+  padding: 4px 0 4px 16px;
 }
 
-#aboutMePageContainer p {
-  font-size: 1rem;
+.notice-item > :first-child {
+  margin-top: 0;
+}
+
+.notice-item > :last-child {
+  margin-bottom: 0;
+}
+
+#aboutMePageContainer,
+#contactPageContainer,
+#faqsPageContainer,
+#projectsPageContainer,
+#songsPageContainer {
+  width: min(100%, 840px);
+  margin-inline: auto;
+}
+
+#aboutMePageContainer p,
+#aboutMePageContainer li,
+#contactPageContainer p,
+#faqsPageContainer > p {
   line-height: 1.7;
-  color: var(--app-text-color);
-  margin-bottom: 1rem;
 }
 
-#aboutMePageContainer .about-summary {
-  font-size: 1.05rem;
-  color: var(--app-text-color);
-  margin-bottom: 1.75rem;
+.about-summary,
+.about-section,
+.about-me,
+.contact-info,
+.availability,
+.resume-button,
+.testimonials,
+.social-links {
+  margin-top: 28px;
 }
 
-#aboutMePageContainer .about-section {
-  margin-top: 2rem;
-}
-
-#aboutMePageContainer .about-section:first-of-type {
-  margin-top: 1.5rem;
-}
-
-#aboutMePageContainer .about-section ul {
-  list-style: disc;
-  margin: 0;
-  padding-left: 1.75rem;
-}
-
-#aboutMePageContainer .about-section li {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  color: var(--app-text-color);
-}
-
-#aboutMePageContainer .about-section li strong {
-  color: var(--app-text-color);
-  font-weight: 600;
-}
-
-#aboutMePageContainer .about-section a {
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
+.about-section .section-title,
+.social-links h2 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
   font-weight: 500;
 }
 
-#aboutMePageContainer .about-section a:hover,
-#aboutMePageContainer .about-section a:focus {
-  text-decoration: underline;
-  outline: none;
+.about-section ul {
+  padding-left: 24px;
+}
+
+.about-section li + li {
+  margin-top: 10px;
 }
 
 #aboutMePageContainer .profile-card-actions {
-  margin-top: 2.5rem;
-  padding: 0.75rem 0 0 0;
-  border-top: 1px solid var(--app-border-color);
+  margin-top: 32px;
 }
 
-@media (max-width: 600px) {
-  #aboutMePageContainer {
-    padding: 1.5rem;
-  }
-
-  #aboutMePageContainer .about-summary {
-    font-size: 1rem;
-  }
-}
-
-/* --- FAQ Support Page Styles --- */
-#faqsPageContainer {
-  background-color: var(--app-card-bg-color);
-  border-radius: 16px;
-  padding: 1.75rem clamp(1.25rem, 4vw, 2.5rem);
-  margin-top: 1.5rem;
-  color: var(--app-text-color);
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-#faqsPageContainer .last-updated-text {
-  color: var(--app-secondary-text-color);
-  font-size: 0.95rem;
+.testimonials blockquote {
   margin: 0;
+  border-inline-start: 3px solid var(--md-sys-color-primary);
+  padding: 4px 0 4px 16px;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.65;
 }
 
-#faqsPageContainer .page-banner-image {
-  max-width: min(560px, 100%);
-  border-radius: 24px;
-  align-self: center;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container);
-}
-
-#faqsPageContainer p {
-  margin: 0;
-  color: var(--app-secondary-text-color);
-  line-height: 1.6;
-}
-
-#faqsPageContainer a {
-  color: var(--md-sys-color-primary);
-  font-weight: 500;
-}
-
-#faqsPageContainer .faq-search {
-  display: flex;
-  justify-content: center;
-}
-
-#faqsPageContainer .faq-search-field {
-  width: min(520px, 100%);
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 1.25rem;
-  border-radius: 999px;
-  border: 1px solid var(--app-border-color);
-  background-color: var(--md-sys-color-surface-container-low);
-  box-shadow: 0 4px 12px rgb(15 23 42 / 0.08);
-  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
-}
-
-#faqsPageContainer .faq-search-field:focus-within {
-  border-color: var(--md-sys-color-primary);
-  box-shadow: 0 8px 20px rgb(15 23 42 / 0.12);
-  background-color: var(--md-sys-color-surface);
-}
-
-#faqsPageContainer .faq-search-icon {
-  color: var(--app-secondary-text-color);
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-}
-
-#faqsPageContainer .faq-search-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  color: var(--app-text-color);
-  font-size: 1rem;
-  font-family: inherit;
-  line-height: 1.2;
-  padding: 0;
-  min-width: 0;
-}
-
-#faqsPageContainer .faq-search-input:focus {
-  outline: none;
-}
-
-#faqsPageContainer .faq-search-input::placeholder {
-  color: var(--app-secondary-text-color);
-  opacity: 0.75;
-}
-
-#faqsPageContainer .faq-search-hint {
-  font-size: 0.95rem;
-  color: var(--app-secondary-text-color);
-  margin: -0.5rem 0 0;
-}
-
-#faqsPageContainer .faq-page-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-#faqsPageContainer .faq-page-accordion .faq-item {
-  scroll-margin-top: 96px;
-}
-
-#faqsPageContainer .faq-empty-message {
-  margin: 0 auto;
-  text-align: center;
-  color: var(--app-secondary-text-color);
-  font-size: 0.95rem;
-  max-width: 520px;
-}
-
-#faqsPageContainer .faq-answer-content ul {
-  margin: 0;
-  padding-left: 1.25rem;
+.social-links ul {
   display: grid;
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-#faqsPageContainer .faq-answer-content li::marker {
-  color: var(--md-sys-color-primary);
-}
-
-#faqsPageContainer .faq-support-cta {
+.social-links li {
   display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
 }
 
-#faqsPageContainer .faq-support-cta a {
-  text-decoration: none;
+.social-links md-outlined-button {
+  width: 100%;
 }
 
-#faqsPageContainer .faq-support-cta .material-symbols-outlined {
-  margin-right: 0.35rem;
+.faq-search {
+  margin-block: 28px 8px;
 }
 
-@media (max-width: 720px) {
-  #faqsPageContainer {
-    padding: 1.25rem;
-  }
-
-  #faqsPageContainer .faq-search-hint {
-    margin-top: 0;
-  }
+.faq-search md-outlined-text-field {
+  width: 100%;
 }
 
-/* --- Smart Cleaner Presentation Page --- */
+.faq-search-hint,
+.faq-empty-message {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.faq-page-accordion {
+  margin-top: 24px;
+}
+
+.faq-support-cta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* Smart Cleaner uses a restrained editorial layout. Decorative parallax,
+   reveal, scanline, zoom, and custom button sizing are deliberately absent. */
 #smartCleanerPageContainer {
-  --smart-cleaner-accent: color-mix(in srgb, var(--md-sys-color-primary) 66%, #22c55e 34%);
-  color: var(--app-text-color);
-  padding: 0.8rem 0 4.5rem;
-  position: relative;
-  overflow: clip;
-  scroll-snap-type: y proximity;
-  scroll-padding-top: 1rem;
+  width: min(100%, 960px);
+  margin-inline: auto;
 }
 
 #smartCleanerPageContainer section {
-  margin-top: clamp(2.25rem, 5.5vw, 5rem);
-  scroll-snap-align: start;
+  margin-block: clamp(44px, 8vw, 80px);
 }
 
 #smartCleanerPageContainer h1 {
   margin: 0;
-  font-size: clamp(2.7rem, 8.4vw, 5.6rem);
-  line-height: 1.01;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.25rem, 7vw, 4.25rem);
+  font-weight: 500;
+  line-height: 1.05;
 }
-#smartCleanerPageContainer .smart-cleaner-headline-pill {
-  display: inline-block;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-}
-
 
 #smartCleanerPageContainer h2 {
-  margin: 0;
-  font-size: clamp(2rem, 5.2vw, 3.7rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  font-weight: 620;
+  margin: 0 0 12px;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 #smartCleanerPageContainer p,
 #smartCleanerPageContainer li {
-  line-height: 1.78;
-  color: var(--app-secondary-text-color);
-  font-size: clamp(0.98rem, 1.15vw, 1.08rem);
+  line-height: 1.65;
 }
 
-#smartCleanerPageContainer .smart-cleaner-bg-shape {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(2px);
-  opacity: 0.14;
-  pointer-events: none;
-  z-index: -1;
-  animation: smartCleanerShapeSpin 36s linear infinite;
-}
-
-#smartCleanerPageContainer .smart-cleaner-bg-shape.is-one {
-  width: min(36vw, 450px);
-  aspect-ratio: 1;
-  top: 5%;
-  right: -10%;
-  background: radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--smart-cleaner-accent) 30%, transparent), transparent 70%);
-}
-
-#smartCleanerPageContainer .smart-cleaner-bg-shape.is-two {
-  width: min(28vw, 340px);
-  aspect-ratio: 1;
-  top: 42%;
-  left: -8%;
-  animation-duration: 40s;
-  background: radial-gradient(circle at 65% 35%, color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent), transparent 68%);
-}
-
-#smartCleanerPageContainer .smart-cleaner-bg-shape.is-three {
-  width: min(30vw, 370px);
-  aspect-ratio: 1;
-  bottom: 10%;
-  right: -12%;
-  animation-duration: 32s;
-  background: radial-gradient(circle at 50% 50%, color-mix(in srgb, #34d399 16%, transparent), transparent 70%);
-}
-
-#smartCleanerPageContainer .smart-cleaner-hero {
+.smart-cleaner-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(250px, 430px);
-  gap: clamp(1.5rem, 5vw, 5rem);
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
   align-items: center;
-  padding: clamp(1.2rem, 2vw, 2rem);
-  border-radius: clamp(24px, 4vw, 42px);
-  background:
-    radial-gradient(circle at 80% 14%, color-mix(in srgb, var(--smart-cleaner-accent) 18%, transparent), transparent 61%),
-    linear-gradient(180deg, color-mix(in srgb, var(--md-sys-color-surface-container) 52%, transparent), transparent 62%);
+  gap: clamp(32px, 7vw, 72px);
+  margin-top: 16px !important;
 }
 
-#smartCleanerPageContainer .smart-cleaner-subtitle {
-  margin: 1rem 0 1.45rem;
-  max-width: 45ch;
+.smart-cleaner-subtitle {
+  margin: 20px 0 28px;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 1.15rem;
 }
 
-#smartCleanerPageContainer .smart-cleaner-hero-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
+.smart-cleaner-hero-actions {
+  align-items: flex-start;
 }
 
-
-#smartCleanerPageContainer .smart-cleaner-github-group {
+.smart-cleaner-github-group {
   display: grid;
-  gap: 0.55rem;
+  gap: 8px;
 }
 
-#smartCleanerPageContainer .smart-cleaner-github-title {
-  margin: 0;
-  font-size: 0.84rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  opacity: 0.76;
+.smart-cleaner-github-title {
+  margin: 0 !important;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.8rem;
 }
 
-#smartCleanerPageContainer .smart-cleaner-github-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
+.smart-cleaner-hero-visual,
+.smart-cleaner-story-visual {
+  display: grid;
+  place-items: center;
 }
 
-
-#smartCleanerPageContainer .smart-cleaner-hero-actions md-filled-button {
-  --md-filled-button-container-height: 44px;
-}
-
-#smartCleanerPageContainer .smart-cleaner-github-buttons md-outlined-button {
-  --md-outlined-button-container-height: 40px;
-}
-
-#smartCleanerPageContainer .smart-cleaner-cta md-filled-tonal-button {
-  --md-filled-tonal-button-container-height: 40px;
-}
-
-
-#smartCleanerPageContainer .smart-cleaner-bottom-link {
-  display: inline-flex;
-  margin-top: 0.8rem;
-}
-
-#smartCleanerPageContainer .smart-cleaner-hero-visual {
-  display: flex;
-  justify-content: center;
-  min-height: 360px;
-  position: relative;
-  perspective: 1200px;
-}
-
-#smartCleanerPageContainer .smart-cleaner-gradient-orb {
-  position: absolute;
-  inset: auto;
-  left: 50%;
-  bottom: 10%;
-  transform: translate3d(-50%, 0, 0);
-  width: min(86%, 390px);
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background:
-    radial-gradient(circle at 40% 38%, color-mix(in srgb, #34d399 50%, transparent), transparent 63%),
-    linear-gradient(130deg, color-mix(in srgb, #22c55e 30%, transparent), color-mix(in srgb, var(--md-sys-color-primary) 24%, transparent));
-  opacity: 0.62;
-  filter: blur(0.2px);
-  will-change: transform;
-  transition: transform 240ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-gradient-orb::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: inset 0 0 80px color-mix(in srgb, #ffffff 14%, transparent);
-  opacity: 0.45;
-}
-
-#smartCleanerPageContainer .smart-cleaner-phone-frame {
-  --parallax-y: 0px;
-  --parallax-rotate-x: 0deg;
-  --parallax-rotate-y: 0deg;
-  width: min(310px, 100%);
-  border-radius: 36px;
-  overflow: hidden;
-  background: #0f172a;
-  box-shadow: 0 28px 52px rgba(0, 0, 0, 0.24);
-  position: relative;
-  transform: translate3d(0, var(--parallax-y), 0) rotateX(var(--parallax-rotate-x)) rotateY(var(--parallax-rotate-y));
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-phone-frame img {
-  width: 100%;
+.smart-cleaner-phone-frame img,
+.smart-cleaner-story-visual img {
   display: block;
+  width: min(100%, 300px);
+  max-height: 560px;
+  border-radius: 20px;
+  object-fit: contain;
 }
 
-#smartCleanerPageContainer .smart-cleaner-problem {
-  position: relative;
-  text-align: center;
-  max-width: 920px;
-  margin-inline: auto;
-  padding: clamp(1.8rem, 4vw, 2.8rem);
-  border-radius: clamp(20px, 3vw, 28px);
-  background:
-    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--smart-cleaner-accent) 14%, transparent), transparent 55%),
-    linear-gradient(165deg, color-mix(in srgb, var(--md-sys-color-surface-container) 68%, transparent), transparent 80%);
-  overflow: hidden;
+.smart-cleaner-problem,
+.smart-cleaner-trust,
+.smart-cleaner-performance,
+.smart-cleaner-cta,
+.smart-cleaner-section {
+  border-radius: 16px;
+  padding: clamp(24px, 5vw, 48px);
+  background: var(--md-sys-color-surface-container-low);
 }
 
-#smartCleanerPageContainer .smart-cleaner-problem p {
-  margin: 1rem auto 0;
-  max-width: 58ch;
-}
-
-#smartCleanerPageContainer .smart-cleaner-problem-copy {
-  --parallax-y: 0px;
-  transform: translate3d(0, var(--parallax-y), 0);
-  will-change: transform;
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-section {
+.smart-cleaner-story-section {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(0, 1fr);
-  gap: clamp(1rem, 5vw, 5rem);
-  align-items: start;
+  grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(32px, 7vw, 72px);
 }
 
-#smartCleanerPageContainer .smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
+.smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
   order: 2;
 }
 
-#smartCleanerPageContainer .smart-cleaner-story-visual {
-  --parallax-y: 0px;
-  --parallax-rotate-x: 0deg;
-  --parallax-rotate-y: 0deg;
-  position: sticky;
-  top: clamp(1rem, 8vh, 96px);
-  transform: translate3d(0, var(--parallax-y), 0) rotateX(var(--parallax-rotate-x)) rotateY(var(--parallax-rotate-y));
-  transform-origin: center center;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-visual img {
-  width: 100%;
-  max-width: 360px;
-  border-radius: 34px;
-  display: block;
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.2);
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-copy {
-  padding-top: clamp(0.4rem, 1vw, 1.2rem);
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-copy p {
-  margin: 0.9rem 0 0;
-  max-width: 52ch;
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-copy ul {
-  margin: 1rem 0 0;
-  padding-left: 0;
+.smart-cleaner-story-copy ul {
   display: grid;
-  gap: 0.65rem;
-  list-style: none;
-  max-width: 44ch;
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-copy li {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--app-border-color) 62%, transparent);
-}
-
-#smartCleanerPageContainer .smart-cleaner-story-copy li .material-symbols-outlined {
-  font-size: 1.14rem;
-  color: color-mix(in srgb, var(--smart-cleaner-accent) 74%, var(--app-text-color));
-}
-
-#smartCleanerPageContainer .smart-cleaner-breathing {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-
-#smartCleanerPageContainer .smart-cleaner-breathing p {
-  margin: 0;
-  color: var(--app-text-color);
-  font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-}
-
-#smartCleanerPageContainer .smart-cleaner-trust {
-  text-align: center;
-  max-width: 840px;
-  margin-inline: auto;
-}
-
-#smartCleanerPageContainer .smart-cleaner-trust p {
-  margin: 1rem auto 0;
-  max-width: 60ch;
-}
-
-#smartCleanerPageContainer .smart-cleaner-ads-note {
-  margin-top: 1.1rem !important;
-  font-size: 0.86rem !important;
-  opacity: 0.82;
-}
-
-#smartCleanerPageContainer .smart-cleaner-performance {
-  text-align: center;
-  max-width: 840px;
-  margin-inline: auto;
-}
-
-#smartCleanerPageContainer .smart-cleaner-circle-container {
-  width: 100%;
-  max-width: 320px;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  padding: 2rem;
-  box-sizing: border-box;
-  background: color-mix(in srgb, var(--md-sys-color-surface-container-high) 80%, transparent);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-#smartCleanerPageContainer .smart-cleaner-circle-container h2,
-#smartCleanerPageContainer .smart-cleaner-circle-container p {
-  position: relative;
-  z-index: 1;
-}
-
-#smartCleanerPageContainer .smart-cleaner-circle-container h2 {
-  margin-bottom: 0.5rem;
-}
-
-#smartCleanerPageContainer .smart-cleaner-performance p {
-  margin: 1rem auto 0;
-  max-width: 55ch;
-}
-
-#smartCleanerPageContainer .smart-cleaner-performance-stage {
-  margin: 1.5rem auto 0;
-  width: min(700px, 100%);
-  border-radius: 32px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.18);
-}
-
-#smartCleanerPageContainer .smart-cleaner-performance-stage img {
-  width: 100%;
-  display: block;
-}
-
-#smartCleanerPageContainer .smart-cleaner-scanline {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--smart-cleaner-accent) 16%, transparent) 0 2px,
-      transparent 2px 9px
-    ),
-    radial-gradient(circle at 50% 40%, color-mix(in srgb, #22c55e 18%, transparent), transparent 56%);
-  animation: smartCleanerScanline 8s linear infinite;
-}
-
-@supports (animation-timeline: view()) {
-  #smartCleanerPageContainer .smart-cleaner-phone-frame {
-    animation: smartCleanerPhoneFloat 1ms linear both;
-    animation-timeline: view(block);
-    animation-range: entry 5% cover 70%;
-  }
-
-  #smartCleanerPageContainer .smart-cleaner-scanline {
-    animation: smartCleanerScanline 8s linear infinite, smartCleanerSweep 1ms linear both;
-    animation-timeline: auto, view(block);
-    animation-range: normal, entry 10% cover 85%;
-  }
-}
-
-#smartCleanerPageContainer .smart-cleaner-screens h2 {
-  margin-bottom: 1.1rem;
-  --parallax-y: 0px;
-  transform: translate3d(0, var(--parallax-y), 0);
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-gallery-track {
-  --parallax-x: 0px;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(260px, 390px);
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding-bottom: 0.35rem;
-  scrollbar-width: thin;
-  transform: translate3d(var(--parallax-x), 0, 0);
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-shot {
-  margin: 0;
-  border-radius: 24px;
-  overflow: hidden;
-  scroll-snap-align: center;
-  opacity: 0.76;
-  transform: scale(0.96);
-  transition: transform var(--app-motion-duration-medium, 320ms) ease, opacity var(--app-motion-duration-medium, 320ms) ease;
-}
-
-#smartCleanerPageContainer .smart-cleaner-shot.is-featured {
-  opacity: 1;
-  transform: scale(1);
-}
-
-#smartCleanerPageContainer .smart-cleaner-shot img {
-  width: 100%;
-  display: block;
-}
-
-#smartCleanerPageContainer .smart-cleaner-gallery-dots {
-  margin-top: 0.7rem;
-  display: flex;
-  justify-content: center;
-  gap: 0.38rem;
-}
-
-#smartCleanerPageContainer .smart-cleaner-gallery-dots button {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  border: 0;
-  background: color-mix(in srgb, var(--app-text-color) 30%, transparent);
-  cursor: pointer;
+  gap: 12px;
+  margin: 20px 0 0;
   padding: 0;
+  list-style: none;
 }
 
-#smartCleanerPageContainer .smart-cleaner-gallery-dots button.is-active {
-  width: 20px;
-  background: var(--smart-cleaner-accent);
+.smart-cleaner-story-copy li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-#smartCleanerPageContainer .smart-cleaner-cta {
-  text-align: center;
-}
-
-#smartCleanerPageContainer .smart-cleaner-cta-content {
-  --parallax-y: 0px;
-  transform: translate3d(0, var(--parallax-y), 0);
-  transition: transform 260ms ease-out;
-}
-
-#smartCleanerPageContainer .smart-cleaner-cta p {
-  margin: 0.95rem 0 0.8rem;
-}
-
-
-#smartCleanerPageContainer .smart-cleaner-windows-badge {
-  margin: 0.85rem auto 0;
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  text-decoration: none;
-  color: var(--app-text-color);
-  padding: 0.62rem 0.95rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--app-text-color) 24%, transparent);
-  background: color-mix(in srgb, var(--md-sys-color-surface) 78%, transparent);
-}
-
-#smartCleanerPageContainer .smart-cleaner-windows-badge .material-symbols-outlined {
-  font-size: 1.08rem;
-}
-
-#smartCleanerPageContainer .smart-cleaner-windows-status {
-  opacity: 0.72;
-}
-
-#smartCleanerPageContainer .smart-cleaner-section {
-  text-align: center;
-}
-
-#smartCleanerPageContainer .smart-cleaner-section p {
-  margin: 0.9rem auto 0;
-  max-width: 58ch;
-}
-
-/* --- PREMIUM SCROLL REVEAL --- */
-#smartCleanerPageContainer .smart-cleaner-reveal {
-  --reveal-y: 38px;
-  --reveal-scale: 0.96;
-  --reveal-duration: 800ms;
-  --reveal-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  opacity: 0;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translate3d(0, var(--reveal-y), 0) scale(var(--reveal-scale));
-  transition:
-    transform var(--reveal-duration) var(--reveal-ease),
-    opacity calc(var(--reveal-duration) * 0.8) var(--reveal-ease);
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal.reveal-from-up {
-  transform: translate3d(0, var(--reveal-y), 0) scale(var(--reveal-scale));
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal.reveal-from-down {
-  transform: translate3d(0, calc(var(--reveal-y) * -1), 0) scale(var(--reveal-scale));
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item {
-  opacity: 0;
-  will-change: transform, opacity;
-  transform: translate3d(0, 16px, 0);
-  transition:
-    transform 700ms var(--reveal-ease),
-    opacity 560ms var(--reveal-ease);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal.reveal-from-up .smart-cleaner-reveal-item {
-  transform: translate3d(0, 16px, 0);
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal.reveal-from-down .smart-cleaner-reveal-item {
-  transform: translate3d(0, -16px, 0);
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal.is-visible,
-#smartCleanerPageContainer .smart-cleaner-reveal.is-visible .smart-cleaner-reveal-item {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
-#smartCleanerPageContainer .smart-cleaner-reveal-child {
-  transition: opacity 600ms ease 130ms, transform 600ms ease 130ms;
-}
-
-#smartCleanerPageContainer .smart-cleaner-sticky-cta {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 12;
-  padding: 0.4rem;
-  border-radius: 16px;
-  backdrop-filter: blur(15px);
-  background: color-mix(in srgb, var(--md-sys-color-surface) 72%, transparent);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity 360ms ease, transform 360ms ease, box-shadow 360ms ease;
-}
-
-#smartCleanerPageContainer .smart-cleaner-sticky-cta.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.2);
-}
-
-#smartCleanerPageContainer .smart-cleaner-sticky-cta img {
-  width: min(180px, 42vw);
-  display: block;
-}
-
-@keyframes smartCleanerScanline {
-  0% {
-    background-position: 0 0, 0 0;
-  }
-
-  100% {
-    background-position: 0 80px, 0 0;
-  }
-}
-
-@keyframes smartCleanerShapeSpin {
-  0%,
-  100% {
-    transform: rotate(0deg) translateY(0);
-  }
-
-  50% {
-    transform: rotate(180deg) translateY(-8px);
-  }
-}
-
-@keyframes smartCleanerPhoneFloat {
-  from {
-    transform: translateY(24px) scale(0.96);
-  }
-
-  to {
-    transform: translateY(-6px) scale(1);
-  }
-}
-
-@keyframes smartCleanerSweep {
-  from {
-    opacity: 0.35;
-    transform: scaleY(0.72);
-  }
-
-  to {
-    opacity: 0.85;
-    transform: scaleY(1);
-  }
-}
-
-@media (max-width: 980px) {
-  #smartCleanerPageContainer .smart-cleaner-hero,
-  #smartCleanerPageContainer .smart-cleaner-story-section {
-    grid-template-columns: 1fr;
-  }
-
-  #smartCleanerPageContainer .smart-cleaner-hero-visual,
-  #smartCleanerPageContainer .smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
-    order: -1;
-  }
-
-  #smartCleanerPageContainer .smart-cleaner-story-visual {
-    position: static;
-  }
-
-  #smartCleanerPageContainer .smart-cleaner-story-visual img {
-    max-width: min(360px, 100%);
-  }
-
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #smartCleanerPageContainer .smart-cleaner-reveal,
-  #smartCleanerPageContainer .smart-cleaner-reveal .smart-cleaner-reveal-item,
-  #smartCleanerPageContainer .smart-cleaner-shot,
-  #smartCleanerPageContainer .smart-cleaner-scanline,
-    #smartCleanerPageContainer [data-parallax] {
-    animation: none !important;
-    transition-duration: 1ms !important;
-    transform: none !important;
-  }
-}
-
-
-/* --- Shared policy/legal document pages --- */
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) {
-  max-width: 960px;
-  margin: 1.5rem auto 0;
-  padding: 1.5rem 2rem;
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface-container-low);
-  border: 1px solid var(--md-sys-color-outline-variant);
-  border-radius: var(--md-sys-shape-corner-large, 16px);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) :is(h1, h2, h3, h4, p, li, strong) {
-  color: inherit;
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) h1 {
-  margin: 0 0 1rem;
-  font: var(--md-sys-typescale-headline-medium-font, 500 1.75rem/1.25 'Google Sans Regular', sans-serif);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) h2 {
-  margin: 2.5rem 0 1rem;
-  font: var(--md-sys-typescale-title-large-font, 500 1.4rem/1.3 'Google Sans Regular', sans-serif);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) h3 {
-  margin: 1.75rem 0 0.75rem;
-  font: var(--md-sys-typescale-title-medium-font, 500 1.2rem/1.35 'Google Sans Regular', sans-serif);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) :is(p, li) {
-  font: var(--md-sys-typescale-body-large-font, 400 1rem/1.7 'Google Sans Regular', sans-serif);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) .last-updated-text {
-  color: var(--md-sys-color-on-surface-variant);
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) md-divider {
-  margin-block: 2rem;
-}
-
-:is(
-  #privacyPolicyPageContainer,
-  #privacyPolicyAppsPageContainer,
-  #termsOfServiceAppsPageContainer,
-  #legalNoticesPageContainer,
-  #adsHelpCenterPageContainer,
-  #codeOfConductPageContainer
-) a {
+.smart-cleaner-story-copy li md-icon {
   color: var(--md-sys-color-primary);
 }
 
-@media (max-width: 600px) {
-  :is(
-    #privacyPolicyPageContainer,
-    #privacyPolicyAppsPageContainer,
-    #termsOfServiceAppsPageContainer,
-    #legalNoticesPageContainer,
-    #adsHelpCenterPageContainer,
-    #codeOfConductPageContainer
-  ) {
-    padding: 1rem;
-    margin-top: 1rem;
+.smart-cleaner-breathing,
+.smart-cleaner-trust,
+.smart-cleaner-performance,
+.smart-cleaner-cta,
+.smart-cleaner-section {
+  text-align: center;
+}
+
+.smart-cleaner-breathing p {
+  margin: 0;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 500;
+  line-height: 1.25 !important;
+}
+
+.smart-cleaner-ads-note {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.smart-cleaner-gallery-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 8px 2px 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.smart-cleaner-shot {
+  flex: 0 0 min(280px, 72vw);
+  margin: 0;
+  scroll-snap-align: center;
+}
+
+.smart-cleaner-shot img {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+}
+
+.smart-cleaner-gallery-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.smart-cleaner-gallery-dots button {
+  width: 8px;
+  height: 8px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: var(--md-sys-color-outline);
+  cursor: pointer;
+}
+
+.smart-cleaner-gallery-dots button.is-active {
+  background: var(--md-sys-color-primary);
+}
+
+@media (max-width: 720px) {
+  .policy-page-card {
+    padding: 20px;
+  }
+
+  .smart-cleaner-hero,
+  .smart-cleaner-story-section {
+    grid-template-columns: 1fr;
+  }
+
+  .smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
+    order: 0;
+  }
+
+  .smart-cleaner-hero-copy {
+    order: 1;
+  }
+
+  .smart-cleaner-hero-visual {
+    order: 0;
   }
 }

@@ -1,76 +1,61 @@
-// @ts-nocheck
+export const FAQ_DATA_URL = 'data/faqs.json';
 
-const FAQ_DATA_URL = 'data/faqs.json';
-
-let faqItemsCache = null;
-let faqDataPromise = null;
-
-function normalizeFaqItem(item, index) {
-    if (!item || typeof item !== 'object') {
-        return null;
-    }
-
-    const normalized = {
-        id: typeof item.id === 'string' ? item.id.trim() : '',
-        question: typeof item.question === 'string' ? item.question.trim() : '',
-        iconSymbol: typeof item.iconSymbol === 'string' && item.iconSymbol.trim() ? item.iconSymbol.trim() : 'help',
-        featured: Boolean(item.featured),
-        answerHtml: typeof item.answerHtml === 'string' ? item.answerHtml.trim() : '',
-        homeAnswerHtml: typeof item.homeAnswerHtml === 'string' ? item.homeAnswerHtml.trim() : ''
-    };
-
-    if (!normalized.id) {
-        const safeQuestion = normalized.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        normalized.id = safeQuestion ? `faq-${safeQuestion}` : `faq-item-${index}`;
-    }
-
-    return normalized.question && normalized.answerHtml ? normalized : null;
+export interface FaqItem {
+  id: string;
+  question: string;
+  iconSymbol: string;
+  featured: boolean;
+  answerHtml: string;
+  homeAnswerHtml: string;
 }
 
-function loadFaqData() {
-    if (faqItemsCache) {
-        return Promise.resolve(faqItemsCache);
-    }
+let faqItemsCache: FaqItem[] | null = null;
+let faqDataPromise: Promise<FaqItem[]> | null = null;
 
-    if (faqDataPromise) {
-        return faqDataPromise;
-    }
+export function normalizeFaqItem(item: unknown, index: number): FaqItem | null {
+  if (!item || typeof item !== 'object') return null;
+  const source = item as Record<string, unknown>;
+  const question = typeof source.question === 'string' ? source.question.trim() : '';
+  const answerHtml = typeof source.answerHtml === 'string' ? source.answerHtml.trim() : '';
+  if (!question || !answerHtml) return null;
 
-    faqDataPromise = fetch(FAQ_DATA_URL)
-        .then((response) => {
-            if (!response || !response.ok) {
-                throw new Error(`FAQ: Failed to fetch data (${response ? response.status : 'no response'})`);
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (!Array.isArray(data)) {
-                throw new Error('FAQ: FAQ data is not an array.');
-            }
-
-            const normalizedItems = data
-                .map((item, index) => normalizeFaqItem(item, index))
-                .filter((item) => item);
-
-            if (!normalizedItems.length) {
-                throw new Error('FAQ: No valid FAQ entries found.');
-            }
-
-            faqItemsCache = normalizedItems;
-            return faqItemsCache;
-        })
-        .catch((error) => {
-            faqDataPromise = null;
-            throw error;
-        });
-
-    return faqDataPromise;
+  const providedId = typeof source.id === 'string' ? source.id.trim() : '';
+  const generatedId = question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return {
+    id: providedId || (generatedId ? `faq-${generatedId}` : `faq-item-${index}`),
+    question,
+    iconSymbol: typeof source.iconSymbol === 'string' && source.iconSymbol.trim()
+      ? source.iconSymbol.trim()
+      : 'help',
+    featured: Boolean(source.featured),
+    answerHtml,
+    homeAnswerHtml: typeof source.homeAnswerHtml === 'string'
+      ? source.homeAnswerHtml.trim()
+      : '',
+  };
 }
 
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, {
-        FAQ_DATA_URL,
-        normalizeFaqItem,
-        loadFaqData
+export function loadFaqData(): Promise<FaqItem[]> {
+  if (faqItemsCache) return Promise.resolve(faqItemsCache);
+  if (faqDataPromise) return faqDataPromise;
+
+  faqDataPromise = fetch(FAQ_DATA_URL)
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`FAQ request failed with status ${response.status}.`);
+      const data = await response.json() as unknown;
+      if (!Array.isArray(data)) throw new Error('FAQ data must be an array.');
+
+      const items = data
+        .map(normalizeFaqItem)
+        .filter((item): item is FaqItem => item !== null);
+      if (!items.length) throw new Error('FAQ data does not contain valid entries.');
+      faqItemsCache = items;
+      return items;
+    })
+    .catch((error: unknown) => {
+      faqDataPromise = null;
+      throw error;
     });
+
+  return faqDataPromise;
 }

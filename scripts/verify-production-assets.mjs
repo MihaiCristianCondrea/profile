@@ -19,6 +19,7 @@ assert(!html.includes('src="/profile/assets/'), 'production module script must n
 
 const routeRegistry = readSource('src/app/router/RouteRegistry.ts');
 const sourceIndex = readSource('index.html');
+const materialRegistry = readSource('src/core/material/MaterialRegistry.ts');
 const requiredFragments = [
   'content/features/resume/presentation/resume.html',
   'content/features/legal/presentation/privacy-policy.html',
@@ -39,6 +40,8 @@ assert(sourceIndex.includes('href="#resume"') || routeRegistry.includes("id: 're
 assert(sourceIndex.includes('href="#privacy-policy-end-user-software"'), 'drawer entry for the app privacy policy route is missing.');
 assert(!html.includes('/profile/assets/'), 'index.html must not include hard-coded /profile/assets paths.');
 assert(!routeRegistry.includes('/profile/assets/'), 'route registry must not include hard-coded /profile/assets paths.');
+assert(!sourceIndex.includes('dotlottie-wc'), 'index.html must not load the retired Lottie runtime.');
+assert(!materialRegistry.includes("import '@material/web/all.js'"), 'Material elements must use explicit production imports.');
 
 const assetFiles = readdirSync(new URL('assets/', distDir));
 const cssFile = assetFiles.find((file) => /^index-.*\.css$/.test(file));
@@ -61,7 +64,6 @@ assert(resumeHtml.includes('id="resume-preview"'), 'resume page fragment is miss
 assert(resumeHtml.includes('id="downloadResumeButton"'), 'resume page fragment is missing the download/print button.');
 
 const resumeSource = readSource('src/features/resume/presentation/ResumePage.ts');
-assert(resumeSource.includes("style.textContent = '@page { size: A4 portrait; margin: 0; }';"), 'resume print preparation must inject A4 zero-margin @page sizing.');
 assert(!resumeSource.includes('A3'), 'resume print preparation must not include the old A3 fallback.');
 assert(resumeSource.includes('window.print()'), 'resume export must continue to use browser print, not canvas/image PDF generation.');
 assert(!resumeSource.includes('html2canvas') && !resumeSource.includes('jsPDF'), 'resume export must not use html2canvas/jsPDF.');

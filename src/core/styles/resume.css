@@ -1,8 +1,8 @@
 #resumePage {
   font-family: var(--resume-ui-font-family, 'Google Sans', 'Google Sans Flex', 'Google Sans Regular', 'Poppins', sans-serif);
-  margin-top: 70px;
-  background-color: var(--app-bg-color);
-  color: var(--app-text-color);
+  margin-top: 0;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-on-surface);
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -14,13 +14,9 @@
 }
 
 #resumePage .form-container {
-  background-color: var(--app-card-bg-color);
   padding: 24px;
-  border-radius: 28px;
-  border: 1px solid var(--md-sys-color-outline);
   width: 100%;
   max-width: 550px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 #resumePage .resume-header {
   display: flex;
@@ -44,20 +40,6 @@
   display: inline-flex;
   gap: 8px;
 }
-#resumePage .resume-language-toggle .resume-flag-btn {
-  padding: 6px 10px;
-  font-size: 20px;
-  border-radius: 999px;
-  border: 1px solid var(--md-sys-color-outline);
-  background-color: var(--md-sys-color-surface-container-high);
-  box-shadow: none;
-  line-height: 1;
-}
-#resumePage .resume-language-toggle .resume-flag-btn[aria-pressed='true'] {
-  border-color: var(--md-sys-color-primary);
-  background-color: var(--md-sys-color-primary-container);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-}
 #resumePage .form-section {
   margin-bottom: 24px;
 }
@@ -71,63 +53,16 @@
   align-items: center;
   gap: 8px;
 }
-#resumePage .form-section h2 .material-symbols-outlined {
+#resumePage .form-section h2 md-icon {
   font-size: 20px;
   color: inherit;
 }
 #resumePage .input-group {
-  position: relative;
   margin-bottom: 16px;
 }
-#resumePage label {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 16px;
-  pointer-events: none;
-  transition: all var(--app-motion-duration-short, 200ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-#resumePage input[type='text'],
-#resumePage input[type='email'],
-#resumePage input[type='tel'],
-#resumePage textarea {
+
+#resumePage md-outlined-text-field {
   width: 100%;
-  background-color: var(--md-sys-color-surface-container-low);
-  border: none;
-  border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
-  padding: 24px 16px 8px 16px;
-  border-radius: 8px 8px 0 0;
-  font-size: 16px;
-  color: var(--md-sys-color-on-surface);
-  box-sizing: border-box;
-  transition: border-color var(--app-motion-duration-short, 200ms)
-    var(--app-motion-ease-standard, cubic-bezier(0, 0, 0.2, 1));
-}
-#resumePage input[type='text']:focus,
-#resumePage input[type='email']:focus,
-#resumePage input[type='tel']:focus,
-#resumePage textarea:focus {
-  outline: none;
-  border-bottom: 2px solid var(--md-sys-color-primary);
-}
-#resumePage input[type='text']:focus + label,
-#resumePage input[type='text']:not(:placeholder-shown) + label,
-#resumePage input[type='email']:focus + label,
-#resumePage input[type='email']:not(:placeholder-shown) + label,
-#resumePage input[type='tel']:focus + label,
-#resumePage input[type='tel']:not(:placeholder-shown) + label,
-#resumePage textarea:focus + label,
-#resumePage textarea:not(:placeholder-shown) + label {
-  top: 6px;
-  left: 16px;
-  font-size: 12px;
-  color: var(--md-sys-color-primary);
-}
-#resumePage textarea {
-  resize: vertical;
-  min-height: 120px;
 }
 #resumePage input[type='file'] {
   color: var(--md-sys-color-on-surface-variant);
@@ -147,32 +82,23 @@
   --md-outlined-icon-button-outline-color: var(--md-sys-color-primary);
   --md-outlined-icon-button-icon-color: var(--md-sys-color-primary);
 }
-#resumePage .dynamic-list .list-item {
+#resumePage .list-item {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
 }
-#resumePage .dynamic-list .list-item input {
-  flex-grow: 1;
-}
 #resumePage .resume-inline-group {
   flex-grow: 1;
   margin-bottom: 0;
 }
-#resumePage .resume-checkbox {
-  margin-left: 8px;
-}
 #resumePage .resume-checkbox-label {
-  position: static;
   font-size: 14px;
-  pointer-events: auto;
 }
-#resumePage .complex-item-form > div {
-  background-color: var(--md-sys-color-surface-container-low);
-  border: 1px solid var(--md-sys-color-surface-variant);
+#resumePage .complex-item-fields {
+  width: 100%;
+  box-sizing: border-box;
   padding: 16px;
-  border-radius: 12px;
   margin-bottom: 16px;
   display: flex;
   flex-direction: column;
@@ -188,8 +114,9 @@
   --resume-right-bg: var(--md-sys-color-surface);
   --resume-text: #111;
   --resume-muted: #333;
-  --resume-border: var(--app-border-color);
+  --resume-border: var(--md-sys-color-outline-variant);
   width: 800px;
+  max-width: 100%;
   background: var(--resume-right-bg);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--resume-border);
@@ -236,10 +163,16 @@
   border-radius: 50%;
   background-color: var(--md-sys-color-surface-variant);
   margin: 0 auto 32px;
-  background-size: cover;
-  background-position: center;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
   border: 4px solid var(--resume-right-bg);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+#resumePage #photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 #resumePage .contact-info {
   font-style: normal;
@@ -255,20 +188,6 @@
 #resumePage .contact-info .material-symbols-outlined {
   font-size: 20px;
   color: var(--resume-secondary);
-}
-#resumePage .resume-icon {
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--resume-secondary);
-  flex-shrink: 0;
-}
-#resumePage .resume-icon svg {
-  width: 100%;
-  height: 100%;
-  fill: currentColor;
 }
 #resumePage .resume-section {
   margin-bottom: 30px;
@@ -351,6 +270,7 @@
   font-size: 14px;
   line-height: 1.6;
   color: var(--resume-muted);
+  white-space: pre-line;
 }
 #resumePage .resume-item .description ul {
   padding-left: 20px;
@@ -435,4 +355,33 @@
 
 #resumePage #resume-json-file {
   display: none;
+}
+
+@media screen and (max-width: 720px) {
+  #resumePage {
+    padding: 0;
+  }
+
+  #resumePage .form-container {
+    padding: 20px;
+  }
+
+  #resumePage .list-item {
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  #resumePage .resume-inline-group {
+    flex-basis: 100%;
+  }
+
+  #resumePage .resume-content {
+    flex-direction: column;
+  }
+
+  #resumePage .resume-left,
+  #resumePage .resume-right {
+    width: 100%;
+    padding: 28px 24px;
+  }
 }

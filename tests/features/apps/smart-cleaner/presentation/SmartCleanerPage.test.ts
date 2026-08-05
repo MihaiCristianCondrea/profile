@@ -1,120 +1,50 @@
-const SMART_CLEANER_PAGE_SCRIPT = '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
+import { initSmartCleanerPage } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
 
-function loadScript() {
-  jest.isolateModules(() => {
-    require(SMART_CLEANER_PAGE_SCRIPT);
-  });
-}
-
-describe('SmartCleanerPage scroll reveal', () => {
-  let originalIntersectionObserver;
-  let intersectionCallback;
+describe('SmartCleanerPage gallery', () => {
+  const originalObserver = window.IntersectionObserver;
 
   beforeEach(() => {
-    jest.resetModules();
-    document.body.innerHTML = '';
-
-    originalIntersectionObserver = window.IntersectionObserver;
-    intersectionCallback = null;
-
-    window.IntersectionObserver = jest.fn(function MockIntersectionObserver(callback) {
-      intersectionCallback = callback;
-      this.observe = jest.fn();
-      this.disconnect = jest.fn();
-    });
-  });
-
-  afterEach(() => {
-    window.IntersectionObserver = originalIntersectionObserver;
-    delete window.initSmartCleanerPage;
-    jest.restoreAllMocks();
-  });
-
-  test('removes visibility when section leaves viewport below while scrolling up', () => {
+    Reflect.deleteProperty(window, 'IntersectionObserver');
     document.body.innerHTML = `
       <div id="smartCleanerPageContainer">
-        <section class="smart-cleaner-reveal" id="target-section">
-          <h2>Overview</h2>
-          <p>Details</p>
-        </section>
+        <div id="smartCleanerGalleryTrack">
+          <figure class="smart-cleaner-shot" id="shot-one"></figure>
+          <figure class="smart-cleaner-shot" id="shot-two"></figure>
+        </div>
+        <div id="smartCleanerGalleryDots"></div>
       </div>
     `;
-
-    Object.defineProperty(window, 'innerHeight', {
-      value: 1000,
-      configurable: true,
-      writable: true
-    });
-
-    window.scrollY = 500;
-
-    loadScript();
-    window.initSmartCleanerPage();
-
-    const section = document.getElementById('target-section');
-
-    intersectionCallback([
-      {
-        target: section,
-        isIntersecting: true,
-        boundingClientRect: { top: 300 }
-      }
-    ]);
-
-    expect(section.classList.contains('is-visible')).toBe(true);
-
-    window.scrollY = 400;
-    window.dispatchEvent(new Event('scroll'));
-
-    intersectionCallback([
-      {
-        target: section,
-        isIntersecting: false,
-        boundingClientRect: { top: 1020, bottom: 1400 }
-      }
-    ]);
-
-    expect(section.classList.contains('is-visible')).toBe(false);
   });
 
-  test('removes visibility when section leaves viewport above while scrolling down', () => {
-    document.body.innerHTML = `
-      <div id="smartCleanerPageContainer">
-        <section class="smart-cleaner-reveal" id="target-section">
-          <h2>Overview</h2>
-          <p>Details</p>
-        </section>
-      </div>
-    `;
+  afterAll(() => {
+    if (originalObserver) {
+      window.IntersectionObserver = originalObserver;
+    }
+  });
 
-    window.scrollY = 100;
+  test('creates accessible controls and updates the selected screenshot', () => {
+    const first = document.getElementById('shot-one') as HTMLElement;
+    const second = document.getElementById('shot-two') as HTMLElement;
+    first.scrollIntoView = jest.fn();
+    second.scrollIntoView = jest.fn();
 
-    loadScript();
-    window.initSmartCleanerPage();
+    initSmartCleanerPage();
 
-    const section = document.getElementById('target-section');
+    const dots = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('#smartCleanerGalleryDots button'),
+    );
+    expect(dots).toHaveLength(2);
+    expect(dots[0].classList.contains('is-active')).toBe(true);
+    expect(dots[0].getAttribute('aria-current')).toBe('true');
 
-    intersectionCallback([
-      {
-        target: section,
-        isIntersecting: true,
-        boundingClientRect: { top: 200, bottom: 600 }
-      }
-    ]);
+    dots[1].click();
 
-    expect(section.classList.contains('is-visible')).toBe(true);
-
-    window.scrollY = 250;
-    window.dispatchEvent(new Event('scroll'));
-
-    intersectionCallback([
-      {
-        target: section,
-        isIntersecting: false,
-        boundingClientRect: { top: -700, bottom: -20 }
-      }
-    ]);
-
-    expect(section.classList.contains('is-visible')).toBe(false);
+    expect(second.scrollIntoView).toHaveBeenCalledWith({
+      inline: 'center',
+      block: 'nearest',
+    });
+    expect(first.classList.contains('is-featured')).toBe(false);
+    expect(second.classList.contains('is-featured')).toBe(true);
+    expect(dots[1].classList.contains('is-active')).toBe(true);
   });
 });

@@ -17,20 +17,14 @@
   </p>
 
   <div class="faq-search" role="search">
-    <div class="faq-search-field">
-      <span class="faq-search-icon material-symbols-outlined" aria-hidden="true">
-        search
-      </span>
-      <input
-        id="faqSearchField"
-        class="faq-search-input"
-        type="search"
-        placeholder="Search questions"
-        aria-label="Search frequently asked questions"
-        spellcheck="false"
-        autocomplete="off"
-      />
-    </div>
+    <md-outlined-text-field
+      id="faqSearchField"
+      type="search"
+      label="Search questions"
+      autocomplete="off"
+    >
+      <md-icon slot="leading-icon">search</md-icon>
+    </md-outlined-text-field>
   </div>
 
   <p id="faqSearchHint" class="faq-search-hint">
@@ -46,13 +40,9 @@
   </p>
 
   <div class="faq-support-cta">
-    <a href="#contact">
-      <md-filled-button>
-        <md-icon slot="icon" aria-hidden="true">
-          <i class="fas fa-comments"></i>
-        </md-icon>
-        Get in touch for more help
-      </md-filled-button>
-    </a>
+    <md-filled-button href="#contact">
+      <md-icon slot="icon" aria-hidden="true">forum</md-icon>
+      Get in touch for more help
+    </md-filled-button>
   </div>
 </div>

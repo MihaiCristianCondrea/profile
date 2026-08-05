@@ -8,7 +8,7 @@ The generated site lives under `dist/` and is intentionally ignored. `npm run bu
 
 - running Vite against `index.html` and `src/main.ts`;
 - copying static runtime assets from `public/`;
-- emitting legacy browser-global TypeScript files under `dist/assets/js/**` for the existing script tags;
+- emitting the Vite-bundled TypeScript and CSS module graph;
 - copying route fragments from `src/features/**/presentation/*.html` to `dist/content/features/**/presentation/*.html`;
 - copying root SEO/support files (`robots.txt`, `sitemap.xml`, and `app-ads.txt`) into `dist/`.
 

@@ -45,6 +45,6 @@
     }
   },
   "dependencies": {
-    "@material/web": "^2.3.0"
+    "@material/web": "^2.4.1"
   }
 }

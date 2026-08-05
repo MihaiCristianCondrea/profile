@@ -1,74 +1,68 @@
-// @ts-nocheck
-(function (global) {
-    const DEFAULT_PAGE_TITLE = "Mihai's Profile";
+import type { PageMarkupResult } from '../../core/types/index.ts';
+import { getRoute } from './RouteRegistry.ts';
 
-    function createErrorHtml(message) {
-        return `<div class="page-section active"><p class="error-message text-red-500">${message}</p></div>`;
-    }
+export const DEFAULT_PAGE_TITLE = "Mihai's Profile";
 
-    function createNotFoundHtml(pageId) {
-        return `<div class="page-section active"><p>Page not found: ${pageId}</p></div>`;
-    }
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+  })[character] ?? character);
+}
 
-    async function fetchPageMarkup(pageId, options = {}) {
-        const routesApi = global.RouterRoutes;
-        const getRoute = routesApi && typeof routesApi.getRoute === 'function'
-            ? routesApi.getRoute.bind(routesApi)
-            : null;
+function createStatusHtml(message: string): string {
+  return `<section class="page-section active" aria-live="polite"><p class="error-message">${escapeHtml(message)}</p></section>`;
+}
 
-        const routeConfig = getRoute ? getRoute(pageId) : null;
-
-        if (!routeConfig) {
-            return {
-                status: 'not-found',
-                title: 'Not Found',
-                html: createNotFoundHtml(pageId)
-            };
-        }
-
-        const pageTitle = routeConfig.title || DEFAULT_PAGE_TITLE;
-        const onReadyHook = routeConfig.onLoad || null;
-
-        if (!routeConfig.path) {
-            if (routeConfig.id !== 'home') {
-                console.warn(`RouterContentLoader: Route "${routeConfig.id}" does not define a path. Using empty content placeholder.`);
-            }
-
-            return {
-                status: 'success',
-                title: pageTitle,
-                html: routeConfig.id === 'home' ? (options.initialHomeHTML || '') : '',
-                onReady: onReadyHook,
-                sourceTitle: pageTitle
-            };
-        }
-
-        try {
-            const response = await fetch(routeConfig.path);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status} for ${routeConfig.path}`);
-            }
-            const html = await response.text();
-            return {
-                status: 'success',
-                title: pageTitle,
-                html,
-                onReady: onReadyHook,
-                sourceTitle: pageTitle
-            };
-        } catch (error) {
-            return {
-                status: 'error',
-                title: 'Error',
-                html: createErrorHtml(`Failed to load page: ${pageTitle}. ${error.message}`),
-                error,
-                sourceTitle: pageTitle
-            };
-        }
-    }
-
-    global.RouterContentLoader = {
-        fetchPageMarkup,
-        DEFAULT_PAGE_TITLE
+export async function fetchPageMarkup(
+  pageId: string,
+  options: { initialHomeHTML?: string } = {},
+): Promise<PageMarkupResult> {
+  const routeConfig = getRoute(pageId);
+  if (!routeConfig) {
+    return {
+      status: 'not-found',
+      title: 'Not Found',
+      html: createStatusHtml(`Page not found: ${pageId}`),
     };
-})(typeof window !== 'undefined' ? window : globalThis);
+  }
+
+  if (!routeConfig.path) {
+    return {
+      status: 'success',
+      title: routeConfig.title,
+      html: routeConfig.id === 'home' ? options.initialHomeHTML ?? '' : '',
+      onReady: routeConfig.onLoad,
+      sourceTitle: routeConfig.title,
+    };
+  }
+
+  try {
+    const response = await fetch(routeConfig.path);
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}.`);
+    }
+
+    return {
+      status: 'success',
+      title: routeConfig.title,
+      html: await response.text(),
+      onReady: routeConfig.onLoad,
+      sourceTitle: routeConfig.title,
+    };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : 'Unknown request error.';
+    return {
+      status: 'error',
+      title: 'Error',
+      html: createStatusHtml(`Failed to load ${routeConfig.title}. ${detail}`),
+      error,
+      sourceTitle: routeConfig.title,
+    };
+  }
+}
+
+export const RouterContentLoader = { DEFAULT_PAGE_TITLE, fetchPageMarkup };

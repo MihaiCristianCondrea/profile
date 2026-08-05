@@ -1,34 +1,21 @@
-// @ts-nocheck
-(() => {
-    const DOCUMENT_TITLE_SUFFIX = " - Mihai's Profile";
+export const DOCUMENT_TITLE_SUFFIX = " - Mihai's Profile";
 
-    function updateTitle(appBarHeadline: HTMLElement | null, pageTitle: string): void {
-        if (appBarHeadline) {
-            appBarHeadline.textContent = pageTitle;
-        }
+export function updateTitle(appBarHeadline: HTMLElement | null, pageTitle: string): void {
+  if (appBarHeadline) appBarHeadline.textContent = pageTitle;
+  document.title = `${pageTitle}${DOCUMENT_TITLE_SUFFIX}`;
+}
 
-        if (typeof document !== 'undefined') {
-            document.title = `${pageTitle}${DOCUMENT_TITLE_SUFFIX}`;
-        }
-    }
+export function pushState(
+  pageId: string,
+  pageTitle: string,
+  urlFragment: string,
+  shouldUpdate = true,
+): void {
+  if (!shouldUpdate) return;
 
-    function pushState(pageId: string, pageTitle: string, urlFragment: string, shouldUpdate = true): void {
-        if (!shouldUpdate || !globalThis.history || typeof globalThis.history.pushState !== 'function') {
-            return;
-        }
+  const nextHash = `#${urlFragment}`;
+  if (window.location.hash === nextHash) return;
+  window.history.pushState({ page: pageId }, pageTitle, nextHash);
+}
 
-        globalThis.history.pushState({ page: pageId }, pageTitle, `#${urlFragment}`);
-    }
-
-    (globalThis as typeof globalThis & {
-        RouterHistory?: {
-            DOCUMENT_TITLE_SUFFIX: string;
-            updateTitle: typeof updateTitle;
-            pushState: typeof pushState;
-        };
-    }).RouterHistory = {
-        DOCUMENT_TITLE_SUFFIX,
-        updateTitle,
-        pushState
-    };
-})();
+export const RouterHistory = { DOCUMENT_TITLE_SUFFIX, updateTitle, pushState };

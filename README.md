@@ -9,8 +9,6 @@ This repository contains the source for a personal profile site built as a small
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
 - **Client‑Side Routing** – TypeScript router modules load internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
-- **Navigation Transitions** – Switching pages from the drawer fades content out
-  and in using Material Design motion.
 - **Progressive Web App** – Includes a `manifest.json` file and icons so it can be installed as a PWA.
 
 ## Repository Structure
@@ -24,14 +22,14 @@ public/                   # Runtime static assets copied as-is to the generated 
   icons/                  # Favicon and PWA icons
   manifest.json           # Web app manifest
 src/
-  main.ts                 # Vite entry for Material Web registration and authored CSS
-  app/                    # Bootstrap, app-level wiring, and router orchestration
-  core/                   # Shared DOM, metadata, theme, animation, Material, style, and type utilities
+  main.ts                 # Browser entry forwarding to app/main.ts
+  app/                    # Material/style imports, bootstrap, and router orchestration
+  core/                   # Shared DOM, metadata, theme, Material, style, and type utilities
   features/               # Feature-first modules grouped by data/domain/presentation
     profile/presentation/ # About/contact route fragments
-    projects/presentation/ # Projects behavior and projects.html
+    projects/             # Android-app data adapter and projects presentation
     resume/presentation/  # Resume behavior and resume.html
-    songs/presentation/   # Songs behavior and songs.html
+    songs/                # Song data, domain mapping, and presentation
     apps/                 # App-specific feature and legal fragments
 scripts/                  # Build/deploy helper scripts
 dist/                     # Generated deployment output (ignored)
@@ -54,14 +52,17 @@ The router loads pages based on URL fragments (e.g., `#privacy-policy`). Importa
 
 ## Running Locally
 
-The project uses Vite for the main browser build and still emits the existing browser-global TypeScript scripts for the current `index.html` script tags. After cloning the repo, install dependencies and run the build:
+The project uses Vite for one browser module graph rooted at `src/main.ts`.
+After cloning the repo, install dependencies and run the build:
 
 ```bash
 npm install
 npm run build
 ```
 
-The `build` script recreates ignored `dist/` output: Vite-bundled CSS and Material registration, static assets copied from `public/`, browser scripts under `dist/assets/js/`, and route fragments under `dist/content/` copied from `src/features/**/presentation/*.html`.
+The `build` script recreates ignored `dist/` output: the Vite-bundled
+TypeScript/CSS graph, static assets copied from `public/`, and route fragments
+under `dist/content/` copied from `src/features/**/presentation/*.html`.
 
 Then serve the generated site with Vite preview or any static HTTP server. The production build emits relative Vite asset URLs so CSS and the Material registration module load both from the GitHub Pages `/profile/` subpath and from local static servers mounted at `/`:
 
@@ -115,8 +116,10 @@ Run `npm run deploy` before publishing. It executes the full build and verifies 
     from the Open Graph copy.
 - Example route registration:
 
-  ```js
-  RouterRoutes.registerRoute({
+  ```ts
+  import { registerRoute } from './src/app/router/RouteRegistry.ts';
+
+  registerRoute({
     id: 'case-study',
     path: 'content/features/case-study/presentation/case-study.html',
     title: 'Case Study',
@@ -141,13 +144,11 @@ Run `npm run deploy` before publishing. It executes the full build and verifies 
   the description, keyword, Open Graph, Twitter, and canonical tags always
   reflect the active route while falling back to opinionated defaults.
 
-### YouTube Channel Feed
+### Music data
 
-The songs page fetches track information from the D4rK Rekords YouTube channel
-using the public [Piped API](https://github.com/TeamPiped/Piped). This service
-does not require any authentication. The site requests
-`https://pipedapi.ducks.party/channel/<channelId>` and renders the uploaded
-tracks from the `relatedStreams` array.
+The songs feature requests D4rK Rekords data through its Odesli-compatible
+public endpoint. The data adapter owns the request, the domain mapper normalizes
+remote tracks, and the presentation module renders Material cards.
 
 ## License
 
@@ -160,10 +161,12 @@ This project is distributed under the terms of the GNU General Public License v3
 - Source of truth: `src/`, organized into `app/`, `core/`, and feature-first modules under `features/`.
 - Generated artifacts are produced under `dist/` by `npm run build`; this path is ignored and should not be edited manually.
 - New feature code must be added in `src/features/<feature>/`, using `data/`, `domain/`, and `presentation/` folders where those responsibilities are useful; shared helpers belong in `src/core/` only when more than one feature needs them.
-- Generated `dist/assets/js/` paths mirror `src/`, and generated `dist/content/` paths mirror feature-owned HTML under `src/features/`; update `index.html` script tags or route paths when source files move. Tests should import `src/` directly or transpile source for browser-global integration cases, not require committed generated JavaScript.
+- Generated `dist/content/` paths mirror feature-owned HTML under
+  `src/features/`. Tests import `src/` modules directly; there is no
+  browser-global compatibility tree.
 - See `docs/architecture.md` for source/generated file rules, routing flow, styling rules, static asset ownership, and the new-page checklist.
 
-### Migration status
+### Module status
 
-- Primary app modules have been migrated to TypeScript sources.
-- Legacy global interop remains in some modules and is being phased into explicit typed imports over time.
+Production modules use explicit TypeScript imports and exports. Material
+registration is centralized, and Vite is the only JavaScript emitter.

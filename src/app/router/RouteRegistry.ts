@@ -1,5 +1,10 @@
-// @ts-nocheck
-(function (global) {
+import type {
+    OpenGraphMetadata,
+    RouteConfig,
+    RouteMetadata,
+    TwitterMetadata,
+} from '../../core/types/index.ts';
+
     const DEFAULT_ROUTE_TITLE = "Mihai's Profile";
     const DEFAULT_METADATA_DESCRIPTION = 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.';
     const DEFAULT_METADATA_KEYWORDS = [
@@ -14,9 +19,9 @@
     const DEFAULT_OPEN_GRAPH_TYPE = 'website';
     const DEFAULT_TWITTER_CARD = 'summary_large_image';
     const DEFAULT_TWITTER_HANDLE = '@MihaiCrstian';
-    const PAGE_ROUTES = Object.create(null);
+    export const PAGE_ROUTES: Record<string, RouteConfig> = Object.create(null);
 
-    function normalizeRouteId(routeId) {
+    export function normalizeRouteId(routeId: string): string {
         if (typeof routeId !== 'string') {
             return '';
         }
@@ -27,24 +32,34 @@
         return trimmed.startsWith('#') ? trimmed.substring(1) : trimmed;
     }
 
-    function sanitizeKeywords(value) {
+    function asRecord(value: unknown): Record<string, unknown> {
+        return value && typeof value === 'object'
+            ? value as Record<string, unknown>
+            : {};
+    }
+
+    function readString(value: unknown, fallback: string): string {
+        return typeof value === 'string' && value.trim() ? value.trim() : fallback;
+    }
+
+    function sanitizeKeywords(value: unknown): string[] {
         if (Array.isArray(value)) {
             return value
-                .map(keyword => (typeof keyword === 'string' ? keyword.trim() : ''))
-                .filter(Boolean);
+                .map((keyword) => (typeof keyword === 'string' ? keyword.trim() : ''))
+                .filter((keyword): keyword is string => Boolean(keyword));
         }
 
         if (typeof value === 'string') {
             return value
                 .split(',')
-                .map(keyword => keyword.trim())
+                .map((keyword) => keyword.trim())
                 .filter(Boolean);
         }
 
         return [];
     }
 
-    function sanitizeCanonicalSlug(value, routeId) {
+    function sanitizeCanonicalSlug(value: unknown, routeId: string): string {
         if (typeof value === 'string') {
             const trimmed = value.trim();
             if (!trimmed || trimmed === '/' || trimmed === '#') {
@@ -62,32 +77,19 @@
         return routeId === 'home' ? '' : routeId;
     }
 
-    function sanitizeOpenGraph(openGraphConfig, route, description) {
-        const config = openGraphConfig && typeof openGraphConfig === 'object' ? openGraphConfig : {};
+    function sanitizeOpenGraph(
+        openGraphConfig: unknown,
+        route: Pick<RouteConfig, 'id' | 'title'>,
+        description: string,
+    ): OpenGraphMetadata {
+        const config = asRecord(openGraphConfig);
 
-        const title = typeof config.title === 'string' && config.title.trim()
-            ? config.title.trim()
-            : (route.title || DEFAULT_ROUTE_TITLE);
-
-        const ogDescription = typeof config.description === 'string' && config.description.trim()
-            ? config.description.trim()
-            : description;
-
-        const type = typeof config.type === 'string' && config.type.trim()
-            ? config.type.trim()
-            : DEFAULT_OPEN_GRAPH_TYPE;
-
-        const image = typeof config.image === 'string' && config.image.trim()
-            ? config.image.trim()
-            : DEFAULT_SOCIAL_IMAGE;
-
-        const imageAlt = typeof config.imageAlt === 'string' && config.imageAlt.trim()
-            ? config.imageAlt.trim()
-            : DEFAULT_SOCIAL_IMAGE_ALT;
-
-        const siteName = typeof config.siteName === 'string' && config.siteName.trim()
-            ? config.siteName.trim()
-            : DEFAULT_ROUTE_TITLE;
+        const title = readString(config.title, route.title || DEFAULT_ROUTE_TITLE);
+        const ogDescription = readString(config.description, description);
+        const type = readString(config.type, DEFAULT_OPEN_GRAPH_TYPE);
+        const image = readString(config.image, DEFAULT_SOCIAL_IMAGE);
+        const imageAlt = readString(config.imageAlt, DEFAULT_SOCIAL_IMAGE_ALT);
+        const siteName = readString(config.siteName, DEFAULT_ROUTE_TITLE);
 
         return {
             title,
@@ -99,32 +101,19 @@
         };
     }
 
-    function sanitizeTwitter(twitterConfig, openGraph, description) {
-        const config = twitterConfig && typeof twitterConfig === 'object' ? twitterConfig : {};
+    function sanitizeTwitter(
+        twitterConfig: unknown,
+        openGraph: OpenGraphMetadata,
+        description: string,
+    ): TwitterMetadata {
+        const config = asRecord(twitterConfig);
 
-        const card = typeof config.card === 'string' && config.card.trim()
-            ? config.card.trim()
-            : DEFAULT_TWITTER_CARD;
-
-        const title = typeof config.title === 'string' && config.title.trim()
-            ? config.title.trim()
-            : openGraph.title;
-
-        const twitterDescription = typeof config.description === 'string' && config.description.trim()
-            ? config.description.trim()
-            : description;
-
-        const image = typeof config.image === 'string' && config.image.trim()
-            ? config.image.trim()
-            : openGraph.image;
-
-        const site = typeof config.site === 'string' && config.site.trim()
-            ? config.site.trim()
-            : DEFAULT_TWITTER_HANDLE;
-
-        const creator = typeof config.creator === 'string' && config.creator.trim()
-            ? config.creator.trim()
-            : DEFAULT_TWITTER_HANDLE;
+        const card = readString(config.card, DEFAULT_TWITTER_CARD);
+        const title = readString(config.title, openGraph.title);
+        const twitterDescription = readString(config.description, description);
+        const image = readString(config.image, openGraph.image);
+        const site = readString(config.site, DEFAULT_TWITTER_HANDLE);
+        const creator = readString(config.creator, DEFAULT_TWITTER_HANDLE);
 
         return {
             card,
@@ -136,12 +125,13 @@
         };
     }
 
-    function sanitizeMetadata(metadataConfig, route) {
-        const config = metadataConfig && typeof metadataConfig === 'object' ? metadataConfig : {};
+    function sanitizeMetadata(
+        metadataConfig: unknown,
+        route: Pick<RouteConfig, 'id' | 'title'>,
+    ): RouteMetadata {
+        const config = asRecord(metadataConfig);
 
-        const description = typeof config.description === 'string' && config.description.trim()
-            ? config.description.trim()
-            : DEFAULT_METADATA_DESCRIPTION;
+        const description = readString(config.description, DEFAULT_METADATA_DESCRIPTION);
 
         const keywords = sanitizeKeywords(config.keywords);
         const canonicalSlug = sanitizeCanonicalSlug(config.canonicalSlug, route.id);
@@ -157,58 +147,51 @@
         };
     }
 
-    function cloneMetadata(metadata) {
-        if (!metadata || typeof metadata !== 'object') {
-            return null;
-        }
-
+    function cloneMetadata(metadata: RouteMetadata): RouteMetadata {
         return {
             description: metadata.description,
-            keywords: Array.isArray(metadata.keywords) ? [...metadata.keywords] : [],
+            keywords: [...metadata.keywords],
             canonicalSlug: metadata.canonicalSlug,
-            openGraph: metadata.openGraph && typeof metadata.openGraph === 'object'
-                ? { ...metadata.openGraph }
-                : null,
-            twitter: metadata.twitter && typeof metadata.twitter === 'object'
-                ? { ...metadata.twitter }
-                : null
+            openGraph: { ...metadata.openGraph },
+            twitter: { ...metadata.twitter },
         };
     }
 
-    function cloneRoute(route) {
-        if (!route || typeof route !== 'object') {
-            return null;
-        }
-
+    function cloneRoute(route: RouteConfig): RouteConfig {
         return {
             ...route,
             metadata: cloneMetadata(route.metadata)
         };
     }
 
-    function sanitizeRouteConfig(config) {
+    function sanitizeRouteConfig(config: unknown): RouteConfig {
         if (!config || typeof config !== 'object') {
             throw new TypeError('RouterRoutes: Route configuration must be an object.');
         }
 
-        const normalizedId = normalizeRouteId(config.id);
+        const source = config as Record<string, unknown>;
+        const normalizedId = normalizeRouteId(typeof source.id === 'string' ? source.id : '');
         if (!normalizedId) {
             throw new Error('RouterRoutes: Route configuration requires a non-empty "id".');
         }
 
-        const sanitized = {
+        const routeIdentity = {
             id: normalizedId,
-            path: typeof config.path === 'string' && config.path.trim() ? config.path.trim() : null,
-            title: typeof config.title === 'string' && config.title.trim() ? config.title.trim() : DEFAULT_ROUTE_TITLE,
-            onLoad: typeof config.onLoad === 'function' ? config.onLoad : null
+            title: typeof source.title === 'string' && source.title.trim()
+                ? source.title.trim()
+                : DEFAULT_ROUTE_TITLE,
         };
 
-        sanitized.metadata = sanitizeMetadata(config.metadata, sanitized);
-
-        return sanitized;
+        const route: RouteConfig = {
+            ...routeIdentity,
+            path: typeof source.path === 'string' && source.path.trim() ? source.path.trim() : null,
+            onLoad: typeof source.onLoad === 'function' ? source.onLoad as () => void : null,
+            metadata: sanitizeMetadata(source.metadata, routeIdentity),
+        };
+        return route;
     }
 
-    function registerRoute(config) {
+    export function registerRoute(config: unknown): RouteConfig {
         const sanitized = sanitizeRouteConfig(config);
         const isUpdate = Object.prototype.hasOwnProperty.call(PAGE_ROUTES, sanitized.id);
         PAGE_ROUTES[sanitized.id] = sanitized;
@@ -218,66 +201,30 @@
         return cloneRoute(sanitized);
     }
 
-    function getRoute(routeId) {
+    export function getRoute(routeId: string): RouteConfig | null {
         const normalizedId = normalizeRouteId(routeId);
         if (!normalizedId) {
             return null;
         }
         const storedRoute = PAGE_ROUTES[normalizedId];
+        if (!storedRoute) {
+            return null;
+        }
         return cloneRoute(storedRoute);
     }
 
-    function hasRoute(routeId) {
+    export function hasRoute(routeId: string): boolean {
         return !!getRoute(routeId);
     }
 
-    function getRoutes() {
-        return Object.values(PAGE_ROUTES).map(route => cloneRoute(route));
-    }
-
-    function runHomeOnLoad() {
-        if (
-            typeof fetchBlogPosts === 'function' &&
-            typeof document !== 'undefined' &&
-            document.getElementById('newsGrid')
-        ) {
-            fetchBlogPosts();
-        }
-    }
-
-    function runSongsOnLoad() {
-        if (
-            typeof loadSongs === 'function' &&
-            typeof document !== 'undefined' &&
-            document.getElementById('songsGrid')
-        ) {
-            loadSongs();
-        }
-    }
-
-    function runProjectsOnLoad() {
-        if (typeof initProjectsPage === 'function') {
-            initProjectsPage();
-        }
-    }
-
-    function runResumeOnLoad() {
-        if (typeof initResumePage === 'function') {
-            initResumePage();
-        }
-    }
-
-    function runSmartCleanerOnLoad() {
-        if (typeof initSmartCleanerPage === 'function') {
-            initSmartCleanerPage();
-        }
+    export function getRoutes(): RouteConfig[] {
+        return Object.values(PAGE_ROUTES).map((route) => cloneRoute(route));
     }
 
     const defaultRoutes = [
         {
             id: 'home',
             title: DEFAULT_ROUTE_TITLE,
-            onLoad: runHomeOnLoad,
             metadata: {
                 description: 'Explore Mihai-Cristian Condrea\'s Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.',
                 keywords: [
@@ -327,7 +274,6 @@
             id: 'songs',
             path: 'content/features/songs/presentation/songs.html',
             title: 'My Music',
-            onLoad: runSongsOnLoad,
             metadata: {
                 description: 'Listen to Mihai-Cristian Condrea\'s original tracks and playlists, including ambient production, electronic experiments, and featured collaborations.',
                 keywords: [
@@ -352,7 +298,6 @@
             id: 'projects',
             path: 'content/features/projects/presentation/projects.html',
             title: 'Projects',
-            onLoad: runProjectsOnLoad,
             metadata: {
                 description: 'Discover Mihai-Cristian Condrea\'s Android and web projects featuring Jetpack Compose demos, Material You UI patterns, and open-source utilities.',
                 keywords: [
@@ -449,7 +394,6 @@
             id: 'smart-cleaner-for-android',
             path: 'content/features/apps/smart-cleaner/presentation/smart-cleaner-for-android.html',
             title: 'Smart Cleaner for Android',
-            onLoad: runSmartCleanerOnLoad,
             metadata: {
                 description: 'Discover Smart Cleaner for Android, an open-source one-tap cleaner that helps remove junk files, optimize storage, and keep your phone responsive.',
                 keywords: [
@@ -597,7 +541,6 @@
             id: 'resume',
             path: 'content/features/resume/presentation/resume.html',
             title: "Mihai's Resume",
-            onLoad: runResumeOnLoad,
             metadata: {
                 description: 'Use Mihai-Cristian Condrea\'s interactive resume builder to assemble, preview, and download a polished CV template for Android developers.',
                 keywords: [
@@ -622,7 +565,7 @@
 
     defaultRoutes.forEach(registerRoute);
 
-    const routesApi = {
+    export const RouterRoutes = {
         registerRoute,
         getRoute,
         hasRoute,
@@ -630,9 +573,3 @@
         normalizeRouteId,
         PAGE_ROUTES
     };
-
-    global.RouterRoutes = routesApi;
-    if (typeof global.registerRoute === 'undefined') {
-        global.registerRoute = registerRoute;
-    }
-})(typeof window !== 'undefined' ? window : globalThis);

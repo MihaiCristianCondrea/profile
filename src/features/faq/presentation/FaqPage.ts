@@ -1,261 +1,128 @@
-// @ts-nocheck
-(function (global) {
-    const reduceMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
-    // FAQ data loading lives in features/faq/data/FaqDataSource.ts.
+import { loadFaqData, type FaqItem } from '../data/FaqDataSource.ts';
 
+type FaqContext = 'home' | 'page';
+type SearchField = HTMLElement & { value: string };
 
-    function createFaqItem(item, context) {
-        const faqItemEl = document.createElement('div');
-        faqItemEl.className = 'faq-item';
-        faqItemEl.dataset.faqId = item.id;
-        faqItemEl.setAttribute('role', 'listitem');
-        faqItemEl.id = context === 'page' ? item.id : `${item.id}-home`;
+interface RenderedFaqItem {
+  data: FaqItem;
+  element: HTMLElement;
+}
 
-        const summaryButton = document.createElement('button');
-        summaryButton.className = 'faq-summary';
-        summaryButton.type = 'button';
-        const summaryId = `${faqItemEl.id}-summary`;
-        summaryButton.id = summaryId;
+function buildSearchText(item: FaqItem): string {
+  const parser = document.createElement('div');
+  parser.innerHTML = item.answerHtml;
+  return `${item.question} ${parser.textContent ?? ''}`.toLowerCase().replace(/\s+/g, ' ').trim();
+}
 
-        const iconWrapper = document.createElement('span');
-        iconWrapper.className = 'faq-icon';
-        iconWrapper.setAttribute('aria-hidden', 'true');
+export function createFaqItem(item: FaqItem, context: FaqContext): HTMLElement {
+  const container = document.createElement('md-outlined-card');
+  container.className = 'faq-item';
+  container.dataset.faqId = item.id;
+  container.dataset.searchText = buildSearchText(item);
+  container.setAttribute('role', 'listitem');
+  container.id = context === 'page' ? item.id : `${item.id}-home`;
 
-        const iconGlyph = document.createElement('span');
-        iconGlyph.className = 'material-symbols-outlined';
-        iconGlyph.textContent = item.iconSymbol || 'help';
-        iconWrapper.appendChild(iconGlyph);
-        summaryButton.appendChild(iconWrapper);
+  const summary = document.createElement('button');
+  summary.className = 'faq-summary';
+  summary.type = 'button';
+  summary.id = `${container.id}-summary`;
 
-        const questionSpan = document.createElement('span');
-        questionSpan.className = 'faq-question';
-        questionSpan.textContent = item.question;
-        summaryButton.appendChild(questionSpan);
+  const icon = document.createElement('md-icon');
+  icon.className = 'faq-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = item.iconSymbol;
 
-        const expandIcon = document.createElement('span');
-        expandIcon.className = 'material-symbols-outlined expand-icon';
-        expandIcon.setAttribute('aria-hidden', 'true');
-        expandIcon.textContent = 'expand_more';
-        summaryButton.appendChild(expandIcon);
+  const question = document.createElement('span');
+  question.className = 'faq-question';
+  question.textContent = item.question;
 
-        faqItemEl.appendChild(summaryButton);
+  const expandIcon = document.createElement('md-icon');
+  expandIcon.className = 'expand-icon';
+  expandIcon.setAttribute('aria-hidden', 'true');
+  expandIcon.textContent = 'expand_more';
+  summary.append(icon, question, expandIcon);
 
-        const answerEl = document.createElement('div');
-        const answerId = `${faqItemEl.id}-answer`;
-        answerEl.className = 'faq-answer';
-        answerEl.id = answerId;
-        answerEl.setAttribute('role', 'region');
-        answerEl.setAttribute('aria-labelledby', summaryId);
-        answerEl.hidden = true;
-        answerEl.style.height = '0px';
+  const answer = document.createElement('div');
+  answer.className = 'faq-answer';
+  answer.id = `${container.id}-answer`;
+  answer.setAttribute('role', 'region');
+  answer.setAttribute('aria-labelledby', summary.id);
+  answer.hidden = true;
 
-        const answerContent = document.createElement('div');
-        answerContent.className = 'faq-answer-content';
-        const answerHtml = context === 'home' && item.homeAnswerHtml ? item.homeAnswerHtml : item.answerHtml;
-        answerContent.innerHTML = typeof answerHtml === 'string' ? answerHtml.trim() : '';
+  const answerContent = document.createElement('div');
+  answerContent.className = 'faq-answer-content';
+  answerContent.innerHTML = context === 'home' && item.homeAnswerHtml
+    ? item.homeAnswerHtml
+    : item.answerHtml;
+  answer.append(answerContent);
 
-        answerEl.appendChild(answerContent);
-        faqItemEl.appendChild(answerEl);
+  summary.setAttribute('aria-controls', answer.id);
+  summary.setAttribute('aria-expanded', 'false');
+  summary.addEventListener('click', () => {
+    const expanded = summary.getAttribute('aria-expanded') !== 'true';
+    summary.setAttribute('aria-expanded', String(expanded));
+    container.classList.toggle('is-open', expanded);
+    answer.hidden = !expanded;
+  });
 
-        summaryButton.setAttribute('aria-controls', answerId);
-        summaryButton.setAttribute('aria-expanded', 'false');
+  container.addEventListener('faq:close', () => {
+    summary.setAttribute('aria-expanded', 'false');
+    container.classList.remove('is-open');
+    answer.hidden = true;
+  });
 
-        attachFaqInteractions(faqItemEl, summaryButton, answerEl, answerContent);
+  container.append(summary, answer);
+  return container;
+}
 
-        const searchText = buildSearchText(item);
-        faqItemEl.dataset.searchText = searchText;
+export function renderFaqList(
+  container: HTMLElement,
+  items: FaqItem[],
+  context: FaqContext,
+): RenderedFaqItem[] {
+  const rendered = items.map((data) => ({ data, element: createFaqItem(data, context) }));
+  container.replaceChildren(...rendered.map(({ element }) => element));
+  return rendered;
+}
 
-        return faqItemEl;
-    }
+export async function renderHomeFaqSection(): Promise<void> {
+  const container = document.getElementById('homeFaqList');
+  if (!container) return;
 
-    function attachFaqInteractions(itemEl, summaryButton, answerEl, answerContent) {
-        const animate = !reduceMotionQuery.matches;
+  try {
+    const items = (await loadFaqData()).filter((item) => item.featured);
+    renderFaqList(container, items, 'home');
+  } catch (error) {
+    container.replaceChildren();
+    console.error('FAQ: Failed to render home entries.', error);
+  }
+}
 
-        const closeAnswer = () => {
-            if (!itemEl.classList.contains('is-open')) {
-                return;
-            }
-            summaryButton.setAttribute('aria-expanded', 'false');
-            itemEl.classList.remove('is-open');
+export async function initFaqPage(): Promise<void> {
+  const container = document.getElementById('faqPageList');
+  if (!container) return;
 
-            if (!animate) {
-                answerEl.style.height = '0px';
-                answerEl.hidden = true;
-                return;
-            }
+  try {
+    const renderedItems = renderFaqList(container, await loadFaqData(), 'page');
+    const emptyMessage = document.getElementById('faqEmptyMessage');
+    const searchField = document.getElementById('faqSearchField') as SearchField | null;
 
-            const startHeight = answerContent.offsetHeight;
-            answerEl.style.height = `${startHeight}px`;
-            requestAnimationFrame(() => {
-                answerEl.style.height = '0px';
-            });
+    const updateVisibility = (): void => {
+      const term = searchField?.value.trim().toLowerCase() ?? '';
+      let visibleCount = 0;
+      renderedItems.forEach(({ element }) => {
+        const matches = !term || element.dataset.searchText?.includes(term) === true;
+        element.hidden = !matches;
+        if (matches) visibleCount += 1;
+        else element.dispatchEvent(new Event('faq:close'));
+      });
+      if (emptyMessage) emptyMessage.hidden = visibleCount > 0;
+    };
 
-            const handleCloseTransitionEnd = (event) => {
-                if (event.propertyName !== 'height') {
-                    return;
-                }
-                answerEl.hidden = true;
-                answerEl.style.height = '';
-                answerEl.removeEventListener('transitionend', handleCloseTransitionEnd);
-            };
-
-            answerEl.addEventListener('transitionend', handleCloseTransitionEnd);
-        };
-
-        const openAnswer = () => {
-            if (itemEl.classList.contains('is-open')) {
-                return;
-            }
-
-            answerEl.hidden = false;
-            summaryButton.setAttribute('aria-expanded', 'true');
-            itemEl.classList.add('is-open');
-
-            if (!animate) {
-                answerEl.style.height = 'auto';
-                return;
-            }
-
-            const startHeight = answerEl.offsetHeight;
-            const endHeight = answerContent.offsetHeight;
-            answerEl.style.height = `${startHeight}px`;
-            requestAnimationFrame(() => {
-                answerEl.style.height = `${endHeight}px`;
-            });
-
-            const handleOpenTransitionEnd = (event) => {
-                if (event.propertyName !== 'height') {
-                    return;
-                }
-                answerEl.style.height = 'auto';
-                answerEl.removeEventListener('transitionend', handleOpenTransitionEnd);
-            };
-
-            answerEl.addEventListener('transitionend', handleOpenTransitionEnd);
-        };
-
-        summaryButton.addEventListener('click', () => {
-            if (itemEl.classList.contains('is-open')) {
-                closeAnswer();
-            } else {
-                openAnswer();
-            }
-        });
-
-        itemEl.addEventListener('faq:open', openAnswer);
-        itemEl.addEventListener('faq:close', closeAnswer);
-    }
-
-    function buildSearchText(item) {
-        const temp = document.createElement('div');
-        temp.innerHTML = item.answerHtml;
-        const textContent = temp.textContent || temp.innerText || '';
-        return `${item.question} ${textContent}`.toLowerCase().replace(/\s+/g, ' ').trim();
-    }
-
-    function renderFaqList(container, items, context) {
-        if (!container) {
-            return [];
-        }
-
-        container.innerHTML = '';
-        const renderedItems = [];
-        const list = Array.isArray(items) ? items : [];
-
-        list.forEach((item) => {
-            const faqElement = createFaqItem(item, context);
-            container.appendChild(faqElement);
-            renderedItems.push({
-                data: item,
-                element: faqElement
-            });
-        });
-
-        return renderedItems;
-    }
-
-    function renderHomeFaqSection() {
-        const container = document.getElementById('homeFaqList');
-        if (!container) {
-            return;
-        }
-
-        loadFaqData()
-            .then((items) => {
-                const featuredItems = items.filter((item) => item.featured);
-                renderFaqList(container, featuredItems, 'home');
-            })
-            .catch((error) => {
-                container.innerHTML = '';
-                console.error('FAQ: Failed to render home FAQ section.', error);
-            });
-    }
-
-    function initFaqPage() {
-        const container = document.getElementById('faqPageList');
-        if (!container) {
-            return;
-        }
-
-        const emptyMessageEl = document.getElementById('faqEmptyMessage');
-        const searchField = document.getElementById('faqSearchField');
-
-        loadFaqData()
-            .then((items) => {
-                const renderedItems = renderFaqList(container, items, 'page');
-
-                const updateVisibility = (searchTerm) => {
-                    const normalizedTerm = (searchTerm || '').trim().toLowerCase();
-                    let visibleCount = 0;
-
-                    renderedItems.forEach(({ element }) => {
-                        if (!normalizedTerm) {
-                            element.hidden = false;
-                            element.setAttribute('aria-hidden', 'false');
-                            visibleCount += 1;
-                            return;
-                        }
-
-                        const matches = element.dataset.searchText.includes(normalizedTerm);
-                        element.hidden = !matches;
-                        element.setAttribute('aria-hidden', matches ? 'false' : 'true');
-                        if (matches) {
-                            visibleCount += 1;
-                        } else if (element.classList.contains('is-open')) {
-                            element.dispatchEvent(new Event('faq:close'));
-                        }
-                    });
-
-                    if (emptyMessageEl) {
-                        emptyMessageEl.hidden = visibleCount !== 0;
-                    }
-                };
-
-                updateVisibility('');
-
-                if (searchField) {
-                    const applySearch = () => {
-                        updateVisibility(searchField.value);
-                    };
-
-                    searchField.addEventListener('input', applySearch);
-                    searchField.addEventListener('change', applySearch);
-                }
-            })
-            .catch((error) => {
-                container.innerHTML = '';
-                console.error('FAQ: Failed to initialize FAQ page.', error);
-            });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        try {
-            renderHomeFaqSection();
-        } catch (error) {
-            console.error('FAQ: Failed to render home FAQ section.', error);
-        }
-    });
-
-    global.initFaqPage = initFaqPage;
-    global.renderHomeFaqSection = renderHomeFaqSection;
-})(typeof window !== 'undefined' ? window : globalThis);
+    searchField?.addEventListener('input', updateVisibility);
+    updateVisibility();
+  } catch (error) {
+    container.replaceChildren();
+    console.error('FAQ: Failed to initialize the page.', error);
+  }
+}

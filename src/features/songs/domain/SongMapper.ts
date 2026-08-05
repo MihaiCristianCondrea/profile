@@ -1,36 +1,43 @@
-// @ts-nocheck
+type RawTrack = Record<string, unknown>;
 
-function mapTrack(rawTrack) {
-    return {
-        title: rawTrack?.title || rawTrack?.song_name || 'Unknown title',
-        artists: rawTrack?.artists || rawTrack?.artist_name || 'D4rK Rekords',
-        image: rawTrack?.image || rawTrack?.thumbnail || rawTrack?.artwork || null,
-        link: rawTrack?.link || rawTrack?.universal_link || rawTrack?.url || '#'
-    };
+export interface SongTrack {
+  title: string;
+  artists: string;
+  image: string | null;
+  link: string;
 }
 
-function normalizeSongTracks(data) {
-    const songs = Array.isArray(data?.songs)
-        ? data.songs
-        : Array.isArray(data?.tracks)
-            ? data.tracks
-            : Array.isArray(data)
-                ? data
-                : [];
-
-    return songs.map(mapTrack);
+interface SongsApiResponse {
+  songs?: unknown[];
+  tracks?: unknown[];
 }
 
-if (typeof globalThis !== 'undefined') {
-    Object.assign(globalThis, {
-        mapTrack,
-        normalizeSongTracks
-    });
+function readString(track: RawTrack, ...keys: string[]): string | undefined {
+  for (const key of keys) {
+    const value = track[key];
+    if (typeof value === 'string' && value.trim()) return value.trim();
+  }
+  return undefined;
 }
 
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        mapTrack,
-        normalizeSongTracks
-    };
+export function mapTrack(rawTrack: unknown): SongTrack {
+  const track = rawTrack && typeof rawTrack === 'object' ? rawTrack as RawTrack : {};
+  return {
+    title: readString(track, 'title', 'song_name') ?? 'Unknown title',
+    artists: readString(track, 'artists', 'artist_name') ?? 'D4rK Rekords',
+    image: readString(track, 'image', 'thumbnail', 'artwork') ?? null,
+    link: readString(track, 'link', 'universal_link', 'url') ?? '#',
+  };
+}
+
+export function normalizeSongTracks(data: unknown): SongTrack[] {
+  const response = data as SongsApiResponse | undefined;
+  const songs = Array.isArray(response?.songs)
+    ? response.songs
+    : Array.isArray(response?.tracks)
+      ? response.tracks
+      : Array.isArray(data)
+        ? data
+        : [];
+  return songs.map(mapTrack);
 }

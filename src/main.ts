@@ -1,2 +1,2 @@
-// Compatibility entry for the current index.html. Application startup lives in src/app/main.ts.
+// Browser entry. Application startup and module wiring live in src/app/main.ts.
 import './app/main.ts';

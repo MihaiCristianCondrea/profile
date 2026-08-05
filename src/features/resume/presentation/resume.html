@@ -1,5 +1,5 @@
 <div id="resumePage">
-  <div class="form-container">
+  <md-outlined-card class="form-container">
     <div class="resume-header">
       <h1 data-resume-i18n="title">Resume Builder</h1>
       <div class="resume-language-toggle" role="group" aria-label="Resume language">
@@ -15,12 +15,22 @@
     <div class="form-section">
       <h2><span data-resume-i18n="personalInfo">Personal Info</span></h2>
       <div class="input-group">
-        <input type="text" id="name" placeholder=" " />
-        <label for="name" data-resume-i18n="fullName">Full Name</label>
+        <md-outlined-text-field
+          id="name"
+          type="text"
+          label="Full Name"
+          autocomplete="name"
+          data-resume-i18n-label="fullName"
+        ></md-outlined-text-field>
       </div>
       <div class="input-group">
-        <input type="text" id="job-title" placeholder=" " />
-        <label for="job-title" data-resume-i18n="jobTitle">Job Title</label>
+        <md-outlined-text-field
+          id="job-title"
+          type="text"
+          label="Job Title"
+          autocomplete="organization-title"
+          data-resume-i18n-label="jobTitle"
+        ></md-outlined-text-field>
       </div>
       <div class="resume-photo-controls">
         <label class="resume-file-label" for="photo" data-resume-i18n="profilePhoto">Profile Photo</label>
@@ -30,20 +40,40 @@
         </md-text-button>
       </div>
       <div class="input-group">
-        <input type="tel" id="phone" placeholder=" " />
-        <label for="phone" data-resume-i18n="phone">Phone</label>
+        <md-outlined-text-field
+          id="phone"
+          type="tel"
+          label="Phone"
+          autocomplete="tel"
+          data-resume-i18n-label="phone"
+        ></md-outlined-text-field>
       </div>
       <div class="input-group">
-        <input type="email" id="email" placeholder=" " />
-        <label for="email" data-resume-i18n="email">Email</label>
+        <md-outlined-text-field
+          id="email"
+          type="email"
+          label="Email"
+          autocomplete="email"
+          data-resume-i18n-label="email"
+        ></md-outlined-text-field>
       </div>
       <div class="input-group">
-        <input type="text" id="address" placeholder=" " />
-        <label for="address" data-resume-i18n="address">Address</label>
+        <md-outlined-text-field
+          id="address"
+          type="text"
+          label="Address"
+          autocomplete="street-address"
+          data-resume-i18n-label="address"
+        ></md-outlined-text-field>
       </div>
       <div class="input-group">
-        <textarea id="summary" placeholder=" "></textarea>
-        <label for="summary" data-resume-i18n="summary">Professional Summary</label>
+        <md-outlined-text-field
+          id="summary"
+          type="textarea"
+          rows="4"
+          label="Professional Summary"
+          data-resume-i18n-label="summary"
+        ></md-outlined-text-field>
       </div>
     </div>
 
@@ -85,7 +115,7 @@
 
     <div class="form-section dynamic-list" id="skills-form">
       <h2>
-        <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="build" aria-hidden="true">build</span>
+        <md-icon aria-hidden="true">build</md-icon>
         <span data-resume-i18n="skills">Skills</span>
       </h2>
       <md-filled-tonal-button data-add-list="skills">
@@ -95,7 +125,7 @@
 
     <div class="form-section" id="work-form">
       <h2>
-        <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="work" aria-hidden="true">work</span>
+        <md-icon aria-hidden="true">work</md-icon>
         <span data-resume-i18n="workHistory">Work History</span>
       </h2>
       <md-filled-tonal-button data-add-complex="work">
@@ -105,7 +135,7 @@
 
     <div class="form-section" id="education-form">
       <h2>
-        <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="school" aria-hidden="true">school</span>
+        <md-icon aria-hidden="true">school</md-icon>
         <span data-resume-i18n="education">Education</span>
       </h2>
       <md-filled-tonal-button data-add-complex="education">
@@ -115,7 +145,7 @@
 
     <div class="form-section dynamic-list" id="languages-form">
       <h2>
-        <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="language" aria-hidden="true">language</span>
+        <md-icon aria-hidden="true">language</md-icon>
         <span data-resume-i18n="languages">Languages</span>
       </h2>
       <md-filled-tonal-button data-add-list="languages">
@@ -125,7 +155,7 @@
 
     <div class="form-section" id="interests-form">
       <h2>
-        <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="interests" aria-hidden="true">interests</span>
+        <md-icon aria-hidden="true">interests</md-icon>
         <span data-resume-i18n="interests">Interests</span>
       </h2>
       <md-filled-tonal-button data-add-interest="true">
@@ -145,7 +175,7 @@
         <input type="file" id="resume-json-file" accept="application/json" />
       </div>
     </div>
-  </div>
+  </md-outlined-card>
 
   <article id="resume-preview" aria-label="ATS-friendly resume preview">
     <div class="resume-content">
@@ -156,13 +186,13 @@
 
         <div class="resume-section" id="resume-work">
           <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="work" aria-hidden="true">work</span>
+            <span class="material-symbols-outlined resume-pdf-icon" aria-hidden="true">work</span>
             <span data-resume-i18n="workHistoryPreview">Work history</span>
           </h2>
         </div>
         <div class="resume-section" id="resume-education">
           <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="school" aria-hidden="true">school</span>
+            <span class="material-symbols-outlined resume-pdf-icon" aria-hidden="true">school</span>
             <span data-resume-i18n="educationPreview">Education</span>
           </h2>
         </div>
@@ -176,21 +206,21 @@
         </address>
         <div class="resume-section" id="resume-skills">
           <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="build" aria-hidden="true">build</span>
+            <span class="material-symbols-outlined resume-pdf-icon" aria-hidden="true">build</span>
             <span data-resume-i18n="skillsPreview">Skills</span>
           </h2>
           <ul></ul>
         </div>
         <div class="resume-section" id="resume-languages">
           <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="language" aria-hidden="true">language</span>
+            <span class="material-symbols-outlined resume-pdf-icon" aria-hidden="true">language</span>
             <span data-resume-i18n="languagesPreview">Languages</span>
           </h2>
           <ul></ul>
         </div>
         <div class="resume-section" id="resume-interests">
           <h2>
-            <span class="material-symbols-outlined resume-pdf-icon" data-print-icon="interests" aria-hidden="true">interests</span>
+            <span class="material-symbols-outlined resume-pdf-icon" aria-hidden="true">interests</span>
             <span data-resume-i18n="interestsPreview">Interests</span>
           </h2>
           <ul></ul>
@@ -201,7 +231,8 @@
   <div class="resume-download">
     <p id="resume-export-note" class="resume-export-note" data-resume-i18n="exportNote">Exports through browser print / Save as PDF to preserve selectable, searchable resume text for ATS and job portals.</p>
     <md-filled-button id="downloadResumeButton" aria-describedby="resume-export-note">
-      <span class="material-symbols-outlined" slot="icon" aria-hidden="true">download</span><span data-resume-i18n="download">Download Resume as PDF</span>
+      <md-icon slot="icon" aria-hidden="true">download</md-icon>
+      <span data-resume-i18n="download">Download Resume as PDF</span>
     </md-filled-button>
   </div>
 </div>

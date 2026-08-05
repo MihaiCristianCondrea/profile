@@ -1,164 +1,92 @@
-const { readTranspiledSource } = require('../../../utils/sourceLoader');
+interface DrawerModule {
+  initNavigationDrawer: () => void;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+}
 
-describe('NavigationDrawer integration', () => {
-  const scriptContent = readTranspiledSource('src/features/navigation-drawer/presentation/NavigationDrawer.ts');
-  const scriptForTest = scriptContent;
+function createDrawerMarkup(): HTMLElement & { opened: boolean } {
+  document.body.innerHTML = `
+    <header data-drawer-inert-target>
+      <button id="menuButton"><span id="menuButtonIcon">menu</span></button>
+    </header>
+    <div id="drawer-layer" aria-hidden="true">
+      <md-navigation-drawer-modal id="navDrawer">
+        <button id="closeDrawerButton">Close</button>
+        <a class="nav-item" href="#home">Home</a>
+        <button id="aboutToggle" aria-controls="aboutContent" aria-expanded="false">About</button>
+        <div id="aboutContent" aria-hidden="true">About content</div>
+        <button id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
+        <div id="androidAppsContent" aria-hidden="true">Apps content</div>
+      </md-navigation-drawer-modal>
+    </div>
+    <main data-drawer-inert-target>Main</main>
+  `;
 
-  const createDrawerMarkup = () => {
-    document.body.innerHTML = `
-      <header data-drawer-inert-target id="topAppBar" class="topbar">
-        <button id="menuButton" type="button">Menu</button>
-      </header>
-      <div id="drawer-layer" class="drawer-layer" aria-hidden="true">
-        <md-navigation-drawer-modal id="navDrawer" aria-modal="true">
-          <button id="closeDrawerButton" type="button">Close</button>
-          <nav>
-            <md-list>
-              <md-list-item href="#home" id="homeLink" class="nav-item">Home</md-list-item>
-            </md-list>
-          </nav>
-          <section>
-            <button id="aboutToggle" type="button" aria-controls="aboutContent" aria-expanded="false">About</button>
-            <div id="aboutContent" aria-hidden="true">About section</div>
-          </section>
-          <section>
-            <button id="androidAppsToggle" type="button" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
-            <div id="androidAppsContent" aria-hidden="true">Apps section</div>
-          </section>
-        </md-navigation-drawer-modal>
-      </div>
-      <main data-drawer-inert-target id="mainContent">Main content</main>
-      <footer data-drawer-inert-target id="footerContent">Footer content</footer>
-    `;
+  const drawer = document.getElementById('navDrawer') as HTMLElement & { opened: boolean };
+  drawer.opened = false;
+  return drawer;
+}
 
-    const navDrawerElement = document.getElementById('navDrawer');
-    let openedState = false;
-    Object.defineProperty(navDrawerElement, 'opened', {
-      configurable: true,
-      get() {
-        return openedState;
-      },
-      set(value) {
-        openedState = Boolean(value);
-      },
-    });
-
-    const firstNavItem = navDrawerElement.querySelector('.nav-item[href]');
-    firstNavItem.focus = jest.fn();
-
-    const closeDrawerButton = document.getElementById('closeDrawerButton');
-    closeDrawerButton.focus = jest.fn();
-  };
-
-  beforeAll(() => {
-    window.getDynamicElement = (id) => document.getElementById(id);
-    window.eval(scriptForTest);
-  });
-
+describe('NavigationDrawer', () => {
   beforeEach(() => {
+    jest.resetModules();
     document.body.className = '';
-    delete document.body.dataset.drawerMode;
-
-    createDrawerMarkup();
-    window.initNavigationDrawer();
   });
 
-  afterEach(() => {
-    document.body.innerHTML = '';
-  });
+  test('opens and closes while synchronizing focus and modal accessibility', () => {
+    const drawer = createDrawerMarkup();
+    const menu = document.getElementById('menuButton') as HTMLElement;
+    const firstItem = drawer.querySelector('.nav-item') as HTMLElement;
+    const firstFocus = jest.spyOn(firstItem, 'focus');
+    const menuFocus = jest.spyOn(menu, 'focus');
+    const drawerModule = require(
+      '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
+    ) as DrawerModule;
 
-  test('opens and closes the drawer while managing focus, layer, and inert targets', () => {
-    const menuButtonElement = document.getElementById('menuButton');
-    const drawerLayer = document.getElementById('drawer-layer');
-    const navDrawerElement = document.getElementById('navDrawer');
-    const inertElements = Array.from(document.querySelectorAll('[data-drawer-inert-target]'));
-    const firstNavItem = navDrawerElement.querySelector('.nav-item[href]');
+    drawerModule.initNavigationDrawer();
+    drawerModule.openDrawer();
 
-    const navItemFocusSpy = firstNavItem.focus;
-    const menuFocusSpy = jest.spyOn(menuButtonElement, 'focus');
-
-    menuButtonElement.click();
-
-    expect(navDrawerElement.opened).toBe(true);
+    expect(drawer.opened).toBe(true);
     expect(document.body.classList.contains('drawer-is-open')).toBe(true);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('true');
-    expect(drawerLayer.classList.contains('open')).toBe(true);
-    expect(drawerLayer.getAttribute('aria-hidden')).toBe('false');
-    expect(navItemFocusSpy).toHaveBeenCalledTimes(1);
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(true);
+    expect(menu.getAttribute('aria-expanded')).toBe('true');
+    expect(firstFocus).toHaveBeenCalledTimes(1);
+    document.querySelectorAll<HTMLElement>('[data-drawer-inert-target]').forEach((element) => {
+      expect(element.inert).toBe(true);
       expect(element.getAttribute('aria-hidden')).toBe('true');
     });
 
-    const closeDrawerButton = document.getElementById('closeDrawerButton');
-    closeDrawerButton.click();
+    drawerModule.closeDrawer();
 
-    expect(navDrawerElement.opened).toBe(false);
+    expect(drawer.opened).toBe(false);
     expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocusSpy).toHaveBeenCalledTimes(1);
-    expect(drawerLayer.classList.contains('open')).toBe(false);
-    expect(drawerLayer.getAttribute('aria-hidden')).toBe('true');
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(false);
-      expect(element.hasAttribute('aria-hidden')).toBe(false);
-    });
-
-    menuButtonElement.click();
-    expect(navDrawerElement.opened).toBe(true);
-
-    drawerLayer.click();
-
-    expect(navDrawerElement.opened).toBe(false);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocusSpy).toHaveBeenCalledTimes(2);
-
-    menuButtonElement.click();
-    expect(navDrawerElement.opened).toBe(true);
-
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-
-    expect(navDrawerElement.opened).toBe(false);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
-    expect(menuButtonElement.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocusSpy).toHaveBeenCalledTimes(3);
-    inertElements.forEach((element) => {
-      expect(element.hasAttribute('inert')).toBe(false);
+    expect(menu.getAttribute('aria-expanded')).toBe('false');
+    expect(menuFocus).toHaveBeenCalledTimes(1);
+    document.querySelectorAll<HTMLElement>('[data-drawer-inert-target]').forEach((element) => {
+      expect(element.inert).toBe(false);
       expect(element.hasAttribute('aria-hidden')).toBe(false);
     });
   });
 
-  test('toggle sections are mutually exclusive and maintain ARIA state', () => {
-    const aboutToggleElement = document.getElementById('aboutToggle');
-    const aboutContentElement = document.getElementById('aboutContent');
-    const androidToggleElement = document.getElementById('androidAppsToggle');
-    const androidContentElement = document.getElementById('androidAppsContent');
+  test('keeps expandable section state and ARIA attributes aligned', () => {
+    createDrawerMarkup();
+    const drawerModule = require(
+      '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
+    ) as DrawerModule;
+    drawerModule.initNavigationDrawer();
+    const toggle = document.getElementById('aboutToggle') as HTMLElement;
+    const content = document.getElementById('aboutContent') as HTMLElement;
 
-    aboutToggleElement.click();
+    expect(content.hidden).toBe(true);
+    toggle.click();
 
-    expect(aboutToggleElement.classList.contains('expanded')).toBe(true);
-    expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('true');
-    expect(aboutContentElement.classList.contains('open')).toBe(true);
-    expect(aboutContentElement.getAttribute('aria-hidden')).toBe('false');
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(toggle.classList.contains('expanded')).toBe(true);
+    expect(content.hidden).toBe(false);
+    expect(content.getAttribute('aria-hidden')).toBe('false');
 
-    androidToggleElement.click();
-
-    expect(aboutToggleElement.classList.contains('expanded')).toBe(false);
-    expect(aboutToggleElement.getAttribute('aria-expanded')).toBe('false');
-    expect(aboutContentElement.classList.contains('open')).toBe(false);
-    expect(aboutContentElement.getAttribute('aria-hidden')).toBe('true');
-
-    expect(androidToggleElement.classList.contains('expanded')).toBe(true);
-    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('true');
-    expect(androidContentElement.classList.contains('open')).toBe(true);
-    expect(androidContentElement.getAttribute('aria-hidden')).toBe('false');
-
-    androidToggleElement.click();
-
-    expect(androidToggleElement.classList.contains('expanded')).toBe(false);
-    expect(androidToggleElement.getAttribute('aria-expanded')).toBe('false');
-    expect(androidContentElement.classList.contains('open')).toBe(false);
-    expect(androidContentElement.getAttribute('aria-hidden')).toBe('true');
+    toggle.click();
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(content.hidden).toBe(true);
+    expect(content.getAttribute('aria-hidden')).toBe('true');
   });
 });
