@@ -1,14 +1,26 @@
 import DataServices from "../../../app/DataServices";
+import {
+	formatDate,
+	formatEnglishPlural,
+	formatNumber,
+	localizeTemplate,
+	strings,
+} from "../../../core/localization/Localization";
 import type { AppShowcaseSection } from "../../app-showcase/presentation/AppShowcaseSection";
 import "../../app-showcase/presentation/AppShowcaseSection";
-import "../core/components/ParticleNetworkBackground";
-import type { FavoriteRepository, RepositoryRef } from "../core/models/Repository";
+import "../../../core/components/ParticleNetworkBackground";
+import type { RepositoryRef } from "../core/models/Repository";
+import type { FavoriteRepository } from "../../favorites/domain/models/FavoriteRepository";
+import { FavoritesView } from "../../favorites/presentation/FavoritesView";
 import { repositoryUrl } from "../core/models/Repository";
 import type { PatchFile } from "../tools/git-patch/domain/PatchFile";
 import type { ProcessedRelease, ReleaseAsset, ReleaseStats } from "../tools/release-stats/domain/ReleaseStats";
 import type { RepositoryMapFormat, RepositoryMapResult, RepositoryTreeItem } from "../tools/repo-mapper/domain/RepositoryTree";
 import GitHubUrlParser from "../core/services/GitHubUrlParser";
 import RepositoryMapBuilder from "../tools/repo-mapper/domain/RepositoryMapBuilder";
+import { BrowserCountryLocator } from "../tools/leaderboard/data/BrowserCountryLocator";
+import type { Leaderboard } from "../tools/leaderboard/domain/Leaderboard";
+import { LeaderboardView } from "../tools/leaderboard/presentation/LeaderboardView";
 import { hashFromViewId, isEmptyHashRoute, isKnownHashRoute, viewIdFromHash, type ViewId } from "./GitHubToolsRoutes";
 import WebComponent from "../../../core/webcomponents/WebComponent";
 import css from "./GitHubToolsApp.scss?raw";
@@ -19,15 +31,18 @@ type SegmentedButtonSetElement = HTMLElement & { setButtonSelected(index: number
 type ThemePreference = "light" | "dark" | "system";
 
 const THEME_STORAGE_KEY = "github_tools_theme";
+const LEADERBOARD_PAGE_SIZE = 25;
+const DEFAULT_LEADERBOARD_SLUG = "global";
+const DEFAULT_LEADERBOARD_NAME = strings.leaderboard.ranking.defaultCountry;
 
 const VIEW_TITLES: Record<ViewId, string> = {
-	home: "Home",
-	favorites: "Favorites",
-	mapper: "Repo Mapper",
-	releases: "Release Stats",
-	gitpatch: "Git Patch",
+	home: strings.common.navigation.home,
+	favorites: strings.common.navigation.favorites,
+	mapper: strings.common.navigation.repoMapper,
+	releases: strings.common.navigation.releaseStats,
+	gitpatch: strings.common.navigation.gitPatch,
+	leaderboard: strings.common.navigation.leaderboard,
 };
-
 
 type AppState = {
 	currentView: ViewId;
@@ -44,9 +59,14 @@ type AppState = {
 		parsedRepo: RepositoryRef | null;
 	};
 	patch: PatchFile;
+	leaderboard: Leaderboard | null;
 };
 
 export default class GitHubToolsApp extends WebComponent {
+	private readonly favoritesView = new FavoritesView();
+	private readonly countryLocator = new BrowserCountryLocator();
+	private leaderboardView!: LeaderboardView;
+	private leaderboardPage = 1;
 	private pendingActions = new Set<"mapper" | "releases" | "patch">();
 	private readonly handleHashChange = (): void => this.activateViewFromHash();
 	private readonly handleSystemThemeChange = (): void => this.applyTheme(this.getThemePreference(), false);
@@ -69,10 +89,11 @@ export default class GitHubToolsApp extends WebComponent {
 			content: "",
 			filename: "git.patch",
 		},
+		leaderboard: null,
 	};
 
 	constructor() {
-		super(html, css);
+		super(localizeTemplate(html), css);
 	}
 
 	get htmlTagName(): string {
@@ -80,6 +101,7 @@ export default class GitHubToolsApp extends WebComponent {
 	}
 
 	onConnected(): void {
+		this.leaderboardView = new LeaderboardView(this.shadowRoot!);
 		this.loadFavorites();
 		this.applyTheme(this.getThemePreference(), false);
 		this.bindNavigation();
@@ -87,6 +109,7 @@ export default class GitHubToolsApp extends WebComponent {
 		this.bindFavorites();
 		this.bindRepositoryMapFormatControls();
 		this.bindPatchActions();
+		this.bindLeaderboard();
 		this.bindThemeOptions();
 		this.configureAppShowcase();
 		this.bindSubmitButtonFallbacks();
@@ -195,6 +218,35 @@ export default class GitHubToolsApp extends WebComponent {
 		this.select("#patch-download-btn")?.addEventListener("click", () => this.downloadPatch());
 	}
 
+	private bindLeaderboard(): void {
+		this.select<HTMLInputElement>("#leaderboard-search")?.addEventListener("input", () => {
+			this.leaderboardPage = 1;
+			this.renderLeaderboardUsers();
+		});
+		this.select("#leaderboard-previous")?.addEventListener("click", () => {
+			this.leaderboardPage = Math.max(1, this.leaderboardPage - 1);
+			this.renderLeaderboardUsers();
+		});
+		this.select("#leaderboard-next")?.addEventListener("click", () => {
+			this.leaderboardPage += 1;
+			this.renderLeaderboardUsers();
+		});
+		this.select("#leaderboard-country-filters")?.addEventListener("click", (event) => {
+			const chip = (event.target as HTMLElement).closest<HTMLElement>("md-filter-chip[data-country-slug]");
+			if (!chip) return;
+			const { countrySlug, countryName } = chip.dataset;
+			if (!countrySlug || !countryName || countrySlug === this.state.leaderboard?.countrySlug) return;
+			void this.loadLeaderboard(countrySlug, countryName);
+		});
+		this.select("#leaderboard-locate")?.addEventListener("click", () => void this.useCurrentLocation());
+		this.select("#leaderboard-retry")?.addEventListener("click", () => {
+			void this.loadLeaderboard(
+				this.state.leaderboard?.countrySlug ?? DEFAULT_LEADERBOARD_SLUG,
+				this.state.leaderboard?.country ?? DEFAULT_LEADERBOARD_NAME,
+			);
+		});
+	}
+
 	private toggleDrawer(forceOpen?: boolean): void {
 		const drawer = this.select<NavigationDrawerElement>("#drawer");
 		if (!drawer) return;
@@ -209,7 +261,9 @@ export default class GitHubToolsApp extends WebComponent {
 		drawerLayer?.setAttribute("aria-hidden", String(!isOpen));
 
 		this.select("#drawer-open")?.setAttribute("aria-expanded", String(isOpen));
-		this.select("#drawer-open")?.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+		this.select("#drawer-open")?.setAttribute("aria-label", isOpen
+			? strings.common.navigation.closeMenu
+			: strings.common.navigation.openMenu);
 		const triggerIcon = this.select("#drawer-open-icon");
 		if (triggerIcon) triggerIcon.textContent = isOpen ? "menu_open" : "menu";
 	}
@@ -259,7 +313,6 @@ export default class GitHubToolsApp extends WebComponent {
 		activeNav?.querySelector("md-icon, .material-symbols-outlined")?.classList.add("filled-icon");
 		const topbarTitle = this.select("#topbar-title");
 		if (topbarTitle) topbarTitle.textContent = VIEW_TITLES[viewId];
-
 		if (url && viewId === "mapper") {
 			this.select<HTMLInputElement>("#mapper-url")!.value = url;
 			this.handleUrlInput("mapper");
@@ -268,7 +321,58 @@ export default class GitHubToolsApp extends WebComponent {
 			this.select<HTMLInputElement>("#releases-url")!.value = url;
 			this.handleUrlInput("releases");
 		}
+		if (viewId === "leaderboard" && !this.state.leaderboard) {
+			void this.loadLeaderboard(DEFAULT_LEADERBOARD_SLUG, DEFAULT_LEADERBOARD_NAME);
+		}
 		if (closeDrawer) this.toggleDrawer(false);
+	}
+
+	private async loadLeaderboard(countrySlug: string, countryName: string): Promise<boolean> {
+		this.leaderboardView.hideError();
+		this.leaderboardView.setLoading(true);
+		try {
+			this.leaderboardPage = 1;
+			this.state.leaderboard = await DataServices.leaderboard.execute(countrySlug, countryName);
+			this.leaderboardView.renderHeader(this.state.leaderboard);
+			this.selectAll<HTMLElement>("#leaderboard-country-filters md-filter-chip").forEach((chip) => {
+				chip.toggleAttribute("selected", chip.dataset.countrySlug === countrySlug);
+			});
+			this.renderLeaderboardUsers();
+			return true;
+		} catch (error) {
+			this.leaderboardView.showError(this.errorMessage(error));
+			return false;
+		} finally {
+			this.leaderboardView.setLoading(false);
+		}
+	}
+
+	private renderLeaderboardUsers(): void {
+		if (!this.state.leaderboard) return;
+		const query = this.select<HTMLInputElement>("#leaderboard-search")?.value ?? "";
+		const allUsers = DataServices.searchLeaderboard.execute(this.state.leaderboard, query, this.state.leaderboard.users.length);
+		const pageCount = Math.max(1, Math.ceil(allUsers.length / LEADERBOARD_PAGE_SIZE));
+		this.leaderboardPage = Math.min(this.leaderboardPage, pageCount);
+		const start = (this.leaderboardPage - 1) * LEADERBOARD_PAGE_SIZE;
+		this.leaderboardView.renderUsers(
+			allUsers.slice(start, start + LEADERBOARD_PAGE_SIZE),
+			this.state.leaderboard.country,
+			query.trim().length > 0,
+		);
+		this.leaderboardView.renderPagination(this.leaderboardPage, pageCount, allUsers.length);
+	}
+
+	private async useCurrentLocation(): Promise<void> {
+		const button = this.select<HTMLElement>("#leaderboard-locate");
+		button?.toggleAttribute("disabled", true);
+		try {
+			const country = await this.countryLocator.locate();
+			await this.loadLeaderboard(country.slug, country.name);
+		} catch {
+			// Location is optional; keep the currently selected leaderboard when unavailable.
+		} finally {
+			button?.removeAttribute("disabled");
+		}
 	}
 
 	private loadFavorites(): void {
@@ -300,62 +404,14 @@ export default class GitHubToolsApp extends WebComponent {
 		const empty = this.select("#favorites-empty");
 		if (!grid || !empty) return;
 
-		grid.textContent = "";
-		if (this.state.favorites.length === 0) {
-			empty.classList.remove("hidden");
-			return;
-		}
-
-		empty.classList.add("hidden");
-		this.state.favorites.forEach((favorite) => grid.append(this.createFavoriteCard(favorite)));
-	}
-
-	private createFavoriteCard(favorite: FavoriteRepository): HTMLElement {
-		const card = document.createElement("md-outlined-card");
-		card.className = "favorite-card";
-
-		const header = document.createElement("div");
-		header.className = "favorite-card-header";
-		const titleWrap = document.createElement("div");
-		titleWrap.className = "favorite-title-wrap";
-		const owner = document.createElement("div");
-		owner.className = "favorite-owner";
-		owner.append(this.createIcon("folder_open"), document.createTextNode(favorite.owner));
-		const title = document.createElement("h3");
-		title.textContent = favorite.repo;
-		titleWrap.append(owner, title);
-		const remove = document.createElement("md-outlined-icon-button");
-		remove.setAttribute("type", "button");
-		remove.setAttribute("aria-label", `Remove ${favorite.owner}/${favorite.repo} from favorites`);
-		const removeIcon = this.createIcon("star");
-		removeIcon.classList.add("filled-icon");
-		remove.append(removeIcon);
-		remove.addEventListener("click", () => {
-			this.state.favorites = this.state.favorites.filter(
-				(item) => !(item.owner.toLowerCase() === favorite.owner.toLowerCase() && item.repo.toLowerCase() === favorite.repo.toLowerCase())
-			);
-			this.saveFavorites();
+		this.favoritesView.renderGrid(grid, empty, this.state.favorites, {
+			remove: (favorite) => {
+				this.state.favorites = this.state.favorites.filter((item) => !DataServices.favorites.isFavorite([item], favorite));
+				this.saveFavorites();
+			},
+			openMapper: (favorite) => this.navigateTo("mapper", repositoryUrl(favorite)),
+			openStats: (favorite) => this.navigateTo("releases", repositoryUrl(favorite))
 		});
-		header.append(titleWrap, remove);
-
-		const actions = document.createElement("div");
-		actions.className = "favorite-card-actions";
-		actions.append(
-			this.createFavoriteAction("terminal", "Map", () => this.navigateTo("mapper", repositoryUrl(favorite))),
-			this.createFavoriteAction("bar_chart", "Stats", () => this.navigateTo("releases", repositoryUrl(favorite)))
-		);
-		card.append(header, actions);
-		return card;
-	}
-
-	private createFavoriteAction(iconName: string, label: string, onClick: () => void): HTMLElement {
-		const button = document.createElement("md-outlined-button");
-		button.setAttribute("type", "button");
-		const icon = this.createIcon(iconName);
-		icon.setAttribute("slot", "icon");
-		button.append(icon, document.createTextNode(label));
-		button.addEventListener("click", onClick);
-		return button;
 	}
 
 	private renderHomeFavorites(): void {
@@ -363,30 +419,13 @@ export default class GitHubToolsApp extends WebComponent {
 		const list = this.select("#home-favorites-list");
 		if (!section || !list) return;
 
-		list.textContent = "";
-		if (this.state.favorites.length === 0) {
-			section.classList.add("hidden");
-			return;
-		}
-
-		section.classList.remove("hidden");
-		this.state.favorites.slice(0, 5).forEach((favorite) => {
-			const button = document.createElement("md-assist-chip");
-			button.className = "favorite-chip";
-			const icon = this.createIcon("star");
-			icon.setAttribute("slot", "icon");
-			icon.classList.add("filled-icon");
-			button.append(icon, document.createTextNode(favorite.repo));
-			button.addEventListener("click", () => this.navigateTo("releases", repositoryUrl(favorite)));
-			list.append(button);
-		});
-		const seeAll = document.createElement("md-assist-chip");
-		seeAll.className = "favorite-chip";
-		const seeAllIcon = this.createIcon("arrow_forward");
-		seeAllIcon.setAttribute("slot", "icon");
-		seeAll.append(seeAllIcon, document.createTextNode("See all"));
-		seeAll.addEventListener("click", () => this.navigateTo("favorites"));
-		list.append(seeAll);
+		this.favoritesView.renderHome(
+			section,
+			list,
+			this.state.favorites,
+			(favorite) => this.navigateTo("releases", repositoryUrl(favorite)),
+			() => this.navigateTo("favorites")
+		);
 	}
 
 	private handleUrlInput(view: "mapper" | "releases"): void {
@@ -407,7 +446,9 @@ export default class GitHubToolsApp extends WebComponent {
 		const active = !!parsed && this.isFavorite(parsed);
 		button.toggleAttribute("disabled", !parsed);
 		button.toggleAttribute("selected", active);
-		button.setAttribute("aria-label", active ? "Remove favorite" : "Add favorite");
+		button.setAttribute("aria-label", active
+			? strings.githubTools.shared.removeFavorite
+			: strings.githubTools.shared.addFavorite);
 	}
 
 	private toggleToken(view: "mapper" | "releases"): void {
@@ -418,7 +459,9 @@ export default class GitHubToolsApp extends WebComponent {
 		if (!button || !panel || !label) return;
 
 		const shouldShow = !panel.classList.contains("open");
-		const nextText = shouldShow ? "Hide Settings" : "Token Settings";
+		const nextText = shouldShow
+			? strings.githubTools.shared.hideSettings
+			: strings.githubTools.shared.tokenSettings;
 
 		panel.classList.toggle("open", shouldShow);
 		panel.setAttribute("aria-hidden", String(!shouldShow));
@@ -446,10 +489,10 @@ export default class GitHubToolsApp extends WebComponent {
 
 		this.hideError("mapper");
 		result?.classList.add("hidden");
-		const resetButton = this.setLoading("#mapper-submit", "Processing...", "progress_activity");
+		const resetButton = this.setLoading("#mapper-submit", strings.githubTools.shared.processing, "progress_activity");
 
 		if (!parsed) {
-			this.showError("mapper", "Invalid GitHub URL");
+			this.showError("mapper", strings.githubTools.shared.invalidGitHubUrl);
 			resetButton();
 			this.finishPendingAction("mapper");
 			return;
@@ -461,7 +504,7 @@ export default class GitHubToolsApp extends WebComponent {
 			this.state.mapper.outputs = {};
 			this.renderMapperOutput();
 			result?.classList.remove("hidden");
-			if (tree.truncated) this.showError("mapper", "Repo is massive, output was truncated by the GitHub API.");
+			if (tree.truncated) this.showError("mapper", strings.githubTools.mapper.truncated);
 		} catch (error) {
 			this.showError("mapper", this.errorMessage(error));
 		} finally {
@@ -476,8 +519,8 @@ export default class GitHubToolsApp extends WebComponent {
 		outputs[format] = result;
 
 		this.select("#mapper-code")!.textContent = result.output;
-		this.select("#mapper-stats-files")!.textContent = String(result.files);
-		this.select("#mapper-stats-folders")!.textContent = String(result.folders);
+		this.select("#mapper-stats-files")!.textContent = formatNumber(result.files);
+		this.select("#mapper-stats-folders")!.textContent = formatNumber(result.folders);
 	}
 
 	private async handleReleasesSubmit(event: SubmitEvent): Promise<void> {
@@ -490,10 +533,10 @@ export default class GitHubToolsApp extends WebComponent {
 
 		this.hideError("releases");
 		result?.classList.add("hidden");
-		const resetButton = this.setLoading("#releases-submit", "Processing...", "progress_activity");
+		const resetButton = this.setLoading("#releases-submit", strings.githubTools.shared.processing, "progress_activity");
 
 		if (!parsed) {
-			this.showError("releases", "Invalid GitHub URL");
+			this.showError("releases", strings.githubTools.shared.invalidGitHubUrl);
 			resetButton();
 			this.finishPendingAction("releases");
 			return;
@@ -525,17 +568,23 @@ export default class GitHubToolsApp extends WebComponent {
 
 		this.select("#rel-detail-name")!.textContent = active.name;
 		this.select("#rel-detail-tag")!.textContent = active.tagName;
-		this.select("#rel-detail-date")!.textContent = active.date ? new Date(active.date).toLocaleDateString() : "Unpublished";
-		this.select("#rel-detail-downloads")!.textContent = active.downloads.toLocaleString();
-		this.select("#rel-total-downloads")!.textContent = total.toLocaleString();
-		this.select("#rel-count")!.textContent = `${releases.length} Found`;
+		this.select("#rel-detail-date")!.textContent = active.date
+			? formatDate(new Date(active.date))
+			: strings.githubTools.releases.unpublished;
+		this.select("#rel-detail-downloads")!.textContent = formatNumber(active.downloads);
+		this.select("#rel-total-downloads")!.textContent = formatNumber(total);
+		this.select("#rel-count")!.textContent = formatEnglishPlural(
+			releases.length,
+			strings.githubTools.releases.found_one,
+			strings.githubTools.releases.found_other,
+		);
 
 		const assetList = this.select("#rel-assets-list")!;
 		assetList.textContent = "";
 		if (active.assets.length === 0) {
 			const empty = document.createElement("div");
 			empty.className = "empty-list";
-			empty.textContent = "No assets.";
+			empty.textContent = strings.githubTools.releases.noAssets;
 			assetList.append(empty);
 		} else {
 			active.assets.forEach((asset) => assetList.append(this.createAssetRow(asset, maxAssetDownloads)));
@@ -565,7 +614,7 @@ export default class GitHubToolsApp extends WebComponent {
 		row.className = "asset-row";
 		row.innerHTML = `<div class="asset-line"><strong></strong><span></span></div><div class="bar-track"><div class="bar-fill"></div></div>`;
 		row.querySelector("strong")!.textContent = asset.name;
-		row.querySelector("span")!.textContent = asset.downloads.toLocaleString();
+		row.querySelector("span")!.textContent = formatNumber(asset.downloads);
 		const width = maxDownloads > 0 ? (asset.downloads / maxDownloads) * 100 : 0;
 		(row.querySelector(".bar-fill") as HTMLElement).style.width = `${width}%`;
 		return row;
@@ -580,7 +629,7 @@ export default class GitHubToolsApp extends WebComponent {
 		button.className = `release-button${selected ? " selected" : ""}`;
 		button.innerHTML = `<div class="release-button-header"><span class="release-button-title"></span><span class="release-button-count"></span></div><div class="bar-track"><div class="bar-fill"></div></div>`;
 		button.querySelector(".release-button-title")!.textContent = release.name;
-		button.querySelector(".release-button-count")!.textContent = release.downloads.toLocaleString();
+		button.querySelector(".release-button-count")!.textContent = formatNumber(release.downloads);
 		const width = maxDownloads > 0 ? (release.downloads / maxDownloads) * 100 : 0;
 		(button.querySelector(".bar-fill") as HTMLElement).style.width = `${width}%`;
 		button.addEventListener("click", () => {
@@ -600,10 +649,10 @@ export default class GitHubToolsApp extends WebComponent {
 
 		this.hideError("patch");
 		result?.classList.add("hidden");
-		const resetButton = this.setLoading("#patch-submit", "Fetching...", "progress_activity");
+		const resetButton = this.setLoading("#patch-submit", strings.githubTools.patch.fetching, "progress_activity");
 
 		if (!parsed) {
-			this.showError("patch", "Invalid Commit URL");
+			this.showError("patch", strings.githubTools.patch.invalidCommitUrl);
 			resetButton();
 			this.finishPendingAction("patch");
 			return;
@@ -632,7 +681,7 @@ export default class GitHubToolsApp extends WebComponent {
 	private async copyTextWithFeedback(text: string, buttonSelector: string): Promise<void> {
 		if (!text) return;
 		await navigator.clipboard.writeText(text);
-		const resetButton = this.setButtonState(buttonSelector, "Copied", "check_circle", false, "copied");
+		const resetButton = this.setButtonState(buttonSelector, strings.common.actions.copied, "check_circle", false, "copied");
 		window.setTimeout(resetButton, 2000);
 	}
 
@@ -673,7 +722,7 @@ export default class GitHubToolsApp extends WebComponent {
 		progress.setAttribute("slot", "icon");
 		progress.setAttribute("data-icon", "");
 		progress.setAttribute("indeterminate", "");
-		progress.setAttribute("aria-label", "Loading");
+		progress.setAttribute("aria-label", strings.common.actions.loading);
 		return this.setButtonState(buttonSelector, label, progress, true, "is-loading");
 	}
 
@@ -714,6 +763,6 @@ export default class GitHubToolsApp extends WebComponent {
 	}
 
 	private errorMessage(error: unknown): string {
-		return error instanceof Error ? error.message : "Something went wrong";
+		return error instanceof Error ? error.message : strings.githubTools.shared.somethingWentWrong;
 	}
 }

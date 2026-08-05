@@ -1,3 +1,4 @@
+import { formatMessage, strings } from "../../../../core/localization/Localization.ts";
 import type { CommitRef, RepositoryRef } from "../models/Repository";
 import type { PatchFile } from "../../tools/git-patch/domain/PatchFile";
 import type { ReleaseStats } from "../../tools/release-stats/domain/ReleaseStats";
@@ -36,12 +37,12 @@ export default class GitHubRepositoryClient {
 		const repoData = await this.fetchJson<GithubRepoResponse>(
 			`https://api.github.com/repos/${repository.owner}/${repository.repo}`,
 			headers,
-			"Repo not found"
+			strings.githubTools.errors.repositoryNotFound
 		);
 		const treeData = await this.fetchJson<GithubTreeResponse>(
 			`https://api.github.com/repos/${repository.owner}/${repository.repo}/git/trees/${encodeURIComponent(repoData.default_branch)}?recursive=1`,
 			headers,
-			"Failed to fetch tree"
+			strings.githubTools.errors.treeFetchFailed
 		);
 		return { items: treeData.tree ?? [], truncated: treeData.truncated ?? false };
 	}
@@ -50,9 +51,9 @@ export default class GitHubRepositoryClient {
 		const releases = await this.fetchJson<GithubReleaseResponse[]>(
 			`https://api.github.com/repos/${repository.owner}/${repository.repo}/releases?per_page=100`,
 			this.githubHeaders(token),
-			"Repo not found"
+			strings.githubTools.errors.repositoryNotFound
 		);
-		if (releases.length === 0) throw new Error("No releases found");
+		if (releases.length === 0) throw new Error(strings.githubTools.errors.noReleases);
 
 		let total = 0;
 		const processed = releases.map((release) => {
@@ -76,7 +77,7 @@ export default class GitHubRepositoryClient {
 		const response = await fetch(`https://api.github.com/repos/${commit.owner}/${commit.repo}/commits/${commit.sha}`, {
 			headers: { Accept: "application/vnd.github.v3.patch" },
 		});
-		if (!response.ok) throw new Error("Failed to fetch patch");
+		if (!response.ok) throw new Error(strings.githubTools.errors.patchFetchFailed);
 		return {
 			content: await response.text(),
 			filename: `${commit.repo}-${commit.sha.substring(0, 7)}.patch`,
@@ -84,7 +85,10 @@ export default class GitHubRepositoryClient {
 	}
 
 	private async fetchJson<T>(url: string, headers: Record<string, string>, notFoundMessage: string): Promise<T> {
-		const cacheKey = this.cacheKey(url, headers);
+		// Never retain credentials (or private repository responses) in the shared response cache.
+		if (headers.Authorization) return this.fetchJsonUncached<T>(url, headers, notFoundMessage);
+
+		const cacheKey = url;
 		const cached = this.responseCache.get(cacheKey);
 
 		if (cached instanceof Promise) return cached as Promise<T>;
@@ -106,26 +110,26 @@ export default class GitHubRepositoryClient {
 
 	private async fetchJsonUncached<T>(url: string, headers: Record<string, string>, notFoundMessage: string): Promise<T> {
 		const response = await fetch(url, { headers });
-		if (!response.ok) throw new Error(response.status === 404 ? notFoundMessage : `GitHub API error (${response.status})`);
+		if (!response.ok) throw new Error(this.githubErrorMessage(response.status, notFoundMessage));
 		return (await response.json()) as T;
 	}
 
-	private cacheKey(url: string, headers: Record<string, string>): string {
-		const authorization = headers.Authorization;
-		return `${authorization ? `auth-${this.hashTokenIdentifier(authorization)}` : "anonymous"}:${url}`;
-	}
-
-	private hashTokenIdentifier(value: string): string {
-		let hash = 0;
-		for (let i = 0; i < value.length; i++) {
-			hash = ((hash << 5) - hash + value.charCodeAt(i)) | 0;
-		}
-		return hash.toString(36);
+	private githubErrorMessage(status: number, notFoundMessage: string): string {
+		if (status === 401) return strings.githubTools.errors.tokenRejected;
+		if (status === 403) return strings.githubTools.errors.accessDenied;
+		if (status === 404) return formatMessage(strings.githubTools.errors.privateRepositoryHint, { message: notFoundMessage });
+		return formatMessage(strings.githubTools.errors.apiError, { status });
 	}
 
 	private githubHeaders(token: string): Record<string, string> {
-		const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json" };
-		if (token.trim()) headers.Authorization = `token ${token.trim()}`;
+		const headers: Record<string, string> = {
+			Accept: "application/vnd.github.v3+json",
+			"X-GitHub-Api-Version": "2022-11-28",
+		};
+		// GitHub access tokens are opaque credentials. Do not infer their type,
+		// validity, or length from a prefix because formats can change over time.
+		const accessToken = token.trim();
+		if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
 		return headers;
 	}
 }
