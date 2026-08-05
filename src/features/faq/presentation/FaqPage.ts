@@ -15,7 +15,7 @@ function buildSearchText(item: FaqItem): string {
 }
 
 export function createFaqItem(item: FaqItem, context: FaqContext): HTMLElement {
-  const container = document.createElement('md-outlined-card');
+  const container = document.createElement('md-filled-card');
   container.className = 'faq-item';
   container.dataset.faqId = item.id;
   container.dataset.searchText = buildSearchText(item);

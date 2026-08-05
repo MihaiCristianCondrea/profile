@@ -36,7 +36,7 @@ describe('songs feature', () => {
 
     await loadSongs();
 
-    const card = document.querySelector('#songsGrid md-outlined-card');
+    const card = document.querySelector('#songsGrid md-filled-card');
     expect(card?.querySelector('h3')?.textContent).toBe('First Song');
     expect(card?.querySelector('p')?.textContent).toBe('First Artist');
     expect(card?.querySelector('img')?.alt).toBe('');

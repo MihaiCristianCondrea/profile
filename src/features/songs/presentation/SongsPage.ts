@@ -22,7 +22,7 @@ function normalizeHttpUrl(value: string | null, fallback: string): string {
 }
 
 export function createSongCard(track: SongTrack): HTMLElement {
-  const card = document.createElement('md-outlined-card');
+  const card = document.createElement('md-filled-card');
   card.className = 'song-card';
 
   const image = document.createElement('img');

@@ -86,7 +86,7 @@ function initializeCarousel(carousel: HTMLElement): void {
 }
 
 function createAndroidProjectCard(app: AndroidApp): HTMLElement {
-  const card = document.createElement('md-outlined-card');
+  const card = document.createElement('md-filled-card');
   card.className = 'project-entry';
   card.dataset.category = 'android';
 

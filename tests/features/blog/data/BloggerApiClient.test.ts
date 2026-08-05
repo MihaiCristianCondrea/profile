@@ -65,7 +65,7 @@ describe('blog feature', () => {
       imageUrl: 'javascript:alert(2)',
     });
 
-    expect(card.tagName.toLowerCase()).toBe('md-outlined-card');
+    expect(card.tagName.toLowerCase()).toBe('md-filled-card');
     expect(card.querySelector('h3')?.textContent).toBe('A safe title');
     expect(card.querySelector('.news-card-content p')?.textContent).toBe('Hello world');
     expect(card.querySelector('img')?.src).toContain('images/placeholder.png');

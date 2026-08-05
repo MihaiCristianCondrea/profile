@@ -31,7 +31,7 @@ function createIcon(name: string): HTMLElement {
 }
 
 export function createBlogPostCard(post: BlogPost): HTMLElement {
-  const card = document.createElement('md-outlined-card');
+  const card = document.createElement('md-filled-card');
   card.className = 'news-card';
 
   const placeholderImageUrl = 'images/placeholder.png';

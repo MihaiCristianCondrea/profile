@@ -8,7 +8,6 @@
 .song-card,
 .project-entry {
   width: 100%;
-  --md-outlined-card-outline-color: var(--md-sys-color-outline-variant);
 }
 
 .profile-card,

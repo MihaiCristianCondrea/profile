@@ -18,6 +18,5 @@ import '@material/web/tabs/tabs.js';
 import '@material/web/textfield/outlined-text-field.js';
 import '@material/web/labs/card/elevated-card.js';
 import '@material/web/labs/card/filled-card.js';
-import '@material/web/labs/card/outlined-card.js';
 import '@material/web/labs/item/item.js';
 import '@material/web/labs/navigationdrawer/navigation-drawer-modal.js';

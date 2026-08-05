@@ -217,7 +217,7 @@ function addComplexItem(section: ComplexSection, entry: Partial<WorkEntry & Educ
   if (!container) return;
   const item = document.createElement('div');
   item.className = 'complex-item-form';
-  const fields = document.createElement('md-outlined-card');
+  const fields = document.createElement('md-filled-card');
   fields.className = 'complex-item-fields';
   if (section === 'work') {
     fields.append(
@@ -397,7 +397,6 @@ function normalizeData(raw: unknown): ResumeData {
 function clearDynamicForms(): void {
   document.querySelectorAll('#skills-form .list-item, #languages-form .list-item, #interests-form .list-item, #work-form .complex-item-form, #education-form .complex-item-form').forEach((item) => item.remove());
 }
-
 function applyData(data: ResumeData): void {
   autosaveEnabled = false;
   const values: Record<string, string> = {
