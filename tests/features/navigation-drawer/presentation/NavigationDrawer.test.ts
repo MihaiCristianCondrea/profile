@@ -6,20 +6,20 @@ interface DrawerModule {
 
 function createDrawerMarkup(): HTMLElement & { opened: boolean } {
   document.body.innerHTML = `
-    <header data-drawer-inert-target>
-      <button id="menuButton"><span id="menuButtonIcon">menu</span></button>
-    </header>
+    <button id="menuButton" aria-expanded="false">
+      <span id="menuButtonIcon">menu</span>
+    </button>
     <div id="drawer-layer" aria-hidden="true">
       <md-navigation-drawer-modal id="navDrawer">
         <button id="closeDrawerButton">Close</button>
-        <a class="nav-item" href="#home">Home</a>
-        <button id="aboutToggle" aria-controls="aboutContent" aria-expanded="false">About</button>
-        <div id="aboutContent" aria-hidden="true">About content</div>
-        <button id="androidAppsToggle" aria-controls="androidAppsContent" aria-expanded="false">Apps</button>
-        <div id="androidAppsContent" aria-hidden="true">Apps content</div>
+        <div class="drawer-content">
+          <md-item class="nav-item" href="#home" role="link" tabindex="0">
+            <span class="nav-item-container" slot="container"></span>
+            Home
+          </md-item>
+        </div>
       </md-navigation-drawer-modal>
     </div>
-    <main data-drawer-inert-target>Main</main>
   `;
 
   const drawer = document.getElementById('navDrawer') as HTMLElement & { opened: boolean };
@@ -33,60 +33,66 @@ describe('NavigationDrawer', () => {
     document.body.className = '';
   });
 
-  test('opens and closes while synchronizing focus and modal accessibility', () => {
+  test('opens and closes while synchronizing the reference drawer shell', () => {
     const drawer = createDrawerMarkup();
-    const menu = document.getElementById('menuButton') as HTMLElement;
-    const firstItem = drawer.querySelector('.nav-item') as HTMLElement;
-    const firstFocus = jest.spyOn(firstItem, 'focus');
-    const menuFocus = jest.spyOn(menu, 'focus');
     const drawerModule = require(
       '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
     ) as DrawerModule;
+    const menu = document.getElementById('menuButton') as HTMLElement;
+    const menuIcon = document.getElementById('menuButtonIcon') as HTMLElement;
+    const layer = document.getElementById('drawer-layer') as HTMLElement;
 
     drawerModule.initNavigationDrawer();
     drawerModule.openDrawer();
 
     expect(drawer.opened).toBe(true);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(true);
+    expect(layer.classList.contains('open')).toBe(true);
+    expect(layer.getAttribute('aria-hidden')).toBe('false');
     expect(menu.getAttribute('aria-expanded')).toBe('true');
-    expect(firstFocus).toHaveBeenCalledTimes(1);
-    document.querySelectorAll<HTMLElement>('[data-drawer-inert-target]').forEach((element) => {
-      expect(element.inert).toBe(true);
-      expect(element.getAttribute('aria-hidden')).toBe('true');
-    });
+    expect(menu.getAttribute('aria-label')).toBe('Close menu');
+    expect(menuIcon.textContent).toBe('menu_open');
 
     drawerModule.closeDrawer();
 
     expect(drawer.opened).toBe(false);
-    expect(document.body.classList.contains('drawer-is-open')).toBe(false);
+    expect(layer.classList.contains('open')).toBe(false);
+    expect(layer.getAttribute('aria-hidden')).toBe('true');
     expect(menu.getAttribute('aria-expanded')).toBe('false');
-    expect(menuFocus).toHaveBeenCalledTimes(1);
-    document.querySelectorAll<HTMLElement>('[data-drawer-inert-target]').forEach((element) => {
-      expect(element.inert).toBe(false);
-      expect(element.hasAttribute('aria-hidden')).toBe(false);
-    });
+    expect(menu.getAttribute('aria-label')).toBe('Open menu');
+    expect(menuIcon.textContent).toBe('menu');
   });
 
-  test('keeps expandable section state and ARIA attributes aligned', () => {
+  test('activates md-item navigation from Enter and Space', () => {
     createDrawerMarkup();
     const drawerModule = require(
       '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
     ) as DrawerModule;
+    const item = document.querySelector<HTMLElement>('.nav-item') as HTMLElement;
+    const clickListener = jest.fn();
+    item.addEventListener('click', clickListener);
+
     drawerModule.initNavigationDrawer();
-    const toggle = document.getElementById('aboutToggle') as HTMLElement;
-    const content = document.getElementById('aboutContent') as HTMLElement;
+    item.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    item.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    item.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
 
-    expect(content.hidden).toBe(true);
-    toggle.click();
+    expect(clickListener).toHaveBeenCalledTimes(2);
+  });
 
-    expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    expect(toggle.classList.contains('expanded')).toBe(true);
-    expect(content.hidden).toBe(false);
-    expect(content.getAttribute('aria-hidden')).toBe('false');
+  test('tracks changes emitted by the Material modal drawer', () => {
+    const drawer = createDrawerMarkup();
+    const drawerModule = require(
+      '../../../../src/features/navigation-drawer/presentation/NavigationDrawer',
+    ) as DrawerModule;
+    const layer = document.getElementById('drawer-layer') as HTMLElement;
 
-    toggle.click();
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(content.hidden).toBe(true);
-    expect(content.getAttribute('aria-hidden')).toBe('true');
+    drawerModule.initNavigationDrawer();
+    drawer.opened = true;
+    drawer.dispatchEvent(new CustomEvent('navigation-drawer-changed', {
+      detail: { opened: true },
+    }));
+
+    expect(layer.classList.contains('open')).toBe(true);
+    expect(layer.getAttribute('aria-hidden')).toBe('false');
   });
 });
