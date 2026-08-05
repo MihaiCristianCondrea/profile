@@ -7,7 +7,7 @@ const themeQuery = typeof window.matchMedia === 'function'
 let themeButtons: HTMLElement[] = [];
 let initialized = false;
 
-function isThemePreference(value: string | null): value is ThemePreference {
+function isThemePreference(value: string | null | undefined): value is ThemePreference {
   return value === 'light' || value === 'dark' || value === 'auto';
 }
 
@@ -50,7 +50,7 @@ export function initTheme(): void {
     themeButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const requestedTheme = button.dataset.theme;
-        if (isThemePreference(requestedTheme ?? null)) applyTheme(requestedTheme);
+        if (isThemePreference(requestedTheme)) applyTheme(requestedTheme);
       });
     });
 

@@ -35,4 +35,8 @@ Feature HTML lives under `src/features/**/presentation/*.html`. The build copies
 
 ## Verification
 
+The toolchain targets Node 24 (`.nvmrc`, `engines`, and both GitHub Actions workflows).
+
 Run `npm run check` before merging. It runs tests, type checking, the production build, SEO verification, and production-asset verification.
+
+Tests run on jsdom, which lacks a few platform APIs that every supported browser ships. `tests/setup/structuredClone.ts` fills those gaps for the test environment only; production code keeps calling the platform API directly instead of carrying a compatibility layer.
