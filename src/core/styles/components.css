@@ -1,23 +1,45 @@
-/* Home and feature composition. Material components keep their native shape,
-   state layers, elevation, and motion; this file only arranges authored content. */
+/* Visual composition restored from the pre-refactor portfolio while Material
+   Web continues to own component shape, elevation, ripple, and state layers. */
+
+:root {
+  --app-card-container-color: var(--md-sys-color-surface);
+  --app-secondary-card-container-color: var(--md-sys-color-surface-container-low);
+}
+
+html.dark {
+  --app-card-container-color: var(--md-sys-color-surface-container-low);
+  --app-secondary-card-container-color: var(--md-sys-color-surface-container);
+}
 
 .profile-card,
 .achievement-card,
 .contribute-card,
 .news-card,
 .song-card,
+.faq-item,
 .project-entry {
   width: 100%;
+  color: var(--md-sys-color-on-surface);
 }
 
-.profile-card,
-.achievement-card {
-  margin-bottom: 16px;
+md-filled-card.profile-card,
+md-filled-card.achievement-card {
+  --md-filled-card-container-color: var(--app-card-container-color);
 }
 
-.card-content,
-.achievement-card,
-.contribute-card {
+md-filled-card.profile-card {
+  --md-filled-card-container-shape: 16px 16px 4px 4px;
+  margin-bottom: 2px;
+  overflow: hidden;
+}
+
+md-filled-card.achievement-card {
+  --md-filled-card-container-shape: 4px 4px 16px 16px;
+  margin-bottom: 0;
+  padding: 24px;
+}
+
+.card-content {
   padding: 24px;
 }
 
@@ -29,11 +51,13 @@
 }
 
 .profile-avatar {
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  border: 2px solid var(--md-sys-color-outline-variant);
   border-radius: 50%;
   object-fit: cover;
+  background: var(--md-sys-color-surface-container);
 }
 
 .profile-info h2,
@@ -47,15 +71,13 @@
 }
 
 .profile-info h2 {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 500;
+  line-height: 1.25;
 }
 
-.profile-info p,
-.achievement-status,
-.achievement-updated,
-.project-category-label,
-.date-range {
+.profile-info p {
+  margin-top: 4px;
   color: var(--md-sys-color-on-surface-variant);
 }
 
@@ -64,23 +86,32 @@
 }
 
 .section-title {
-  margin: 24px 0 12px;
-  font-size: 1rem;
+  margin: 24px 0 16px;
+  font-size: 1.25rem;
   font-weight: 500;
+}
+
+md-chip-set {
+  margin-bottom: 16px;
+}
+
+md-assist-chip {
+  margin: 0 8px 8px 0;
 }
 
 .achievement-body {
   display: flex;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .achievement-icon {
   position: relative;
   display: grid;
-  width: 72px;
-  height: 72px;
-  flex: 0 0 72px;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
   place-items: center;
   color: var(--md-sys-color-on-primary-container);
 }
@@ -95,28 +126,52 @@
 
 .achievement-icon md-icon {
   position: relative;
+  z-index: 1;
   font-size: 32px;
 }
 
-.achievement-rank {
-  margin-top: 8px !important;
-  font-size: 1.4rem;
+.achievement-content {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.achievement-content h3 {
+  margin-bottom: 8px;
+  font-size: 1.3rem;
   font-weight: 500;
 }
 
-.achievement-status,
+.achievement-rank {
+  color: var(--md-sys-color-primary);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.achievement-status {
+  margin-top: 8px !important;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.5;
+}
+
 .achievement-updated {
-  margin-top: 4px !important;
-  font-size: 0.875rem;
+  margin-top: 8px !important;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9rem;
 }
 
 .achievement-actions,
-.contribute-actions,
+.contribute-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 24px;
+}
+
 .view-all-posts-container,
 .view-all-faqs-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 .profile-section-divider {
@@ -124,7 +179,6 @@
 }
 
 .profile-card-actions,
-.contribute-actions,
 .smart-cleaner-hero-actions,
 .smart-cleaner-github-buttons {
   display: flex;
@@ -133,21 +187,18 @@
 }
 
 .podcast-embed,
-.news-section,
-.faq-section {
+.news-section {
   margin-top: 40px;
+}
+
+.faq-section {
+  margin: 48px 0 40px;
 }
 
 .podcast-embed iframe {
   display: block;
   border: 0;
   border-radius: 12px;
-}
-
-.page-section-title {
-  margin: 40px 0 16px;
-  font-size: 1.35rem;
-  font-weight: 500;
 }
 
 .podcast-embed .page-section-title,
@@ -158,8 +209,8 @@
 .news-grid,
 .songs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 24px;
 }
 
 #news-status,
@@ -167,55 +218,101 @@
 .projects-loading,
 .projects-error {
   display: flex;
+  min-height: 160px;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  min-height: 96px;
   color: var(--md-sys-color-on-surface-variant);
+  text-align: center;
+}
+
+md-filled-card.news-card,
+md-filled-card.song-card,
+md-filled-card.project-entry {
+  --md-filled-card-container-color: var(--app-secondary-card-container-color);
+  --md-filled-card-container-shape: 16px;
+  overflow: hidden;
 }
 
 .news-card,
 .song-card {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.news-card-image,
+.song-card > img {
+  display: block;
+  width: 100%;
+  height: 180px;
+  flex: 0 0 180px;
   overflow: hidden;
+  background: var(--md-sys-color-surface-container);
+}
+
+.news-card-image {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .news-card-image img,
 .song-card > img {
-  display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
-  background: var(--md-sys-color-surface-container);
 }
 
 .news-card-content,
 .song-card-content {
-  padding: 20px 20px 8px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  padding: 16px;
 }
 
 .news-card-content h3,
 .song-card-content h3 {
+  display: -webkit-box;
+  min-height: 2.4em;
   margin: 0 0 8px;
-  font-size: 1.05rem;
+  overflow: hidden;
+  font-size: 1.1rem;
   font-weight: 500;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .news-card-content p,
 .song-card-content p {
   margin: 0;
   color: var(--md-sys-color-on-surface-variant);
-  line-height: 1.55;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.news-card-content p {
+  display: -webkit-box;
+  min-height: 4.05em;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .news-card-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 4px;
+  margin-top: auto;
   padding: 8px 8px 12px;
 }
 
 .song-card-content md-text-button {
+  align-self: flex-start;
   margin-top: 12px;
 }
 
@@ -224,6 +321,7 @@
   padding-inline: 12px;
   color: var(--md-sys-color-primary);
   font-size: 0.8rem;
+  text-align: right;
 }
 
 .share-feedback.error {
@@ -233,17 +331,22 @@
 .faq-accordion,
 .faq-page-accordion {
   display: grid;
-  gap: 8px;
+  gap: 16px;
+}
+
+md-filled-card.faq-item {
+  --md-filled-card-container-color: var(--app-secondary-card-container-color);
+  --md-filled-card-container-shape: 18px;
+  overflow: hidden;
 }
 
 .faq-summary {
-  display: grid;
+  display: flex;
   width: 100%;
-  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   border: 0;
-  padding: 16px;
+  padding: 16px 20px;
   background: transparent;
   color: var(--md-sys-color-on-surface);
   font: inherit;
@@ -256,13 +359,41 @@
   outline-offset: -2px;
 }
 
-.faq-icon,
-.expand-icon {
+.faq-icon {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--md-sys-color-primary) 18%, transparent);
   color: var(--md-sys-color-primary);
 }
 
+.faq-question {
+  flex: 1 1 auto;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.expand-icon {
+  flex: 0 0 auto;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: transform 220ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.faq-item.is-open .expand-icon {
+  transform: rotate(180deg);
+}
+
+.faq-item.is-open .faq-summary {
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+
 .faq-answer-content {
-  padding: 0 16px 16px 52px;
+  display: grid;
+  gap: 12px;
+  padding: 16px 20px 20px 80px;
   color: var(--md-sys-color-on-surface-variant);
   line-height: 1.6;
 }
@@ -275,21 +406,34 @@
   margin-bottom: 0;
 }
 
-.contribute-card {
-  color: var(--md-sys-color-on-surface);
+md-filled-card.contribute-card {
+  --md-filled-card-container-color: var(--md-sys-color-primary-container);
+  --md-filled-card-container-shape: 16px;
+  margin-bottom: 40px;
+  padding: 24px;
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.contribute-card h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
 .contribute-card p {
   margin-top: 8px;
+  color: inherit;
   line-height: 1.6;
 }
 
 .social-icons {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 4px;
-  margin-top: 28px;
+  gap: 12px;
+  margin-top: 16px;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  padding: 32px 0;
 }
 
 .social-icons md-icon-button {
@@ -316,7 +460,7 @@
 .projects-list,
 .projects-android {
   display: grid;
-  gap: 20px;
+  gap: 24px;
 }
 
 .project-content {
@@ -334,6 +478,7 @@
 .project-category-label,
 .date-range {
   margin: 0 0 12px;
+  color: var(--md-sys-color-on-surface-variant);
   font-size: 0.875rem;
 }
 
@@ -444,8 +589,8 @@ md-dialog {
 
 @media (max-width: 720px) {
   .card-content,
-  .achievement-card,
-  .contribute-card,
+  md-filled-card.achievement-card,
+  md-filled-card.contribute-card,
   .project-content {
     padding: 20px;
   }
@@ -454,13 +599,19 @@ md-dialog {
     grid-template-columns: 1fr;
   }
 
+  .profile-card-actions > *,
+  .smart-cleaner-hero-actions > * {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
   .achievement-body {
     align-items: flex-start;
   }
 
-  .profile-card-actions > *,
-  .smart-cleaner-hero-actions > * {
-    max-width: 100%;
+  .faq-answer-content {
+    padding-left: 20px;
   }
 }
 
@@ -470,13 +621,11 @@ md-dialog {
     align-items: flex-start;
   }
 
-  .achievement-icon {
-    width: 56px;
-    height: 56px;
-    flex-basis: 56px;
+  .profile-info h2 {
+    font-size: 1.3rem;
   }
 
-  .faq-answer-content {
-    padding-left: 16px;
+  .faq-summary {
+    padding-inline: 16px;
   }
 }
