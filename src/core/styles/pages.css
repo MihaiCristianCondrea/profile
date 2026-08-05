@@ -174,7 +174,8 @@
 
 /* Smart Cleaner uses a restrained editorial layout. Decorative parallax,
    reveal, scanline, zoom, and custom button sizing are deliberately absent. */
-#smartCleanerPageContainer section {
+#smartCleanerPageContainer > section,
+#smartCleanerPageContainer > md-filled-card {
   margin-block: clamp(44px, 8vw, 80px);
 }
 
@@ -241,14 +242,14 @@
   object-fit: contain;
 }
 
+/* These blocks are Material filled cards, so the container shape and color come
+   from the component. Only the content inset is authored here. */
 .smart-cleaner-problem,
 .smart-cleaner-trust,
 .smart-cleaner-performance,
 .smart-cleaner-cta,
 .smart-cleaner-section {
-  border-radius: 16px;
   padding: clamp(24px, 5vw, 48px);
-  background: var(--md-sys-color-surface-container-low);
 }
 
 .smart-cleaner-story-section {
