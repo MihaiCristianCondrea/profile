@@ -6,6 +6,10 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCE_ROOT = join(ROOT, 'src');
 const PRODUCTION_EXTENSIONS = new Set(['.html', '.ts']);
 const FORBIDDEN_CARD_TAGS = ['md-outlined-card', 'md-elevated-card'];
+const FORBIDDEN_CARD_IMPORTS = [
+  '@material/web/labs/card/outlined-card.js',
+  '@material/web/labs/card/elevated-card.js',
+];
 
 async function collectProductionFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -40,6 +44,16 @@ for (const filePath of productionFiles) {
         `${relative(ROOT, filePath).replaceAll('\\', '/')} contains forbidden production card ${cardTag}`,
       );
     }
+  }
+}
+
+const materialRegistryPath = join(SOURCE_ROOT, 'core/material/MaterialRegistry.ts');
+const materialRegistry = await readFile(materialRegistryPath, 'utf8');
+for (const cardImport of FORBIDDEN_CARD_IMPORTS) {
+  if (materialRegistry.includes(cardImport)) {
+    violations.push(
+      `${relative(ROOT, materialRegistryPath).replaceAll('\\', '/')} contains unused forbidden import ${cardImport}`,
+    );
   }
 }
 

@@ -71,9 +71,21 @@ function readTag(source, start) {
   return null;
 }
 
+function readAttribute(tag, attributeName) {
+  const expression = new RegExp(`\\s${attributeName}\\s*=\\s*(["'])(.*?)\\1`, 'i');
+  return tag.match(expression)?.[2] ?? null;
+}
+
 function validateHtml(filePath, source) {
   const stack = [];
   const errors = [];
+  const ids = new Map();
+  const rootCounts = new Map([
+    ['html', 0],
+    ['head', 0],
+    ['body', 0],
+  ]);
+  const isDocument = filePath === join(ROOT, 'index.html');
   let cursor = 0;
 
   while (cursor < source.length) {
@@ -108,6 +120,18 @@ function validateHtml(filePath, source) {
     const selfClosing = /\/\s*>$/.test(tag.raw);
 
     if (!closing) {
+      if (rootCounts.has(name)) rootCounts.set(name, rootCounts.get(name) + 1);
+
+      const id = readAttribute(tag.raw, 'id');
+      if (id) {
+        const previousLine = ids.get(id);
+        if (previousLine) {
+          errors.push(`line ${line}: duplicate id="${id}"; first declared on line ${previousLine}`);
+        } else {
+          ids.set(id, line);
+        }
+      }
+
       if (!selfClosing && !VOID_ELEMENTS.has(name)) {
         stack.push({ name, line });
       }
@@ -149,6 +173,15 @@ function validateHtml(filePath, source) {
     errors.push(`line ${opened.line}: unclosed <${opened.name}> element`);
   }
 
+  for (const [name, count] of rootCounts) {
+    if (isDocument && count !== 1) {
+      errors.push(`document must contain exactly one <${name}> element; found ${count}`);
+    }
+    if (!isDocument && count !== 0) {
+      errors.push(`route fragment must not contain a <${name}> document element`);
+    }
+  }
+
   if (errors.length > 0) {
     const path = relative(ROOT, filePath).replaceAll('\\', '/');
     throw new Error(`${path}\n${errors.map((error) => `  - ${error}`).join('\n')}`);
@@ -170,4 +203,4 @@ if (failures.length > 0) {
   throw new Error(`HTML structure validation failed:\n\n${failures.join('\n\n')}`);
 }
 
-console.log(`Validated HTML structure for ${files.length} production HTML files.`);
+console.log(`Validated balanced tags, document shells, and unique IDs for ${files.length} HTML files.`);
