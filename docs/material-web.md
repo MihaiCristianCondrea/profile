@@ -12,44 +12,78 @@ imports Material element definitions. Keep imports explicit:
 ```ts
 import '@material/web/button/filled-button.js';
 import '@material/web/iconbutton/icon-button.js';
-import '@material/web/labs/card/outlined-card.js';
+import '@material/web/labs/card/filled-card.js';
 ```
 
 Do not use `@material/web/all.js` in production and do not load Material
 elements from a runtime CDN. Register a new element in the registry when the
 application starts using it.
 
-## Card variants
+## Intentional surface and shape policy
 
-The bundled Material Web source exposes exactly three public card elements:
+The following rules are deliberate parts of the portfolio design. They should
+not be normalized back to Material defaults during cleanup or refactoring.
 
-- `md-elevated-card` for separation created primarily by elevation;
-- `md-filled-card` for tonal separation from the surrounding surface;
-- `md-outlined-card` for separation created primarily by an outline.
+### Search fields look like search bars
 
-There is no public `md-card`, `md-normal-card`, or plain card element. The
-`Card` class under `labs/card/internal` is implementation detail and must not be
-imported by application code.
+The FAQ `Search questions` field uses the documented outlined text-field shape
+token with a 28px radius:
 
-```html
-<md-elevated-card>
-  <div class="card-content">Elevated content</div>
-</md-elevated-card>
-
-<md-filled-card>
-  <div class="card-content">Filled content</div>
-</md-filled-card>
-
-<md-outlined-card>
-  <div class="card-content">Outlined content</div>
-</md-outlined-card>
+```css
+.faq-search md-outlined-text-field {
+  --md-outlined-text-field-container-shape: 28px;
+}
 ```
 
-Material cards provide the container, outline, shape, and elevation. The
-application may style content layout inside the card, but it must not recreate
-card elevation, outlines, state layers, or shapes with parallel CSS. A static
-card should remain static. Put actions inside the card using Material buttons
-instead of making the whole card zoom, lift, or scale on hover.
+The field is 56px tall, so a 28px container shape creates the fully rounded
+search-bar silhouette expected for search rather than the standard text-field
+shape. Use the Material token instead of styling shadow DOM or applying an
+unrelated wrapper radius.
+
+### Grouped FAQ cards share one visual outline
+
+Adjacent FAQ cards intentionally use the same grouped-item geometry as the
+Android UI. The web values use pixels; their Android equivalents use dp.
+
+- First item: `16px 16px 2px 2px`.
+- Middle items: `2px` on every corner.
+- Last item: `2px 2px 16px 16px`.
+- A single visible item: `16px` on every corner.
+- The seam between adjacent items is `2px`.
+
+The FAQ renderer assigns `single`, `first`, `middle`, or `last` from the
+currently visible items. Search filtering must recompute those positions so a
+filtered middle item can correctly become the new first or last item.
+
+### Filled cards are the production default
+
+Material Web exposes elevated, filled, and outlined card variants, but this
+portfolio intentionally uses `md-filled-card` for production cards. Tonal
+separation is preferred over outlines and artificial elevation.
+
+Normal cards use the neutral filled surface defined in
+`src/core/styles/ui-policy.css`. This includes the grouped profile header made
+from the `profile-card` and `achievement-card`, FAQ cards, news cards, song
+cards, project cards, resume cards, and legal-content cards. The profile and
+GitHub ranking pair must remain visibly filled in both light and dark themes;
+it must not blend into the page background.
+
+The single tonal exception is the **Do you like my projects?** contribution
+card. It remains an `md-filled-card`, but intentionally uses
+`primary-container` instead of the neutral card fill so it reads as a support
+callout rather than another content card.
+
+Do not introduce `md-outlined-card` or `md-elevated-card` into production code
+without first changing this documented policy and its verification script.
+The read-only files under `resources/` are references and are not governed by
+this application rule.
+
+Material cards own their container, shape, state layers, and elevation. The
+application may style content layout inside a card and may use documented
+component tokens for the intentional policies above. Do not recreate card
+outlines, shadows, or hover elevation with parallel CSS. A static card should
+remain static. Put actions inside the card using Material buttons instead of
+making the whole card zoom, lift, or scale on hover.
 
 ## Navigation actions
 
@@ -57,10 +91,10 @@ Material buttons and icon buttons support link behavior through `href` and
 `target`. Use the component as the link:
 
 ```html
-<md-outlined-button href="https://example.com" target="_blank">
+<md-filled-button href="https://example.com" target="_blank">
   <md-icon slot="icon">open_in_new</md-icon>
   Open example
-</md-outlined-button>
+</md-filled-button>
 ```
 
 Do not wrap a Material button in an anchor and do not place an anchor inside a
@@ -97,11 +131,12 @@ CSS is appropriate for:
 - spacing between components;
 - responsive behavior;
 - application color and typography tokens;
+- intentional component shapes expressed through supported Material tokens;
 - non-Material content such as images and editorial sections.
 
-Do not override Material controls with custom padding, height, border radius,
-box shadow, internal structure, state-layer behavior, or hover transforms.
-Material owns those interactions.
+Do not override Material controls with custom internal padding, height, raw
+shadow-DOM border radii, box shadows, internal structure, state-layer behavior,
+or hover transforms. Material owns those interactions.
 
 Use Material text fields and checkboxes for supported form controls. Native
 controls are appropriate only where Material Web does not support the input

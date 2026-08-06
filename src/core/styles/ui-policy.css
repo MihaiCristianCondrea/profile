@@ -1,0 +1,27 @@
+/* Intentional site-wide card policy.
+   Normal cards use a visible neutral filled surface. The contribution callout
+   is the single tonal exception and keeps its primary-container emphasis. */
+
+:root {
+  --app-filled-card-container-color: var(--md-sys-color-surface-container-low);
+  --app-card-container-color: var(--app-filled-card-container-color);
+  --app-secondary-card-container-color: var(--app-filled-card-container-color);
+}
+
+html.dark {
+  --app-filled-card-container-color: var(--md-sys-color-surface-container);
+}
+
+md-filled-card {
+  --md-filled-card-container-color: var(--app-filled-card-container-color);
+}
+
+md-filled-card.profile-card,
+md-filled-card.achievement-card {
+  --md-filled-card-container-color: var(--app-filled-card-container-color);
+}
+
+md-filled-card.contribute-card {
+  --md-filled-card-container-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
