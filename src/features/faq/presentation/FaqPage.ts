@@ -2,8 +2,9 @@ import { loadFaqData, type FaqItem } from '../data/FaqDataSource.ts';
 
 type FaqContext = 'home' | 'page';
 type SearchField = HTMLElement & { value: string };
+type FaqGroupPosition = 'single' | 'first' | 'middle' | 'last';
 
-interface RenderedFaqItem {
+export interface RenderedFaqItem {
   data: FaqItem;
   element: HTMLElement;
 }
@@ -12,6 +13,25 @@ function buildSearchText(item: FaqItem): string {
   const parser = document.createElement('div');
   parser.innerHTML = item.answerHtml;
   return `${item.question} ${parser.textContent ?? ''}`.toLowerCase().replace(/\s+/g, ' ').trim();
+}
+
+function groupedPosition(index: number, size: number): FaqGroupPosition {
+  if (size === 1) return 'single';
+  if (index === 0) return 'first';
+  if (index === size - 1) return 'last';
+  return 'middle';
+}
+
+export function applyGroupedFaqPositions(renderedItems: RenderedFaqItem[]): void {
+  const visibleItems = renderedItems.filter(({ element }) => !element.hidden);
+
+  renderedItems.forEach(({ element }) => {
+    delete element.dataset.groupPosition;
+  });
+
+  visibleItems.forEach(({ element }, index) => {
+    element.dataset.groupPosition = groupedPosition(index, visibleItems.length);
+  });
 }
 
 export function createFaqItem(item: FaqItem, context: FaqContext): HTMLElement {
@@ -82,6 +102,7 @@ export function renderFaqList(
 ): RenderedFaqItem[] {
   const rendered = items.map((data) => ({ data, element: createFaqItem(data, context) }));
   container.replaceChildren(...rendered.map(({ element }) => element));
+  applyGroupedFaqPositions(rendered);
   return rendered;
 }
 
@@ -116,6 +137,7 @@ export async function initFaqPage(): Promise<void> {
         if (matches) visibleCount += 1;
         else element.dispatchEvent(new Event('faq:close'));
       });
+      applyGroupedFaqPositions(renderedItems);
       if (emptyMessage) emptyMessage.hidden = visibleCount > 0;
     };
 

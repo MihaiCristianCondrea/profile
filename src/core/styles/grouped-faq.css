@@ -1,0 +1,27 @@
+/* FAQ cards use the same grouped-corner pattern as grouped list items:
+   large outer corners and compact inner seams. */
+
+.faq-accordion,
+.faq-page-accordion {
+  gap: 2px;
+}
+
+md-filled-card.faq-item {
+  --md-filled-card-container-shape: 2px;
+}
+
+md-filled-card.faq-item[data-group-position='single'] {
+  --md-filled-card-container-shape: 16px;
+}
+
+md-filled-card.faq-item[data-group-position='first'] {
+  --md-filled-card-container-shape: 16px 16px 2px 2px;
+}
+
+md-filled-card.faq-item[data-group-position='middle'] {
+  --md-filled-card-container-shape: 2px;
+}
+
+md-filled-card.faq-item[data-group-position='last'] {
+  --md-filled-card-container-shape: 2px 2px 16px 16px;
+}
