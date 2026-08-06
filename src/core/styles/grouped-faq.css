@@ -1,6 +1,10 @@
 /* FAQ cards use the same grouped-corner pattern as grouped list items:
    large outer corners and compact inner seams. */
 
+.faq-search md-outlined-text-field {
+  --md-outlined-text-field-container-shape: 28px;
+}
+
 .faq-accordion,
 .faq-page-accordion {
   gap: 2px;
