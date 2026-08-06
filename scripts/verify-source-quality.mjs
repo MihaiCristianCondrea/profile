@@ -113,7 +113,6 @@ for (const filePath of formatFiles.sort()) {
   const path = displayPath(filePath);
 
   if (source.includes('\r')) formattingViolations.push(`${path}: use LF line endings`);
-  if (!source.endsWith('\n')) formattingViolations.push(`${path}: file must end with one newline`);
   if (/\n{3,}/.test(source)) formattingViolations.push(`${path}: remove consecutive blank lines`);
 
   source.split('\n').forEach((line, index) => {

@@ -1,16 +1,6 @@
 /* Visual composition restored from the pre-refactor portfolio while Material
    Web continues to own component shape, elevation, ripple, and state layers. */
 
-:root {
-  --app-card-container-color: var(--md-sys-color-surface);
-  --app-secondary-card-container-color: var(--md-sys-color-surface-container-low);
-}
-
-html.dark {
-  --app-card-container-color: var(--md-sys-color-surface-container-low);
-  --app-secondary-card-container-color: var(--md-sys-color-surface-container);
-}
-
 .profile-card,
 .achievement-card,
 .contribute-card,
@@ -20,11 +10,6 @@ html.dark {
 .project-entry {
   width: 100%;
   color: var(--md-sys-color-on-surface);
-}
-
-md-filled-card.profile-card,
-md-filled-card.achievement-card {
-  --md-filled-card-container-color: var(--app-card-container-color);
 }
 
 md-filled-card.profile-card {
@@ -229,7 +214,6 @@ md-assist-chip {
 md-filled-card.news-card,
 md-filled-card.song-card,
 md-filled-card.project-entry {
-  --md-filled-card-container-color: var(--app-secondary-card-container-color);
   --md-filled-card-container-shape: 16px;
   overflow: hidden;
 }
@@ -331,12 +315,9 @@ md-filled-card.project-entry {
 .faq-accordion,
 .faq-page-accordion {
   display: grid;
-  gap: 16px;
 }
 
 md-filled-card.faq-item {
-  --md-filled-card-container-color: var(--app-secondary-card-container-color);
-  --md-filled-card-container-shape: 18px;
   overflow: hidden;
 }
 
@@ -407,11 +388,9 @@ md-filled-card.faq-item {
 }
 
 md-filled-card.contribute-card {
-  --md-filled-card-container-color: var(--md-sys-color-primary-container);
   --md-filled-card-container-shape: 16px;
   margin-bottom: 40px;
   padding: 24px;
-  color: var(--md-sys-color-on-primary-container);
 }
 
 .contribute-card h3 {
