@@ -156,7 +156,7 @@ describe('NavigationDrawer', () => {
     expect(androidToggle.getAttribute('aria-expanded')).toBe('true');
     expect(androidContent.hidden).toBe(false);
     expect(androidContent.querySelectorAll('.nested-nav-item')).toHaveLength(5);
-    expect(document.querySelectorAll('.drawer-section-divider')).toHaveLength(2);
+    expect(document.querySelector('md-divider')).toBeNull();
 
     profileToggle.click();
     expect(profileToggle.getAttribute('aria-expanded')).toBe('true');

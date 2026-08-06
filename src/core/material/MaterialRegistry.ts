@@ -8,7 +8,6 @@ import '@material/web/checkbox/checkbox.js';
 import '@material/web/chips/assist-chip.js';
 import '@material/web/chips/chip-set.js';
 import '@material/web/dialog/dialog.js';
-import '@material/web/divider/divider.js';
 import '@material/web/icon/icon.js';
 import '@material/web/iconbutton/icon-button.js';
 import '@material/web/iconbutton/outlined-icon-button.js';

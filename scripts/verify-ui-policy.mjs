@@ -10,6 +10,7 @@ const FORBIDDEN_CARD_IMPORTS = [
   '@material/web/labs/card/outlined-card.js',
   '@material/web/labs/card/elevated-card.js',
 ];
+const FORBIDDEN_DIVIDER_MARKER = 'md-divider';
 
 async function collectProductionFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -45,6 +46,12 @@ for (const filePath of productionFiles) {
       );
     }
   }
+  if (source.includes(FORBIDDEN_DIVIDER_MARKER)) {
+    violations.push(
+      `${relative(ROOT, filePath).replaceAll('\\', '/')} contains forbidden production divider`,
+    );
+  }
+
 }
 
 const materialRegistryPath = join(SOURCE_ROOT, 'core/material/MaterialRegistry.ts');
@@ -65,6 +72,14 @@ const homeHtml = await readFile(join(ROOT, 'index.html'), 'utf8');
 assertIncludes(homeHtml, '<md-filled-card class="profile-card">', 'Home profile header');
 assertIncludes(homeHtml, '<md-filled-card class="achievement-card">', 'Home ranking header');
 assertIncludes(homeHtml, '<md-filled-card class="contribute-card">', 'Contribution callout');
+assertIncludes(
+  homeHtml,
+  '<footer class="app-footer" data-drawer-inert-target>\n'
+    + '      <div class="footer-shell">\n'
+    + '        <span id="copyright-message"></span>\n'
+    + '        <nav class="social-icons" aria-label="Social profiles">',
+  'Footer social shell',
+);
 
 const uiPolicyCss = await readFile(join(SOURCE_ROOT, 'core/styles/ui-policy.css'), 'utf8');
 assertIncludes(
