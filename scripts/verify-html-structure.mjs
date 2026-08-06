@@ -86,6 +86,11 @@ function validateHtml(filePath, source) {
     ['body', 0],
   ]);
   const isDocument = filePath === join(ROOT, 'index.html');
+  const shellCounts = new Map([
+    ['pageContentArea', 0],
+    ['mainContentPage', 0],
+    ['appFooter', 0],
+  ]);
   let cursor = 0;
 
   while (cursor < source.length) {
@@ -123,6 +128,8 @@ function validateHtml(filePath, source) {
       if (rootCounts.has(name)) rootCounts.set(name, rootCounts.get(name) + 1);
 
       const id = readAttribute(tag.raw, 'id');
+      const className = readAttribute(tag.raw, 'class') ?? '';
+      const parent = stack.at(-1);
       if (id) {
         const previousLine = ids.get(id);
         if (previousLine) {
@@ -132,8 +139,27 @@ function validateHtml(filePath, source) {
         }
       }
 
+      if (isDocument && id === 'pageContentArea') {
+        shellCounts.set('pageContentArea', shellCounts.get('pageContentArea') + 1);
+        if (name !== 'main' || parent?.name !== 'body') {
+          errors.push(`line ${line}: #pageContentArea must be a <main> directly inside <body>`);
+        }
+      }
+      if (isDocument && id === 'mainContentPage') {
+        shellCounts.set('mainContentPage', shellCounts.get('mainContentPage') + 1);
+        if (name !== 'section' || parent?.id !== 'pageContentArea') {
+          errors.push(`line ${line}: #mainContentPage must be a <section> directly inside #pageContentArea`);
+        }
+      }
+      if (isDocument && name === 'footer' && className.split(/\s+/).includes('app-footer')) {
+        shellCounts.set('appFooter', shellCounts.get('appFooter') + 1);
+        if (parent?.name !== 'body') {
+          errors.push(`line ${line}: .app-footer must be directly inside <body>`);
+        }
+      }
+
       if (!selfClosing && !VOID_ELEMENTS.has(name)) {
-        stack.push({ name, line });
+        stack.push({ name, line, id, className });
       }
       continue;
     }
@@ -179,6 +205,14 @@ function validateHtml(filePath, source) {
     }
     if (!isDocument && count !== 0) {
       errors.push(`route fragment must not contain a <${name}> document element`);
+    }
+  }
+
+  if (isDocument) {
+    for (const [shellName, count] of shellCounts) {
+      if (count !== 1) {
+        errors.push(`document must contain exactly one ${shellName}; found ${count}`);
+      }
     }
   }
 

@@ -72,6 +72,17 @@ const homeHtml = await readFile(join(ROOT, 'index.html'), 'utf8');
 assertIncludes(homeHtml, '<md-filled-card class="profile-card">', 'Home profile header');
 assertIncludes(homeHtml, '<md-filled-card class="achievement-card">', 'Home ranking header');
 assertIncludes(homeHtml, '<md-filled-card class="contribute-card">', 'Contribution callout');
+assertIncludes(homeHtml, '<meta name="theme-color" content="#4285F4" />', 'Browser theme color');
+assertIncludes(
+  homeHtml,
+  '<main class="content-wrapper" id="pageContentArea" data-drawer-inert-target>',
+  'Semantic application shell',
+);
+assertIncludes(
+  homeHtml,
+  '<section id="mainContentPage" class="page-section active">',
+  'Semantic home route',
+);
 assertIncludes(
   homeHtml,
   '<footer class="app-footer" data-drawer-inert-target>\n'
@@ -100,6 +111,25 @@ for (const expected of [
   '--md-filled-card-container-shape: 2px 2px 16px 16px;',
 ]) {
   assertIncludes(groupedFaqCss, expected, 'FAQ shape policy');
+}
+
+const themeCss = await readFile(join(SOURCE_ROOT, 'core/styles/variables.css'), 'utf8');
+assertIncludes(themeCss, '--md-sys-color-primary: #4285f4;', 'Google blue light theme');
+assertIncludes(themeCss, '--md-sys-color-inverse-primary: #4285f4;', 'Google blue dark theme');
+
+const manifest = await readFile(join(ROOT, 'public/manifest.json'), 'utf8');
+assertIncludes(manifest, '"theme_color": "#4285F4"', 'PWA theme color');
+
+const resumePage = await readFile(
+  join(SOURCE_ROOT, 'features/resume/presentation/ResumePage.ts'),
+  'utf8',
+);
+assertIncludes(resumePage, "'accent-color': '#4285f4'", 'Resume accent color');
+
+for (const forbiddenGreen of ['#3ddc84', '#3DDC84']) {
+  if (`${themeCss}\n${manifest}\n${resumePage}`.includes(forbiddenGreen)) {
+    throw new Error(`UI policy validation failed: legacy Android green ${forbiddenGreen} remains`);
+  }
 }
 
 console.log(`Validated intentional UI policy across ${productionFiles.length} production files.`);

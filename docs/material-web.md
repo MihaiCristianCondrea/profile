@@ -24,6 +24,10 @@ application starts using it.
 The following rules are deliberate parts of the portfolio design. They should
 not be normalized back to Material defaults during cleanup or refactoring.
 
+### Google blue brand accent
+
+The portfolio uses Google blue `#4285F4` as its intentional brand seed instead of Android green. The light Material primary role, browser theme metadata, PWA manifest, and resume-builder default accent must stay synchronized. Dark mode uses a lighter blue primary for legibility while preserving `#4285F4` as the inverse brand role.
+
 ### Search fields look like search bars
 
 The FAQ `Search questions` field uses the documented outlined text-field shape

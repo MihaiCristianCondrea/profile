@@ -30,10 +30,10 @@ const COLOR_FIELDS: Record<string, string> = {
   'muted-color': '--resume-muted',
 };
 const DEFAULT_COLORS: Record<string, string> = {
-  'accent-color': '#3ddc84',
-  'secondary-color': '#516350',
-  'left-bg-color': '#e6eae9',
-  'right-bg-color': '#f8fdff',
+  'accent-color': '#4285f4',
+  'secondary-color': '#565e71',
+  'left-bg-color': '#e9e7ec',
+  'right-bg-color': '#faf8ff',
   'text-color': '#111111',
   'muted-color': '#333333',
 };
