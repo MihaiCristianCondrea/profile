@@ -85,6 +85,20 @@ outlines, shadows, or hover elevation with parallel CSS. A static card should
 remain static. Put actions inside the card using Material buttons instead of
 making the whole card zoom, lift, or scale on hover.
 
+
+### Divider-free composition and footer shell
+
+The production interface intentionally avoids standalone dividers and
+separator rules. Section hierarchy comes from spacing, typography, grouped
+corners, and filled tonal surfaces instead of horizontal lines. Do not add
+`md-divider` elements, register the divider component, or introduce separator
+borders around the drawer sections, FAQ answers, or footer content.
+
+Social profile actions belong inside the global footer shell beside the
+copyright message. The shell uses the same neutral filled surface as normal
+cards, has one rounded container, and contains no internal divider. On narrow
+screens the copyright and icon row stack inside that same surface.
+
 ## Navigation actions
 
 Material buttons and icon buttons support link behavior through `href` and
@@ -118,9 +132,8 @@ Each disclosure header must:
 - keep the controlled group synchronized with `hidden` and `aria-hidden`;
 - automatically expand when one of its nested routes becomes active.
 
-Dividers, icons, selected states, and drawer surfaces remain Material
-components. Application CSS is limited to hierarchy, indentation, spacing, and
-visibility.
+Icons, selected states, and drawer surfaces remain Material components.
+Application CSS is limited to hierarchy, indentation, spacing, and visibility.
 
 ## Styling contract
 

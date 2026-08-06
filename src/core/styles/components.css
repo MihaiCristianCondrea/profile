@@ -159,16 +159,16 @@ md-assist-chip {
   margin-top: 24px;
 }
 
-.profile-section-divider {
-  margin: 28px 0;
-}
-
 .profile-card-actions,
 .smart-cleaner-hero-actions,
 .smart-cleaner-github-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.profile-card-actions {
+  margin-top: 28px;
 }
 
 .podcast-embed,
@@ -367,10 +367,6 @@ md-filled-card.faq-item {
   transform: rotate(180deg);
 }
 
-.faq-item.is-open .faq-summary {
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-}
-
 .faq-answer-content {
   display: grid;
   gap: 12px;
@@ -389,7 +385,7 @@ md-filled-card.faq-item {
 
 md-filled-card.contribute-card {
   --md-filled-card-container-shape: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 0;
   padding: 24px;
 }
 
@@ -404,27 +400,43 @@ md-filled-card.contribute-card {
   line-height: 1.6;
 }
 
+.app-footer {
+  width: min(100%, 900px);
+  margin-inline: auto;
+  padding: 0 max(16px, calc(16px + var(--safe-area-inset-right)))
+    calc(24px + var(--safe-area-inset-bottom))
+    max(16px, calc(16px + var(--safe-area-inset-left)));
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+}
+
+.footer-shell {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  border-radius: 24px;
+  padding: 12px 16px 12px 20px;
+  background: var(--app-filled-card-container-color);
+}
+
+#copyright-message {
+  flex: 1 1 280px;
+}
+
 .social-icons {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 16px;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-  padding: 32px 0;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-inline-start: auto;
 }
 
 .social-icons md-icon-button {
   --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);
-}
-
-.app-footer {
-  padding: 24px max(20px, env(safe-area-inset-right, 0px))
-    calc(24px + env(safe-area-inset-bottom, 0px));
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.875rem;
-  text-align: center;
 }
 
 .projects-intro {
@@ -591,6 +603,22 @@ md-dialog {
 
   .faq-answer-content {
     padding-left: 20px;
+  }
+
+  .footer-shell {
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+  }
+
+  #copyright-message {
+    flex-basis: auto;
+  }
+
+  .social-icons {
+    justify-content: center;
+    margin-inline-start: 0;
   }
 }
 

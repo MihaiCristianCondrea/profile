@@ -103,10 +103,6 @@ function createDrawerSection(
   const firstItem = items[0];
   if (!firstItem) return;
 
-  const divider = document.createElement('md-divider');
-  divider.className = 'drawer-section-divider';
-  divider.setAttribute('aria-hidden', 'true');
-
   const toggle = document.createElement('md-item');
   toggle.id = toggleId;
   toggle.className = 'nav-item drawer-section-toggle';
@@ -127,7 +123,6 @@ function createDrawerSection(
   content.setAttribute('aria-labelledby', toggleId);
   content.dataset.sectionToggleId = toggleId;
 
-  drawerContent.insertBefore(divider, firstItem);
   drawerContent.insertBefore(toggle, firstItem);
   drawerContent.insertBefore(content, firstItem);
 
