@@ -437,6 +437,24 @@ md-filled-card.contribute-card {
 
 .social-icons md-icon-button {
   --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);
+  --md-icon-button-icon-size: 20px;
+  vertical-align: middle;
+}
+
+.social-icons md-icon-button > i,
+.social-icons md-icon-button > md-icon {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  place-items: center;
+  font-size: 20px;
+  line-height: 1;
+  text-align: center;
+}
+
+.social-icons md-icon-button > md-icon {
+  font-size: 22px;
 }
 
 .projects-intro {
