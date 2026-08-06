@@ -69,10 +69,10 @@ describe('blog feature', () => {
     expect(card.querySelector('h3')?.textContent).toBe('A safe title');
     expect(card.querySelector('.news-card-content p')?.textContent).toBe('Hello world');
     expect(card.querySelector('img')?.src).toContain('images/placeholder.png');
-    const readButton = Array.from(card.querySelectorAll('md-text-button'))
+    const readButton = Array.from(card.querySelectorAll('md-filled-button'))
       .find((button) => button.textContent?.includes('Read more'));
     expect(readButton?.getAttribute('href')).toBe('#');
     expect(readButton?.hasAttribute('disabled')).toBe(true);
-    expect(card.querySelector('a md-text-button')).toBeNull();
+    expect(card.querySelector('a md-filled-button')).toBeNull();
   });
 });
