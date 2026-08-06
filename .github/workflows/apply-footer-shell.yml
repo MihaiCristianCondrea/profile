@@ -1,0 +1,319 @@
+name: Apply divider-free footer shell
+
+on:
+  push:
+    branches:
+      - ui/footer-shell-no-dividers
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ui/footer-shell-no-dividers
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - name: Apply UI changes
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          def read(path: str) -> str:
+              return Path(path).read_text(encoding='utf-8')
+
+          def write(path: str, content: str) -> None:
+              Path(path).write_text(content, encoding='utf-8')
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              source = read(path)
+              count = source.count(old)
+              if count != 1:
+                  raise RuntimeError(f'{path}: expected one match, found {count}: {old[:80]!r}')
+              write(path, source.replace(old, new, 1))
+
+          html_files = [Path('index.html'), *Path('src').rglob('*.html')]
+          divider_pattern = re.compile(
+              r'\n[ \t]*<md-divider(?:\s[^>]*)?></md-divider>[ \t]*\n',
+          )
+          for path in html_files:
+              source = path.read_text(encoding='utf-8')
+              updated = divider_pattern.sub('\n', source)
+              updated = re.sub(r'\n{3,}', '\n\n', updated)
+              if updated != source:
+                  path.write_text(updated, encoding='utf-8')
+
+          index_path = 'index.html'
+          index_source = read(index_path)
+          footer_pattern = re.compile(
+              r'\n        <div class="social-icons">\n'
+              r'(?P<icons>.*?)\n'
+              r'        </div>\n'
+              r'      </div>\n'
+              r'    </div>\n\n'
+              r'    <footer class="app-footer">\n'
+              r'      <span id="copyright-message"></span>\n'
+              r'    </footer>',
+              re.DOTALL,
+          )
+          match = footer_pattern.search(index_source)
+          if not match:
+              raise RuntimeError('index.html: social row and footer shell pattern was not found')
+          footer_replacement = (
+              '\n      </div>\n'
+              '    </div>\n\n'
+              '    <footer class="app-footer" data-drawer-inert-target>\n'
+              '      <div class="footer-shell">\n'
+              '        <span id="copyright-message"></span>\n'
+              '        <nav class="social-icons" aria-label="Social profiles">\n'
+              f'{match.group("icons")}\n'
+              '        </nav>\n'
+              '      </div>\n'
+              '    </footer>'
+          )
+          index_source = footer_pattern.sub(footer_replacement, index_source, count=1)
+          write(index_path, index_source)
+
+          replace_once(
+              'src/core/material/MaterialRegistry.ts',
+              "import '@material/web/divider/divider.js';\n",
+              '',
+          )
+
+          replace_once(
+              'src/features/navigation-drawer/presentation/NavigationDrawer.ts',
+              "  const divider = document.createElement('md-divider');\n"
+              "  divider.className = 'drawer-section-divider';\n"
+              "  divider.setAttribute('aria-hidden', 'true');\n\n",
+              '',
+          )
+          replace_once(
+              'src/features/navigation-drawer/presentation/NavigationDrawer.ts',
+              '  drawerContent.insertBefore(divider, firstItem);\n',
+              '',
+          )
+
+          replace_once(
+              'tests/features/navigation-drawer/presentation/NavigationDrawer.test.ts',
+              "    expect(document.querySelectorAll('.drawer-section-divider')).toHaveLength(2);\n",
+              "    expect(document.querySelector('md-divider')).toBeNull();\n",
+          )
+
+          replace_once(
+              'src/core/styles/components.css',
+              ".profile-section-divider {\n  margin: 28px 0;\n}\n\n",
+              '',
+          )
+          replace_once(
+              'src/core/styles/components.css',
+              ".faq-item.is-open .faq-summary {\n"
+              "  border-bottom: 1px solid var(--md-sys-color-outline-variant);\n"
+              "}\n\n",
+              '',
+          )
+          replace_once(
+              'src/core/styles/components.css',
+              ".social-icons {\n"
+              "  display: flex;\n"
+              "  flex-wrap: wrap;\n"
+              "  align-items: center;\n"
+              "  justify-content: center;\n"
+              "  gap: 12px;\n"
+              "  margin-top: 16px;\n"
+              "  border-top: 1px solid var(--md-sys-color-outline-variant);\n"
+              "  padding: 32px 0;\n"
+              "}\n\n"
+              ".social-icons md-icon-button {\n"
+              "  --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);\n"
+              "}\n\n"
+              ".app-footer {\n"
+              "  padding: 24px max(20px, env(safe-area-inset-right, 0px))\n"
+              "    calc(24px + env(safe-area-inset-bottom, 0px));\n"
+              "  color: var(--md-sys-color-on-surface-variant);\n"
+              "  font-size: 0.875rem;\n"
+              "  text-align: center;\n"
+              "}\n",
+              ".app-footer {\n"
+              "  padding: 0 max(16px, env(safe-area-inset-right, 0px))\n"
+              "    calc(24px + env(safe-area-inset-bottom, 0px))\n"
+              "    max(16px, env(safe-area-inset-left, 0px));\n"
+              "  color: var(--md-sys-color-on-surface-variant);\n"
+              "  font-size: 0.875rem;\n"
+              "}\n\n"
+              ".footer-shell {\n"
+              "  display: flex;\n"
+              "  width: min(100%, 900px);\n"
+              "  align-items: center;\n"
+              "  justify-content: space-between;\n"
+              "  gap: 12px 20px;\n"
+              "  margin-inline: auto;\n"
+              "  border-radius: 24px;\n"
+              "  padding: 12px 16px 12px 20px;\n"
+              "  background: var(--app-filled-card-container-color);\n"
+              "}\n\n"
+              "#copyright-message {\n"
+              "  flex: 1 1 280px;\n"
+              "}\n\n"
+              ".social-icons {\n"
+              "  display: flex;\n"
+              "  flex-wrap: wrap;\n"
+              "  align-items: center;\n"
+              "  justify-content: flex-end;\n"
+              "  gap: 4px;\n"
+              "}\n\n"
+              ".social-icons md-icon-button {\n"
+              "  --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);\n"
+              "}\n",
+          )
+          replace_once(
+              'src/core/styles/components.css',
+              "@media (max-width: 600px) {\n"
+              "  .achievement-body {\n"
+              "    align-items: flex-start;\n"
+              "  }\n\n"
+              "  .faq-answer-content {\n"
+              "    padding-left: 20px;\n"
+              "  }\n"
+              "}\n",
+              "@media (max-width: 600px) {\n"
+              "  .achievement-body {\n"
+              "    align-items: flex-start;\n"
+              "  }\n\n"
+              "  .faq-answer-content {\n"
+              "    padding-left: 20px;\n"
+              "  }\n\n"
+              "  .footer-shell {\n"
+              "    flex-direction: column;\n"
+              "    justify-content: center;\n"
+              "    padding: 16px;\n"
+              "    text-align: center;\n"
+              "  }\n\n"
+              "  #copyright-message {\n"
+              "    flex-basis: auto;\n"
+              "  }\n\n"
+              "  .social-icons {\n"
+              "    justify-content: center;\n"
+              "  }\n"
+              "}\n",
+          )
+
+          nav_css_path = 'src/core/styles/navigation-shell.css'
+          nav_css = read(nav_css_path)
+          for old in [
+              '  --navigation-shell-border: color-mix(in srgb, var(--md-sys-color-on-surface) 18%, transparent);\n',
+              '  border-bottom: 1px solid var(--navigation-shell-border);\n',
+              '  border-top: 1px solid var(--navigation-shell-border);\n',
+              ".drawer-section-divider {\n  margin: 4px 0;\n}\n\n",
+          ]:
+              count = nav_css.count(old)
+              if count != 1:
+                  raise RuntimeError(f'{nav_css_path}: expected one match, found {count}: {old!r}')
+              nav_css = nav_css.replace(old, '', 1)
+          write(nav_css_path, nav_css)
+
+          replace_once(
+              'src/core/styles/pages.css',
+              ".policy-page-card md-divider {\n  margin-block: 28px;\n}\n\n",
+              '',
+          )
+
+          policy_path = 'scripts/verify-ui-policy.mjs'
+          policy = read(policy_path)
+          policy = policy.replace(
+              "const FORBIDDEN_CARD_IMPORTS = [\n"
+              "  '@material/web/labs/card/outlined-card.js',\n"
+              "  '@material/web/labs/card/elevated-card.js',\n"
+              "];\n",
+              "const FORBIDDEN_CARD_IMPORTS = [\n"
+              "  '@material/web/labs/card/outlined-card.js',\n"
+              "  '@material/web/labs/card/elevated-card.js',\n"
+              "];\n"
+              "const FORBIDDEN_DIVIDER_MARKER = 'md-divider';\n",
+              1,
+          )
+          loop_marker = "  for (const cardTag of FORBIDDEN_CARD_TAGS) {\n"
+          loop_start = policy.index(loop_marker)
+          loop_end_marker = "  }\n}\n\nconst materialRegistryPath"
+          loop_end = policy.index(loop_end_marker, loop_start)
+          divider_check = (
+              "\n  if (source.includes(FORBIDDEN_DIVIDER_MARKER)) {\n"
+              "    violations.push(\n"
+              "      `${relative(ROOT, filePath).replaceAll('\\\\', '/')} contains forbidden production divider`,\n"
+              "    );\n"
+              "  }\n"
+          )
+          policy = policy[:loop_end + 3] + divider_check + policy[loop_end + 3:]
+          footer_assertion_marker = (
+              "assertIncludes(homeHtml, '<md-filled-card class=\"contribute-card\">', 'Contribution callout');\n"
+          )
+          footer_assertion = footer_assertion_marker + (
+              "assertIncludes(\n"
+              "  homeHtml,\n"
+              "  '<footer class=\"app-footer\" data-drawer-inert-target>\\n'\n"
+              "    + '      <div class=\"footer-shell\">\\n'\n"
+              "    + '        <span id=\"copyright-message\"></span>\\n'\n"
+              "    + '        <nav class=\"social-icons\" aria-label=\"Social profiles\">',\n"
+              "  'Footer social shell',\n"
+              ");\n"
+          )
+          if policy.count(footer_assertion_marker) != 1:
+              raise RuntimeError(f'{policy_path}: contribution assertion marker missing')
+          policy = policy.replace(footer_assertion_marker, footer_assertion, 1)
+          write(policy_path, policy)
+
+          docs_path = 'docs/material-web.md'
+          docs = read(docs_path)
+          divider_policy = """
+          ### Divider-free composition and footer shell
+
+          The production interface intentionally avoids standalone dividers and
+          separator rules. Section hierarchy comes from spacing, typography, grouped
+          corners, and filled tonal surfaces instead of horizontal lines. Do not add
+          `md-divider` elements, register the divider component, or introduce separator
+          borders around the drawer sections, FAQ answers, or footer content.
+
+          Social profile actions belong inside the global footer shell beside the
+          copyright message. The shell uses the same neutral filled surface as normal
+          cards, has one rounded container, and contains no internal divider. On narrow
+          screens the copyright and icon row stack inside that same surface.
+
+          """
+          navigation_marker = '## Navigation actions\n'
+          if docs.count(navigation_marker) != 1:
+              raise RuntimeError(f'{docs_path}: navigation section marker missing')
+          docs = docs.replace(navigation_marker, divider_policy + navigation_marker, 1)
+          docs = docs.replace(
+              'Dividers, icons, selected states, and drawer surfaces remain Material\n'
+              'components. Application CSS is limited to hierarchy, indentation, spacing, and\n'
+              'visibility.\n',
+              'Icons, selected states, and drawer surfaces remain Material components.\n'
+              'Application CSS is limited to hierarchy, indentation, spacing, and visibility.\n',
+              1,
+          )
+          write(docs_path, docs)
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify divider-free UI
+        run: |
+          if grep -R "md-divider" index.html src --include='*.html' --include='*.ts'; then
+            echo "Production divider usage remains"
+            exit 1
+          fi
+          npm run check
+      - name: Commit UI changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/apply-footer-shell.yml
+          git add index.html src tests scripts docs
+          git commit -m "Move social links into a divider-free footer shell"
+          git push
