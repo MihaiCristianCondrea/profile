@@ -72,7 +72,7 @@ export function createBlogPostCard(post: BlogPost): HTMLElement {
   feedback.setAttribute('aria-live', 'polite');
   feedback.hidden = true;
 
-  const shareButton = document.createElement('md-text-button');
+  const shareButton = document.createElement('md-filled-button');
   shareButton.type = 'button';
   shareButton.textContent = 'Share';
   shareButton.setAttribute('aria-label', `Share “${title}”`);
@@ -89,7 +89,7 @@ export function createBlogPostCard(post: BlogPost): HTMLElement {
     }
   });
 
-  const readButton = document.createElement('md-text-button');
+  const readButton = document.createElement('md-filled-button');
   readButton.setAttribute('href', postUrl);
   readButton.setAttribute('target', '_blank');
   readButton.textContent = 'Read more';
