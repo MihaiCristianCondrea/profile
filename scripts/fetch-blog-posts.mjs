@@ -3,7 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const BLOG_URL = 'https://d4rk7355608.blogspot.com/';
-const BLOGGER_API_REFERER = 'https://mihaicristiancondrea.github.io/profile/';
+const BLOGGER_API_REFERER = 'https://mihaicristiancondrea.github.io/';
 const MAX_RESULTS = 4;
 const OUTPUT_PATH = resolve(
   dirname(fileURLToPath(import.meta.url)),
