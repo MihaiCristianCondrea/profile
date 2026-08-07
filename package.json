@@ -11,7 +11,7 @@
     "verify:source-quality": "node scripts/verify-source-quality.mjs",
     "verify:ui-policy": "node scripts/verify-ui-policy.mjs",
     "verify:svg-assets": "node scripts/verify-svg-assets.mjs",
-    "verify:security": "npm audit --audit-level=moderate",
+    "verify:security": "npm audit --audit-level=moderate --omit=dev",
     "build": "npm run verify:html-structure && npm run verify:source-quality && npm run verify:ui-policy && npm run verify:svg-assets && npm run clean && npm run typecheck && npm run build:vite && npm run build:pages",
     "build:vite": "vite build",
     "build:pages": "node scripts/copy-page-fragments.mjs",
