@@ -6,6 +6,7 @@
     "test": "jest",
     "clean": "rimraf dist",
     "typecheck": "tsc -p tsconfig.json",
+    "prepare:blog": "node scripts/fetch-blog-posts.mjs",
     "verify:html-structure": "node scripts/verify-html-structure.mjs",
     "verify:source-quality": "node scripts/verify-source-quality.mjs",
     "verify:ui-policy": "node scripts/verify-ui-policy.mjs",
