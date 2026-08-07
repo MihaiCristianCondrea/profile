@@ -115,23 +115,37 @@ function showNewsStatus(status: HTMLElement, message: string, loading = false): 
   status.hidden = false;
 }
 
+function setBlogSectionVisibility(newsGrid: HTMLElement, visible: boolean): void {
+  const newsSection = newsGrid.closest<HTMLElement>('.news-section');
+  const heading = newsSection?.previousElementSibling;
+  if (newsSection) newsSection.hidden = !visible;
+  if (heading instanceof HTMLElement && heading.classList.contains('page-section-title')) {
+    heading.hidden = !visible;
+  }
+}
+
 export async function fetchBlogPosts(): Promise<void> {
   const newsGrid = getDynamicElement('newsGrid');
   const newsStatus = getDynamicElement('news-status');
   if (!newsGrid || !newsStatus) return;
 
+  setBlogSectionVisibility(newsGrid, false);
   showNewsStatus(newsStatus, 'Loading latest posts…', true);
   try {
     const posts = await fetchBloggerPostsData();
-    newsGrid.replaceChildren(...posts.map(createBlogPostCard));
-    if (posts.length) {
+    if (!posts.length) {
+      newsGrid.replaceChildren(newsStatus);
       newsStatus.hidden = true;
-    } else {
-      showNewsStatus(newsStatus, 'No posts were found.');
+      return;
     }
+
+    newsGrid.replaceChildren(...posts.map(createBlogPostCard));
+    newsStatus.hidden = true;
+    setBlogSectionVisibility(newsGrid, true);
   } catch (error) {
     console.error('Blogger: Failed to load posts.', error);
-    showNewsStatus(newsStatus, 'Posts are unavailable right now.');
+    newsGrid.replaceChildren(newsStatus);
+    newsStatus.hidden = true;
   }
 }
 
