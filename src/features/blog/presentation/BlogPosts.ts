@@ -116,22 +116,29 @@ function showNewsStatus(status: HTMLElement, message: string, loading = false): 
 }
 
 export async function fetchBlogPosts(): Promise<void> {
+  const blogSection = getDynamicElement('blogSection');
   const newsGrid = getDynamicElement('newsGrid');
   const newsStatus = getDynamicElement('news-status');
-  if (!newsGrid || !newsStatus) return;
+  if (!blogSection || !newsGrid || !newsStatus) return;
 
+  blogSection.hidden = true;
   showNewsStatus(newsStatus, 'Loading latest posts…', true);
   try {
     const posts = await fetchBloggerPostsData();
-    newsGrid.replaceChildren(...posts.map(createBlogPostCard));
-    if (posts.length) {
-      newsStatus.hidden = true;
-    } else {
-      showNewsStatus(newsStatus, 'No posts were found.');
+    if (!posts.length) {
+      newsGrid.replaceChildren(newsStatus);
+      blogSection.hidden = true;
+      return;
     }
+
+    newsGrid.replaceChildren(...posts.map(createBlogPostCard));
+    newsStatus.hidden = true;
+    blogSection.hidden = false;
   } catch (error) {
     console.error('Blogger: Failed to load posts.', error);
-    showNewsStatus(newsStatus, 'Posts are unavailable right now.');
+    newsGrid.replaceChildren(newsStatus);
+    newsStatus.hidden = true;
+    blogSection.hidden = true;
   }
 }
 
