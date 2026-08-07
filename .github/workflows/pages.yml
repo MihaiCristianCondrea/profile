@@ -29,6 +29,10 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm test -- --runInBand
+      - name: Fetch Blogger posts
+        env:
+          BLOGGER_API_KEY: ${{ secrets.BLOGGER_API_KEY }}
+        run: npm run prepare:blog
       - name: Build site
         run: npm run deploy
       - name: Configure Pages
