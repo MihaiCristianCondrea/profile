@@ -3,6 +3,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const BLOG_URL = 'https://d4rk7355608.blogspot.com/';
+const BLOGGER_API_REFERER = 'https://mihaicristiancondrea.github.io/profile/';
 const MAX_RESULTS = 4;
 const OUTPUT_PATH = resolve(
   dirname(fileURLToPath(import.meta.url)),
@@ -20,7 +21,12 @@ async function getErrorMessage(response) {
 }
 
 async function fetchJson(url, description) {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+      Referer: BLOGGER_API_REFERER,
+    },
+  });
   if (!response.ok) {
     const detail = await getErrorMessage(response);
     throw new Error(detail || `${description} (${response.status}).`);
