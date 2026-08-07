@@ -3,52 +3,42 @@ import {
   fetchBloggerPostsData,
   type BlogConfiguration,
 } from '../../../../src/features/blog/data/BloggerApiClient';
-import { createBlogPostCard } from '../../../../src/features/blog/presentation/BlogPosts';
+import {
+  createBlogPostCard,
+  fetchBlogPosts,
+} from '../../../../src/features/blog/presentation/BlogPosts';
 
 const config: BlogConfiguration = {
-  url: 'https://example.blogspot.com/',
-  maxResults: 2,
-  getApiKey: () => 'test-key',
+  dataUrl: 'generated-blog-posts.json',
 };
 
 describe('blog feature', () => {
   beforeEach(() => {
     global.fetch = jest.fn();
+    document.body.replaceChildren();
   });
 
-  test('loads blog identity and posts through the typed data source', async () => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValue({ id: 'blog-123' }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValue({ items: [{ title: 'Post' }] }),
-      });
+  test('loads generated Blogger posts through the typed data source', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ items: [{ title: 'Post' }] }),
+    });
 
     const result = await fetchBloggerPostsData(config);
 
     expect(result[0]?.title).toBe('Post');
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-    expect(String((global.fetch as jest.Mock).mock.calls[0][0]))
-      .toContain('blogs/byurl');
-    expect(String((global.fetch as jest.Mock).mock.calls[1][0]))
-      .toContain('/blogs/blog-123/posts');
-    expect(String((global.fetch as jest.Mock).mock.calls[1][0]))
-      .toContain('maxResults=2');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect((global.fetch as jest.Mock).mock.calls[0][0]).toBe('generated-blog-posts.json');
   });
 
-  test('surfaces API error details', async () => {
+  test('surfaces generated data loading errors', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: false,
-      status: 403,
-      json: jest.fn().mockResolvedValue({
-        error: { message: 'API access denied' },
-      }),
+      status: 404,
     });
 
-    await expect(fetchBloggerPostsData(config)).rejects.toThrow('API access denied');
+    await expect(fetchBloggerPostsData(config))
+      .rejects.toThrow('Unable to load generated blog posts (404).');
   });
 
   test('extracts the first non-inline image from Blogger HTML', () => {
@@ -74,5 +64,50 @@ describe('blog feature', () => {
     expect(readButton?.getAttribute('href')).toBe('#');
     expect(readButton?.hasAttribute('disabled')).toBe(true);
     expect(card.querySelector('a md-filled-button')).toBeNull();
+  });
+
+  test('keeps the complete latest news block hidden when no posts exist', async () => {
+    document.body.innerHTML = `
+      <h2 class="page-section-title">Latest news</h2>
+      <div class="news-section">
+        <div id="newsGrid">
+          <div id="news-status"></div>
+        </div>
+      </div>
+    `;
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ items: [] }),
+    });
+
+    await fetchBlogPosts();
+
+    const heading = document.querySelector<HTMLElement>('.page-section-title');
+    const section = document.querySelector<HTMLElement>('.news-section');
+    expect(heading?.hidden).toBe(true);
+    expect(section?.hidden).toBe(true);
+  });
+
+  test('reveals the latest news block when generated posts exist', async () => {
+    document.body.innerHTML = `
+      <h2 class="page-section-title">Latest news</h2>
+      <div class="news-section">
+        <div id="newsGrid">
+          <div id="news-status"></div>
+        </div>
+      </div>
+    `;
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ items: [{ title: 'Visible post' }] }),
+    });
+
+    await fetchBlogPosts();
+
+    const heading = document.querySelector<HTMLElement>('.page-section-title');
+    const section = document.querySelector<HTMLElement>('.news-section');
+    expect(heading?.hidden).toBe(false);
+    expect(section?.hidden).toBe(false);
+    expect(document.querySelector('#newsGrid h3')?.textContent).toBe('Visible post');
   });
 });
