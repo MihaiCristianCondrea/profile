@@ -1,165 +1,207 @@
-<div id="smartCleanerPageContainer" class="page-section active">
-  <section class="smart-cleaner-hero" id="smartCleanerHero">
-    <div class="smart-cleaner-hero-copy">
-      <h1>Cleaner storage.<br />Smoother Android.</h1>
-      <p class="smart-cleaner-subtitle">Reclaim space. Remove clutter. Stay in control.</p>
-
-      <div class="smart-cleaner-hero-actions">
-        <md-filled-button
-          href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner"
-          target="_blank"
-          aria-label="Download Smart Cleaner from Google Play"
-        >
-          <md-icon slot="icon">download</md-icon>
-          Download on Google Play
+<div id="smartCleanerPageContainer" class="page-section active smart-cleaner-page">
+  <section class="sc-hero" id="smartCleanerHero">
+    <div class="sc-hero-copy sc-reveal is-visible">
+      <p class="sc-kicker"><md-icon aria-hidden="true">cleaning_services</md-icon>Cleaner for Android</p>
+      <h1>Cleaner storage.<br /><span>Smoother Android.</span></h1>
+      <p class="sc-hero-subtitle" id="appShortDescription">
+        Reclaim space, remove cache and duplicates, and stay in control with a cleaner built around clear decisions.
+      </p>
+      <div class="sc-actions">
+        <md-filled-button href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner" target="_blank" aria-label="Download Cleaner for Android from Google Play">
+          <md-icon slot="icon">download</md-icon>Google Play
         </md-filled-button>
-        <div class="smart-cleaner-github-group" aria-label="View Smart Cleaner repositories on GitHub">
-          <p class="smart-cleaner-github-title">Source code</p>
-          <div class="smart-cleaner-github-buttons">
-            <md-outlined-button
-              href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android"
-              target="_blank"
-            >
-              <md-icon slot="icon">android</md-icon>
-              Android app
-            </md-outlined-button>
-            <md-outlined-button
-              href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Windows"
-              target="_blank"
-            >
-              <md-icon slot="icon">desktop_windows</md-icon>
-              Windows app
-            </md-outlined-button>
-          </div>
+        <md-outlined-button href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android" target="_blank">
+          <md-icon slot="icon">code</md-icon>View source
+        </md-outlined-button>
+      </div>
+      <div class="sc-proof-row" aria-label="Cleaner highlights">
+        <span><md-icon>android</md-icon>Native Material 3</span>
+        <span><md-icon>visibility</md-icon>Clear decisions</span>
+        <span><md-icon>watch</md-icon>Wear OS companion</span>
+      </div>
+    </div>
+
+    <div class="sc-hero-stage" id="heroStage" aria-label="Cleaner for Android preview">
+      <div class="sc-hero-halo" aria-hidden="true"></div>
+      <md-filled-card class="sc-float-card sc-float-top" aria-hidden="true">
+        <div class="sc-float-content"><md-icon>photo_library</md-icon><div><strong>Duplicate finder</strong><span>Keep the copy you want.</span></div></div>
+      </md-filled-card>
+      <div class="sc-device-wrap">
+        <div class="sc-device">
+          <img src="https://play-lh.googleusercontent.com/kZorcBMqxV0DQilcYiCkN-L36zPQ4Fv6j35JrrXT27G0HOdr6_aKFpY7PrvUb64Lqs8=w2560-h1440-rw" alt="Cleaner for Android dashboard" fetchpriority="high" />
         </div>
       </div>
+      <md-filled-card class="sc-float-card sc-float-bottom" aria-hidden="true">
+        <div class="sc-float-content"><md-icon>folder_delete</md-icon><div><strong>Clutter, explained</strong><span>Preview before cleanup.</span></div></div>
+      </md-filled-card>
+    </div>
+  </section>
+
+  <section class="sc-section sc-reveal" id="smartCleanerProblemSection">
+    <md-filled-card class="sc-problem-card">
+      <div class="sc-problem-inner">
+        <div>
+          <p class="sc-kicker"><md-icon>storage</md-icon>Less storage anxiety</p>
+          <h2>Storage shouldn’t feel stressful.</h2>
+          <p>When space runs low, your phone should still feel simple. Cleaner turns storage chaos into a clear next step, with the important information visible before you remove anything.</p>
+        </div>
+        <div class="sc-problem-stat">
+          <md-icon>space_dashboard</md-icon><strong>1 flow</strong><span>See the problem, inspect what matters, then decide what leaves.</span>
+        </div>
+      </div>
+    </md-filled-card>
+  </section>
+
+  <section class="sc-section" id="smartCleanerFeatureFocus">
+    <div class="sc-section-heading sc-reveal">
+      <p class="sc-kicker"><md-icon>view_cozy</md-icon>Focused tools</p>
+      <h2>Explore the cleanup flow.</h2>
+      <p>The preview stays anchored while the feature changes around it. Depth comes from the composition, not from turning the page into a slideshow.</p>
     </div>
 
-    <div class="smart-cleaner-hero-visual" aria-label="Smart Cleaner app preview">
-      <div class="smart-cleaner-phone-frame">
-        <img
-          src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png"
-          alt="Smart Cleaner main dashboard screenshot"
-          loading="lazy"
-        />
+    <div class="sc-feature-switcher sc-reveal">
+      <div class="sc-feature-copy">
+        <div class="sc-feature-selector-wrap" aria-label="Choose a Cleaner feature">
+          <md-outlined-segmented-button-set id="featureSelector">
+            <md-outlined-segmented-button selected label="Memory Manager" data-feature="memory"><md-icon slot="icon">memory</md-icon></md-outlined-segmented-button>
+            <md-outlined-segmented-button label="Duplicates" data-feature="duplicates"><md-icon slot="icon">content_copy</md-icon></md-outlined-segmented-button>
+            <md-outlined-segmented-button label="App Manager" data-feature="apps"><md-icon slot="icon">apps</md-icon></md-outlined-segmented-button>
+            <md-outlined-segmented-button label="Wear OS" data-feature="wear"><md-icon slot="icon">watch</md-icon></md-outlined-segmented-button>
+          </md-outlined-segmented-button-set>
+        </div>
+        <h3 id="featureTitle">Clean what matters.</h3>
+        <p id="featureDescription">See what is taking space in seconds, then clear the files that actually move the needle.</p>
+        <ul id="featureBullets">
+          <li><md-icon>photo_size_select_large</md-icon><span>Spot oversized files quickly.</span></li>
+          <li><md-icon>visibility</md-icon><span>Preview before every action.</span></li>
+          <li><md-icon>verified_user</md-icon><span>Keep cleanup deliberate and understandable.</span></li>
+        </ul>
+      </div>
+
+      <div class="sc-feature-stage" id="featureStage">
+        <div class="sc-feature-backplate" aria-hidden="true"></div>
+        <md-filled-card class="sc-feature-shot-card" id="featureShotCard">
+          <div class="sc-shot-pad"><img id="featureImage" src="https://play-lh.googleusercontent.com/s15b2PJk5VSkOykE_c-yOs3VqlA1db9XuV_BnQSubPSjp73EO5c262WP11p1fUAdjKyz=w2560-h1440-rw" alt="Cleaner memory manager screen" loading="lazy" /></div>
+        </md-filled-card>
+        <md-filled-card class="sc-feature-badge" aria-hidden="true"><div><span>Focus</span><strong id="featureBadgeValue">Memory & Storage</strong></div></md-filled-card>
       </div>
     </div>
   </section>
 
-  <section class="smart-cleaner-problem" id="smartCleanerProblemSection">
-    <div class="smart-cleaner-problem-copy">
-      <h2>Storage shouldn’t feel stressful.</h2>
-      <p>When space runs low, your phone should still feel simple. Smart Cleaner turns storage chaos into a clear next step.</p>
-    </div>
-  </section>
+  <section class="sc-section sc-story-stack" aria-label="Cleaner feature stories">
+    <article class="sc-story sc-reveal" data-parallax-story>
+      <div class="sc-story-visual" style="--story-backdrop: var(--md-sys-color-primary-container); --story-rotate: -4deg; --shot-rotate: 1.4deg;">
+        <img src="https://play-lh.googleusercontent.com/22xJupF9f3rszxorCDFYSDMFxPse31hA-wnfMWV-0iWuZqw9WIM8yJLd3bYZg2trqag=w2560-h1440-rw" alt="Cleaner duplicate files detection screenshot" loading="lazy" />
+      </div>
+      <div class="sc-story-copy">
+        <p class="sc-kicker"><md-icon>content_copy</md-icon>Duplicates & junk</p>
+        <h3>Find repeated files without the guesswork.</h3>
+        <p>Repeated photos and files stop hiding. The cleaner groups the problem first, then lets you keep the copy you want and remove the rest in one understandable flow.</p>
+        <div class="sc-story-list">
+          <md-filled-card><div><md-icon>search</md-icon><span>Fast duplicate matching without a maze of folders.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>lightbulb</md-icon><span>Recommendations remain visible before deletion.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>touch_app</md-icon><span>Cleanup only when you are ready.</span></div></md-filled-card>
+        </div>
+      </div>
+    </article>
 
-  <section class="smart-cleaner-story-section" id="smartCleanerLargeFiles">
-    <div class="smart-cleaner-story-visual">
-      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/3-screenshot_main_memory_manager.png" alt="Large files cleaning screenshot" loading="lazy" />
-    </div>
-    <article class="smart-cleaner-story-copy">
-      <h2>Clean what matters.</h2>
-      <p>See what’s taking space in seconds, then clear the files that move the needle.</p>
-      <ul>
-        <li><md-icon aria-hidden="true">photo_size_select_large</md-icon><span>Spot oversized files instantly</span></li>
-        <li><md-icon aria-hidden="true">visibility</md-icon><span>Preview before every action</span></li>
-        <li><md-icon aria-hidden="true">verified_user</md-icon><span>Cleanups that feel safe and deliberate</span></li>
-      </ul>
+    <article class="sc-story is-reverse sc-reveal" data-parallax-story data-invert="true">
+      <div class="sc-story-visual" style="--story-backdrop: var(--md-sys-color-tertiary-container); --story-rotate: 4deg; --shot-rotate: -1.4deg;">
+        <img src="https://play-lh.googleusercontent.com/RFPtMvrFEzPOSVxiCKosDVSqnqKdz_kbfkcJgw2Rf6IDcr9IfOfbqGmPE3ihVO3o98k0=w2560-h1440-rw" alt="Cleaner app manager screenshot" loading="lazy" />
+      </div>
+      <div class="sc-story-copy">
+        <p class="sc-kicker"><md-icon>apps</md-icon>App Manager</p>
+        <h3>Keep unused heavy apps in check.</h3>
+        <p>Storage problems are easier to solve when the biggest items are obvious. Cleaner surfaces apps and residual packages that deserve attention first.</p>
+        <div class="sc-story-list">
+          <md-filled-card><div><md-icon>sort</md-icon><span>Prioritize apps by disk footprint and usage.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>visibility</md-icon><span>Inspect details before acting.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>speed</md-icon><span>Move quickly from overview to cleanup.</span></div></md-filled-card>
+        </div>
+      </div>
+    </article>
+
+    <article class="sc-story sc-reveal" data-parallax-story>
+      <div class="sc-story-visual" style="--story-backdrop: var(--md-sys-color-secondary-container); --story-rotate: -3deg; --shot-rotate: 1deg;">
+        <img src="https://play-lh.googleusercontent.com/sA2lY3wl9DnfXKKJtLo55HK50CcT_d-kDrYUo5njFskK4pii1-ScfgsbWJ_-5p49pA=w2560-h1440-rw" alt="Cleaner trash and review screenshot" loading="lazy" />
+      </div>
+      <div class="sc-story-copy">
+        <p class="sc-kicker"><md-icon>delete_sweep</md-icon>Review first</p>
+        <h3>Destructive actions stay deliberate.</h3>
+        <p>Cleanup results are categorized and readable before you commit. Automation helps surface the work, but the final choice remains yours.</p>
+        <div class="sc-story-list">
+          <md-filled-card><div><md-icon>inventory_2</md-icon><span>Keep cleanup results grouped and readable.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>history</md-icon><span>Avoid hidden destructive actions.</span></div></md-filled-card>
+          <md-filled-card><div><md-icon>tune</md-icon><span>Transparent controls over black boxes.</span></div></md-filled-card>
+        </div>
+      </div>
     </article>
   </section>
 
-  <section class="smart-cleaner-story-section is-reverse" id="smartCleanerDuplicates">
-    <div class="smart-cleaner-story-visual">
-      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_main.png" alt="Duplicate files detection screenshot" loading="lazy" />
-    </div>
-    <article class="smart-cleaner-story-copy">
-      <h2>Find duplicates instantly.</h2>
-      <p>Repeated photos and files stop hiding. Keep the copy you want and remove the rest in one flow.</p>
-      <ul>
-        <li><md-icon aria-hidden="true">content_copy</md-icon><span>Fast duplicate matching</span></li>
-        <li><md-icon aria-hidden="true">lightbulb</md-icon><span>Clear, confident recommendations</span></li>
-        <li><md-icon aria-hidden="true">touch_app</md-icon><span>One-tap cleanup when you’re ready</span></li>
-      </ul>
-    </article>
-  </section>
-
-  <section class="smart-cleaner-story-section" id="smartCleanerWhatsapp">
-    <div class="smart-cleaner-story-visual">
-      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png" alt="WhatsApp storage cleaner screenshot" loading="lazy" />
-    </div>
-    <article class="smart-cleaner-story-copy">
-      <h2>WhatsApp storage under control.</h2>
-      <p>Recover space from chat media without digging through folders or losing control of what stays.</p>
-      <ul>
-        <li><md-icon aria-hidden="true">forum</md-icon><span>Focus on media-heavy conversations</span></li>
-        <li><md-icon aria-hidden="true">folder_open</md-icon><span>Reduce manual folder hunting</span></li>
-        <li><md-icon aria-hidden="true">autorenew</md-icon><span>Keep messaging storage clean over time</span></li>
-      </ul>
-    </article>
-  </section>
-
-  <section class="smart-cleaner-story-section is-reverse" id="smartCleanerPrivacy">
-    <div class="smart-cleaner-story-visual">
-      <img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/5-screenshot_trash.png" alt="Privacy cleanup screenshot" loading="lazy" />
-    </div>
-    <article class="smart-cleaner-story-copy">
-      <h2>Protect your digital traces.</h2>
-      <p>Clear clipboard leftovers and shared links with the same simple rhythm as storage cleanup.</p>
-      <ul>
-        <li><md-icon aria-hidden="true">content_paste_off</md-icon><span>Clipboard cleanup in moments</span></li>
-        <li><md-icon aria-hidden="true">link_off</md-icon><span>Link history cleanup made simple</span></li>
-        <li><md-icon aria-hidden="true">tune</md-icon><span>Transparent controls at every step</span></li>
-      </ul>
-    </article>
-  </section>
-
-  <section class="smart-cleaner-breathing">
+  <section class="sc-section sc-breathing sc-reveal" id="smartCleanerBreathing">
     <p>Clean your storage.<br />Keep your clarity.</p>
   </section>
 
-  <section class="smart-cleaner-trust">
-    <h2>Built to be simple.<br />Fast.<br />Transparent.</h2>
-    <p>Open-source by design, focused on clear decisions, and built for everyday reliability.</p>
-    <p class="smart-cleaner-ads-note">Contains ads to support development.</p>
-  </section>
-
-  <section class="smart-cleaner-performance" aria-label="Performance story section">
-    <div class="smart-cleaner-circle-container">
-      <h2>Fast by design.</h2>
-      <p>Quick scans, smooth transitions, and lightweight behavior built for daily use.</p>
+  <section class="sc-section sc-performance sc-reveal" id="smartCleanerPerformance">
+    <div class="sc-performance-orbit" aria-hidden="true">
+      <span class="sc-orbit-ring"></span><span class="sc-orbit-ring"></span>
+      <div class="sc-performance-core"><md-icon>bolt</md-icon></div>
+    </div>
+    <div class="sc-performance-copy">
+      <p class="sc-kicker"><md-icon>speed</md-icon>Fast by design</p>
+      <h2>Native, lightweight, direct.</h2>
+      <p>Quick scans, smooth transitions, and focused flows are built for everyday use rather than spectacle.</p>
+      <div class="sc-performance-metrics">
+        <md-filled-card><div><md-icon>android</md-icon><strong>Native</strong><span>Built for Android rather than wrapped around it.</span></div></md-filled-card>
+        <md-filled-card><div><md-icon>visibility</md-icon><strong>Inspectable</strong><span>Important choices stay visible.</span></div></md-filled-card>
+        <md-filled-card><div><md-icon>touch_app</md-icon><strong>Direct</strong><span>Short flows with clear actions.</span></div></md-filled-card>
+        <md-filled-card><div><md-icon>watch</md-icon><strong>Wear OS</strong><span>Useful controls extend to your wrist.</span></div></md-filled-card>
+      </div>
     </div>
   </section>
 
-  <section class="smart-cleaner-screens" id="smartCleanerScreenshots">
-    <h2>Screenshots</h2>
-    <div class="smart-cleaner-gallery-track" id="smartCleanerGalleryTrack" aria-label="Smart Cleaner screenshots gallery">
-      <figure class="smart-cleaner-shot is-featured"><img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/1-screenshot_main.png" alt="Main cleanup overview screen" loading="lazy" /></figure>
-      <figure class="smart-cleaner-shot"><img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/2-screenshot_main.png" alt="Storage analysis details" loading="lazy" /></figure>
-      <figure class="smart-cleaner-shot"><img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/3-screenshot_main_memory_manager.png" alt="Memory manager screen" loading="lazy" /></figure>
-      <figure class="smart-cleaner-shot"><img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/4-screenshot_main_app_manager.png" alt="App manager screen" loading="lazy" /></figure>
-      <figure class="smart-cleaner-shot"><img src="https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/master/app/src/main/play/listings/en-US/graphics/phone-screenshots/5-screenshot_trash.png" alt="Trash and recovery screen" loading="lazy" /></figure>
+  <section class="sc-section sc-gallery-section sc-reveal" id="smartCleanerScreenshots">
+    <div class="sc-gallery-header">
+      <div><p class="sc-kicker"><md-icon>photo_library</md-icon>Real app screens</p><h2>Screenshots</h2></div>
+      <div class="sc-gallery-controls">
+        <md-outlined-icon-button id="galleryPrev" aria-label="Previous screenshot"><md-icon>arrow_back</md-icon></md-outlined-icon-button>
+        <md-outlined-icon-button id="galleryNext" aria-label="Next screenshot"><md-icon>arrow_forward</md-icon></md-outlined-icon-button>
+      </div>
     </div>
-    <div class="smart-cleaner-gallery-dots" id="smartCleanerGalleryDots" aria-label="Screenshot position"></div>
+    <div class="sc-gallery-track" id="galleryTrack" tabindex="0" aria-label="Cleaner screenshots gallery">
+      <figure class="sc-shot"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/kZorcBMqxV0DQilcYiCkN-L36zPQ4Fv6j35JrrXT27G0HOdr6_aKFpY7PrvUb64Lqs8=w2560-h1440-rw" alt="Cleaner dashboard" loading="lazy" /></div></md-filled-card></figure>
+      <figure class="sc-shot"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/22xJupF9f3rszxorCDFYSDMFxPse31hA-wnfMWV-0iWuZqw9WIM8yJLd3bYZg2trqag=w2560-h1440-rw" alt="Duplicate cleanup" loading="lazy" /></div></md-filled-card></figure>
+      <figure class="sc-shot"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/s15b2PJk5VSkOykE_c-yOs3VqlA1db9XuV_BnQSubPSjp73EO5c262WP11p1fUAdjKyz=w2560-h1440-rw" alt="Memory manager" loading="lazy" /></div></md-filled-card></figure>
+      <figure class="sc-shot"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/RFPtMvrFEzPOSVxiCKosDVSqnqKdz_kbfkcJgw2Rf6IDcr9IfOfbqGmPE3ihVO3o98k0=w2560-h1440-rw" alt="App Manager" loading="lazy" /></div></md-filled-card></figure>
+      <figure class="sc-shot"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/sA2lY3wl9DnfXKKJtLo55HK50CcT_d-kDrYUo5njFskK4pii1-ScfgsbWJ_-5p49pA=w2560-h1440-rw" alt="Trash review" loading="lazy" /></div></md-filled-card></figure>
+      <figure class="sc-shot is-wear"><md-filled-card><div><img src="https://play-lh.googleusercontent.com/Pbr3Un1Y7v-VIUR72Z4r4paIhrL9hjaCGqx1EUqoYRZQTh6jUaF6zaIFpgLXW3ODZLQo-3qjPaiAxaMLwDP2=w2560-h1440-rw" alt="Wear OS storage tile" loading="lazy" /></div></md-filled-card></figure>
+    </div>
+    <div class="sc-gallery-progress" id="galleryProgress" aria-hidden="true"><span></span></div>
   </section>
 
-  <section class="smart-cleaner-cta" id="smartCleanerFinalCta">
-    <div class="smart-cleaner-cta-content">
-      <h2>Ready for a cleaner phone?</h2>
-      <p>Free to use. No subscription required.</p>
-      <md-filled-tonal-button href="#smartCleanerScreenshots" trailing-icon>
-        View Screenshots
-        <md-icon slot="icon">arrow_forward</md-icon>
-      </md-filled-tonal-button>
+  <section class="sc-section sc-reveal">
+    <div class="sc-trust-grid">
+      <md-filled-card><div><md-icon>code</md-icon><strong>Open source</strong><p>The Android client is available to inspect and contribute to.</p></div></md-filled-card>
+      <md-filled-card><div><md-icon>ads_click</md-icon><strong>Free to use</strong><p>No subscription is required. Ads support ongoing development.</p></div></md-filled-card>
+      <md-filled-card><div><md-icon>verified_user</md-icon><strong>User controlled</strong><p>The important cleanup decision stays in front of you.</p></div></md-filled-card>
     </div>
   </section>
 
-  <section class="smart-cleaner-section">
-    <h2>License &amp; Policies</h2>
-    <p>
-      Smart Cleaner is free and open-source software. Read the
+  <section class="sc-section sc-reveal">
+    <md-filled-card class="sc-final-card" id="finalCtaCard">
+      <div class="sc-final-inner">
+        <div><p class="sc-kicker"><md-icon>android</md-icon>Cleaner for Android</p><h2>Ready for a cleaner phone?</h2><p>Free to use, open source, and built around Material 3.</p></div>
+        <div class="sc-final-actions">
+          <md-filled-button href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner" target="_blank"><md-icon slot="icon">download</md-icon>Google Play</md-filled-button>
+          <md-outlined-button href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Android" target="_blank"><md-icon slot="icon">code</md-icon>Source</md-outlined-button>
+        </div>
+      </div>
+    </md-filled-card>
+    <div class="sc-links-footer">
       <a href="#privacy-policy-end-user-software">Privacy Policy</a>
-      and
-      <a href="#terms-of-service-end-user-software">Terms of Service</a>.
-    </p>
+      <a href="#terms-of-service-end-user-software">Terms of Service</a>
+      <a href="https://github.com/MihaiCristianCondrea/Smart-Cleaner-for-Windows" target="_blank" rel="noopener noreferrer">Windows edition</a>
+    </div>
+    <p class="sc-policy-note">Cleaner is free and open-source software. Contains ads to support development.</p>
   </section>
 </div>

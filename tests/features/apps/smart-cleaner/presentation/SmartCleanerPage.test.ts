@@ -1,50 +1,63 @@
 import { initSmartCleanerPage } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
 
-describe('SmartCleanerPage gallery', () => {
+describe('SmartCleanerPage', () => {
   const originalObserver = window.IntersectionObserver;
+  const originalAnimationFrame = window.requestAnimationFrame;
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
+    jest.useFakeTimers();
     Reflect.deleteProperty(window, 'IntersectionObserver');
+    Reflect.deleteProperty(window, 'requestAnimationFrame');
+    globalThis.fetch = jest.fn().mockRejectedValue(new Error('offline')) as typeof fetch;
     document.body.innerHTML = `
       <div id="smartCleanerPageContainer">
-        <div id="smartCleanerGalleryTrack">
-          <figure class="smart-cleaner-shot" id="shot-one"></figure>
-          <figure class="smart-cleaner-shot" id="shot-two"></figure>
-        </div>
-        <div id="smartCleanerGalleryDots"></div>
-      </div>
-    `;
+        <md-outlined-segmented-button-set id="featureSelector">
+          <md-outlined-segmented-button selected data-feature="memory"></md-outlined-segmented-button>
+          <md-outlined-segmented-button id="duplicatesButton" data-feature="duplicates"></md-outlined-segmented-button>
+        </md-outlined-segmented-button-set>
+        <h3 id="featureTitle"></h3><p id="featureDescription"></p>
+        <img id="featureImage" /><ul id="featureBullets"></ul>
+        <span id="featureBadgeValue"></span><div id="featureShotCard"></div>
+        <div class="sc-reveal" id="revealItem"></div>
+        <button id="galleryPrev"></button><button id="galleryNext"></button>
+        <div id="galleryTrack"><div class="sc-shot" id="shotOne"></div><div class="sc-shot"></div></div>
+        <div id="galleryProgress"></div>
+      </div>`;
+    (document.getElementById('galleryTrack') as HTMLElement).scrollBy = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   afterAll(() => {
-    if (originalObserver) {
-      window.IntersectionObserver = originalObserver;
-    }
+    if (originalObserver) window.IntersectionObserver = originalObserver;
+    if (originalAnimationFrame) window.requestAnimationFrame = originalAnimationFrame;
+    globalThis.fetch = originalFetch;
   });
 
-  test('creates accessible controls and updates the selected screenshot', () => {
-    const first = document.getElementById('shot-one') as HTMLElement;
-    const second = document.getElementById('shot-two') as HTMLElement;
-    first.scrollIntoView = jest.fn();
-    second.scrollIntoView = jest.fn();
+  test('switches the interactive feature content', () => {
+    initSmartCleanerPage();
+    expect(document.getElementById('revealItem')?.classList.contains('is-visible')).toBe(true);
+
+    document.getElementById('duplicatesButton')?.click();
+    jest.advanceTimersByTime(130);
+
+    expect(document.getElementById('featureTitle')?.textContent).toBe('Find duplicates instantly.');
+    expect((document.getElementById('featureImage') as HTMLImageElement).alt).toBe('Cleaner duplicate files detection screen');
+    expect(document.querySelectorAll('#featureBullets li')).toHaveLength(3);
+  });
+
+  test('moves the gallery by one card', () => {
+    const shot = document.getElementById('shotOne') as HTMLElement;
+    shot.getBoundingClientRect = jest.fn(() => ({ width: 280, height: 500, top: 0, right: 280, bottom: 500, left: 0, x: 0, y: 0, toJSON: () => ({}) }));
+    const track = document.getElementById('galleryTrack') as HTMLElement;
 
     initSmartCleanerPage();
+    document.getElementById('galleryNext')?.click();
 
-    const dots = Array.from(
-      document.querySelectorAll<HTMLButtonElement>('#smartCleanerGalleryDots button'),
-    );
-    expect(dots).toHaveLength(2);
-    expect(dots[0].classList.contains('is-active')).toBe(true);
-    expect(dots[0].getAttribute('aria-current')).toBe('true');
-
-    dots[1].click();
-
-    expect(second.scrollIntoView).toHaveBeenCalledWith({
-      inline: 'center',
-      block: 'nearest',
-    });
-    expect(first.classList.contains('is-featured')).toBe(false);
-    expect(second.classList.contains('is-featured')).toBe(true);
-    expect(dots[1].classList.contains('is-active')).toBe(true);
+    expect(track.scrollBy).toHaveBeenCalledWith({ left: 308, behavior: 'smooth' });
   });
 });

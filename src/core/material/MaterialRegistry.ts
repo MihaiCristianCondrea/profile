@@ -18,3 +18,5 @@ import '@material/web/textfield/outlined-text-field.js';
 import '@material/web/labs/card/filled-card.js';
 import '@material/web/labs/item/item.js';
 import '@material/web/labs/navigationdrawer/navigation-drawer-modal.js';
+import '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
+import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set.js';
