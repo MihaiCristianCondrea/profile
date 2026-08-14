@@ -1,70 +1,16 @@
-type FeatureKey = 'memory' | 'duplicates' | 'apps' | 'wear';
-type SegmentedButton = HTMLElement & { selected: boolean };
+import { fetchSmartCleanerShortDescription } from '../data/SmartCleanerDataSource.ts';
+import {
+  CLEANER_FEATURES,
+  isCleanerFeatureKey,
+  type CleanerFeatureKey,
+} from '../domain/CleanerFeature.ts';
 
-type FeatureInfo = {
-  title: string;
-  description: string;
-  image: string;
-  alt: string;
-  badge: string;
-  isWear: boolean;
-  bullets: Array<[string, string]>;
-};
+/** Detail carried by `md-outlined-segmented-button-set`'s selection event. */
+interface SegmentedButtonSelectionEvent extends Event {
+  detail?: { button?: HTMLElement };
+}
 
-const FEATURES: Record<FeatureKey, FeatureInfo> = {
-  memory: {
-    title: 'Clean what matters.',
-    description: 'See what is taking space in seconds, then clear the files that actually move the needle.',
-    image: 'https://play-lh.googleusercontent.com/s15b2PJk5VSkOykE_c-yOs3VqlA1db9XuV_BnQSubPSjp73EO5c262WP11p1fUAdjKyz=w2560-h1440-rw',
-    alt: 'Cleaner memory manager screen',
-    badge: 'Memory & Storage',
-    isWear: false,
-    bullets: [
-      ['photo_size_select_large', 'Spot oversized files quickly.'],
-      ['visibility', 'Preview before every action.'],
-      ['verified_user', 'Keep cleanup deliberate and understandable.'],
-    ],
-  },
-  duplicates: {
-    title: 'Find duplicates instantly.',
-    description: 'Repeated photos and files stop hiding. Keep the copy you want and remove the rest in one clear flow.',
-    image: 'https://play-lh.googleusercontent.com/22xJupF9f3rszxorCDFYSDMFxPse31hA-wnfMWV-0iWuZqw9WIM8yJLd3bYZg2trqag=w2560-h1440-rw',
-    alt: 'Cleaner duplicate files detection screen',
-    badge: 'Duplicates',
-    isWear: false,
-    bullets: [
-      ['content_copy', 'Group repeated files before cleanup.'],
-      ['lightbulb', 'Keep recommendations visible and understandable.'],
-      ['touch_app', 'Remove only what you choose.'],
-    ],
-  },
-  apps: {
-    title: 'App manager under control.',
-    description: 'Inspect unused apps and residue directly instead of hunting through system settings.',
-    image: 'https://play-lh.googleusercontent.com/RFPtMvrFEzPOSVxiCKosDVSqnqKdz_kbfkcJgw2Rf6IDcr9IfOfbqGmPE3ihVO3o98k0=w2560-h1440-rw',
-    alt: 'Cleaner app manager screen',
-    badge: 'App Manager',
-    isWear: false,
-    bullets: [
-      ['apps', 'Sort apps by storage footprint.'],
-      ['folder_open', 'Inspect cached components cleanly.'],
-      ['tune', 'Keep user authority over uninstalls.'],
-    ],
-  },
-  wear: {
-    title: 'Wear OS on your wrist.',
-    description: 'Trigger memory optimization and monitor storage metrics directly from your smartwatch tile.',
-    image: 'https://play-lh.googleusercontent.com/Pbr3Un1Y7v-VIUR72Z4r4paIhrL9hjaCGqx1EUqoYRZQTh6jUaF6zaIFpgLXW3ODZLQo-3qjPaiAxaMLwDP2=w2560-h1440-rw',
-    alt: 'Cleaner Wear OS tile',
-    badge: 'Wear OS Tile',
-    isWear: true,
-    bullets: [
-      ['watch', 'One-tap wrist cleanup triggers.'],
-      ['sync', 'Useful phone metrics on your wrist.'],
-      ['bolt', 'A lightweight companion experience.'],
-    ],
-  },
-};
+const FEATURE_SWAP_DELAY_MS = 130;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -72,6 +18,12 @@ function clamp(value: number, min: number, max: number): number {
 
 function mediaMatches(query: string): boolean {
   return typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+}
+
+/** Distance from the viewport centre to an element's centre, in pixels. */
+function centerOffset(element: HTMLElement): number {
+  const rect = element.getBoundingClientRect();
+  return rect.top + rect.height / 2 - window.innerHeight / 2;
 }
 
 export function initSmartCleanerPage(): void {
@@ -90,13 +42,8 @@ export function initSmartCleanerPage(): void {
   const featureBadge = query<HTMLElement>('#featureBadgeValue');
   const featureShotCard = query<HTMLElement>('#featureShotCard');
 
-  const selectFeature = (key: FeatureKey): void => {
-    const feature = FEATURES[key];
-    featureSelector?.querySelectorAll<SegmentedButton>('md-outlined-segmented-button').forEach((button) => {
-      const selected = button.dataset.feature === key;
-      button.toggleAttribute('selected', selected);
-      button.selected = selected;
-    });
+  const showFeature = (key: CleanerFeatureKey): void => {
+    const feature = CLEANER_FEATURES[key];
 
     featureShotCard?.classList.add('is-changing');
     window.setTimeout(() => {
@@ -110,25 +57,25 @@ export function initSmartCleanerPage(): void {
       featureShotCard?.classList.toggle('is-wear', feature.isWear);
       if (featureBadge) featureBadge.textContent = feature.badge;
       if (featureBullets) {
-        featureBullets.replaceChildren(...feature.bullets.map(([icon, text]) => {
+        featureBullets.replaceChildren(...feature.bullets.map(({ icon, label }) => {
           const item = document.createElement('li');
           const materialIcon = document.createElement('md-icon');
-          const label = document.createElement('span');
+          const text = document.createElement('span');
           materialIcon.textContent = icon;
-          label.textContent = text;
-          item.append(materialIcon, label);
+          text.textContent = label;
+          item.append(materialIcon, text);
           return item;
         }));
       }
       featureShotCard?.classList.remove('is-changing');
-    }, 130);
+    }, FEATURE_SWAP_DELAY_MS);
   };
 
-  featureSelector?.querySelectorAll<SegmentedButton>('md-outlined-segmented-button').forEach((button) => {
-    button.addEventListener('click', () => {
-      const key = button.dataset.feature as FeatureKey | undefined;
-      if (key && key in FEATURES) selectFeature(key);
-    });
+  // The segmented button set owns selection state: it deselects the previous
+  // button and reports the new one. This listener only renders the result.
+  featureSelector?.addEventListener('segmented-button-set-selection', (event) => {
+    const key = (event as SegmentedButtonSelectionEvent).detail?.button?.dataset.feature;
+    if (isCleanerFeatureKey(key)) showFeature(key);
   });
 
   const revealItems = Array.from(page.querySelectorAll<HTMLElement>('.sc-reveal'));
@@ -173,8 +120,7 @@ export function initSmartCleanerPage(): void {
 
   const setSectionDepth = (element: HTMLElement | null, forwardName: string, reverseName: string, strength = .07): void => {
     if (!element) return;
-    const rect = element.getBoundingClientRect();
-    const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+    const delta = centerOffset(element);
     element.style.setProperty(forwardName, `${clamp(delta * -strength, -50, 50)}px`);
     element.style.setProperty(reverseName, `${clamp(delta * strength, -50, 50)}px`);
   };
@@ -198,8 +144,7 @@ export function initSmartCleanerPage(): void {
     page.style.setProperty('--sc-float-bottom-x', `${pointerX * 22}px`);
 
     if (heroStage) {
-      const rect = heroStage.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const delta = centerOffset(heroStage);
       const forward = clamp(delta * -.065, -45, 45);
       const reverse = clamp(delta * .025, -18, 18);
       page.style.setProperty('--sc-hero-forward', `${forward}px`);
@@ -211,8 +156,7 @@ export function initSmartCleanerPage(): void {
     setSectionDepth(problemSection, '--problem-forward', '--problem-reverse', .055);
 
     if (featureStage) {
-      const rect = featureStage.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const delta = centerOffset(featureStage);
       featureStage.style.setProperty('--feature-forward', `${clamp(delta * -.07, -42, 42)}px`);
       featureStage.style.setProperty('--feature-reverse', `${clamp(delta * .075, -45, 45)}px`);
       featureStage.style.setProperty('--feature-badge-reverse', `${clamp(delta * .055, -34, 34)}px`);
@@ -220,8 +164,7 @@ export function initSmartCleanerPage(): void {
     }
 
     storyCards.forEach((story) => {
-      const rect = story.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const delta = centerOffset(story);
       const direction = story.dataset.invert === 'true' ? -1 : 1;
       story.style.setProperty('--story-forward', `${clamp(delta * -.08 * direction, -50, 50)}px`);
       story.style.setProperty('--story-reverse', `${clamp(delta * .075 * direction, -45, 45)}px`);
@@ -229,22 +172,17 @@ export function initSmartCleanerPage(): void {
     });
 
     if (breathing) {
-      const rect = breathing.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
+      const delta = centerOffset(breathing);
       breathing.style.setProperty('--breathing-forward', `${clamp(delta * .12, -70, 70)}px`);
       breathing.style.setProperty('--breathing-reverse', `${clamp(delta * -.12, -70, 70)}px`);
     }
 
     if (performance) {
-      const rect = performance.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
-      performance.style.setProperty('--performance-core', `${clamp(delta * -.04, -22, 22)}px`);
+      performance.style.setProperty('--performance-core', `${clamp(centerOffset(performance) * -.04, -22, 22)}px`);
     }
 
     if (finalCard) {
-      const rect = finalCard.getBoundingClientRect();
-      const delta = rect.top + rect.height / 2 - window.innerHeight / 2;
-      finalCard.style.setProperty('--final-reverse', `${clamp(delta * .08, -50, 50)}px`);
+      finalCard.style.setProperty('--final-reverse', `${clamp(centerOffset(finalCard) * .08, -50, 50)}px`);
     }
   };
 
@@ -299,14 +237,8 @@ export function initSmartCleanerPage(): void {
     requestFrame(animate);
   }
 
-  if (typeof fetch === 'function') {
-    void fetch('https://android-apps-metadata-backend.mihaicristiancondrea.workers.dev/admin/api/v1/apps/com.d4rk.cleaner')
-      .then((response) => response.json())
-      .then((response) => {
-        const shortDescription = response?.data?.app?.short_description;
-        const target = query<HTMLElement>('#appShortDescription');
-        if (page.isConnected && target && typeof shortDescription === 'string') target.textContent = shortDescription;
-      })
-      .catch(() => { /* Authored text is the offline fallback. */ });
-  }
+  void fetchSmartCleanerShortDescription().then((shortDescription) => {
+    const target = query<HTMLElement>('#appShortDescription');
+    if (page.isConnected && target && shortDescription) target.textContent = shortDescription;
+  });
 }

@@ -29,7 +29,6 @@ export interface RouteConfig {
   title: string;
   path: string | null;
   metadata: RouteMetadata;
-  onLoad: PageLoadCallback | null;
 }
 
 export interface RouteLoadContext {
@@ -44,7 +43,6 @@ export interface PageMarkupResult {
   status: RouteLoadStatus;
   title: string;
   html: string;
-  onReady?: PageLoadCallback | null;
   sourceTitle?: string;
   error?: unknown;
 }
@@ -56,12 +54,13 @@ export interface SanitizedMetadata {
   ogTitle: string;
   twitterTitle: string;
 }
-export type HomeLoadCallback = () => void;
+
 export type PageLoadCallback = () => void;
+
 export interface RouterOptions {
   showOverlay?: () => void;
   hideOverlay?: () => void;
   closeDrawer?: () => void;
-  onHomeLoad?: HomeLoadCallback;
+  onHomeLoad?: PageLoadCallback;
   pageHandlers?: Record<string, PageLoadCallback>;
 }

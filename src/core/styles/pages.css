@@ -177,8 +177,9 @@
   margin-top: 24px;
 }
 
-/* Smart Cleaner uses a restrained editorial layout. Decorative parallax,
-   reveal, scanline, zoom, and custom button sizing are deliberately absent. */
+/* Shared page-shell sizing and typography for Smart Cleaner. The redesigned
+   layout, parallax, and reveal styles live beside the page in
+   src/features/apps/smart-cleaner/presentation/SmartCleanerPage.css. */
 #smartCleanerPageContainer {
   width: min(100%, 960px);
   margin-inline: auto;
@@ -207,170 +208,8 @@
   line-height: 1.65;
 }
 
-.smart-cleaner-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.8fr);
-  align-items: center;
-  gap: clamp(32px, 7vw, 72px);
-  margin-top: 16px !important;
-}
-
-.smart-cleaner-subtitle {
-  margin: 20px 0 28px;
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 1.15rem;
-}
-
-.smart-cleaner-hero-actions {
-  align-items: flex-start;
-}
-
-.smart-cleaner-github-group {
-  display: grid;
-  gap: 8px;
-}
-
-.smart-cleaner-github-title {
-  margin: 0 !important;
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.8rem;
-}
-
-.smart-cleaner-hero-visual,
-.smart-cleaner-story-visual {
-  display: grid;
-  place-items: center;
-}
-
-.smart-cleaner-phone-frame img,
-.smart-cleaner-story-visual img {
-  display: block;
-  width: min(100%, 300px);
-  max-height: 560px;
-  border-radius: 20px;
-  object-fit: contain;
-}
-
-.smart-cleaner-problem,
-.smart-cleaner-trust,
-.smart-cleaner-performance,
-.smart-cleaner-cta,
-.smart-cleaner-section {
-  border-radius: 16px;
-  padding: clamp(24px, 5vw, 48px);
-  background: var(--md-sys-color-surface-container-low);
-}
-
-.smart-cleaner-story-section {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(32px, 7vw, 72px);
-}
-
-.smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
-  order: 2;
-}
-
-.smart-cleaner-story-copy ul {
-  display: grid;
-  gap: 12px;
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.smart-cleaner-story-copy li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.smart-cleaner-story-copy li md-icon {
-  color: var(--md-sys-color-primary);
-}
-
-.smart-cleaner-breathing,
-.smart-cleaner-trust,
-.smart-cleaner-performance,
-.smart-cleaner-cta,
-.smart-cleaner-section {
-  text-align: center;
-}
-
-.smart-cleaner-breathing p {
-  margin: 0;
-  font-size: clamp(1.75rem, 5vw, 3rem);
-  font-weight: 500;
-  line-height: 1.25 !important;
-}
-
-.smart-cleaner-ads-note {
-  color: var(--md-sys-color-on-surface-variant);
-  font-size: 0.875rem;
-}
-
-.smart-cleaner-gallery-track {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding: 8px 2px 16px;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-}
-
-.smart-cleaner-shot {
-  flex: 0 0 min(280px, 72vw);
-  margin: 0;
-  scroll-snap-align: center;
-}
-
-.smart-cleaner-shot img {
-  display: block;
-  width: 100%;
-  border-radius: 16px;
-}
-
-.smart-cleaner-gallery-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.smart-cleaner-gallery-dots button {
-  width: 8px;
-  height: 8px;
-  border: 0;
-  border-radius: 50%;
-  padding: 0;
-  background: var(--md-sys-color-outline);
-  cursor: pointer;
-}
-
-.smart-cleaner-gallery-dots button.is-active {
-  background: var(--md-sys-color-primary);
-}
-
 @media (max-width: 720px) {
   .policy-page-card {
     padding: 20px;
-  }
-
-  .smart-cleaner-hero,
-  .smart-cleaner-story-section {
-    grid-template-columns: 1fr;
-  }
-
-  .smart-cleaner-story-section.is-reverse .smart-cleaner-story-visual {
-    order: 0;
-  }
-
-  .smart-cleaner-hero-copy {
-    order: 1;
-  }
-
-  .smart-cleaner-hero-visual {
-    order: 0;
   }
 }

@@ -1,4 +1,3 @@
-import { getDynamicElement } from '../../../core/dom/DomUtils.ts';
 import { fetchCommittersData } from '../data/CommittersDataSource.ts';
 import {
   findCommitterRanking,
@@ -19,9 +18,9 @@ export function updateCommittersStatus(
 }
 
 export async function fetchCommittersRanking(): Promise<void> {
-  const rankElement = getDynamicElement('committers-rank');
-  const statusElement = getDynamicElement('committers-status');
-  const updatedElement = getDynamicElement('committers-updated');
+  const rankElement = document.getElementById('committers-rank');
+  const statusElement = document.getElementById('committers-status');
+  const updatedElement = document.getElementById('committers-updated');
   if (!rankElement || !statusElement) return;
 
   rankElement.textContent = '—';

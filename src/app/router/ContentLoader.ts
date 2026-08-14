@@ -1,8 +1,6 @@
 import type { PageMarkupResult } from '../../core/types/index.ts';
 import { getRoute } from './RouteRegistry.ts';
 
-export const DEFAULT_PAGE_TITLE = "Mihai's Profile";
-
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => ({
     '&': '&amp;',
@@ -35,7 +33,6 @@ export async function fetchPageMarkup(
       status: 'success',
       title: routeConfig.title,
       html: routeConfig.id === 'home' ? options.initialHomeHTML ?? '' : '',
-      onReady: routeConfig.onLoad,
       sourceTitle: routeConfig.title,
     };
   }
@@ -50,7 +47,6 @@ export async function fetchPageMarkup(
       status: 'success',
       title: routeConfig.title,
       html: await response.text(),
-      onReady: routeConfig.onLoad,
       sourceTitle: routeConfig.title,
     };
   } catch (error) {
@@ -64,5 +60,3 @@ export async function fetchPageMarkup(
     };
   }
 }
-
-export const RouterContentLoader = { DEFAULT_PAGE_TITLE, fetchPageMarkup };

@@ -1,6 +1,4 @@
-import {
-  getDynamicElement,
-} from '../../../core/dom/DomUtils.ts';
+import { safeHttpUrlOr } from '../../../core/dom/SafeUrl.ts';
 import { fetchBloggerPostsData } from '../data/BloggerApiClient.ts';
 import type { BlogPost } from '../domain/BlogPost.ts';
 
@@ -11,16 +9,6 @@ interface SharePostData {
 }
 
 const feedbackTimers = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>();
-
-function normalizeHttpUrl(value: string | undefined, fallback: string): string {
-  if (!value) return fallback;
-  try {
-    const url = new URL(value, window.location.href);
-    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : fallback;
-  } catch {
-    return fallback;
-  }
-}
 
 function createIcon(name: string): HTMLElement {
   const icon = document.createElement('md-icon');
@@ -35,10 +23,9 @@ export function createBlogPostCard(post: BlogPost): HTMLElement {
   card.className = 'news-card';
 
   const placeholderImageUrl = 'images/placeholder.png';
-  const rawImageUrl = post.imageUrl ?? placeholderImageUrl;
-  const imageUrl = normalizeHttpUrl(rawImageUrl, placeholderImageUrl);
+  const imageUrl = safeHttpUrlOr(post.imageUrl ?? placeholderImageUrl, placeholderImageUrl);
   const title = post.title?.trim() || 'Untitled post';
-  const postUrl = normalizeHttpUrl(post.url, '#');
+  const postUrl = safeHttpUrlOr(post.url, '#');
 
   const parser = document.createElement('div');
   parser.innerHTML = post.content ?? '';
@@ -125,8 +112,8 @@ function setBlogSectionVisibility(newsGrid: HTMLElement, visible: boolean): void
 }
 
 export async function fetchBlogPosts(): Promise<void> {
-  const newsGrid = getDynamicElement('newsGrid');
-  const newsStatus = getDynamicElement('news-status');
+  const newsGrid = document.getElementById('newsGrid');
+  const newsStatus = document.getElementById('news-status');
   if (!newsGrid || !newsStatus) return;
 
   setBlogSectionVisibility(newsGrid, false);

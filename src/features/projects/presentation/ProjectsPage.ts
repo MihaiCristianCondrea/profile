@@ -1,16 +1,10 @@
-import {
-  fetchAndroidApps,
-} from '../data/AndroidAppsDataSource.ts';
+import { safeHttpUrl } from '../../../core/dom/SafeUrl.ts';
+import { fetchAndroidApps } from '../data/AndroidAppsDataSource.ts';
 import type { AndroidApp } from '../domain/AndroidApp.ts';
 
-function safeHttpUrl(value: string | undefined): string | null {
-  if (!value) return null;
-  try {
-    const url = new URL(value, window.location.href);
-    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null;
-  } catch {
-    return null;
-  }
+/** The slice of the `md-tabs` API this page reads. */
+interface TabsElement extends HTMLElement {
+  activeTab?: HTMLElement | null;
 }
 
 function normalizeScreenshots(screenshots: string[] | undefined): string[] {
@@ -168,15 +162,25 @@ function createAndroidProjectCard(app: AndroidApp): HTMLElement {
   return card;
 }
 
+/**
+ * Reads the selected filter from `md-tabs`. The component exposes the active
+ * tab directly; `[active]` is only the reflected fallback for markup that has
+ * not upgraded yet.
+ */
+function selectedCategory(tabs: TabsElement | null): string {
+  const activeTab = tabs?.activeTab ?? tabs?.querySelector<HTMLElement>('md-primary-tab[active]');
+  return activeTab?.dataset.category ?? 'all';
+}
+
 function applyCategoryFilter(category: string): void {
-  const selectedCategory = category || 'all';
+  const selected = category || 'all';
   document.querySelectorAll<HTMLElement>('#projectsPageContainer .project-entry').forEach((project) => {
     const categories = (project.dataset.category ?? '').split(',').map((value) => value.trim());
-    project.hidden = selectedCategory !== 'all' && !categories.includes(selectedCategory);
+    project.hidden = selected !== 'all' && !categories.includes(selected);
   });
 }
 
-async function loadAndroidProjects(container: HTMLElement): Promise<void> {
+async function loadAndroidProjects(container: HTMLElement, tabs: TabsElement | null): Promise<void> {
   try {
     const apps = await fetchAndroidApps();
     container.removeAttribute('data-loading');
@@ -186,8 +190,7 @@ async function loadAndroidProjects(container: HTMLElement): Promise<void> {
     }
 
     container.replaceChildren(...apps.map(createAndroidProjectCard));
-    const activeTab = document.querySelector<HTMLElement>('#projectsFilterTabs md-primary-tab[active]');
-    applyCategoryFilter(activeTab?.dataset.category ?? 'all');
+    applyCategoryFilter(selectedCategory(tabs));
   } catch (error) {
     console.error('Projects: Failed to load Android apps.', error);
     container.removeAttribute('data-loading');
@@ -201,17 +204,13 @@ export async function initProjectsPage(): Promise<void> {
   if (!page) return;
 
   page.querySelectorAll<HTMLElement>('.carousel').forEach(initializeCarousel);
-  const tabs = page.querySelector<HTMLElement>('#projectsFilterTabs');
-  const applySelectedTab = (): void => {
-    const activeTab = tabs?.querySelector<HTMLElement>('md-primary-tab[active]');
-    applyCategoryFilter(activeTab?.dataset.category ?? 'all');
-  };
-  if (tabs?.dataset.filterInitialized !== 'true') {
-    tabs?.addEventListener('change', applySelectedTab);
-    if (tabs) tabs.dataset.filterInitialized = 'true';
+  const tabs = page.querySelector<TabsElement>('#projectsFilterTabs');
+  if (tabs && tabs.dataset.filterInitialized !== 'true') {
+    tabs.addEventListener('change', () => applyCategoryFilter(selectedCategory(tabs)));
+    tabs.dataset.filterInitialized = 'true';
   }
-  applySelectedTab();
+  applyCategoryFilter(selectedCategory(tabs));
 
   const androidContainer = page.querySelector<HTMLElement>('#androidProjectsContainer');
-  if (androidContainer) await loadAndroidProjects(androidContainer);
+  if (androidContainer) await loadAndroidProjects(androidContainer, tabs);
 }

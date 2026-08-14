@@ -1,5 +1,21 @@
 import { initSmartCleanerPage } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
 
+/**
+ * Mirrors what `md-outlined-segmented-button-set` emits on user interaction.
+ * The Material elements are not registered under jsdom, so the test stands in
+ * for the component that would normally dispatch this.
+ */
+function selectFeatureButton(buttonId: string): void {
+  const button = document.getElementById(buttonId) as HTMLElement;
+  document.getElementById('featureSelector')?.dispatchEvent(
+    new CustomEvent('segmented-button-set-selection', {
+      detail: { button, selected: true },
+      bubbles: true,
+      composed: true,
+    }),
+  );
+}
+
 describe('SmartCleanerPage', () => {
   const originalObserver = window.IntersectionObserver;
   const originalAnimationFrame = window.requestAnimationFrame;
@@ -42,7 +58,9 @@ describe('SmartCleanerPage', () => {
     initSmartCleanerPage();
     expect(document.getElementById('revealItem')?.classList.contains('is-visible')).toBe(true);
 
-    document.getElementById('duplicatesButton')?.click();
+    // The segmented button set owns selection and reports the chosen button
+    // through this event; the page only renders what the set decided.
+    selectFeatureButton('duplicatesButton');
     jest.advanceTimersByTime(130);
 
     expect(document.getElementById('featureTitle')?.textContent).toBe('Find duplicates instantly.');
