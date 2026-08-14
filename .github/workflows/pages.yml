@@ -32,6 +32,10 @@ jobs:
       - name: Fetch Blogger posts
         env:
           BLOGGER_API_KEY: ${{ secrets.BLOGGER_API_KEY }}
+          # Optional overrides. Set BLOGGER_BLOG_ID to skip the byurl lookup
+          # when the blog's public address changes.
+          BLOGGER_BLOG_ID: ${{ vars.BLOGGER_BLOG_ID }}
+          BLOGGER_BLOG_URL: ${{ vars.BLOGGER_BLOG_URL }}
         run: npm run prepare:blog
       - name: Build site
         run: npm run deploy
