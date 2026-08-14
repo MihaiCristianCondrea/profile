@@ -159,6 +159,31 @@ Use Material text fields and checkboxes for supported form controls. Native
 controls are appropriate only where Material Web does not support the input
 type; the resume editor keeps native `file` and `color` inputs for that reason.
 
+## Components own their own state
+
+Where a Material component already manages selection, the application listens
+instead of reimplementing it. Writing the same state the component writes causes
+two owners for one value.
+
+The Smart Cleaner feature switcher is the reference case.
+`md-outlined-segmented-button-set` handles the click, deselects the previous
+button, and reports the result:
+
+```ts
+featureSelector.addEventListener('segmented-button-set-selection', (event) => {
+  const key = event.detail?.button?.dataset.feature;
+  if (isCleanerFeatureKey(key)) showFeature(key);
+});
+```
+
+Do not bind `click` on each `md-outlined-segmented-button` and assign `selected`
+by hand. Likewise, read the projects filter from `md-tabs.activeTab` rather than
+querying the reflected `[active]` attribute.
+
+Because these elements delegate ARIA into their shadow root, put `aria-label` on
+the component itself. An `aria-label` on a plain wrapper `div` has no role to
+attach to and is ignored by assistive technology.
+
 ## Labs components
 
 Cards and the modal navigation drawer are labs components. Their APIs may

@@ -6,19 +6,10 @@ import {
   normalizeSongTracks,
   type SongTrack,
 } from '../domain/SongMapper.ts';
+import { safeHttpUrlOr } from '../../../core/dom/SafeUrl.ts';
 
 export async function fetchArtistSongs(artistId: string): Promise<SongTrack[]> {
   return normalizeSongTracks(await fetchArtistSongData(artistId));
-}
-
-function normalizeHttpUrl(value: string | null, fallback: string): string {
-  if (!value) return fallback;
-  try {
-    const url = new URL(value, window.location.href);
-    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : fallback;
-  } catch {
-    return fallback;
-  }
 }
 
 export function createSongCard(track: SongTrack): HTMLElement {
@@ -26,7 +17,7 @@ export function createSongCard(track: SongTrack): HTMLElement {
   card.className = 'song-card';
 
   const image = document.createElement('img');
-  image.src = normalizeHttpUrl(track.image, 'images/placeholder.png');
+  image.src = safeHttpUrlOr(track.image, 'images/placeholder.png');
   image.alt = '';
   image.loading = 'lazy';
 
@@ -39,7 +30,7 @@ export function createSongCard(track: SongTrack): HTMLElement {
   artists.textContent = track.artists;
 
   const action = document.createElement('md-text-button');
-  const songUrl = normalizeHttpUrl(track.link, '#');
+  const songUrl = safeHttpUrlOr(track.link, '#');
   action.setAttribute('href', songUrl);
   action.setAttribute('target', '_blank');
   action.textContent = 'Open song';

@@ -159,15 +159,10 @@ md-assist-chip {
   margin-top: 24px;
 }
 
-.profile-card-actions,
-.smart-cleaner-hero-actions,
-.smart-cleaner-github-buttons {
+.profile-card-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.profile-card-actions {
   margin-top: 28px;
 }
 
@@ -608,8 +603,7 @@ md-dialog {
     grid-template-columns: 1fr;
   }
 
-  .profile-card-actions > *,
-  .smart-cleaner-hero-actions > * {
+  .profile-card-actions > * {
     max-width: 100%;
   }
 }

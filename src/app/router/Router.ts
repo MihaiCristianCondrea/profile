@@ -1,8 +1,11 @@
 import type { PageLoadCallback, RouterOptions } from '../../core/types/index.ts';
+import { SITE_TITLE } from '../../core/metadata/SiteMetadata.ts';
 import { updateMetadataForRoute } from '../../core/metadata/MetadataManager.ts';
 import { fetchPageMarkup } from './ContentLoader.ts';
 import { pushState, updateTitle } from './HistoryManager.ts';
-import { getRoute, hasRoute } from './RouteRegistry.ts';
+import { getRoute, hasRoute, normalizeRouteId } from './RouteRegistry.ts';
+
+export { normalizeRouteId as normalizePageId };
 
 const NOOP = (): void => undefined;
 
@@ -11,7 +14,10 @@ let appBarHeadline: HTMLElement | null = null;
 let initialHomepageHTML = '';
 let loadSequence = 0;
 
-const routerRuntime: Required<Omit<RouterOptions, 'onHomeLoad' | 'pageHandlers'>> & {
+const routerRuntime: {
+  showOverlay: PageLoadCallback;
+  hideOverlay: PageLoadCallback;
+  closeDrawer: PageLoadCallback;
   onHomeLoad: PageLoadCallback | null;
   pageHandlers: Record<string, PageLoadCallback>;
 } = {
@@ -22,19 +28,13 @@ const routerRuntime: Required<Omit<RouterOptions, 'onHomeLoad' | 'pageHandlers'>
   pageHandlers: Object.create(null),
 };
 
-export function normalizePageId(pageId: string): string {
-  const normalized = pageId.trim().replace(/^#/, '').split('?')[0];
-  return !normalized || normalized === 'index.html' ? 'home' : normalized;
-}
-
-function runCallback(callback: PageLoadCallback | null | undefined, description: string): boolean {
-  if (!callback) return false;
+function runCallback(callback: PageLoadCallback | null | undefined, description: string): void {
+  if (!callback) return;
   try {
     callback();
   } catch (error) {
     console.error(`Router: ${description} failed.`, error);
   }
-  return true;
 }
 
 export function initRouter(
@@ -53,20 +53,23 @@ export function initRouter(
   routerRuntime.pageHandlers = Object.create(null);
 
   Object.entries(options.pageHandlers ?? {}).forEach(([pageId, handler]) => {
-    routerRuntime.pageHandlers[normalizePageId(pageId)] = handler;
+    routerRuntime.pageHandlers[normalizeRouteId(pageId)] = handler;
   });
 }
 
 function runPageHandler(pageId: string): void {
-  if (pageId === 'home' && runCallback(routerRuntime.onHomeLoad, 'home handler')) return;
+  if (pageId === 'home') {
+    runCallback(routerRuntime.onHomeLoad, 'home handler');
+    return;
+  }
   runCallback(routerRuntime.pageHandlers[pageId], `handler for ${pageId}`);
 }
 
 export function updateActiveNavLink(currentPageId: string): void {
-  const normalizedCurrentPage = normalizePageId(currentPageId);
+  const normalizedCurrentPage = normalizeRouteId(currentPageId);
 
   document.querySelectorAll<HTMLElement>('#navDrawer .nav-item[href^="#"]').forEach((item) => {
-    const selected = normalizePageId(item.getAttribute('href') ?? '') === normalizedCurrentPage;
+    const selected = normalizeRouteId(item.getAttribute('href') ?? '') === normalizedCurrentPage;
     item.toggleAttribute('data-active', selected);
     if (selected) item.setAttribute('aria-current', 'page');
     else item.removeAttribute('aria-current');
@@ -76,7 +79,7 @@ export function updateActiveNavLink(currentPageId: string): void {
 
 export async function loadPageContent(pageId: string, updateHistory = true): Promise<void> {
   const currentLoad = ++loadSequence;
-  const normalizedPageId = normalizePageId(pageId);
+  const normalizedPageId = normalizeRouteId(pageId);
   const routeConfig = getRoute(normalizedPageId);
 
   routerRuntime.showOverlay();
@@ -93,14 +96,11 @@ export async function loadPageContent(pageId: string, updateHistory = true): Pro
     pageContentArea.innerHTML = result.html;
     if (result.status === 'success') {
       runPageHandler(normalizedPageId);
-      if (!routerRuntime.pageHandlers[normalizedPageId] && normalizedPageId !== 'home') {
-        runCallback(result.onReady, `route hook for ${normalizedPageId}`);
-      }
     } else if (result.error) {
       console.error(`Router: Failed to load ${result.sourceTitle ?? normalizedPageId}.`, result.error);
     }
 
-    const pageTitle = result.title || routeConfig?.title || "Mihai's Profile";
+    const pageTitle = result.title || routeConfig?.title || SITE_TITLE;
     updateMetadataForRoute(routeConfig, {
       pageId: normalizedPageId,
       pageTitle,
@@ -116,5 +116,5 @@ export async function loadPageContent(pageId: string, updateHistory = true): Pro
 }
 
 export function isRegisteredRoute(pageId: string): boolean {
-  return hasRoute(normalizePageId(pageId));
+  return hasRoute(pageId);
 }

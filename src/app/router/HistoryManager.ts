@@ -17,5 +17,3 @@ export function pushState(
   if (window.location.hash === nextHash) return;
   window.history.pushState({ page: pageId }, pageTitle, nextHash);
 }
-
-export const RouterHistory = { DOCUMENT_TITLE_SUFFIX, updateTitle, pushState };

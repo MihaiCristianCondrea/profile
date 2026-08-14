@@ -14,6 +14,8 @@ The application boot path is `src/main.ts` -> `src/app/main.ts` -> `startApp()` 
 
 Create `data`, `domain`, or `presentation` directories only when they contain real code. Do not add empty architectural placeholders. Keep feature-only behavior inside its feature and move code to `core` only when multiple features use it.
 
+Keep the layers honest: `data` owns `fetch` and `localStorage` access, `domain` owns models and normalization of untrusted input with no DOM dependency, and `presentation` owns DOM and Material composition. Presentation code must not call `fetch` or `localStorage` directly. Route any value used as a link or image source through `src/core/dom/SafeUrl.ts`.
+
 Do not attach new APIs to `globalThis`. Existing browser globals are compatibility boundaries being retired gradually. New code must use explicit imports and exports.
 
 ## TypeScript
@@ -28,6 +30,8 @@ All production TypeScript is checked by `tsc` and bundled by Vite. TypeScript mu
 ## Material Web
 
 Material Web registration stays centralized in `src/core/material/MaterialRegistry.ts`. Prefer Material component attributes, slots, and supported design tokens over custom replicas or structural CSS overrides.
+
+When a component already manages state, listen to its event instead of writing that state yourself. Check the API against `resources/material-web-components` before hand-rolling behavior. Put `aria-label` on the component, not on a wrapper element.
 
 ## Static route fragments
 

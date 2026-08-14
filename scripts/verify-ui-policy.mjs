@@ -120,14 +120,15 @@ assertIncludes(themeCss, '--md-sys-color-inverse-primary: #4285f4;', 'Google blu
 const manifest = await readFile(join(ROOT, 'public/manifest.json'), 'utf8');
 assertIncludes(manifest, '"theme_color": "#4285F4"', 'PWA theme color');
 
-const resumePage = await readFile(
-  join(SOURCE_ROOT, 'features/resume/presentation/ResumePage.ts'),
+// The resume builder's default palette is owned by the feature's domain layer.
+const resumeData = await readFile(
+  join(SOURCE_ROOT, 'features/resume/domain/ResumeData.ts'),
   'utf8',
 );
-assertIncludes(resumePage, "'accent-color': '#4285f4'", 'Resume accent color');
+assertIncludes(resumeData, "'accent-color': '#4285f4'", 'Resume accent color');
 
 for (const forbiddenGreen of ['#3ddc84', '#3DDC84']) {
-  if (`${themeCss}\n${manifest}\n${resumePage}`.includes(forbiddenGreen)) {
+  if (`${themeCss}\n${manifest}\n${resumeData}`.includes(forbiddenGreen)) {
     throw new Error(`UI policy validation failed: legacy Android green ${forbiddenGreen} remains`);
   }
 }

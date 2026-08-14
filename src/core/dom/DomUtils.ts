@@ -1,7 +1,3 @@
-export function getDynamicElement(id: string): HTMLElement | null {
-  return document.getElementById(id);
-}
-
 export function setCopyrightYear(): void {
   const copyrightElement = document.getElementById('copyright-message');
   if (!copyrightElement) return;

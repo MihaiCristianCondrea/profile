@@ -1,6 +1,5 @@
 import type { RouterOptions } from '../core/types/index.ts';
 import {
-  getDynamicElement,
   hidePageLoadingOverlay,
   setCopyrightYear,
   showPageLoadingOverlay,
@@ -85,9 +84,9 @@ function initializeApp(): void {
   if (initialized) return;
   initialized = true;
 
-  const pageContentArea = getDynamicElement('pageContentArea');
-  const initialHome = getDynamicElement('mainContentPage');
-  const appBarHeadline = getDynamicElement('appBarHeadline');
+  const pageContentArea = document.getElementById('pageContentArea');
+  const initialHome = document.getElementById('mainContentPage');
+  const appBarHeadline = document.getElementById('appBarHeadline');
   if (!pageContentArea || !initialHome) {
     throw new Error('The application shell is incomplete.');
   }

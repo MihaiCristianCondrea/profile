@@ -55,11 +55,37 @@ Create `data`, `domain`, or `presentation` only when it contains real code. A
 feature must not reach another feature through browser globals; use explicit
 imports and small typed contracts.
 
+Layer responsibilities inside a feature:
+
+- `data` owns network and storage access, and returns typed results. Presentation
+  code must not call `fetch` or `localStorage` directly.
+- `domain` owns the feature's model, defaults, and normalization of untrusted
+  input. It has no DOM dependency and is directly unit-testable.
+- `presentation` owns DOM construction, Material composition, and event wiring.
+
+Remote and imported values reach the DOM only after normalization. Any value used
+as a link or image source goes through `src/core/dom/SafeUrl.ts`, which keeps only
+`http:` and `https:` URLs.
+
 ## Routing and static fragments
 
 Hash routes are the public URL contract. `RouteRegistry.ts` contains route data,
 `ContentLoader.ts` fetches markup, `HistoryManager.ts` owns title/history
 updates, and `Router.ts` coordinates them.
+
+`RouteRegistry.ts` holds a typed `RouteDefinition` table. Each route writes its
+description and share title once; the Open Graph and Twitter blocks are expanded
+from those fields, so the three copies never drift apart. `normalizeRouteId` is
+the single hash-to-route-id normalizer, re-exported by `Router.ts` as
+`normalizePageId`.
+
+Site-wide identity — title, description, keywords, share image, Twitter handle,
+canonical base URL — lives in `src/core/metadata/SiteMetadata.ts`. Both the route
+table and the runtime metadata writer read it, so changing the site title is a
+one-line edit.
+
+Feature initialization is wired through the router's `pageHandlers` in
+`App.ts`. There is no second per-route load hook.
 
 Feature HTML belongs under `src/features/**/presentation/*.html`.
 `scripts/copy-page-fragments.mjs` copies those files to `dist/content/**` at
