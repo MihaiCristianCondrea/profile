@@ -1,0 +1,151 @@
+<!-- width/height match the viewBox so the file has an intrinsic size. Referenced
+     through an <img>, a percentage size gives no aspect ratio and the element
+     collapses; CSS still controls the rendered size. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <title>Google Material System - Mathematically Perfect Rings</title>
+  <defs>
+    <!-- Drop shadows -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#202124" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#202124" flood-opacity="0.2"/>
+    </filter>
+    <filter id="shadow-sm" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#202124" flood-opacity="0.15"/>
+    </filter>
+
+    <!-- Clipping masks -->
+    <clipPath id="p-clip">
+      <circle cx="0" cy="0" r="110"/>
+    </clipPath>
+    <clipPath id="c-top">
+      <rect x="-400" y="-400" width="800" height="400"/>
+    </clipPath>
+    <clipPath id="c-bot">
+      <rect x="-400" y="0" width="800" height="400"/>
+    </clipPath>
+
+    <!--
+      MATHEMATICALLY PERFECT RINGS
+      - `pathLength` is set identically to the radius (`r`).
+      - This normalizes the dash array so 1 unit = exactly 2π pixels on EVERY ring.
+      - Red/Green use the sequence: 8 (Dash), 12 (Gap) = Sum of 20
+      - Blue/Yellow use the sequence: 4 (Dash), 4 (Gap), 8 (Dash), 4 (Gap) = Sum of 20
+      - Dividing the Radii by 20 creates exactly 13, 11, 9, and 7 perfect pieces.
+    -->
+    <g id="rings">
+      <g transform="scale(1, 0.35)">
+        <circle cx="0" cy="0" r="260" class="r-cw1" fill="none" stroke="#EA4335" stroke-width="8" pathLength="260" stroke-dasharray="8 12" stroke-linecap="round"/>
+        <circle cx="0" cy="0" r="220" class="r-ccw1" fill="none" stroke="#4285F4" stroke-width="8" pathLength="220" stroke-dasharray="4 4 8 4" stroke-linecap="round"/>
+        <circle cx="0" cy="0" r="180" class="r-cw2" fill="none" stroke="#34A853" stroke-width="8" pathLength="180" stroke-dasharray="8 12" stroke-linecap="round"/>
+        <circle cx="0" cy="0" r="140" class="r-ccw2" fill="none" stroke="#FBBC04" stroke-width="8" pathLength="140" stroke-dasharray="4 4 8 4" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <style>
+      @keyframes fl { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+      @keyframes fl-p { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      @keyframes spin-r { 100% { transform: rotate(-360deg); } }
+
+      .f1 { animation: fl 5s cubic-bezier(0.37, 0, 0.63, 1) infinite; }
+      .f2 { animation: fl 6s cubic-bezier(0.37, 0, 0.63, 1) infinite 1s; }
+      .f3 { animation: fl 4.5s cubic-bezier(0.37, 0, 0.63, 1) infinite 2s; }
+      .f4 { animation: fl 7s cubic-bezier(0.37, 0, 0.63, 1) infinite 0.5s; }
+      .pb { animation: fl-p 6s cubic-bezier(0.37, 0, 0.63, 1) infinite; }
+
+      .r-cw1, .r-cw2, .bg-cw, .bg-ccw, .r-ccw1, .r-ccw2 { transform-origin: 0 0; }
+      .r-cw1 { animation: spin 20s linear infinite; }
+      .r-ccw1 { animation: spin-r 28s linear infinite; }
+      .r-cw2 { animation: spin 12s linear infinite; }
+      .r-ccw2 { animation: spin-r 10s linear infinite; }
+      .bg-cw { animation: spin 60s linear infinite; }
+      .bg-ccw { animation: spin-r 45s linear infinite; }
+
+      /* The illustration keeps its composition but holds still for readers who
+         ask for reduced motion. This media query is honoured even when the file
+         is referenced as an image. Keep angle brackets out of this stylesheet:
+         the file is parsed as XML, so a literal one ends the style element. */
+      @media (prefers-reduced-motion: reduce) {
+        .f1, .f2, .f3, .f4, .pb,
+        .r-cw1, .r-ccw1, .r-cw2, .r-ccw2,
+        .bg-cw, .bg-ccw { animation: none; }
+      }
+    </style>
+  </defs>
+
+  <g transform="translate(400, 300)">
+
+    <!-- Background Track: 200 ÷ 5 = 40 exactly perfect pieces -->
+    <circle cx="0" cy="0" r="200" class="bg-ccw" fill="none" stroke="#DADCE0" stroke-width="1" pathLength="200" stroke-dasharray="1 4"/>
+
+    <g transform="translate(-160, -240)">
+      <path class="f4" d="M 0 -8 L 0 8 M -8 0 L 8 0" stroke="#FBBC04" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <g class="pb">
+      <g transform="rotate(-25)">
+        <g clip-path="url(#c-top)">
+          <use href="#rings"/>
+        </g>
+      </g>
+
+      <g clip-path="url(#p-clip)">
+        <circle cx="0" cy="0" r="110" fill="#FFFFFF"/>
+        <circle cx="15" cy="15" r="110" fill="#F8F9FA"/>
+        <circle cx="35" cy="35" r="110" fill="#F1F3F4"/>
+        <circle cx="65" cy="65" r="110" fill="#E8EAED"/>
+        <circle cx="95" cy="95" r="110" fill="#DADCE0"/>
+      </g>
+      <circle cx="0" cy="0" r="110" fill="none" stroke="#BDC1C6" stroke-width="3"/>
+
+      <g transform="rotate(-25)">
+        <g clip-path="url(#c-bot)">
+          <use href="#rings"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- Floating Badges -->
+    <g transform="translate(-250, -120)">
+      <g class="f1">
+        <circle cx="0" cy="0" r="28" fill="#4285F4" filter="url(#shadow)"/>
+        <rect x="-8" y="-8" width="16" height="16" rx="3" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+        <path d="M -4 -3 L 4 -3 M -4 3 L 1 3" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <g transform="translate(240, -160)">
+      <g class="f2">
+        <circle cx="0" cy="0" r="20" fill="#EA4335" filter="url(#shadow)"/>
+        <path d="M -7 0 L 7 0 M 0 -7 L 0 7" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <g transform="translate(-220, 180)">
+      <g class="f3">
+        <circle cx="0" cy="0" r="22" fill="#34A853" filter="url(#shadow)"/>
+        <polygon points="-3,-6 7,0 -3,6" fill="#FFFFFF"/>
+      </g>
+    </g>
+
+    <g transform="translate(260, 140)">
+      <g class="f4">
+        <circle cx="0" cy="0" r="26" fill="#FBBC04" filter="url(#shadow)"/>
+        <path d="M -7 -5 L 7 -5 M -7 0 L 7 0 M -7 5 L 3 5" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+      </g>
+    </g>
+
+    <g transform="translate(120, -250)">
+      <g class="f3">
+        <circle cx="0" cy="0" r="8" fill="#4285F4" filter="url(#shadow-sm)"/>
+      </g>
+    </g>
+
+    <g transform="translate(-120, 260)">
+      <g class="f2">
+        <circle cx="0" cy="0" r="6" fill="#EA4335" filter="url(#shadow-sm)"/>
+      </g>
+    </g>
+
+  </g>
+</svg>

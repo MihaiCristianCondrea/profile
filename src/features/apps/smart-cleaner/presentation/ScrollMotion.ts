@@ -265,8 +265,6 @@ export function startScrollMotion(
     // --- write ---
     write(page, '--sc-bg-forward', `${(smoothScrollY * .08).toFixed(1)}px`);
     write(page, '--sc-bg-reverse', `${(smoothScrollY * -.075).toFixed(1)}px`);
-    write(page, '--sc-orbit-forward', `${(smoothScrollY * .024).toFixed(2)}deg`);
-    write(page, '--sc-orbit-reverse', `${(smoothScrollY * -.032).toFixed(2)}deg`);
     write(page, '--sc-tilt-x', `${(pointerY * -3).toFixed(2)}deg`);
     write(page, '--sc-tilt-y', `${(pointerX * 3.5).toFixed(2)}deg`);
     write(page, '--sc-feature-tilt-x', `${(pointerY * -2).toFixed(2)}deg`);

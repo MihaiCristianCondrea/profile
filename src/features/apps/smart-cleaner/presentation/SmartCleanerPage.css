@@ -13,8 +13,6 @@
   --sc-hero-reverse: 0px;
   --sc-pointer-x: 0;
   --sc-pointer-y: 0;
-  --sc-orbit-forward: 0deg;
-  --sc-orbit-reverse: 0deg;
   position: relative;
   isolation: isolate;
   /* The container spans the full route width so the decorative background
@@ -297,11 +295,10 @@ html.dark #smartCleanerPageContainer.smart-cleaner-page {
 .sc-breathing::after { right: -180px; bottom: -180px; background: radial-gradient(circle, color-mix(in srgb, var(--md-sys-color-tertiary) 23%, transparent), transparent 68%); transform: translate3d(0, var(--breathing-reverse, 0px), 0); }
 .sc-breathing p { position: relative; z-index: 1; margin: 0; padding: 40px; font-family: var(--sc-display); font-size: clamp(2.7rem, 7vw, 6.2rem); font-weight: 600; letter-spacing: -.055em; line-height: .98; }
 .sc-performance { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(36px, 7vw, 78px); align-items: center; }
-.sc-performance-orbit { position: relative; min-height: 470px; display: grid; place-items: center; }
-.sc-orbit-ring { position: absolute; width: min(380px, 72vw); aspect-ratio: 1; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 50%; transform: rotateX(68deg) rotateZ(var(--sc-orbit-forward)); }
-.sc-orbit-ring:nth-child(2) { width: min(300px, 58vw); opacity: .65; transform: rotateX(68deg) rotateZ(var(--sc-orbit-reverse)); }
-.sc-performance-core { position: relative; z-index: 2; width: 205px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); box-shadow: var(--sc-shadow-soft); transform: translate3d(0, var(--performance-core, 0px), 0); }
-.sc-performance-core md-icon { font-size: 64px; font-variation-settings: 'FILL' 1; }
+/* The illustration owns its own motion; the page only parallaxes it so it
+   still drifts with the surrounding section. */
+.sc-performance-visual { position: relative; min-height: 470px; display: grid; place-items: center; }
+.sc-performance-visual img { display: block; width: min(100%, 520px); height: auto; transform: translate3d(0, var(--performance-core, 0px), 0); will-change: transform; }
 .sc-performance-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 30px; }
 .sc-performance-metrics md-filled-card { --md-filled-card-container-color: var(--md-sys-color-surface-container-low); --md-filled-card-container-shape: 24px; }
 .sc-performance-metrics md-filled-card > div { padding: 20px; }
@@ -394,8 +391,7 @@ html.dark #smartCleanerPageContainer.smart-cleaner-page {
   .sc-story-copy,
   .sc-breathing::before,
   .sc-breathing::after,
-  .sc-orbit-ring,
-  .sc-performance-core,
+  .sc-performance-visual img,
   .sc-shot { transform: none !important; }
   .sc-reveal { opacity: 1; transform: none; transition: none; }
 }
