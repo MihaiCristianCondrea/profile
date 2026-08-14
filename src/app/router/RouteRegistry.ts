@@ -31,6 +31,11 @@ interface RouteDefinition {
   imageAlt?: string;
   /** Canonical slug. Defaults to the route id, and to `''` for home. */
   canonicalSlug?: string;
+  /**
+   * Opts the route out of the shell's centered content column so it can own
+   * its full horizontal width. See `.content-wrapper.is-full-bleed`.
+   */
+  fullBleed?: boolean;
 }
 
 const ROUTE_DEFINITIONS: readonly RouteDefinition[] = [
@@ -144,6 +149,7 @@ const ROUTE_DEFINITIONS: readonly RouteDefinition[] = [
     socialTitle: 'Smart Cleaner for Android | App Presentation',
     image: 'https://raw.githubusercontent.com/MihaiCristianCondrea/Smart-Cleaner-for-Android/refs/heads/master/.idea/icon.svg',
     imageAlt: 'Smart Cleaner for Android app icon',
+    fullBleed: true,
   },
   {
     id: 'ads-help-center',
@@ -262,6 +268,7 @@ const PAGE_ROUTES: ReadonlyMap<string, RouteConfig> = new Map(
     id: definition.id,
     title: definition.title,
     path: definition.path ?? null,
+    fullBleed: definition.fullBleed ?? false,
     metadata: buildMetadata(definition),
   }]),
 );

@@ -55,6 +55,14 @@ img {
   flex: 1 0 auto;
 }
 
+/* Routes flagged `fullBleed` in the route registry own their own horizontal
+   rhythm, so the shell drops its content column and side padding and keeps
+   only the safe-area insets. */
+.content-wrapper.is-full-bleed {
+  width: 100%;
+  padding-inline: var(--safe-area-inset-left) var(--safe-area-inset-right);
+}
+
 .page-section-title {
   margin: 40px 0 24px;
   color: var(--md-sys-color-on-background);

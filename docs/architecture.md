@@ -87,6 +87,13 @@ one-line edit.
 Feature initialization is wired through the router's `pageHandlers` in
 `App.ts`. There is no second per-route load hook.
 
+A route may set `fullBleed: true` to opt out of the shell's centered content
+column. The router mirrors that onto `#pageContentArea` as `.is-full-bleed`,
+which drops the 900px column and side padding while keeping the safe-area
+insets, and clears it again on the next navigation. The route is then
+responsible for its own horizontal rhythm. Smart Cleaner uses this so its
+1180px presentation layout is not clipped by the shell.
+
 Feature HTML belongs under `src/features/**/presentation/*.html`.
 `scripts/copy-page-fragments.mjs` copies those files to `dist/content/**` at
 build time. `dist` is generated output and must not be edited.

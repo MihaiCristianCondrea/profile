@@ -28,6 +28,8 @@ export interface RouteConfig {
   id: string;
   title: string;
   path: string | null;
+  /** Route renders edge-to-edge instead of inside the shell content column. */
+  fullBleed: boolean;
   metadata: RouteMetadata;
 }
 

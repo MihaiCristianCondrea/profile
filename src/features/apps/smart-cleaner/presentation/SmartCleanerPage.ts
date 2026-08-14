@@ -1,4 +1,4 @@
-import { fetchSmartCleanerShortDescription } from '../data/SmartCleanerDataSource.ts';
+import { fetchSmartCleanerMetadata } from '../data/SmartCleanerDataSource.ts';
 import {
   CLEANER_FEATURES,
   isCleanerFeatureKey,
@@ -11,6 +11,8 @@ interface SegmentedButtonSelectionEvent extends Event {
 }
 
 const FEATURE_SWAP_DELAY_MS = 130;
+/** How quickly the parallax settles into a new scroll direction, per frame. */
+const DIRECTION_EASING = .06;
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
@@ -105,6 +107,14 @@ export function initSmartCleanerPage(): void {
   let pointerX = 0;
   let pointerY = 0;
   let smoothScrollY = window.scrollY;
+  let lastScrollY = window.scrollY;
+  // +1 while scrolling down, -1 while scrolling up. Depth offsets are
+  // multiplied by this, so layers that lag on the way down lead on the way up.
+  // `scrollDirection` eases toward the target every frame — including after the
+  // scroll stops — so a short flick still completes the reversal instead of
+  // stalling part-way, and the turn glides rather than snapping.
+  let directionTarget = 1;
+  let scrollDirection = 1;
 
   if (finePointer && !reduceMotion) {
     page.addEventListener('pointermove', (event) => {
@@ -118,15 +128,25 @@ export function initSmartCleanerPage(): void {
     }, { passive: true });
   }
 
+  /** Depth offset for an element, signed by the current scroll direction. */
+  const depth = (element: HTMLElement): number => centerOffset(element) * scrollDirection;
+
   const setSectionDepth = (element: HTMLElement | null, forwardName: string, reverseName: string, strength = .07): void => {
     if (!element) return;
-    const delta = centerOffset(element);
+    const delta = depth(element);
     element.style.setProperty(forwardName, `${clamp(delta * -strength, -50, 50)}px`);
     element.style.setProperty(reverseName, `${clamp(delta * strength, -50, 50)}px`);
   };
 
   const updateParallax = (): void => {
-    smoothScrollY += (window.scrollY - smoothScrollY) * .15;
+    const currentScrollY = window.scrollY;
+    if (currentScrollY !== lastScrollY) {
+      directionTarget = currentScrollY > lastScrollY ? 1 : -1;
+      lastScrollY = currentScrollY;
+    }
+    scrollDirection += (directionTarget - scrollDirection) * DIRECTION_EASING;
+
+    smoothScrollY += (currentScrollY - smoothScrollY) * .15;
     page.style.setProperty('--sc-bg-forward', `${smoothScrollY * .08}px`);
     page.style.setProperty('--sc-bg-reverse', `${smoothScrollY * -.075}px`);
     page.style.setProperty('--sc-orbit-forward', `${smoothScrollY * .024}deg`);
@@ -144,7 +164,7 @@ export function initSmartCleanerPage(): void {
     page.style.setProperty('--sc-float-bottom-x', `${pointerX * 22}px`);
 
     if (heroStage) {
-      const delta = centerOffset(heroStage);
+      const delta = depth(heroStage);
       const forward = clamp(delta * -.065, -45, 45);
       const reverse = clamp(delta * .025, -18, 18);
       page.style.setProperty('--sc-hero-forward', `${forward}px`);
@@ -156,7 +176,7 @@ export function initSmartCleanerPage(): void {
     setSectionDepth(problemSection, '--problem-forward', '--problem-reverse', .055);
 
     if (featureStage) {
-      const delta = centerOffset(featureStage);
+      const delta = depth(featureStage);
       featureStage.style.setProperty('--feature-forward', `${clamp(delta * -.07, -42, 42)}px`);
       featureStage.style.setProperty('--feature-reverse', `${clamp(delta * .075, -45, 45)}px`);
       featureStage.style.setProperty('--feature-badge-reverse', `${clamp(delta * .055, -34, 34)}px`);
@@ -164,7 +184,7 @@ export function initSmartCleanerPage(): void {
     }
 
     storyCards.forEach((story) => {
-      const delta = centerOffset(story);
+      const delta = depth(story);
       const direction = story.dataset.invert === 'true' ? -1 : 1;
       story.style.setProperty('--story-forward', `${clamp(delta * -.08 * direction, -50, 50)}px`);
       story.style.setProperty('--story-reverse', `${clamp(delta * .075 * direction, -45, 45)}px`);
@@ -172,17 +192,17 @@ export function initSmartCleanerPage(): void {
     });
 
     if (breathing) {
-      const delta = centerOffset(breathing);
+      const delta = depth(breathing);
       breathing.style.setProperty('--breathing-forward', `${clamp(delta * .12, -70, 70)}px`);
       breathing.style.setProperty('--breathing-reverse', `${clamp(delta * -.12, -70, 70)}px`);
     }
 
     if (performance) {
-      performance.style.setProperty('--performance-core', `${clamp(centerOffset(performance) * -.04, -22, 22)}px`);
+      performance.style.setProperty('--performance-core', `${clamp(depth(performance) * -.04, -22, 22)}px`);
     }
 
     if (finalCard) {
-      finalCard.style.setProperty('--final-reverse', `${clamp(centerOffset(finalCard) * .08, -50, 50)}px`);
+      finalCard.style.setProperty('--final-reverse', `${clamp(depth(finalCard) * .08, -50, 50)}px`);
     }
   };
 
@@ -237,8 +257,26 @@ export function initSmartCleanerPage(): void {
     requestFrame(animate);
   }
 
-  void fetchSmartCleanerShortDescription().then((shortDescription) => {
-    const target = query<HTMLElement>('#appShortDescription');
-    if (page.isConnected && target && shortDescription) target.textContent = shortDescription;
+  void fetchSmartCleanerMetadata().then(({ shortDescription, iconUrl }) => {
+    if (!page.isConnected) return;
+
+    const description = query<HTMLElement>('#appShortDescription');
+    if (description && shortDescription) description.textContent = shortDescription;
+
+    const icon = query<HTMLImageElement>('#appIconLogo');
+    if (!icon || !iconUrl) return;
+
+    // Preload off-DOM, then swap the generic Material glyph for the real app
+    // icon. A hidden <img> is display:none, so loading it in place would stall
+    // under lazy loading and never resolve; this also guarantees a broken URL
+    // simply leaves the fallback glyph in place.
+    const preload = new Image();
+    preload.addEventListener('load', () => {
+      if (!page.isConnected) return;
+      icon.src = iconUrl;
+      icon.hidden = false;
+      query<HTMLElement>('#appIconFallback')?.setAttribute('hidden', '');
+    }, { once: true });
+    preload.src = iconUrl;
   });
 }

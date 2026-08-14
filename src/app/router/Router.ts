@@ -94,6 +94,7 @@ export async function loadPageContent(pageId: string, updateHistory = true): Pro
     if (currentLoad !== loadSequence) return;
 
     pageContentArea.innerHTML = result.html;
+    pageContentArea.classList.toggle('is-full-bleed', routeConfig?.fullBleed === true);
     if (result.status === 'success') {
       runPageHandler(normalizedPageId);
     } else if (result.error) {

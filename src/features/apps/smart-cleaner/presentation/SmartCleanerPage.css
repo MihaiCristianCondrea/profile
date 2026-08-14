@@ -17,10 +17,14 @@
   --sc-orbit-reverse: 0deg;
   position: relative;
   isolation: isolate;
-  width: min(100%, var(--sc-page-width));
-  margin-inline: auto;
+  /* The container spans the full route width so the decorative background
+     reaches the viewport edges; the sections below keep the design width. */
+  width: 100%;
   padding: 24px clamp(18px, 4vw, 44px) 80px;
-  overflow: clip;
+  /* Clip only sideways. The decorative blobs sit outside the container on the
+     x axis, but the parallax moves content vertically, and a two-axis clip
+     cut that movement off at the top and bottom edges. */
+  overflow-x: clip;
   color: var(--md-sys-color-on-surface);
   font-family: var(--sc-body);
 }
@@ -30,7 +34,11 @@ html.dark #smartCleanerPageContainer.smart-cleaner-page {
   --sc-shadow-device: 0 44px 110px color-mix(in srgb, var(--md-sys-color-shadow) 65%, transparent);
 }
 
-#smartCleanerPageContainer.smart-cleaner-page > section { margin-block: 0; }
+#smartCleanerPageContainer.smart-cleaner-page > section {
+  width: min(100%, var(--sc-page-width));
+  margin-block: 0;
+  margin-inline: auto;
+}
 .smart-cleaner-page::before,
 .smart-cleaner-page::after {
   content: '';
@@ -69,6 +77,9 @@ html.dark #smartCleanerPageContainer.smart-cleaner-page {
   letter-spacing: .025em;
 }
 .sc-kicker md-icon { font-size: 20px; }
+/* Live app icon from the metadata service, sized to match the glyph it
+   replaces so the kicker keeps its rhythm either way. */
+.sc-app-icon { width: 22px; height: 22px; border-radius: 6px; object-fit: contain; }
 .sc-section { position: relative; margin-block: clamp(92px, 13vw, 178px) !important; }
 .sc-section-heading { max-width: 780px; margin-bottom: 42px; }
 #smartCleanerPageContainer .sc-section h2,
