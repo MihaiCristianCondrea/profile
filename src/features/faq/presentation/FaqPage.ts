@@ -4,6 +4,51 @@ type FaqContext = 'home' | 'page';
 type SearchField = HTMLElement & { value: string };
 type FaqGroupPosition = 'single' | 'first' | 'middle' | 'last';
 
+const FAQ_ANSWER_TRANSITION_PROPERTY = 'height';
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
+function setAnswerExpanded(answer: HTMLElement, expanded: boolean): void {
+  const currentFrame = Number(answer.dataset.animationFrame);
+  if (currentFrame) window.cancelAnimationFrame(currentFrame);
+  delete answer.dataset.animationFrame;
+
+  const animationId = String(Number(answer.dataset.animationId ?? '0') + 1);
+  answer.dataset.animationId = animationId;
+
+  const finish = (): void => {
+    if (answer.dataset.animationId !== animationId) return;
+    answer.style.height = expanded ? 'auto' : '0px';
+    answer.hidden = !expanded;
+  };
+  const handleTransitionEnd = (event: TransitionEvent): void => {
+    if (event.target !== answer || event.propertyName !== FAQ_ANSWER_TRANSITION_PROPERTY) return;
+    answer.removeEventListener('transitionend', handleTransitionEnd);
+    finish();
+  };
+
+  if ((!expanded && answer.hidden) || prefersReducedMotion()) {
+    finish();
+    return;
+  }
+
+  answer.hidden = false;
+  const currentHeight = answer.getBoundingClientRect().height;
+  answer.style.height = `${currentHeight}px`;
+  // Reading layout ensures the browser commits the current height before the next frame.
+  void answer.offsetHeight;
+
+  answer.addEventListener('transitionend', handleTransitionEnd);
+  const frame = window.requestAnimationFrame(() => {
+    delete answer.dataset.animationFrame;
+    if (answer.dataset.animationId !== animationId) return;
+    answer.style.height = expanded ? `${answer.scrollHeight}px` : '0px';
+  });
+  answer.dataset.animationFrame = String(frame);
+}
+
 export interface RenderedFaqItem {
   data: FaqItem;
   element: HTMLElement;
@@ -68,6 +113,7 @@ export function createFaqItem(item: FaqItem, context: FaqContext): HTMLElement {
   answer.setAttribute('role', 'region');
   answer.setAttribute('aria-labelledby', summary.id);
   answer.hidden = true;
+  answer.style.height = '0px';
 
   const answerContent = document.createElement('div');
   answerContent.className = 'faq-answer-content';
@@ -82,13 +128,13 @@ export function createFaqItem(item: FaqItem, context: FaqContext): HTMLElement {
     const expanded = summary.getAttribute('aria-expanded') !== 'true';
     summary.setAttribute('aria-expanded', String(expanded));
     container.classList.toggle('is-open', expanded);
-    answer.hidden = !expanded;
+    setAnswerExpanded(answer, expanded);
   });
 
   container.addEventListener('faq:close', () => {
     summary.setAttribute('aria-expanded', 'false');
     container.classList.remove('is-open');
-    answer.hidden = true;
+    setAnswerExpanded(answer, false);
   });
 
   container.append(summary, answer);

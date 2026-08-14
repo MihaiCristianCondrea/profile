@@ -64,3 +64,98 @@ describe('grouped FAQ positions', () => {
     expect(rendered[0].element.dataset.groupPosition).toBe('single');
   });
 });
+
+describe('FAQ answer animation', () => {
+  let animationFrames: FrameRequestCallback[];
+
+  beforeEach(() => {
+    animationFrames = [];
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      animationFrames.push(callback);
+      return animationFrames.length;
+    });
+    jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  function renderAnimatedFaq(context: 'home' | 'page' = 'home') {
+    const host = document.createElement('div');
+    const [{ element }] = renderFaqList(host, [faq('animated')], context);
+    const summary = element.querySelector<HTMLButtonElement>('.faq-summary')!;
+    const answer = element.querySelector<HTMLElement>('.faq-answer')!;
+    Object.defineProperty(answer, 'scrollHeight', { configurable: true, value: 96 });
+    return { element, summary, answer };
+  }
+
+  function runNextFrame(): void {
+    animationFrames.shift()?.(0);
+  }
+
+  function finishHeightTransition(answer: HTMLElement): void {
+    const event = new Event('transitionend', { bubbles: true }) as TransitionEvent;
+    Object.defineProperty(event, 'propertyName', { value: 'height' });
+    answer.dispatchEvent(event);
+  }
+
+  test.each(['home', 'page'] as const)('animates opening and closing in the %s context', (context) => {
+    const { element, summary, answer } = renderAnimatedFaq(context);
+
+    summary.click();
+    expect(summary.getAttribute('aria-expanded')).toBe('true');
+    expect(element.classList.contains('is-open')).toBe(true);
+    expect(answer.hidden).toBe(false);
+    runNextFrame();
+    expect(answer.style.height).toBe('96px');
+    finishHeightTransition(answer);
+    expect(answer.style.height).toBe('auto');
+
+    summary.click();
+    expect(summary.getAttribute('aria-expanded')).toBe('false');
+    expect(element.classList.contains('is-open')).toBe(false);
+    expect(answer.hidden).toBe(false);
+    runNextFrame();
+    expect(answer.style.height).toBe('0px');
+    finishHeightTransition(answer);
+    expect(answer.hidden).toBe(true);
+  });
+
+  test('the close event collapses an expanded answer', () => {
+    const { element, summary, answer } = renderAnimatedFaq();
+    summary.click();
+    runNextFrame();
+    finishHeightTransition(answer);
+
+    element.dispatchEvent(new Event('faq:close'));
+    runNextFrame();
+    finishHeightTransition(answer);
+
+    expect(summary.getAttribute('aria-expanded')).toBe('false');
+    expect(element.classList.contains('is-open')).toBe(false);
+    expect(answer.hidden).toBe(true);
+  });
+
+  test('the close event leaves an already collapsed answer hidden', () => {
+    const { element, answer } = renderAnimatedFaq();
+
+    element.dispatchEvent(new Event('faq:close'));
+
+    expect(answer.hidden).toBe(true);
+    expect(animationFrames).toHaveLength(0);
+  });
+
+  test('a rapid second toggle supersedes the pending opening frame', () => {
+    const { summary, answer } = renderAnimatedFaq();
+    summary.click();
+    summary.click();
+
+    runNextFrame();
+    runNextFrame();
+    expect(window.cancelAnimationFrame).toHaveBeenCalled();
+    expect(answer.style.height).toBe('0px');
+    finishHeightTransition(answer);
+    expect(answer.hidden).toBe(true);
+  });
+});
