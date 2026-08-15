@@ -18,11 +18,13 @@ export function updateCommittersStatus(
 }
 
 export async function fetchCommittersRanking(): Promise<void> {
+  const rankingElement = document.getElementById('committers-ranking');
   const rankElement = document.getElementById('committers-rank');
   const statusElement = document.getElementById('committers-status');
   const updatedElement = document.getElementById('committers-updated');
   if (!rankElement || !statusElement) return;
 
+  if (rankingElement) rankingElement.hidden = true;
   rankElement.textContent = '—';
   updateCommittersStatus(statusElement, 'Checking latest ranking…');
   if (updatedElement) updatedElement.textContent = UPDATED_FALLBACK;
@@ -51,6 +53,7 @@ export async function fetchCommittersRanking(): Promise<void> {
         ? `Last updated: ${ranking.dataAsOf}`
         : UPDATED_FALLBACK;
     }
+    if (rankingElement) rankingElement.hidden = false;
   } catch (error) {
     console.error('Committers ranking: Failed to load data.', error);
     updateCommittersStatus(
