@@ -13,9 +13,13 @@
 }
 
 md-filled-card.profile-card {
-  --md-filled-card-container-shape: 16px 16px 4px 4px;
+  --md-filled-card-container-shape: 16px;
   margin-bottom: 2px;
   overflow: hidden;
+}
+
+md-filled-card.profile-card:has(+ md-filled-card.achievement-card:not([hidden])) {
+  --md-filled-card-container-shape: 16px 16px 4px 4px;
 }
 
 md-filled-card.achievement-card {
