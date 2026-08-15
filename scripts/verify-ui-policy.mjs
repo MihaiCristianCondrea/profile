@@ -70,7 +70,11 @@ if (violations.length > 0) {
 
 const homeHtml = await readFile(join(ROOT, 'index.html'), 'utf8');
 assertIncludes(homeHtml, '<md-filled-card class="profile-card">', 'Home profile header');
-assertIncludes(homeHtml, '<md-filled-card class="achievement-card">', 'Home ranking header');
+assertIncludes(
+  homeHtml,
+  '<md-filled-card class="achievement-card" id="committers-ranking" hidden>',
+  'Home ranking header',
+);
 assertIncludes(homeHtml, '<md-filled-card class="contribute-card">', 'Contribution callout');
 assertIncludes(homeHtml, '<meta name="theme-color" content="#4285F4" />', 'Browser theme color');
 assertIncludes(
