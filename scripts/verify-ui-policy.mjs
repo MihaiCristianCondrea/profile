@@ -108,6 +108,18 @@ assertIncludes(
   'Contribution-card tonal exception',
 );
 
+const componentsCss = await readFile(join(SOURCE_ROOT, 'core/styles/components.css'), 'utf8');
+assertIncludes(
+  componentsCss,
+  'md-filled-card.profile-card:has(+ md-filled-card.achievement-card:not([hidden]))',
+  'Connected profile and achievement card shape',
+);
+assertIncludes(
+  componentsCss,
+  '--md-filled-card-container-shape: 16px;',
+  'Standalone profile card shape',
+);
+
 const groupedFaqCss = await readFile(join(SOURCE_ROOT, 'core/styles/grouped-faq.css'), 'utf8');
 for (const expected of [
   '--md-outlined-text-field-container-shape: 28px;',
