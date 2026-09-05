@@ -4,13 +4,15 @@
 
 export const SITE_BASE_URL = 'https://mihaicristiancondrea.github.io/profile/';
 export const SITE_TITLE = "Mihai's Profile";
-export const SITE_DESCRIPTION = "Explore Mihai-Cristian Condrea's Android developer portfolio featuring Jetpack Compose apps, Material Design systems, and open-source tools.";
+export const SITE_DESCRIPTION = "Explore Mihai-Cristian Condrea's Android developer portfolio spanning production apps, Jetpack Compose, Material Design, reusable libraries, developer tooling, and selected open-source projects.";
 export const SITE_KEYWORDS: readonly string[] = [
   'Mihai Cristian Condrea',
   'Android developer portfolio',
   'Jetpack Compose',
   'Kotlin apps',
   'Material Design UI',
+  'Android architecture',
+  'developer tools',
 ];
 export const SITE_IMAGE = `${SITE_BASE_URL}images/profile/cv_profile_pic.png`;
 export const SITE_IMAGE_ALT = 'Portrait of Android developer Mihai-Cristian Condrea';
