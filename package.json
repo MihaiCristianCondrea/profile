@@ -11,7 +11,7 @@
     "verify:source-quality": "node scripts/verify-source-quality.mjs",
     "verify:ui-policy": "node scripts/verify-ui-policy.mjs",
     "verify:svg-assets": "node scripts/verify-svg-assets.mjs",
-    "verify:security": "npm audit --audit-level=moderate --omit=dev",
+    "verify:security": "npm audit --audit-level=low",
     "build": "npm run verify:html-structure && npm run verify:source-quality && npm run verify:ui-policy && npm run verify:svg-assets && npm run clean && npm run typecheck && npm run build:vite && npm run build:pages",
     "build:vite": "vite build",
     "build:pages": "node scripts/copy-page-fragments.mjs",
@@ -30,7 +30,7 @@
   },
   "overrides": {
     "@babel/core": "7.29.6",
-    "js-yaml": "3.15.1",
+    "js-yaml": "3.15.2",
     "nanoid": "3.3.18"
   },
   "devDependencies": {
