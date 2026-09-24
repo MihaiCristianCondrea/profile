@@ -7,9 +7,12 @@ granted to copy, modify, distribute, sublicense, publish, sell, or otherwise
 use the source code or other original project materials except where expressly
 authorized in writing by the copyright holder or permitted by applicable law.
 
-Access to this repository, including the ability to view or fork it through
-GitHub, does not grant any additional license to the original source code or
-project materials.
+Because this repository is public on GitHub, GitHub's Terms of Service permit
+uses available through GitHub's functionality, including viewing and forking
+the repository. Those platform rights do not grant a broader license to copy,
+modify, distribute, sublicense, publish, sell, or otherwise use the original
+source code or project materials outside the permissions expressly provided by
+GitHub's Terms of Service, applicable law, or the copyright holder.
 
 Third-party libraries, frameworks, assets, and other externally licensed
 components remain subject to their respective licenses. Nothing in this notice
