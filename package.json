@@ -1,6 +1,7 @@
 {
   "name": "profile",
   "version": "1.0.0",
+  "private": true,
   "description": "This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript.",
   "scripts": {
     "test": "jest",
@@ -23,7 +24,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "GPL-3.0-or-later",
+  "license": "UNLICENSED",
   "type": "commonjs",
   "engines": {
     "node": ">=24"
