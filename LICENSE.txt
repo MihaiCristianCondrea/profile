@@ -1,0 +1,21 @@
+Copyright © 2026 Mihai-Cristian Condrea
+
+All rights reserved.
+
+This software and its original source code are proprietary. No permission is
+granted to copy, modify, distribute, sublicense, publish, sell, or otherwise
+use the source code or other original project materials except where expressly
+authorized in writing by the copyright holder or permitted by applicable law.
+
+Access to this repository, including the ability to view or fork it through
+GitHub, does not grant any additional license to the original source code or
+project materials.
+
+Third-party libraries, frameworks, assets, and other externally licensed
+components remain subject to their respective licenses. Nothing in this notice
+is intended to restrict rights granted under an applicable third-party or
+open-source license.
+
+Additional legal information and policies are available at:
+
+https://mihaicristiancondrea.github.io/profile/
