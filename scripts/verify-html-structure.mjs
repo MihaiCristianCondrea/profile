@@ -141,8 +141,8 @@ function validateHtml(filePath, source) {
 
       if (isDocument && id === 'pageContentArea') {
         shellCounts.set('pageContentArea', shellCounts.get('pageContentArea') + 1);
-        if (name !== 'main' || parent?.name !== 'body') {
-          errors.push(`line ${line}: #pageContentArea must be a <main> directly inside <body>`);
+        if (name !== 'div' || parent?.name !== 'mnw-app-shell') {
+          errors.push(`line ${line}: #pageContentArea must be a <div> directly inside <mnw-app-shell>`);
         }
       }
       if (isDocument && id === 'mainContentPage') {
@@ -151,10 +151,10 @@ function validateHtml(filePath, source) {
           errors.push(`line ${line}: #mainContentPage must be a <section> directly inside #pageContentArea`);
         }
       }
-      if (isDocument && name === 'footer' && className.split(/\s+/).includes('app-footer')) {
+      if (isDocument && name === 'mnw-site-footer') {
         shellCounts.set('appFooter', shellCounts.get('appFooter') + 1);
-        if (parent?.name !== 'body') {
-          errors.push(`line ${line}: .app-footer must be directly inside <body>`);
+        if (parent?.name !== 'mnw-app-shell') {
+          errors.push(`line ${line}: the shared footer must be directly inside <mnw-app-shell>`);
         }
       }
 

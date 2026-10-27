@@ -1,3 +1,10 @@
+@media print {
+  mnw-app-shell::part(top-app-bar),
+  mnw-app-shell::part(drawer),
+  mnw-site-footer {
+    display: none !important;
+  }
+}
 @page {
   size: A4 portrait;
   margin: 0;

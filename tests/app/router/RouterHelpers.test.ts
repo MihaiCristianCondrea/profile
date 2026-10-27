@@ -19,11 +19,11 @@ describe('router helpers', () => {
   });
 
   test('updates the shell title and document title', () => {
-    const headline = document.createElement('h1');
+    const headline = {heading: 'Home'};
 
     updateTitle(headline, 'Projects');
 
-    expect(headline.textContent).toBe('Projects');
+    expect(headline.heading).toBe('Projects');
     expect(document.title).toBe(`Projects${DOCUMENT_TITLE_SUFFIX}`);
   });
 

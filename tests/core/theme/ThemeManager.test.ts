@@ -4,11 +4,7 @@ interface ThemeModule {
 }
 
 function installThemeMarkup(): void {
-  document.body.innerHTML = `
-    <button data-theme="light"></button>
-    <button data-theme="dark"></button>
-    <button data-theme="auto"></button>
-  `;
+  document.body.innerHTML = '<mnw-app-shell-footer></mnw-app-shell-footer>';
 }
 
 describe('ThemeManager', () => {
@@ -33,12 +29,9 @@ describe('ThemeManager', () => {
     initTheme();
 
     expect(document.documentElement.classList.contains('dark')).toBe(true);
-    expect(document.querySelector('[data-theme="dark"]')?.getAttribute('aria-pressed'))
-      .toBe('true');
-    expect(document.querySelector('[data-theme="dark"]')?.hasAttribute('data-active'))
-      .toBe(true);
-
-    (document.querySelector('[data-theme="light"]') as HTMLElement).click();
+    const footer = document.querySelector('mnw-app-shell-footer') as HTMLElement & {theme: string};
+    expect(footer.theme).toBe('dark');
+    footer.dispatchEvent(new CustomEvent('theme-change', {detail: {theme: 'light'}}));
     expect(document.documentElement.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('theme')).toBe('light');
   });

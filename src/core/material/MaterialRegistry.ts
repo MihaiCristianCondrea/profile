@@ -16,7 +16,10 @@ import '@material/web/tabs/primary-tab.js';
 import '@material/web/tabs/tabs.js';
 import '@material/web/textfield/outlined-text-field.js';
 import '@material/web/labs/card/filled-card.js';
-import '@material/web/labs/item/item.js';
-import '@material/web/labs/navigationdrawer/navigation-drawer-modal.js';
 import '@material/web/labs/segmentedbutton/outlined-segmented-button.js';
 import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set.js';
+
+import 'material-next-web-components/app-shell.js';
+import 'material-next-web-components/site-footer.js';
+import 'material-next-web-components/app-showcase.js';
+import 'material-next-web-components/expressive-tab-bar.js';

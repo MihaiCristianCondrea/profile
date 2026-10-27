@@ -98,3 +98,20 @@ img {
     font-size: 1.5rem;
   }
 }
+
+.profile-brand {
+  display: block;
+  padding: 16px;
+  color: inherit;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+mnw-site-footer {
+  --md-icon-button-icon-color: var(--md-sys-color-on-surface-variant);
+}
+
+/* Preserve the site's divider-free drawer composition. */
+mnw-app-shell-footer {
+  border-top: 0;
+}

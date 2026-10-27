@@ -1,10 +1,14 @@
+import type {
+  AppShellThemeChangeEvent,
+  MaterialNextAppShellFooter,
+} from 'material-next-web-components/app-shell.js';
 export type ThemePreference = 'light' | 'dark' | 'auto';
 
 const THEME_STORAGE_KEY = 'theme';
-const themeQuery = typeof window.matchMedia === 'function'
-  ? window.matchMedia('(prefers-color-scheme: dark)')
-  : null;
-let themeButtons: HTMLElement[] = [];
+const themeQuery =
+  typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-color-scheme: dark)')
+    : null;
 let initialized = false;
 
 function isThemePreference(value: string | null | undefined): value is ThemePreference {
@@ -28,31 +32,21 @@ function storeThemePreference(theme: ThemePreference): void {
   }
 }
 
-export function updateThemeButtonSelection(selectedTheme: ThemePreference): void {
-  themeButtons.forEach((button) => {
-    const isSelected = button.dataset.theme === selectedTheme;
-    button.toggleAttribute('data-active', isSelected);
-    button.setAttribute('aria-pressed', String(isSelected));
-  });
-}
-
 export function applyTheme(theme: ThemePreference): void {
   const isDark = theme === 'dark' || (theme === 'auto' && themeQuery?.matches === true);
   document.documentElement.classList.toggle('dark', isDark);
   storeThemePreference(theme);
-  updateThemeButtonSelection(theme);
+  const footer = document.querySelector<MaterialNextAppShellFooter>('mnw-app-shell-footer');
+  if (footer) footer.theme = theme === 'auto' ? 'system' : theme;
 }
 
 export function initTheme(): void {
-  themeButtons = Array.from(document.querySelectorAll<HTMLElement>('[data-theme]'));
-
   if (!initialized) {
-    themeButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const requestedTheme = button.dataset.theme;
-        if (isThemePreference(requestedTheme)) applyTheme(requestedTheme);
+    document
+      .querySelector<MaterialNextAppShellFooter>('mnw-app-shell-footer')
+      ?.addEventListener('theme-change', (event: AppShellThemeChangeEvent) => {
+        applyTheme(event.detail.theme === 'system' ? 'auto' : event.detail.theme);
       });
-    });
 
     themeQuery?.addEventListener('change', () => {
       if (readThemePreference() === 'auto') applyTheme('auto');

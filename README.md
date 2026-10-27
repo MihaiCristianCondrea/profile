@@ -2,10 +2,14 @@
 
 This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript (compiled to browser JavaScript).
 
+Material Next is pinned to source commit `a4c1bbd` until its new drawer category and
+site footer components are released on npm. Installation requires Git and Node.js 24.
+The package builds from source during `npm install`; no library files are copied into this repo.
+
 ## Features
 
-- **Material Design Components** – UI is styled with Google's Material Web Components.
-- **Navigation Drawer** – A slide‑out drawer lists Home, Blogs, Music, Projects and collapsible "Profile" and "Android Apps" sections.
+- **Material Design Components** – UI uses Material Next and Google's Material Web Components.
+- **Navigation Drawer** – A Material Next drawer starts closed on desktop and phone and lists Home, Blogs, Music, Projects and collapsible "Profile" and "Android Apps" sections.
 - **Light/Dark Theme** – A theme toggle stores your preference in `localStorage` and can automatically match the system theme.
 - **Blogger Integration** – The home page fetches recent blog posts from Blogger using the Blogger API.
 - **Client‑Side Routing** – TypeScript router modules load internal pages without a full reload (privacy policy, code of conduct, app related info, etc.).
@@ -27,7 +31,7 @@ src/
   core/                   # Shared DOM, metadata, theme, Material, style, and type utilities
   features/               # Feature-first modules grouped by data/domain/presentation
     profile/presentation/ # About/contact route fragments
-    projects/             # Android-app data adapter and projects presentation
+    projects/             # Shared Android app showcase and web project presentation
     resume/presentation/  # Resume behavior and resume.html
     songs/                # Song data, domain mapping, and presentation
     apps/                 # App-specific feature and legal fragments

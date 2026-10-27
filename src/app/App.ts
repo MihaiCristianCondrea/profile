@@ -1,14 +1,7 @@
 import type { RouterOptions } from '../core/types/index.ts';
-import {
-  hidePageLoadingOverlay,
-  setCopyrightYear,
-  showPageLoadingOverlay,
-} from '../core/dom/DomUtils.ts';
+import { hidePageLoadingOverlay, showPageLoadingOverlay } from '../core/dom/DomUtils.ts';
 import { initTheme } from '../core/theme/ThemeManager.ts';
-import {
-  closeDrawer,
-  initNavigationDrawer,
-} from '../features/navigation-drawer/presentation/NavigationDrawer.ts';
+import { closeDrawer, initAppShell, profileShell } from './AppShell.ts';
 import { fetchBlogPosts } from '../features/blog/presentation/BlogPosts.ts';
 import { renderHomeFaqSection, initFaqPage } from '../features/faq/presentation/FaqPage.ts';
 import { fetchCommittersRanking } from '../features/resume/presentation/CommittersRanking.ts';
@@ -38,32 +31,54 @@ export function buildRouterOptions(): RouterOptions {
       if (document.getElementById('homeFaqList')) void renderHomeFaqSection();
     },
     pageHandlers: {
-      songs: () => { void loadSongs(); },
-      projects: () => { void initProjectsPage(); },
+      songs: () => {
+        void loadSongs();
+      },
+      projects: () => {
+        void initProjectsPage();
+      },
       resume: initResumePage,
       contact: initContactPage,
-      faqs: () => { void initFaqPage(); },
+      faqs: () => {
+        void initFaqPage();
+      },
       'smart-cleaner-for-android': initSmartCleanerPage,
     },
   };
 }
 
 function getRouteElement(event: MouseEvent): Element | null {
-  return event.composedPath().find((target): target is Element => (
-    target instanceof Element && target.matches('[href^="#"]')
-  )) ?? null;
+  return (
+    event
+      .composedPath()
+      .find(
+        (target): target is Element => target instanceof Element && target.matches('[href^="#"]'),
+      ) ?? null
+  );
 }
 
 function setupRouteLinkInterception(): void {
-  document.addEventListener('click', (event) => {
-    const routeElement = getRouteElement(event);
-    if (!routeElement || routeElement.getAttribute('target') === '_blank') return;
+  document.addEventListener(
+    'click',
+    (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+        return;
+      if (
+        event
+          .composedPath()
+          .some((target) => target instanceof Element && target.localName === 'mnw-navigation-item')
+      )
+        return;
+      const routeElement = getRouteElement(event);
+      if (!routeElement || routeElement.getAttribute('target') === '_blank') return;
 
-    const href = routeElement.getAttribute('href');
-    if (!href || !isRegisteredRoute(href)) return;
-    event.preventDefault();
-    void loadPageContent(normalizePageId(href));
-  }, true);
+      const href = routeElement.getAttribute('href');
+      if (!href || !isRegisteredRoute(href)) return;
+      event.preventDefault();
+      void loadPageContent(normalizePageId(href));
+    },
+    true,
+  );
 }
 
 function initProfileAvatarFallback(): void {
@@ -86,21 +101,18 @@ function initializeApp(): void {
 
   const pageContentArea = document.getElementById('pageContentArea');
   const initialHome = document.getElementById('mainContentPage');
-  const appBarHeadline = document.getElementById('appBarHeadline');
+  const shell = profileShell();
   if (!pageContentArea || !initialHome) {
     throw new Error('The application shell is incomplete.');
   }
 
   initProfileAvatarFallback();
-  setCopyrightYear();
   initTheme();
-  initNavigationDrawer();
-  initRouter(pageContentArea, appBarHeadline, initialHome.outerHTML, buildRouterOptions());
+  initAppShell();
+  initRouter(pageContentArea, shell, initialHome.outerHTML, buildRouterOptions());
   setupRouteLinkInterception();
 
-  const initialRoute = isRegisteredRoute(window.location.hash)
-    ? window.location.hash
-    : '#home';
+  const initialRoute = isRegisteredRoute(window.location.hash) ? window.location.hash : '#home';
   void loadPageContent(initialRoute, false);
 
   window.addEventListener('hashchange', () => {

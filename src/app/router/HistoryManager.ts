@@ -1,7 +1,12 @@
+import type { MaterialNextAppShell } from 'material-next-web-components/app-shell.js';
+
 export const DOCUMENT_TITLE_SUFFIX = " - Mihai's Profile";
 
-export function updateTitle(appBarHeadline: HTMLElement | null, pageTitle: string): void {
-  if (appBarHeadline) appBarHeadline.textContent = pageTitle;
+export function updateTitle(
+  appBarHeadline: Pick<MaterialNextAppShell, 'heading'> | null,
+  pageTitle: string,
+): void {
+  if (appBarHeadline) appBarHeadline.heading = pageTitle;
   document.title = `${pageTitle}${DOCUMENT_TITLE_SUFFIX}`;
 }
 

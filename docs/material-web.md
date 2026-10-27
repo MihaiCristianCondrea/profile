@@ -1,6 +1,6 @@
 # Material Web usage
 
-This project uses Material Web 2.4.1 from the npm dependency and bundles it with
+This project uses Material Web 2.5 from the npm dependency and bundles it with
 Vite. The read-only source snapshot in `resources/material-web-components` may
 be inspected to confirm supported properties, slots, events, and tokens.
 
@@ -120,24 +120,18 @@ Material button. Standalone icon buttons need an accessible `aria-label`.
 
 ## Drawer disclosure groups
 
-Material Web provides the modal drawer and item layout, but it does not provide
-a dedicated accordion API for drawer categories. The profile drawer therefore
-uses app-owned disclosure groups composed around `md-item` elements.
+Material Web provides primitives, but it does not provide
+a dedicated accordion API for drawer categories. Material Next supplies
+`mnw-app-shell`, `mnw-navigation-item`, and `mnw-navigation-group` instead.
 
 This is an intentional information-architecture choice for shorter scrolling
 and clearer route grouping. It does not modify Material shadow DOM, state
 layers, ripple behavior, drawer elevation, or component shapes.
 
-Each disclosure header must:
-
-- use an `md-item` with `role="button"` and keyboard focus;
-- expose `aria-expanded` and `aria-controls`;
-- support Enter and Space activation;
-- keep the controlled group synchronized with `hidden` and `aria-hidden`;
-- automatically expand when one of its nested routes becomes active.
-
-Icons, selected states, and drawer surfaces remain Material components.
-Application CSS is limited to hierarchy, indentation, spacing, and visibility.
+The shared group uses a native button with `aria-expanded` and `aria-controls`,
+Enter and Space activation, inert collapsed content, and active-route expansion.
+Profile supplies labels, icons and destinations through the documented slots.
+Do not recreate its focus handling, animations or state layers in application CSS.
 
 ## Styling contract
 
@@ -177,7 +171,7 @@ featureSelector.addEventListener('segmented-button-set-selection', (event) => {
 ```
 
 Do not bind `click` on each `md-outlined-segmented-button` and assign `selected`
-by hand. Likewise, read the projects filter from `md-tabs.activeTab` rather than
+by hand. Likewise, read the projects filter from `mnw-expressive-tab-bar.activeIndex` rather than
 querying the reflected `[active]` attribute.
 
 Because these elements delegate ARIA into their shadow root, put `aria-label` on
@@ -186,9 +180,8 @@ attach to and is ignored by assistive technology.
 
 ## Labs components
 
-Cards and the modal navigation drawer are labs components. Their APIs may
-change, so inspect the matching 2.4.1 files under
-`resources/material-web-components/labs` before upgrading. Production imports
+Cards are Material Web labs components. Check the installed package version
+before upgrading; the read-only reference snapshot may be older. Production imports
 must still point to `@material/web/labs/...`.
 
 ## Fallback policy

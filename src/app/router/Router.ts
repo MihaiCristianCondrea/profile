@@ -1,3 +1,4 @@
+import type { MaterialNextAppShell } from 'material-next-web-components/app-shell.js';
 import type { PageLoadCallback, RouterOptions } from '../../core/types/index.ts';
 import { SITE_TITLE } from '../../core/metadata/SiteMetadata.ts';
 import { updateMetadataForRoute } from '../../core/metadata/MetadataManager.ts';
@@ -10,7 +11,7 @@ export { normalizeRouteId as normalizePageId };
 const NOOP = (): void => undefined;
 
 let pageContentArea: HTMLElement | null = null;
-let appBarHeadline: HTMLElement | null = null;
+let appBarHeadline: MaterialNextAppShell | null = null;
 let initialHomepageHTML = '';
 let loadSequence = 0;
 
@@ -39,7 +40,7 @@ function runCallback(callback: PageLoadCallback | null | undefined, description:
 
 export function initRouter(
   contentAreaElement: HTMLElement | null,
-  headlineElement: HTMLElement | null,
+  headlineElement: MaterialNextAppShell | null,
   homeHtml: string,
   options: RouterOptions = {},
 ): void {
@@ -68,13 +69,8 @@ function runPageHandler(pageId: string): void {
 export function updateActiveNavLink(currentPageId: string): void {
   const normalizedCurrentPage = normalizeRouteId(currentPageId);
 
-  document.querySelectorAll<HTMLElement>('#navDrawer .nav-item[href^="#"]').forEach((item) => {
-    const selected = normalizeRouteId(item.getAttribute('href') ?? '') === normalizedCurrentPage;
-    item.toggleAttribute('data-active', selected);
-    if (selected) item.setAttribute('aria-current', 'page');
-    else item.removeAttribute('aria-current');
-    item.querySelector('md-icon')?.classList.toggle('filled-icon', selected);
-  });
+  const shell = document.querySelector<MaterialNextAppShell>('#profile-shell');
+  if (shell) shell.activePath = `#${normalizedCurrentPage}`;
 }
 
 export async function loadPageContent(pageId: string, updateHistory = true): Promise<void> {
@@ -98,7 +94,10 @@ export async function loadPageContent(pageId: string, updateHistory = true): Pro
     if (result.status === 'success') {
       runPageHandler(normalizedPageId);
     } else if (result.error) {
-      console.error(`Router: Failed to load ${result.sourceTitle ?? normalizedPageId}.`, result.error);
+      console.error(
+        `Router: Failed to load ${result.sourceTitle ?? normalizedPageId}.`,
+        result.error,
+      );
     }
 
     const pageTitle = result.title || routeConfig?.title || SITE_TITLE;

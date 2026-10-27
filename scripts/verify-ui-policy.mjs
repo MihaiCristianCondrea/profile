@@ -79,7 +79,7 @@ assertIncludes(homeHtml, '<md-filled-card class="contribute-card">', 'Contributi
 assertIncludes(homeHtml, '<meta name="theme-color" content="#4285F4" />', 'Browser theme color');
 assertIncludes(
   homeHtml,
-  '<main class="content-wrapper" id="pageContentArea" data-drawer-inert-target>',
+  '<div class="content-wrapper" id="pageContentArea">',
   'Semantic application shell',
 );
 assertIncludes(
@@ -89,10 +89,7 @@ assertIncludes(
 );
 assertIncludes(
   homeHtml,
-  '<footer class="app-footer" data-drawer-inert-target>\n'
-    + '      <div class="footer-shell">\n'
-    + '        <span id="copyright-message"></span>\n'
-    + '        <nav class="social-icons" aria-label="Social profiles">',
+  '<mnw-site-footer slot="footer" start-year="2020">',
   'Footer social shell',
 );
 

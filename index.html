@@ -77,178 +77,28 @@
       <md-circular-progress indeterminate></md-circular-progress>
     </div>
 
-    <div id="drawer-layer" class="drawer-layer" aria-hidden="true">
-      <md-navigation-drawer-modal
-        id="navDrawer"
-        class="drawer"
-        pivot="start"
-        aria-label="Site navigation"
-        aria-modal="true"
-      >
-        <div class="drawer-header">
-          <h2>Menu</h2>
-          <md-icon-button
-            id="closeDrawerButton"
-            type="button"
-            aria-label="Close menu"
-          >
-            <md-icon>close</md-icon>
-          </md-icon-button>
-        </div>
-        <div class="drawer-body">
-          <div class="drawer-content">
-            <md-item id="navHomeLink" class="nav-item" href="#home" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">home</md-icon>
-              Home
-            </md-item>
-            <md-item
-              class="nav-item"
-              href="https://d4rk7355608.blogspot.com/"
-              target="_blank"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">article</md-icon>
-              Blogs
-              <md-icon slot="end">open_in_new</md-icon>
-            </md-item>
-            <md-item id="navSongsLink" class="nav-item" href="#songs" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">music_note</md-icon>
-              Music
-            </md-item>
-            <md-item id="navProjectsLink" class="nav-item" href="#projects" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">work</md-icon>
-              Projects
-            </md-item>
-            <md-item id="navFaqsLink" class="nav-item" href="#faqs" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">quiz</md-icon>
-              FAQ &amp; Support
-            </md-item>
-            <md-item id="navContactLink" class="nav-item" href="#contact" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">contact_mail</md-icon>
-              Contact
-            </md-item>
-            <md-item id="navAboutMeLink" class="nav-item" href="#about-me" role="link" tabindex="0">
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">person</md-icon>
-              About Me
-            </md-item>
-            <md-item
-              id="navSmartCleanerLink"
-              class="nav-item"
-              href="#smart-cleaner-for-android"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">cleaning_services</md-icon>
-              Smart Cleaner for Android
-            </md-item>
-            <md-item
-              id="navAdsHelpCenterLink"
-              class="nav-item"
-              href="#ads-help-center"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">ads_click</md-icon>
-              Ads Help Center
-            </md-item>
-            <md-item
-              class="nav-item"
-              href="#privacy-policy-end-user-software"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">privacy_tip</md-icon>
-              App Privacy Policy
-            </md-item>
-            <md-item
-              class="nav-item"
-              href="#terms-of-service-end-user-software"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">gavel</md-icon>
-              Terms of Service
-            </md-item>
-            <md-item
-              id="navLegalNoticesLink"
-              class="nav-item"
-              href="#legal-notices"
-              role="link"
-              tabindex="0"
-            >
-              <span class="nav-item-container" slot="container" aria-hidden="true"></span>
-              <md-icon slot="start">policy</md-icon>
-              Legal Notices
-            </md-item>
-          </div>
-          <div class="drawer-footer" aria-label="Theme and legal settings">
-            <p class="drawer-footer-label">Theme</p>
-            <div class="theme-options" role="group" aria-label="Theme options">
-              <md-icon-button
-                id="lightThemeButton"
-                class="theme-option"
-                type="button"
-                aria-label="Light theme"
-                data-theme="light"
-              >
-                <md-icon>light_mode</md-icon>
-              </md-icon-button>
-              <md-icon-button
-                id="darkThemeButton"
-                class="theme-option"
-                type="button"
-                aria-label="Dark theme"
-                data-theme="dark"
-              >
-                <md-icon>dark_mode</md-icon>
-              </md-icon-button>
-              <md-icon-button
-                id="autoThemeButton"
-                class="theme-option"
-                type="button"
-                aria-label="Auto theme"
-                data-theme="auto"
-              >
-                <md-icon>brightness_auto</md-icon>
-              </md-icon-button>
-            </div>
-            <div class="drawer-links">
-              <a href="#privacy-policy">Privacy Policy</a>
-              <span aria-hidden="true">·</span>
-              <a href="#code-of-conduct">Code of Conduct</a>
-            </div>
-          </div>
-        </div>
-      </md-navigation-drawer-modal>
-    </div>
-
-    <header class="topbar" id="topAppBar" data-drawer-inert-target>
-      <div class="topbar-title">
-        <md-icon-button
-          id="menuButton"
-          type="button"
-          aria-label="Open menu"
-          aria-expanded="false"
-        >
-          <md-icon id="menuButtonIcon">menu</md-icon>
-        </md-icon-button>
-        <h1 id="appBarHeadline">Home</h1>
+    <mnw-app-shell id="profile-shell" heading="Home" navigation-mode="modal" navigation-label="Site navigation">
+      <a slot="brand" class="profile-brand" href="#home">Mihai-Cristian Condrea</a>
+      <div slot="navigation">
+        <mnw-navigation-item href="#home" icon="home" match="exact">Home</mnw-navigation-item>
+        <mnw-navigation-item href="https://d4rk7355608.blogspot.com/" target="_blank" icon="article">Blogs</mnw-navigation-item>
+        <mnw-navigation-item href="#songs" icon="music_note">Music</mnw-navigation-item>
+        <mnw-navigation-item href="#projects" icon="work">Projects</mnw-navigation-item>
+        <mnw-navigation-item href="#faqs" icon="quiz">FAQ &amp; Support</mnw-navigation-item>
+        <mnw-navigation-group label="Profile" icon="account_circle">
+          <mnw-navigation-item href="#contact" icon="contact_mail">Contact</mnw-navigation-item>
+          <mnw-navigation-item href="#about-me" icon="person">About Me</mnw-navigation-item>
+        </mnw-navigation-group>
+        <mnw-navigation-group label="Android Apps" icon="apps">
+          <mnw-navigation-item href="#smart-cleaner-for-android" icon="cleaning_services">Smart Cleaner for Android</mnw-navigation-item>
+          <mnw-navigation-item href="#ads-help-center" icon="ads_click">Ads Help Center</mnw-navigation-item>
+          <mnw-navigation-item href="#privacy-policy-end-user-software" icon="privacy_tip">App Privacy Policy</mnw-navigation-item>
+          <mnw-navigation-item href="#terms-of-service-end-user-software" icon="gavel">Terms of Service</mnw-navigation-item>
+          <mnw-navigation-item href="#legal-notices" icon="policy">Legal Notices</mnw-navigation-item>
+        </mnw-navigation-group>
       </div>
-    </header>
-
-    <main class="content-wrapper" id="pageContentArea" data-drawer-inert-target>
+      <mnw-app-shell-footer slot="navigation-footer" privacy-href="#privacy-policy" code-of-conduct-href="#code-of-conduct"></mnw-app-shell-footer>
+    <div class="content-wrapper" id="pageContentArea">
       <section id="mainContentPage" class="page-section active">
         <md-filled-card class="profile-card">
           <div class="card-content">
@@ -428,12 +278,9 @@
           </div>
         </md-filled-card>
       </section>
-    </main>
+    </div>
 
-    <footer class="app-footer" data-drawer-inert-target>
-      <div class="footer-shell">
-        <span id="copyright-message"></span>
-        <nav class="social-icons" aria-label="Social profiles">
+      <mnw-site-footer slot="footer" start-year="2020">
           <md-icon-button
             href="https://github.com/MihaiCristianCondrea"
             target="_blank"
@@ -497,8 +344,7 @@
           >
             <i class="fab fa-facebook-f" aria-hidden="true"></i>
           </md-icon-button>
-        </nav>
-      </div>
-    </footer>
+      </mnw-site-footer>
+    </mnw-app-shell>
   </body>
 </html>

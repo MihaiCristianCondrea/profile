@@ -1,6 +1,5 @@
 import {
   hidePageLoadingOverlay,
-  setCopyrightYear,
   showPageLoadingOverlay,
 } from '../../../src/core/dom/DomUtils';
 
@@ -44,21 +43,4 @@ describe('DOM utility helpers', () => {
     }).not.toThrow();
   });
 
-  test('setCopyrightYear renders a range once the site is older than a year', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2027-06-01T00:00:00Z'));
-
-    setCopyrightYear();
-
-    expect(document.getElementById('copyright-message')?.textContent)
-      .toBe('Copyright © 2025–2027, Mihai-Cristian Condrea');
-  });
-
-  test('setCopyrightYear renders a single year during the first year', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2025-03-01T00:00:00Z'));
-
-    setCopyrightYear();
-
-    expect(document.getElementById('copyright-message')?.textContent)
-      .toBe('Copyright © 2025, Mihai-Cristian Condrea');
-  });
 });

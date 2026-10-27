@@ -1,11 +1,7 @@
 <div id="projectsPageContainer" class="page-section active">
   <h1>Projects</h1>
   <p class="projects-intro">A selection of my work using Material Design.</p>
-  <md-tabs id="projectsFilterTabs" class="projects-filter-tabs">
-    <md-primary-tab data-category="all" active>All</md-primary-tab>
-    <md-primary-tab data-category="web">Web</md-primary-tab>
-    <md-primary-tab data-category="android">Android</md-primary-tab>
-  </md-tabs>
+  <mnw-expressive-tab-bar id="projectsFilterTabs" aria-label="Project category"></mnw-expressive-tab-bar>
   <div class="projects-list">
     <md-filled-card class="project-entry" data-category="web">
       <div class="project-content">
@@ -54,16 +50,6 @@
         </div>
       </div>
     </md-filled-card>
-    <div
-      id="androidProjectsContainer"
-      class="projects-android"
-      data-loading
-      data-category="android"
-    >
-      <div class="projects-loading">
-        <md-circular-progress indeterminate aria-hidden="true"></md-circular-progress>
-        <p>Loading Android apps…</p>
-      </div>
-    </div>
+    <mnw-app-showcase id="androidProjectsContainer" data-category="android" headline="Android apps" limit="50"></mnw-app-showcase>
   </div>
 </div>

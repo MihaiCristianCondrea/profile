@@ -40,7 +40,6 @@ src/
     |-- blog/
     |-- faq/
     |-- legal/
-    |-- navigation-drawer/
     |-- profile/
     |-- projects/
     |-- resume/
@@ -65,7 +64,8 @@ Layer responsibilities inside a feature:
 
 Remote and imported values reach the DOM only after normalization. Any value used
 as a link or image source goes through `src/core/dom/SafeUrl.ts`, which keeps only
-`http:` and `https:` URLs.
+`http:` and `https:` URLs. Material Next owns the equivalent validation for its
+remote app showcase metadata.
 
 ## Routing and static fragments
 
@@ -79,8 +79,8 @@ from those fields, so the three copies never drift apart. `normalizeRouteId` is
 the single hash-to-route-id normalizer, re-exported by `Router.ts` as
 `normalizePageId`.
 
-Site-wide identity — title, description, keywords, share image, Twitter handle,
-canonical base URL — lives in `src/core/metadata/SiteMetadata.ts`. Both the route
+Site-wide identity (title, description, keywords, share image, Twitter handle,
+canonical base URL) lives in `src/core/metadata/SiteMetadata.ts`. Both the route
 table and the runtime metadata writer read it, so changing the site title is a
 one-line edit.
 
@@ -120,3 +120,17 @@ hover zoom/elevation behavior to Material controls.
 Run `npm run check` before merging when dependencies are available. It runs
 tests, TypeScript validation, the production build, route-fragment generation,
 SEO checks, and production-asset verification.
+
+## Material Next integration
+
+Material Next owns the modal drawer, expandable navigation groups, top app bar, drawer theme controls,
+site footer, expressive project tabs and Android app showcase. The drawer starts closed at desktop
+and phone widths. `src/app/AppShell.ts` binds its cancelable navigation requests to the existing
+hash router. The router owns history, loading, metadata and content; `active-path` carries the hash.
+
+ThemeManager keeps the existing `theme` preference and palette, mapping `auto` to the shared footer's
+`system` mode. Social links remain authored in `index.html`. The shared footer owns the copyright
+range. The app showcase loads the public apps metadata API and validates its external URLs.
+
+The previous navigation-drawer feature, shell stylesheet, copyright helper and Android app card
+renderer/data source have been removed. Material registration remains centralized.
