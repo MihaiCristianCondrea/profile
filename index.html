@@ -77,11 +77,10 @@
       <md-circular-progress indeterminate></md-circular-progress>
     </div>
 
-    <mnw-app-shell id="profile-shell" heading="Home" navigation-mode="modal" navigation-label="Site navigation">
-      <a slot="brand" class="profile-brand" href="#home">Mihai-Cristian Condrea</a>
+    <mnw-app-shell id="profile-shell" heading="Home" navigation-mode="modal" navigation-label="Site navigation" appearance="outlined" drawer-heading="Menu" navigation-size="large">
       <div slot="navigation">
         <mnw-navigation-item href="#home" icon="home" match="exact">Home</mnw-navigation-item>
-        <mnw-navigation-item href="https://d4rk7355608.blogspot.com/" target="_blank" icon="article">Blogs</mnw-navigation-item>
+        <mnw-navigation-item href="https://d4rk7355608.blogspot.com/" target="_blank" icon="article" trailing-icon="open_in_new">Blogs</mnw-navigation-item>
         <mnw-navigation-item href="#songs" icon="music_note">Music</mnw-navigation-item>
         <mnw-navigation-item href="#projects" icon="work">Projects</mnw-navigation-item>
         <mnw-navigation-item href="#faqs" icon="quiz">FAQ &amp; Support</mnw-navigation-item>

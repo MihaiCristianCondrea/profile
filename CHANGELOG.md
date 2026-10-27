@@ -8,10 +8,15 @@
 
 ### Changed
 
-- Pin the shared library to tested source commit `a4c1bbd` until npm 0.0.4 is available.
-
+- Pin the shared library to tested source commit `03707ca` until npm 0.0.4 is available.
+- Outlined top app bar and drawer with a plain **Menu** title instead of the site name, 56dp drawer destinations, and the open-in-new icon back on Blogs.
 - Use shared drawer theme controls, expressive project tabs, and Android app showcase while preserving hash routes, page content, the site palette, and eight social links.
 - Update compatible development dependencies to resolve two Vite security advisories.
+
+### Fixed
+
+- The drawer's theme picker and policy links scrolled away with the destinations; they now stay at the bottom.
+- Drawer destinations had no space between them.
 
 ### Removed
 
