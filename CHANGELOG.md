@@ -15,6 +15,7 @@
 
 ### Fixed
 
+- Pin Material Next to `cf79323` for aligned mobile drawer and app-bar dividers, smoother launcher editing and pointer-following drag motion, pending its npm release.
 - The drawer's theme picker and policy links scrolled away with the destinations; they now stay at the bottom.
 - Drawer destinations had no space between them.
 
