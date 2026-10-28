@@ -2,9 +2,8 @@
 
 This repository contains the source for a personal profile site built as a small Single Page Application (SPA). The site presents information about Mihai-Cristian Condrea and includes additional pages such as a privacy policy and code of conduct. It is designed as a Progressive Web App using Material Web Components and TypeScript (compiled to browser JavaScript).
 
-Material Next is pinned to source commit `a4c1bbd` until its new drawer category and
-site footer components are released on npm. Installation requires Git and Node.js 24.
-The package builds from source during `npm install`; no library files are copied into this repo.
+Material Next `0.0.7` is installed from npm. Installation requires Node.js 24.
+The published package includes its built components; no library files are copied into this repo.
 
 ## Features
 
