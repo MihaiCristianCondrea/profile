@@ -1,159 +1,290 @@
-import { fetchSmartCleanerMetadata } from '../data/SmartCleanerDataSource.ts';
+import type { ScreenHost, ScreenState } from 'material-next-web-components/marketing.js';
+import { clamp01, startScrollScenes, within } from './ScrollScenes.ts';
 import {
-  CLEANER_FEATURES,
-  isCleanerFeatureKey,
-  type CleanerFeatureKey,
-} from '../domain/CleanerFeature.ts';
-import { startScrollMotion } from './ScrollMotion.ts';
+  isPartName,
+  loadSmartCleanerUiKit,
+  type SmartCleanerTheme,
+  type SmartCleanerUiKit,
+} from './SmartCleanerUiKit.ts';
 
-/** Detail carried by `md-outlined-segmented-button-set`'s selection event. */
-interface SegmentedButtonSelectionEvent extends Event {
-  detail?: { button?: HTMLElement };
-}
-
-const FEATURE_SWAP_DELAY_MS = 130;
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
+/** The framed Pixel 9 Pro XL from Material Next's device frames, in CSS pixels. */
+const DEVICE_WIDTH = 469;
+const DEVICE_HEIGHT = 992;
+/** The site's top app bar plus breathing room around a pinned phone. */
+const VIEWPORT_CHROME = 150;
+const LOGO_DURATION_MS = 900;
+/** Storage categories, in the ring's order (motion/storage-ring.js). */
+const CATEGORY_IDS = ['images', 'videos', 'apps', 'downloads', 'system'] as const;
 
 function reduceMotionEnabled(): boolean {
   return typeof window.matchMedia === 'function'
     && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+function siteTheme(): SmartCleanerTheme {
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+}
+
+/** `data-state` is authored JSON; anything else falls back to the screen's defaults. */
+export function parseScreenState(source: string | undefined): ScreenState | undefined {
+  if (!source) return undefined;
+  try {
+    const value: unknown = JSON.parse(source);
+    return value && typeof value === 'object' && !Array.isArray(value) ? value as ScreenState : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Scale that fits the framed phone inside `maxHeight` and the stage width. */
+export function deviceZoom(stageWidth: number, maxHeight: number): number {
+  const byHeight = maxHeight / DEVICE_HEIGHT;
+  const byWidth = stageWidth > 0 ? stageWidth / DEVICE_WIDTH : byHeight;
+  return Math.max(0.3, Math.min(byHeight, byWidth));
+}
+
+/**
+ * Height for a phone pinned in a scene. On one-column layouts the copy shares
+ * the viewport with it, so the phone takes a little over half.
+ */
+export function viewportDeviceHeight(width: number, height: number): number {
+  return width < 900 ? Math.max(320, height * 0.56) : Math.min(840, height - VIEWPORT_CHROME);
+}
+
+/**
+ * Quick Clean, scrubbed: the first 70% of the scene runs the scan from 0 to
+ * 100%, and from 80% the screen shows its finished state, which then animates
+ * in on the screen's own clock.
+ */
+export function quickCleanState(progress: number): ScreenState {
+  if (progress >= 0.8) return { phase: 'done' };
+  return { phase: 'scanning', progress: within(progress, 0, 0.7), running: false, derive: true };
+}
+
+/** Gallery Swipe Cleaner, scrubbed: the card leans left (delete), then right (keep), then rests. */
+export function swipeDrag(progress: number): number {
+  return -Math.sin(clamp01(progress) * Math.PI * 2) * 0.85;
+}
+
+/** Runs `onVisible` the first time `el` is at least half on screen. */
+function whenVisible(el: Element, onVisible: () => void, cleanups: Array<() => void>): void {
+  if (typeof IntersectionObserver !== 'function') {
+    onVisible();
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    onVisible();
+  }, { threshold: 0.5 });
+  observer.observe(el);
+  cleanups.push(() => observer.disconnect());
+}
+
+function animateLogo(kit: SmartCleanerUiKit, el: HTMLElement, size: number, still: boolean): void {
+  if (still || typeof requestAnimationFrame !== 'function') {
+    kit.renderLogo(el, size, 1);
+    return;
+  }
+  kit.renderLogo(el, size, 0);
+  let start = 0;
+  const frame = (now: number): void => {
+    start ||= now;
+    const progress = Math.min(1, (now - start) / LOGO_DURATION_MS);
+    kit.renderLogo(el, size, progress);
+    if (progress < 1 && el.isConnected) requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
+/** Numeric state values: the screen's scroll offsets live among them. */
+function numericSnapshot(state: ScreenState): string {
+  return Object.entries(state)
+    .filter(([, value]) => typeof value === 'number')
+    .map(([key, value]) => `${key}:${String(value)}`)
+    .join('|');
+}
+
+function scrollContainerOf(event: Event): Element | null {
+  for (const node of event.composedPath()) {
+    if (!(node instanceof Element)) continue;
+    const { overflowY } = getComputedStyle(node);
+    if ((overflowY === 'auto' || overflowY === 'scroll') && node.scrollHeight > node.clientHeight) return node;
+  }
+  return document.scrollingElement;
+}
+
+/**
+ * The kit scrolls a screen from state and always cancels the wheel event, so a
+ * wheel over a phone would never reach the page. When the screen did not move
+ * (it is at its top or bottom, or does not scroll), hand the wheel back.
+ */
+function releaseWheelAtEdges(device: HTMLElement, host: () => ScreenHost | undefined, cleanups: Array<() => void>): void {
+  let before = '';
+  const capture = (): void => {
+    const current = host();
+    before = current ? numericSnapshot(current.state) : '';
+  };
+  const bubble = (event: WheelEvent): void => {
+    const current = host();
+    if (!event.defaultPrevented || !current || numericSnapshot(current.state) !== before) return;
+    scrollContainerOf(event)?.scrollBy({ top: event.deltaY, left: event.deltaX });
+  };
+  device.addEventListener('wheel', capture, { capture: true, passive: true });
+  device.addEventListener('wheel', bubble);
+  cleanups.push(() => {
+    device.removeEventListener('wheel', capture, { capture: true });
+    device.removeEventListener('wheel', bubble);
+  });
+}
+
 export function initSmartCleanerPage(): void {
   const page = document.getElementById('smartCleanerPageContainer');
   if (!page) return;
 
-  const query = <T extends HTMLElement>(selector: string): T | null => page.querySelector<T>(selector);
-  const reduceMotion = reduceMotionEnabled();
+  const still = reduceMotionEnabled();
+  page.classList.toggle('is-still', still);
+  const cleanups: Array<() => void> = [];
+  const hosts = new Map<HTMLElement, ScreenHost>();
 
-  // --- Feature switcher ---------------------------------------------------
-
-  const featureSelector = query<HTMLElement>('#featureSelector');
-  const featureTitle = query<HTMLElement>('#featureTitle');
-  const featureDescription = query<HTMLElement>('#featureDescription');
-  const featureImage = query<HTMLImageElement>('#featureImage');
-  const featureBullets = query<HTMLUListElement>('#featureBullets');
-  const featureBadge = query<HTMLElement>('#featureBadgeValue');
-  const featureShotCard = query<HTMLElement>('#featureShotCard');
-
-  const showFeature = (key: CleanerFeatureKey): void => {
-    const feature = CLEANER_FEATURES[key];
-
-    featureShotCard?.classList.add('is-changing');
-    window.setTimeout(() => {
-      if (!page.isConnected) return;
-      if (featureTitle) featureTitle.textContent = feature.title;
-      if (featureDescription) featureDescription.textContent = feature.description;
-      if (featureImage) {
-        featureImage.src = feature.image;
-        featureImage.alt = feature.alt;
-      }
-      featureShotCard?.classList.toggle('is-wear', feature.isWear);
-      if (featureBadge) featureBadge.textContent = feature.badge;
-      if (featureBullets) {
-        featureBullets.replaceChildren(...feature.bullets.map(({ icon, label }) => {
-          const item = document.createElement('li');
-          const materialIcon = document.createElement('md-icon');
-          const text = document.createElement('span');
-          materialIcon.textContent = icon;
-          text.textContent = label;
-          item.append(materialIcon, text);
-          return item;
-        }));
-      }
-      featureShotCard?.classList.remove('is-changing');
-    }, FEATURE_SWAP_DELAY_MS);
+  const applyTheme = (): void => {
+    const theme = siteTheme();
+    page.dataset.theme = theme;
+    hosts.forEach((host) => host.setOptions({ theme }));
   };
+  applyTheme();
+  const themeObserver = new MutationObserver(applyTheme);
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  cleanups.push(() => themeObserver.disconnect());
 
-  // The segmented button set owns selection state: it deselects the previous
-  // button and reports the new one. This listener only renders the result.
-  featureSelector?.addEventListener('segmented-button-set-selection', (event) => {
-    const key = (event as SegmentedButtonSelectionEvent).detail?.button?.dataset.feature;
-    if (isCleanerFeatureKey(key)) showFeature(key);
-  });
-
-  // --- Screenshot gallery -------------------------------------------------
-
-  const galleryTrack = query<HTMLElement>('#galleryTrack');
-  const galleryProgress = query<HTMLElement>('#galleryProgress');
-  const galleryShots = galleryTrack ? Array.from(galleryTrack.querySelectorAll<HTMLElement>('.sc-shot')) : [];
-
-  const updateGallery = (): void => {
-    if (!galleryTrack) return;
-    const track = galleryTrack.getBoundingClientRect();
-    const centre = track.left + track.width / 2;
-    const distance = Math.max(track.width * .58, 1);
-    const measured = galleryShots.map((shot) => shot.getBoundingClientRect());
-    measured.forEach((rect, index) => {
-      const normalized = clamp((rect.left + rect.width / 2 - centre) / distance, -1, 1);
-      const closeness = 1 - Math.abs(normalized);
-      const style = galleryShots[index].style;
-      style.setProperty('--shot-rotate', `${normalized * -9}deg`);
-      style.setProperty('--shot-y', `${(1 - closeness) * 16}px`);
-      style.setProperty('--shot-scale', `${.92 + closeness * .08}`);
-      style.setProperty('--shot-opacity', `${.55 + closeness * .45}`);
+  const devices = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-device[data-screen]'));
+  const fitDevices = (): void => {
+    devices.forEach((device) => {
+      const stage = device.parentElement;
+      const maxHeight = device.dataset.deviceFit === 'viewport'
+        ? viewportDeviceHeight(window.innerWidth, window.innerHeight) - (Number(device.dataset.deviceReserve) || 0)
+        : Number(device.dataset.deviceHeight) || 720;
+      device.style.setProperty('--device-zoom', String(deviceZoom(stage?.clientWidth ?? 0, maxHeight)));
     });
-    const maxScroll = galleryTrack.scrollWidth - galleryTrack.clientWidth;
-    const progress = maxScroll > 0 ? galleryTrack.scrollLeft / maxScroll * 100 : 100;
-    galleryProgress?.style.setProperty('--gallery-progress', `${clamp(progress, 0, 100)}%`);
   };
+  fitDevices();
+  window.addEventListener('resize', fitDevices, { passive: true });
+  cleanups.push(() => window.removeEventListener('resize', fitDevices));
+  if (typeof ResizeObserver === 'function') {
+    const resizeObserver = new ResizeObserver(fitDevices);
+    devices.forEach((device) => device.parentElement && resizeObserver.observe(device.parentElement));
+    cleanups.push(() => resizeObserver.disconnect());
+  }
+  devices.forEach((device) => releaseWheelAtEdges(device, () => hosts.get(device), cleanups));
 
-  const scrollGallery = (direction: -1 | 1): void => {
-    if (!galleryTrack || galleryShots.length === 0) return;
-    const amount = galleryShots[0].getBoundingClientRect().width + 28;
-    galleryTrack.scrollBy({ left: direction * amount, behavior: reduceMotion ? 'auto' : 'smooth' });
+  const scenes = startScrollScenes({ still });
+  cleanups.push(() => scenes.stop());
+
+  // Tear everything down once the router swaps this page out.
+  const teardown = (): void => {
+    cleanups.splice(0).forEach((cleanup) => cleanup());
+    hosts.forEach((host) => host.destroy());
+    hosts.clear();
   };
-
-  query<HTMLElement>('#galleryPrev')?.addEventListener('click', () => scrollGallery(-1));
-  query<HTMLElement>('#galleryNext')?.addEventListener('click', () => scrollGallery(1));
-  galleryTrack?.addEventListener('scroll', updateGallery, { passive: true });
-  updateGallery();
-
-  const onResize = (): void => updateGallery();
-  window.addEventListener('resize', onResize, { passive: true });
-
-  // --- Scroll-driven motion -----------------------------------------------
-
-  const stopMotion = startScrollMotion(page, {
-    heroStage: query<HTMLElement>('#heroStage'),
-    problemSection: query<HTMLElement>('#smartCleanerProblemSection'),
-    featureStage: query<HTMLElement>('#featureStage'),
-    storyCards: Array.from(page.querySelectorAll<HTMLElement>('[data-parallax-story]')),
-    breathing: query<HTMLElement>('#smartCleanerBreathing'),
-    performance: query<HTMLElement>('#smartCleanerPerformance'),
-    finalCard: query<HTMLElement>('#finalCtaCard'),
-    onFrame: () => {
+  if (page.parentElement) {
+    const detachObserver = new MutationObserver(() => {
       if (page.isConnected) return;
-      stopMotion();
-      window.removeEventListener('resize', onResize);
-    },
-  });
+      detachObserver.disconnect();
+      teardown();
+    });
+    detachObserver.observe(page.parentElement, { childList: true });
+  }
 
-  // --- Live app metadata --------------------------------------------------
-
-  void fetchSmartCleanerMetadata().then(({ shortDescription, iconUrl }) => {
+  void loadSmartCleanerUiKit().then((kit) => {
     if (!page.isConnected) return;
+    page.classList.add('is-live');
 
-    const description = query<HTMLElement>('#appShortDescription');
-    if (description && shortDescription) description.textContent = shortDescription;
+    devices.forEach((device) => {
+      hosts.set(device, kit.mountScreen(device, device.dataset.screen ?? '', {
+        state: parseScreenState(device.dataset.state),
+        theme: siteTheme(),
+      }));
+    });
+    const hostOf = (selector: string): ScreenHost | undefined => {
+      const device = page.querySelector<HTMLElement>(selector);
+      return device ? hosts.get(device) : undefined;
+    };
 
-    const icon = query<HTMLImageElement>('#appIconLogo');
-    if (!icon || !iconUrl) return;
+    page.querySelectorAll<HTMLElement>('[data-part]').forEach((piece) => {
+      const name = piece.dataset.part;
+      if (isPartName(name)) kit.renderPart(piece, name);
+    });
 
-    // Preload off-DOM, then swap the generic Material glyph for the real app
-    // icon. A hidden <img> is display:none, so loading it in place would stall
-    // under lazy loading and never resolve; this also guarantees a broken URL
-    // simply leaves the fallback glyph in place.
-    const preload = new Image();
-    preload.addEventListener('load', () => {
-      if (!page.isConnected) return;
-      icon.src = iconUrl;
-      icon.hidden = false;
-      query<HTMLElement>('#appIconFallback')?.setAttribute('hidden', '');
-    }, { once: true });
-    preload.src = iconUrl;
+    const heroLogo = page.querySelector<HTMLElement>('#cleanerHeroLogo');
+    if (heroLogo) animateLogo(kit, heroLogo, 40, still);
+    const closingLogo = page.querySelector<HTMLElement>('#cleanerClosingLogo');
+    if (closingLogo) whenVisible(closingLogo, () => animateLogo(kit, closingLogo, 120, still), cleanups);
+
+    // Opening: CSS reads --p to fly the pieces into the phone. Once it has
+    // landed, the phone takes taps.
+    const assemble = page.querySelector<HTMLElement>('[data-scene="assemble"]');
+    if (assemble) scenes.add(assemble, (progress) => assemble.classList.toggle('is-assembled', progress > 0.55));
+
+    const quick = page.querySelector<HTMLElement>('[data-scene="quick"]');
+    const quickHost = hostOf('[data-screen="quick-clean"]');
+    const steps = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-steps [data-step]'));
+    if (quick && quickHost) {
+      scenes.add(quick, (progress) => {
+        const next = quickCleanState(progress);
+        if (next.phase !== 'done') quickHost.set(next);
+        else if (quickHost.state.phase !== 'done') {
+          // The finished screen eases in on its own clock; a still page shows it settled.
+          const entrance = still ? 1 : 0;
+          quickHost.set({ phase: 'done', running: false, heroIn: entrance, cardsIn: entrance });
+        }
+        const active = progress >= 0.8 ? 2 : progress >= 0.25 ? 1 : 0;
+        steps.forEach((step) => step.classList.toggle('is-active', Number(step.dataset.step) === active));
+      });
+    }
+
+    const swipe = page.querySelector<HTMLElement>('[data-scene="swipe"]');
+    const swipeHost = hostOf('[data-screen="gallery-cleaner"]');
+    if (swipe && swipeHost) {
+      scenes.add(swipe, (progress) => {
+        const drag = swipeDrag(progress);
+        swipe.style.setProperty('--lean', drag.toFixed(3));
+        const state = swipeHost.state as { phase?: string; dragging?: boolean; fling?: number };
+        if (state.phase === 'review' && !state.dragging && !state.fling) swipeHost.set({ drag, settle: false });
+      });
+    }
+
+    const storage = page.querySelector<HTMLElement>('[data-scene="storage"]');
+    const ring = page.querySelector<HTMLElement>('#cleanerRing');
+    const tiles = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-tile[data-category]'));
+    tiles.forEach((tile) => kit.renderCategoryTile(tile, tile.dataset.category ?? ''));
+    if (storage && ring) {
+      scenes.add(storage, (progress) => {
+        const peeled: string[] = [];
+        CATEGORY_IDS.forEach((id, index) => {
+          const lift = within(progress, 0.55 + index * 0.07, 0.67 + index * 0.07);
+          tiles.find((tile) => tile.dataset.category === id)?.style.setProperty('--t', lift.toFixed(3));
+          if (lift > 0) peeled.push(id);
+        });
+        kit.renderRing(ring, Math.round(Math.min(360, ring.clientWidth || 360)), within(progress, 0.05, 0.5), peeled);
+      });
+    }
+
+    const toolHost = hostOf('#cleanerToolDevice');
+    const tools = Array.from(page.querySelectorAll<HTMLElement>('#cleanerTools [data-tool]'));
+    tools.forEach((tool) => tool.addEventListener('click', () => {
+      const id = tool.dataset.tool;
+      if (!id || !toolHost) return;
+      // md-list-item moves aria-* onto its inner element, so the visual state
+      // rides on data-selected while aria-current keeps it announced.
+      tools.forEach((item) => {
+        item.toggleAttribute('data-selected', item === tool);
+        if (item === tool) item.setAttribute('aria-current', 'true');
+        else item.removeAttribute('aria-current');
+      });
+      toolHost.load(id);
+    }));
+  }).catch((error: unknown) => {
+    console.error('Smart Cleaner: the live app preview could not load.', error);
+    page.classList.add('is-offline');
   });
 }

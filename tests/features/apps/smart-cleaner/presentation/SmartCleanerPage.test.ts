@@ -1,81 +1,166 @@
-import { initSmartCleanerPage } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
+import {
+  deviceZoom,
+  initSmartCleanerPage,
+  parseScreenState,
+  quickCleanState,
+  swipeDrag,
+  viewportDeviceHeight,
+} from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
+import { loadSmartCleanerUiKit } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerUiKit';
 
-/**
- * Mirrors what `md-outlined-segmented-button-set` emits on user interaction.
- * The Material elements are not registered under jsdom, so the test stands in
- * for the component that would normally dispatch this.
- */
-function selectFeatureButton(buttonId: string): void {
-  const button = document.getElementById(buttonId) as HTMLElement;
-  document.getElementById('featureSelector')?.dispatchEvent(
-    new CustomEvent('segmented-button-set-selection', {
-      detail: { button, selected: true },
-      bubbles: true,
-      composed: true,
-    }),
-  );
+jest.mock('../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerUiKit', () => ({
+  loadSmartCleanerUiKit: jest.fn(),
+  isPartName: (value: string | undefined) => value === 'statusChip',
+}));
+
+interface FakeHost {
+  id: string;
+  state: Record<string, unknown>;
+  options: Record<string, unknown>;
+  set: jest.Mock;
+  load: jest.Mock;
+  setOptions: jest.Mock;
+  destroy: jest.Mock;
 }
 
+const flush = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
+
 describe('SmartCleanerPage', () => {
-  const originalObserver = window.IntersectionObserver;
-  const originalAnimationFrame = window.requestAnimationFrame;
-  const originalFetch = globalThis.fetch;
+  let hosts: FakeHost[];
+  let kit: Record<string, jest.Mock>;
 
   beforeEach(() => {
-    jest.useFakeTimers();
-    Reflect.deleteProperty(window, 'IntersectionObserver');
-    Reflect.deleteProperty(window, 'requestAnimationFrame');
-    globalThis.fetch = jest.fn().mockRejectedValue(new Error('offline')) as typeof fetch;
+    hosts = [];
+    kit = {
+      mountScreen: jest.fn((_el: HTMLElement, id: string, options: Record<string, unknown>) => {
+        const host: FakeHost = {
+          id,
+          state: { ...(options.state as object) },
+          options,
+          set: jest.fn(),
+          load: jest.fn(),
+          setOptions: jest.fn(),
+          destroy: jest.fn(),
+        };
+        hosts.push(host);
+        return host;
+      }),
+      renderLogo: jest.fn(),
+      renderPart: jest.fn(),
+      renderRing: jest.fn(),
+      renderCategoryTile: jest.fn(),
+    };
+    (loadSmartCleanerUiKit as jest.Mock).mockResolvedValue(kit);
+    document.documentElement.classList.remove('dark');
     document.body.innerHTML = `
-      <div id="smartCleanerPageContainer">
-        <md-outlined-segmented-button-set id="featureSelector">
-          <md-outlined-segmented-button selected data-feature="memory"></md-outlined-segmented-button>
-          <md-outlined-segmented-button id="duplicatesButton" data-feature="duplicates"></md-outlined-segmented-button>
-        </md-outlined-segmented-button-set>
-        <h3 id="featureTitle"></h3><p id="featureDescription"></p>
-        <img id="featureImage" /><ul id="featureBullets"></ul>
-        <span id="featureBadgeValue"></span><div id="featureShotCard"></div>
-        <div class="sc-reveal" id="revealItem"></div>
-        <button id="galleryPrev"></button><button id="galleryNext"></button>
-        <div id="galleryTrack"><div class="sc-shot" id="shotOne"></div><div class="sc-shot"></div></div>
-        <div id="galleryProgress"></div>
-      </div>`;
-    (document.getElementById('galleryTrack') as HTMLElement).scrollBy = jest.fn();
+      <main id="area">
+        <div id="smartCleanerPageContainer">
+          <section data-scene="assemble">
+            <div data-part="statusChip"></div>
+            <div class="cleaner-device" data-screen="dashboard" data-device-fit="viewport"></div>
+          </section>
+          <section data-scene="quick">
+            <ol class="cleaner-steps"><li data-step="0"></li><li data-step="1"></li><li data-step="2"></li></ol>
+            <div class="cleaner-device" data-screen="quick-clean" data-state='{"phase":"scanning","progress":0}'></div>
+          </section>
+          <div id="cleanerTools">
+            <button data-tool="duplicates" data-selected aria-current="true"></button>
+            <button data-tool="large-files" id="largeFilesTool"></button>
+          </div>
+          <div class="cleaner-device" id="cleanerToolDevice" data-screen="duplicates"></div>
+        </div>
+      </main>`;
   });
 
-  afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-  });
-
-  afterAll(() => {
-    if (originalObserver) window.IntersectionObserver = originalObserver;
-    if (originalAnimationFrame) window.requestAnimationFrame = originalAnimationFrame;
-    globalThis.fetch = originalFetch;
-  });
-
-  test('switches the interactive feature content', () => {
+  test('hosts every marked screen live, in the site theme, and renders the floating parts', async () => {
+    document.documentElement.classList.add('dark');
     initSmartCleanerPage();
-    expect(document.getElementById('revealItem')?.classList.contains('is-visible')).toBe(true);
+    await flush();
 
-    // The segmented button set owns selection and reports the chosen button
-    // through this event; the page only renders what the set decided.
-    selectFeatureButton('duplicatesButton');
-    jest.advanceTimersByTime(130);
-
-    expect(document.getElementById('featureTitle')?.textContent).toBe('Find duplicates instantly.');
-    expect((document.getElementById('featureImage') as HTMLImageElement).alt).toBe('Cleaner duplicate files detection screen');
-    expect(document.querySelectorAll('#featureBullets li')).toHaveLength(3);
+    expect(hosts.map((host) => host.id)).toEqual(['dashboard', 'quick-clean', 'duplicates']);
+    expect(hosts[1].state).toEqual({ phase: 'scanning', progress: 0 });
+    expect(hosts.every((host) => host.options.theme === 'dark')).toBe(true);
+    expect(kit.renderPart).toHaveBeenCalledWith(expect.any(HTMLElement), 'statusChip');
   });
 
-  test('moves the gallery by one card', () => {
-    const shot = document.getElementById('shotOne') as HTMLElement;
-    shot.getBoundingClientRect = jest.fn(() => ({ width: 280, height: 500, top: 0, right: 280, bottom: 500, left: 0, x: 0, y: 0, toJSON: () => ({}) }));
-    const track = document.getElementById('galleryTrack') as HTMLElement;
-
+  test('choosing a tool loads its screen and moves the selection', async () => {
     initSmartCleanerPage();
-    document.getElementById('galleryNext')?.click();
+    await flush();
+    document.getElementById('largeFilesTool')?.click();
 
-    expect(track.scrollBy).toHaveBeenCalledWith({ left: 308, behavior: 'smooth' });
+    const previous = document.querySelector('[data-tool="duplicates"]');
+    expect(hosts[2].load).toHaveBeenCalledWith('large-files');
+    expect(document.getElementById('largeFilesTool')?.getAttribute('aria-current')).toBe('true');
+    expect(document.getElementById('largeFilesTool')?.hasAttribute('data-selected')).toBe(true);
+    expect(previous?.hasAttribute('data-selected')).toBe(false);
+    expect(previous?.hasAttribute('aria-current')).toBe(false);
+  });
+
+  test('reduced motion shows every scene at its end state', async () => {
+    const matchMedia = window.matchMedia;
+    window.matchMedia = jest.fn().mockReturnValue({ matches: true }) as typeof window.matchMedia;
+    initSmartCleanerPage();
+    await flush();
+    window.matchMedia = matchMedia;
+
+    const page = document.getElementById('smartCleanerPageContainer');
+    expect(page?.classList.contains('is-still')).toBe(true);
+    expect(hosts[1].set).toHaveBeenCalledWith(expect.objectContaining({ phase: 'done', heroIn: 1, cardsIn: 1 }));
+    expect(document.querySelector('[data-step="2"]')?.classList.contains('is-active')).toBe(true);
+  });
+
+  test('releases the live screens when the router swaps the page out', async () => {
+    initSmartCleanerPage();
+    await flush();
+    document.getElementById('area')?.replaceChildren();
+    await flush();
+
+    expect(hosts.every((host) => host.destroy.mock.calls.length === 1)).toBe(true);
+  });
+
+  test('marks the page offline when the kit cannot load', async () => {
+    (loadSmartCleanerUiKit as jest.Mock).mockRejectedValue(new Error('offline'));
+    const error = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    initSmartCleanerPage();
+    await flush();
+
+    expect(document.getElementById('smartCleanerPageContainer')?.classList.contains('is-offline')).toBe(true);
+    error.mockRestore();
+  });
+});
+
+describe('scene choreography', () => {
+  test('Quick Clean scans over the first 70% and finishes from 80%', () => {
+    expect(quickCleanState(0)).toMatchObject({ phase: 'scanning', progress: 0 });
+    expect(quickCleanState(0.35)).toMatchObject({ phase: 'scanning', progress: 0.5 });
+    expect(quickCleanState(0.75)).toMatchObject({ phase: 'scanning', progress: 1 });
+    expect(quickCleanState(0.8)).toEqual({ phase: 'done' });
+  });
+
+  test('the swipe leans left first, then right, and rests at both ends', () => {
+    expect(swipeDrag(0)).toBeCloseTo(0);
+    expect(swipeDrag(0.25)).toBeCloseTo(-0.85);
+    expect(swipeDrag(0.75)).toBeCloseTo(0.85);
+    expect(swipeDrag(1)).toBeCloseTo(0);
+  });
+});
+
+describe('screen helpers', () => {
+  test('parseScreenState accepts only JSON objects', () => {
+    expect(parseScreenState('{"free":8}')).toEqual({ free: 8 });
+    expect(parseScreenState('[1]')).toBeUndefined();
+    expect(parseScreenState('not json')).toBeUndefined();
+    expect(parseScreenState(undefined)).toBeUndefined();
+  });
+
+  test('deviceZoom fits the phone in both the height cap and the stage width', () => {
+    expect(deviceZoom(1000, 496)).toBeCloseTo(0.5);
+    expect(deviceZoom(234.5, 992)).toBeCloseTo(0.5);
+    expect(deviceZoom(0, 496)).toBeCloseTo(0.5);
+  });
+
+  test('pinned phones share a narrow viewport with their copy', () => {
+    expect(viewportDeviceHeight(1440, 900)).toBe(750);
+    expect(viewportDeviceHeight(390, 800)).toBeCloseTo(448);
   });
 });

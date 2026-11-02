@@ -61,3 +61,11 @@ node scripts/verify-live-site.mjs https://mihaicristiancondrea.github.io/profile
 - `deepmerge` → `tools/deepmerge-safe/`. Upstream `deepmerge` has a prototype-poisoning advisory with no fixed release, and only `jest-config` uses it. The local package implements the same API (`deepmerge(a, b, options)` and `deepmerge.all`) and never copies `__proto__`, `constructor`, or `prototype`. Remove the override once a fixed `deepmerge` is published or Jest drops it.
 
 TypeScript stays on 6.x: TypeScript 7 (the native compiler) does not expose the JavaScript API that `ts-jest` needs.
+
+## Smart Cleaner presentation
+
+`#smart-cleaner-for-android` is reachable only by its link: it has no drawer entry, and
+`tests/features/apps/smart-cleaner/presentation/SmartCleanerDrawer.test.ts` keeps it that way.
+It renders the app's real screens from the vendored UI kit in `vendor/smart-cleaner-ui/` (see its
+README to update it) with runtime assets in `public/smart-cleaner-ui/`. The page is scroll-driven
+(`ScrollScenes.ts`); with reduced motion every scene rests at its final state.

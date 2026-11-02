@@ -20,7 +20,8 @@
     "verify:production-assets": "node scripts/verify-production-assets.mjs",
     "deploy": "npm run build && npm run verify:seo",
     "check": "npm run verify:security && npm test -- --runInBand && npm run deploy && npm run verify:production-assets",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "sync:smart-cleaner-ui": "node scripts/sync-smart-cleaner-ui.mjs"
   },
   "keywords": [],
   "author": "",

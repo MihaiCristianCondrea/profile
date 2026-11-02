@@ -144,10 +144,10 @@ const ROUTE_DEFINITIONS: readonly RouteDefinition[] = [
     id: 'smart-cleaner-for-android',
     title: 'Smart Cleaner for Android',
     path: 'content/features/apps/smart-cleaner/presentation/smart-cleaner-for-android.html',
-    description: 'Discover Smart Cleaner for Android, a storage-management utility with cleanup, analysis, privacy, automation, widgets, and Wear OS features.',
+    description: 'Smart Cleaner for Android: see what fills your storage, review it, and remove the files you no longer need. Quick Clean, Gallery Swipe Cleaner, duplicates, large files, and a Wear OS companion.',
     keywords: [
       'Smart Cleaner for Android',
-      'Android junk cleaner app',
+      'Android storage cleaner app',
       'Android storage cleaner',
       'Google Play phone cleaner',
     ],

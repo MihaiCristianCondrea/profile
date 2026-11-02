@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">material-next-web-components logo</title>
+  <desc id="desc">A Material themed monogram with the letters MNW.</desc>
+  <rect width="128" height="128" rx="32" fill="#6750A4"/>
+  <path fill="#EADDFF" d="M28 88V40h12l24 28 24-28h12v48H88V59L68 82h-8L40 59v29H28Z"/>
+</svg>

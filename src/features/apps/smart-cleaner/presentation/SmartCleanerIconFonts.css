@@ -1,0 +1,14 @@
+/*
+ * Stands in for the kit's `material-symbols/*.css` imports (see vite.config.js).
+ * The npm package ships every axis, 9.4 MB of fonts. The site already loads
+ * Material Symbols Outlined with its FILL axis (src/core/styles/fonts.css), so
+ * only Rounded is added here, trimmed to the FILL axis the kit uses (0.5 MB).
+ */
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('https://fonts.gstatic.com/s/materialsymbolsrounded/v383/syl7-zNym6YjUruM-QrEh7-nyTnjDwKNJ_190FjpZIvLgyidOK7BDB_Qb9vUdV6_gjDK-P3JuF_Zs-obHph2-jOcZTKPqw.woff2')
+    format('woff2');
+}
