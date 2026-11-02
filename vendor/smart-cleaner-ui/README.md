@@ -35,3 +35,16 @@ types the few entry points the page imports, and Vite resolves them through the
   and only needs a 0.5 MB Rounded face.
 - The kit's `scrollArea` cancels every wheel event over a screen. The page hands the wheel back to
   the document when the screen is already at its top or bottom, so a phone never traps page scroll.
+
+## The 3D Pixel
+
+`public/smart-cleaner-ui/models/pixel-9-pro-xl.glb` is the Google Pixel 9 Pro XL from
+BlenderKit (`asset_base_id:511e7e71-de38-4d6e-99da-9b34cc4dd738`), a free asset under BlenderKit's
+Royalty Free licence: it may be used inside this site, but not redistributed on its own, so do not
+copy it into public repositories or offer it as a download. Its meshes are Draco-compressed;
+`public/smart-cleaner-ui/draco/` holds three.js's decoder, copied from
+`node_modules/three/examples/jsm/libs/draco/gltf/`.
+
+`Pixel3D.ts` renders it with three.js (loaded only on this page, and never with reduced motion).
+The display material is swapped for dark glass, because the opening scene hands off to the live
+screen the moment the phone faces front. Without WebGL or the model, the flat device frame is used.

@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
+    "@types/three": "^0.180.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "ts-jest": "^29.4.15",
@@ -68,6 +69,7 @@
   "dependencies": {
     "@material/web": "^2.5.0",
     "lit": "^3.3.3",
-    "material-next-web-components": "^0.1.0"
+    "material-next-web-components": "^0.1.0",
+    "three": "^0.180.0"
   }
 }

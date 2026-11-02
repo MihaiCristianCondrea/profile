@@ -78,7 +78,11 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
       }
     },
     refresh: () => {
-      if (!still) schedule();
+      if (still) return;
+      scenes.forEach((scene) => {
+        scene.last = -1;
+      });
+      schedule();
     },
     stop() {
       if (frame) cancelAnimationFrame(frame);

@@ -1,5 +1,7 @@
 import type { ScreenHost, ScreenState } from 'material-next-web-components/marketing.js';
+import { fetchPixelModel } from '../data/PixelModelSource.ts';
 import { clamp01, startScrollScenes, within } from './ScrollScenes.ts';
+import type { Pixel3D } from './Pixel3D.ts';
 import {
   isPartName,
   loadSmartCleanerUiKit,
@@ -195,6 +197,31 @@ export function initSmartCleanerPage(): void {
     detachObserver.observe(page.parentElement, { childList: true });
   }
 
+  // The 3D Pixel turns in during the opening; skipped for reduced motion and without WebGL.
+  let pixel: Pixel3D | undefined;
+  const pixelCanvas = page.querySelector<HTMLCanvasElement>('#cleanerPixel');
+  if (pixelCanvas && !still) {
+    void Promise.all([fetchPixelModel(), import('./Pixel3D.ts')])
+      .then(([model, { createPixel3D }]) => createPixel3D(pixelCanvas, model))
+      .then((created) => {
+        if (!page.isConnected) {
+          created.dispose();
+          return;
+        }
+        pixel = created;
+        const fit = (): void => created.resize(pixelCanvas.clientWidth, pixelCanvas.clientHeight);
+        page.classList.add('has-pixel');
+        fit();
+        window.addEventListener('resize', fit, { passive: true });
+        cleanups.push(() => {
+          window.removeEventListener('resize', fit);
+          created.dispose();
+        });
+        scenes.refresh();
+      })
+      .catch((error: unknown) => console.warn('Smart Cleaner: 3D phone unavailable, showing the flat device.', error));
+  }
+
   void loadSmartCleanerUiKit().then((kit) => {
     if (!page.isConnected) return;
     page.classList.add('is-live');
@@ -223,7 +250,10 @@ export function initSmartCleanerPage(): void {
     // Opening: CSS reads --p to fly the pieces into the phone. Once it has
     // landed, the phone takes taps.
     const assemble = page.querySelector<HTMLElement>('[data-scene="assemble"]');
-    if (assemble) scenes.add(assemble, (progress) => assemble.classList.toggle('is-assembled', progress > 0.55));
+    if (assemble) scenes.add(assemble, (progress) => {
+      assemble.classList.toggle('is-assembled', progress > 0.55);
+      pixel?.pose(within(progress, 0.1, 0.55), (1 - within(progress, 0.1, 0.55)) * 0.12);
+    });
 
     const quick = page.querySelector<HTMLElement>('[data-scene="quick"]');
     const quickHost = hostOf('[data-screen="quick-clean"]');

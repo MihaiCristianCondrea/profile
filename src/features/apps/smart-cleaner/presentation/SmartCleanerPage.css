@@ -254,6 +254,35 @@
     scale(calc(0.72 + 0.28 * var(--phone-in)));
 }
 
+/* The 3D Pixel arrives back first and turns to face you; as it lands, the
+   live screen takes its place (--live). Without WebGL the page skips it. */
+.cleaner-scene--assemble {
+  --turn: clamp(0, (var(--p) - 0.1) / 0.45, 1);
+  --live: clamp(0, (var(--p) - 0.55) * 14, 1);
+}
+
+.cleaner-assembled__phone {
+  position: relative;
+}
+
+.cleaner-pixel {
+  display: none;
+  height: 100%;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.has-pixel .cleaner-pixel {
+  display: block;
+  opacity: calc(1 - var(--live));
+}
+
+.has-pixel .cleaner-assembled .cleaner-device {
+  opacity: var(--live);
+}
+
 .cleaner-assembled .cleaner-live-note {
   opacity: clamp(0, (var(--p) - 0.6) * 4, 1);
 }
