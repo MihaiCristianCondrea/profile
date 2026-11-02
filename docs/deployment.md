@@ -52,3 +52,12 @@ Guard: the `verify` job in `pages.yml` runs after deployment, waits for competin
 ```bash
 node scripts/verify-live-site.mjs https://mihaicristiancondrea.github.io/profile/
 ```
+
+## Dependency security
+
+`npm run check` starts with `npm audit --audit-level=low`, so any advisory fails CI. `package.json` `overrides` keep Jest's transitive tooling on patched releases:
+
+- `glob` `^14.0.3` and `minimatch` `^11.0.4` (fixed upstream advisories).
+- `deepmerge` → `tools/deepmerge-safe/`. Upstream `deepmerge` has a prototype-poisoning advisory with no fixed release, and only `jest-config` uses it. The local package implements the same API (`deepmerge(a, b, options)` and `deepmerge.all`) and never copies `__proto__`, `constructor`, or `prototype`. Remove the override once a fixed `deepmerge` is published or Jest drops it.
+
+TypeScript stays on 6.x: TypeScript 7 (the native compiler) does not expose the JavaScript API that `ts-jest` needs.

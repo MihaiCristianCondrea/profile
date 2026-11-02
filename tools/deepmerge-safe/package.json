@@ -1,0 +1,7 @@
+{
+  "name": "deepmerge",
+  "version": "4.3.2-safe",
+  "description": "Local replacement for deepmerge (GHSA advisory: mergeObject prototype poisoning, no fixed upstream release). Only jest-config uses it.",
+  "main": "index.js",
+  "license": "MIT"
+}
