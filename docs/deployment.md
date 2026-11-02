@@ -38,3 +38,17 @@ npm run deploy
 6. Deploy the uploaded artifact with `actions/deploy-pages`.
 
 That keeps the repository source-first while the published GitHub Pages artifact still contains every runtime file, static asset, and route fragment needed by `index.html`.
+
+## Unstyled live site (raw source published)
+
+Symptom: the live site shows plain black-on-white HTML — the drawer links as a run-on line of text, no Material components, no theme.
+
+Cause: the repository's Pages **Source** was set to *Deploy from a branch*. GitHub then runs its own legacy "pages build and deployment" job on every push, in parallel with `.github/workflows/pages.yml`. That job publishes the repository root instead of `dist/`. The root `index.html` loads `/src/main.ts`, which browsers cannot execute, and all CSS is imported from that module graph, so nothing styles the page. Because the legacy job usually finishes last, it silently overwrites the correct deployment even when the workflow succeeds.
+
+Fix (one-time, repository admin): **Settings → Pages → Build and deployment → Source → GitHub Actions**. The legacy job then stops running and only the workflow deploys `dist/`.
+
+Guard: the `verify` job in `pages.yml` runs after deployment, waits for competing deployments to settle, and runs `scripts/verify-live-site.mjs` against the live URL. It fails the workflow if the live `index.html` references `src/main.ts` or lacks the built `./assets` bundles, so this regression can never pass unnoticed again. Run it locally with:
+
+```bash
+node scripts/verify-live-site.mjs https://mihaicristiancondrea.github.io/profile/
+```

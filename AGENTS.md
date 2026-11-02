@@ -35,6 +35,8 @@ When a component already manages state, listen to its event instead of writing t
 
 ## Static route fragments
 
+GitHub Pages must publish only the `pages.yml` artifact (`dist/`); its Source must stay "GitHub Actions", never "Deploy from a branch". See `docs/deployment.md` for why.
+
 Feature HTML lives under `src/features/**/presentation/*.html`. The build copies these files to `dist/content/**`; never edit generated `dist` files.
 
 ## Verification
