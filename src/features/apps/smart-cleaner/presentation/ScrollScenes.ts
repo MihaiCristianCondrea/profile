@@ -11,6 +11,16 @@ interface Scene {
   el: HTMLElement;
   update: SceneUpdate;
   last: number;
+  /** `arrival` scenes report how far `el` has entered the viewport instead of a pinned progress. */
+  arrival?: boolean;
+}
+
+/**
+ * How far an element has scrolled into view: 0 while its top is at the bottom
+ * of the viewport, 1 once its top has risen past 85% of it.
+ */
+export function arrivalProgress(top: number, viewport: number): number {
+  return viewport > 0 ? clamp01((viewport - top) / (viewport * 0.85)) : 1;
 }
 
 export function clamp01(value: number): number {
@@ -30,6 +40,8 @@ export function sceneProgress(top: number, height: number, viewport: number): nu
 
 export interface ScrollScenes {
   add(el: HTMLElement, update: SceneUpdate): void;
+  /** Like `add`, but progress is the element's arrival into the viewport. */
+  arrive(el: HTMLElement, update: SceneUpdate): void;
   /** Recompute now, for example after content above the scenes changed size. */
   refresh(): void;
   stop(): void;
@@ -48,7 +60,9 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
     const viewport = window.innerHeight;
     for (const scene of scenes) {
       const box = scene.el.getBoundingClientRect();
-      const progress = sceneProgress(box.top, box.height, viewport);
+      const progress = scene.arrival
+        ? arrivalProgress(box.top, viewport)
+        : sceneProgress(box.top, box.height, viewport);
       if (progress === scene.last) continue;
       scene.last = progress;
       scene.el.style.setProperty('--p', progress.toFixed(4));
@@ -67,6 +81,12 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
   }
 
   return {
+    arrive(el, update) {
+      const scene = { el, update, last: -1, arrival: true };
+      scenes.push(scene);
+      if (still) update(1);
+      else schedule();
+    },
     add(el, update) {
       const scene = { el, update, last: -1 };
       scenes.push(scene);

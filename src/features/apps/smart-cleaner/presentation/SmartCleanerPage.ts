@@ -162,7 +162,8 @@ export function initSmartCleanerPage(): void {
   const devices = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-device[data-screen]'));
   const fitDevices = (): void => {
     devices.forEach((device) => {
-      const stage = device.parentElement;
+      // The figure, not the shrink-wrapped Pixel stage, gives the room available.
+      const stage = device.closest('figure') ?? device.parentElement;
       const maxHeight = device.dataset.deviceFit === 'viewport'
         ? viewportDeviceHeight(window.innerWidth, window.innerHeight) - (Number(device.dataset.deviceReserve) || 0)
         : Number(device.dataset.deviceHeight) || 720;
@@ -174,7 +175,10 @@ export function initSmartCleanerPage(): void {
   cleanups.push(() => window.removeEventListener('resize', fitDevices));
   if (typeof ResizeObserver === 'function') {
     const resizeObserver = new ResizeObserver(fitDevices);
-    devices.forEach((device) => device.parentElement && resizeObserver.observe(device.parentElement));
+    devices.forEach((device) => {
+      const stage = device.closest('figure') ?? device.parentElement;
+      if (stage) resizeObserver.observe(stage);
+    });
     cleanups.push(() => resizeObserver.disconnect());
   }
   devices.forEach((device) => releaseWheelAtEdges(device, () => hosts.get(device), cleanups));
@@ -197,26 +201,45 @@ export function initSmartCleanerPage(): void {
     detachObserver.observe(page.parentElement, { childList: true });
   }
 
-  // The 3D Pixel turns in during the opening; skipped for reduced motion and without WebGL.
-  let pixel: Pixel3D | undefined;
-  const pixelCanvas = page.querySelector<HTMLCanvasElement>('#cleanerPixel');
-  if (pixelCanvas && !still) {
+  // Every phone is the 3D Pixel first: it turns in, and the live screen takes
+  // its place once it faces front. Skipped for reduced motion and without
+  // WebGL, where the flat device is shown from the start.
+  const pixelStages = Array.from(page.querySelectorAll<HTMLElement>('[data-pixel]'));
+  const pixels = new Map<HTMLElement, Pixel3D>();
+  const heroStage = pixelStages.find((stage) => stage.dataset.pixelArrival === undefined);
+  pixelStages.forEach((stage) => {
+    if (stage.dataset.pixelArrival === undefined) return;
+    const side = stage.dataset.pixelArrival === 'left' ? -1 : 1;
+    scenes.arrive(stage, (arrival) => {
+      stage.style.setProperty('--live', within(arrival, 0.9, 1).toFixed(3));
+      pixels.get(stage)?.pose(0.4 + 0.6 * arrival, (1 - arrival) * 0.22, side);
+    });
+  });
+  if (pixelStages.length > 0 && !still) {
     void Promise.all([fetchPixelModel(), import('./Pixel3D.ts')])
-      .then(([model, { createPixel3D }]) => createPixel3D(pixelCanvas, model))
-      .then((created) => {
+      .then(async ([model, { createPixel3D }]) => {
+        for (const stage of pixelStages) {
+          const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
+          if (!canvas || !page.isConnected) continue;
+          const pixel = await createPixel3D(canvas, model);
+          pixels.set(stage, pixel);
+          cleanups.push(() => pixel.dispose());
+        }
         if (!page.isConnected) {
-          created.dispose();
+          pixels.forEach((pixel) => pixel.dispose());
           return;
         }
-        pixel = created;
-        const fit = (): void => created.resize(pixelCanvas.clientWidth, pixelCanvas.clientHeight);
+        const fit = (): void => pixels.forEach((pixel, stage) => {
+          const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
+          if (canvas) pixel.resize(canvas.clientWidth, canvas.clientHeight);
+        });
         page.classList.add('has-pixel');
         fit();
-        window.addEventListener('resize', fit, { passive: true });
-        cleanups.push(() => {
-          window.removeEventListener('resize', fit);
-          created.dispose();
-        });
+        if (typeof ResizeObserver === 'function') {
+          const observer = new ResizeObserver(fit);
+          pixelStages.forEach((stage) => observer.observe(stage));
+          cleanups.push(() => observer.disconnect());
+        }
         scenes.refresh();
       })
       .catch((error: unknown) => console.warn('Smart Cleaner: 3D phone unavailable, showing the flat device.', error));
@@ -252,7 +275,7 @@ export function initSmartCleanerPage(): void {
     const assemble = page.querySelector<HTMLElement>('[data-scene="assemble"]');
     if (assemble) scenes.add(assemble, (progress) => {
       assemble.classList.toggle('is-assembled', progress > 0.55);
-      pixel?.pose(within(progress, 0.1, 0.55), (1 - within(progress, 0.1, 0.55)) * 0.12);
+      if (heroStage) pixels.get(heroStage)?.pose(within(progress, 0.1, 0.55), (1 - within(progress, 0.1, 0.55)) * 0.12);
     });
 
     const quick = page.querySelector<HTMLElement>('[data-scene="quick"]');

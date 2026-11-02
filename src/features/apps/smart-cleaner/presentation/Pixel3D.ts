@@ -23,8 +23,11 @@ const FIELD_OF_VIEW = 18;
 const DRACO_DECODER_PATH = './smart-cleaner-ui/draco/';
 
 export interface Pixel3D {
-  /** `turn` 0 shows the back, 1 the front; `tilt` leans it in radians. */
-  pose(turn: number, tilt?: number): void;
+  /**
+   * `turn` 0 shows the back, 1 the front; `tilt` leans it in radians; `side`
+   * (1 or -1) picks which way it turns in.
+   */
+  pose(turn: number, tilt?: number, side?: number): void;
   resize(width: number, height: number): void;
   dispose(): void;
 }
@@ -97,8 +100,8 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
   const draw = (): void => renderer.render(scene, camera);
 
   return {
-    pose(turn, tilt = 0) {
-      turntable.rotation.y = Math.PI * (1 - easeTurn(turn));
+    pose(turn, tilt = 0, side = 1) {
+      turntable.rotation.y = side * Math.PI * (1 - easeTurn(turn));
       turntable.rotation.x = tilt;
       draw();
     },

@@ -19,7 +19,8 @@
         </p>
         <h1 class="cleaner-display" id="cleanerHeroTitle">Room for what&#8217;s next.</h1>
         <p class="cleaner-lede">
-          See what is filling your storage, review it, and remove only the files you no longer need.
+          The storage cleaner that feels at home on your Pixel. See what is filling your storage, review it,
+          and remove only the files you no longer need.
         </p>
         <a class="cleaner-play-badge" href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner" target="_blank" rel="noopener">
           <img src="smart-cleaner-ui/material-next/badges/google-play/en.svg" alt="Get it on Google Play" width="239" height="71" />
@@ -27,9 +28,9 @@
       </div>
 
       <figure class="cleaner-assembled">
-        <div class="cleaner-assembled__phone">
+        <div class="cleaner-assembled__phone" data-pixel>
           <div class="cleaner-device" data-screen="dashboard" data-device-fit="viewport"></div>
-          <canvas class="cleaner-pixel" id="cleanerPixel" aria-hidden="true"></canvas>
+          <canvas class="cleaner-pixel" aria-hidden="true"></canvas>
         </div>
         <figcaption class="cleaner-live-note">
           <md-icon aria-hidden="true">touch_app</md-icon>
@@ -62,12 +63,15 @@
         </ol>
       </div>
       <figure class="cleaner-split__stage">
-        <div
-          class="cleaner-device"
-          data-screen="quick-clean"
-          data-device-fit="viewport"
-          data-state='{"phase":"scanning","progress":0,"running":false,"derive":true}'
-        ></div>
+        <div class="cleaner-pixel-stage" data-pixel data-pixel-arrival="right">
+          <div
+            class="cleaner-device"
+            data-screen="quick-clean"
+            data-device-fit="viewport"
+            data-state='{"phase":"scanning","progress":0,"running":false,"derive":true}'
+          ></div>
+          <canvas class="cleaner-pixel" aria-hidden="true"></canvas>
+        </div>
       </figure>
     </div>
   </section>
@@ -76,7 +80,10 @@
     <div class="cleaner-scene__stage cleaner-swipe">
       <p class="cleaner-swipe__word cleaner-swipe__word--left" aria-hidden="true">Left to <br />let go.</p>
       <figure class="cleaner-swipe__stage">
-        <div class="cleaner-device" data-screen="gallery-cleaner" data-device-fit="viewport" data-device-reserve="120"></div>
+        <div class="cleaner-pixel-stage" data-pixel data-pixel-arrival="left">
+          <div class="cleaner-device" data-screen="gallery-cleaner" data-device-fit="viewport" data-device-reserve="120"></div>
+          <canvas class="cleaner-pixel" aria-hidden="true"></canvas>
+        </div>
       </figure>
       <p class="cleaner-swipe__word cleaner-swipe__word--right" aria-hidden="true">Right <br />to keep.</p>
       <div class="cleaner-swipe__caption">
@@ -142,7 +149,10 @@
       </md-list>
     </div>
     <figure class="cleaner-stage">
-      <div class="cleaner-device" id="cleanerToolDevice" data-screen="duplicates" data-device-height="700"></div>
+      <div class="cleaner-pixel-stage" data-pixel data-pixel-arrival="right">
+        <div class="cleaner-device" id="cleanerToolDevice" data-screen="duplicates" data-device-height="700"></div>
+        <canvas class="cleaner-pixel" aria-hidden="true"></canvas>
+      </div>
     </figure>
   </section>
 
@@ -158,8 +168,8 @@
         <dd>Scanning and cleaning run on your device.</dd>
       </div>
       <div>
-        <dt>On your wrist too</dt>
-        <dd>A Wear OS companion shows your phone&#8217;s storage and starts Quick Clean from the watch.</dd>
+        <dt>At home on Pixel</dt>
+        <dd>Material 3 Expressive, the design of your Pixel. A Wear OS companion, Pixel Watch included, shows your storage and starts Quick Clean. Runs on any Android phone.</dd>
       </div>
       <div>
         <dt>Free</dt>
@@ -170,7 +180,7 @@
 
   <section class="cleaner-closing" aria-labelledby="cleanerClosingTitle">
     <span class="cleaner-closing__logo" id="cleanerClosingLogo" aria-hidden="true"></span>
-    <h2 class="cleaner-display" id="cleanerClosingTitle">Make some room.</h2>
+    <h2 class="cleaner-display" id="cleanerClosingTitle">Make room on your Pixel.</h2>
     <a class="cleaner-play-badge" href="https://play.google.com/store/apps/details?id=com.d4rk.cleaner" target="_blank" rel="noopener">
       <img src="smart-cleaner-ui/material-next/badges/google-play/en.svg" alt="Get it on Google Play" width="239" height="71" />
     </a>
@@ -178,6 +188,6 @@
       <a href="#privacy-policy-end-user-software">Privacy Policy</a>
       <a href="#terms-of-service-end-user-software">Terms of Service</a>
     </nav>
-    <p class="cleaner-trademark">Google Play and the Google Play logo are trademarks of Google LLC.</p>
+    <p class="cleaner-trademark">Google Play, the Google Play logo and Pixel are trademarks of Google LLC.</p>
   </section>
 </div>

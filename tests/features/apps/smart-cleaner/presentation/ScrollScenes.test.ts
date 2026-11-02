@@ -1,4 +1,4 @@
-import { sceneProgress, startScrollScenes, within } from '../../../../../src/features/apps/smart-cleaner/presentation/ScrollScenes';
+import { arrivalProgress, sceneProgress, startScrollScenes, within } from '../../../../../src/features/apps/smart-cleaner/presentation/ScrollScenes';
 
 describe('ScrollScenes', () => {
   test('progress runs from the section top reaching the viewport top to its bottom reaching the bottom', () => {
@@ -23,5 +23,14 @@ describe('ScrollScenes', () => {
     expect(update).toHaveBeenCalledWith(1);
     expect(el.style.getPropertyValue('--p')).toBe('1');
     scenes.stop();
+  });
+});
+
+describe('arrivalProgress', () => {
+  test('runs from the element entering at the bottom to 85% up the viewport', () => {
+    expect(arrivalProgress(1000, 1000)).toBe(0);
+    expect(arrivalProgress(575, 1000)).toBeCloseTo(0.5);
+    expect(arrivalProgress(150, 1000)).toBe(1);
+    expect(arrivalProgress(-200, 1000)).toBe(1);
   });
 });
