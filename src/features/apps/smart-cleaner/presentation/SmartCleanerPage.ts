@@ -167,7 +167,9 @@ export function initSmartCleanerPage(): void {
       const maxHeight = device.dataset.deviceFit === 'viewport'
         ? viewportDeviceHeight(window.innerWidth, window.innerHeight) - (Number(device.dataset.deviceReserve) || 0)
         : Number(device.dataset.deviceHeight) || 720;
-      device.style.setProperty('--device-zoom', String(deviceZoom(stage?.clientWidth ?? 0, maxHeight)));
+      // On a 3D stage the variable sizes the stage, which the screen no longer fills.
+      const target = device.closest<HTMLElement>('[data-pixel]') ?? device;
+      target.style.setProperty('--device-zoom', String(deviceZoom(stage?.clientWidth ?? 0, maxHeight)));
     });
   };
   fitDevices();
@@ -201,19 +203,17 @@ export function initSmartCleanerPage(): void {
     detachObserver.observe(page.parentElement, { childList: true });
   }
 
-  // Every phone is the 3D Pixel first: it turns in, and the live screen takes
-  // its place once it faces front. Skipped for reduced motion and without
-  // WebGL, where the flat device is shown from the start.
+  // Every phone is the 3D Pixel, with the live screen on its display: it turns
+  // in as it arrives. Skipped for reduced motion and without WebGL, where the
+  // screens keep Material Next's flat device frame.
   const pixelStages = Array.from(page.querySelectorAll<HTMLElement>('[data-pixel]'));
   const pixels = new Map<HTMLElement, Pixel3D>();
   const heroStage = pixelStages.find((stage) => stage.dataset.pixelArrival === undefined);
+  let moveScreensOntoPixels = (): void => undefined;
   pixelStages.forEach((stage) => {
     if (stage.dataset.pixelArrival === undefined) return;
     const side = stage.dataset.pixelArrival === 'left' ? -1 : 1;
-    scenes.arrive(stage, (arrival) => {
-      stage.style.setProperty('--live', within(arrival, 0.9, 1).toFixed(3));
-      pixels.get(stage)?.pose(0.4 + 0.6 * arrival, (1 - arrival) * 0.22, side);
-    });
+    scenes.arrive(stage, (arrival) => pixels.get(stage)?.pose(0.4 + 0.6 * arrival, (1 - arrival) * 0.22, side));
   });
   if (pixelStages.length > 0 && !still) {
     void Promise.all([fetchPixelModel(), import('./Pixel3D.ts')])
@@ -235,6 +235,7 @@ export function initSmartCleanerPage(): void {
         });
         page.classList.add('has-pixel');
         fit();
+        moveScreensOntoPixels();
         if (typeof ResizeObserver === 'function') {
           const observer = new ResizeObserver(fit);
           pixelStages.forEach((stage) => observer.observe(stage));
@@ -255,6 +256,25 @@ export function initSmartCleanerPage(): void {
         theme: siteTheme(),
       }));
     });
+    // A screen on a 3D phone drops its flat frame and sits on the display,
+    // still live: the CSS3D layer keeps it in the document.
+    const onPixel = new Set<HTMLElement>();
+    moveScreensOntoPixels = (): void => pixels.forEach((pixel, stage) => {
+      const device = stage.querySelector<HTMLElement>('.cleaner-device');
+      const host = device ? hosts.get(device) : undefined;
+      if (!device || !host || onPixel.has(stage)) return;
+      onPixel.add(stage);
+      host.setOptions({ frame: false });
+      const screen = document.createElement('div');
+      screen.className = 'cleaner-pixel-screen';
+      const camera = document.createElement('span');
+      camera.className = 'cleaner-pixel-screen__camera';
+      screen.append(device, camera);
+      pixel.attachScreen(screen);
+      scenes.refresh();
+    });
+    moveScreensOntoPixels();
+
     const hostOf = (selector: string): ScreenHost | undefined => {
       const device = page.querySelector<HTMLElement>(selector);
       return device ? hosts.get(device) : undefined;

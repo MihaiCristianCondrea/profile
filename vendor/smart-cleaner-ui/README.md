@@ -46,5 +46,8 @@ copy it into public repositories or offer it as a download. Its meshes are Draco
 `node_modules/three/examples/jsm/libs/draco/gltf/`.
 
 `Pixel3D.ts` renders it with three.js (loaded only on this page, and never with reduced motion).
-The display material is swapped for dark glass, because the opening scene hands off to the live
-screen the moment the phone faces front. Without WebGL or the model, the flat device frame is used.
+Every phone on the page is this model with the live screen on its display: WebGL cannot paint a live
+page into a texture, so a CSS3DRenderer layer, drawn with the same camera, places the real
+`ScreenHost` element on the display plane, inset by the bezel and rounded like the panel. It stays
+interactive and hides when the display faces away. Without WebGL or the model, the screens keep
+Material Next's flat device frame.

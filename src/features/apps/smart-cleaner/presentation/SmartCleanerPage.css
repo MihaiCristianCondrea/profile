@@ -254,21 +254,11 @@
     scale(calc(0.72 + 0.28 * var(--phone-in)));
 }
 
-/* The 3D Pixel arrives back first and turns to face you; as it lands, the
-   live screen takes its place (--live). Without WebGL the page skips it. */
-.cleaner-scene--assemble {
-  --turn: clamp(0, (var(--p) - 0.1) / 0.45, 1);
-  --live: clamp(0, (var(--p) - 0.55) * 14, 1);
-}
-
+/* The 3D Pixel arrives back first and turns to face you with the live screen
+   on its display. Without WebGL the page keeps the flat device frame. */
 .cleaner-assembled__phone,
 .cleaner-pixel-stage {
   position: relative;
-}
-
-/* A phone further down hands off when its own arrival completes (set by JS). */
-.cleaner-pixel-stage {
-  --live: 0;
 }
 
 .cleaner-pixel {
@@ -282,11 +272,43 @@
 
 .has-pixel .cleaner-pixel {
   display: block;
-  opacity: calc(1 - var(--live));
 }
 
-.has-pixel [data-pixel] .cleaner-device {
-  opacity: var(--live);
+/* On a 3D phone the stage keeps the flat frame's footprint, the canvas fills
+   it, and the live screen rides a CSS3D layer drawn with the same camera. */
+.has-pixel [data-pixel] {
+  height: calc(992px * var(--device-zoom, 0.7));
+  width: calc(469px * var(--device-zoom, 0.7));
+}
+
+.cleaner-pixel-screen-layer {
+  inset: 0;
+  position: absolute;
+}
+
+.cleaner-pixel-screen {
+  background: var(--md-sys-color-surface);
+  height: 957px;
+  overflow: hidden;
+  width: 430px;
+}
+
+.cleaner-pixel-screen .cleaner-device {
+  height: 100%;
+  width: 100%;
+  zoom: 1;
+}
+
+/* The front camera sits in the display; the screen layer covers the model's. */
+.cleaner-pixel-screen__camera {
+  background: #000;
+  border-radius: 50%;
+  height: var(--camera-size, 30px);
+  left: 50%;
+  position: absolute;
+  top: var(--camera-top, 22px);
+  transform: translateX(-50%);
+  width: var(--camera-size, 30px);
 }
 
 .cleaner-assembled .cleaner-live-note {
