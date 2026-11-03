@@ -4,6 +4,8 @@ import {
   initSmartCleanerPage,
   parseScreenState,
   quickCleanState,
+  releaseWheelAtEdges,
+  wheelDistance,
   swipeDrag,
   viewportDeviceHeight,
 } from '../../../../../src/features/apps/smart-cleaner/presentation/SmartCleanerPage';
@@ -162,7 +164,7 @@ describe('screen helpers', () => {
 
   test('pinned phones share a narrow viewport with their copy', () => {
     expect(viewportDeviceHeight(1440, 900)).toBe(750);
-    expect(viewportDeviceHeight(390, 800)).toBeCloseTo(448);
+    expect(viewportDeviceHeight(390, 800)).toBeCloseTo(400);
   });
 });
 
@@ -173,8 +175,9 @@ describe('createPixelsAtomically', () => {
     el.firstElementChild?.classList.add('cleaner-pixel');
     return el;
   };
-  const pixel = (): { pose: jest.Mock; resize: jest.Mock; attachScreen: jest.Mock; dispose: jest.Mock } => ({
+  const pixel = (): { pose: jest.Mock; resize: jest.Mock; attachScreen: jest.Mock; setVisible: jest.Mock; dispose: jest.Mock } => ({
     pose: jest.fn(),
+    setVisible: jest.fn(),
     resize: jest.fn(),
     attachScreen: jest.fn(),
     dispose: jest.fn(),
@@ -203,5 +206,44 @@ describe('createPixelsAtomically', () => {
 
     await expect(createPixelsAtomically([document.createElement('div')], create)).rejects.toThrow('no canvas');
     expect(create).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('phone wheel chaining', () => {
+  test('converts line and page deltas while leaving pixel deltas intact', () => {
+    expect(wheelDistance(3, 0, 800)).toBe(3);
+    expect(wheelDistance(-3, 1, 800)).toBe(-48);
+    expect(wheelDistance(1, 2, 800)).toBe(800);
+  });
+
+  test('chains a cancelled wheel outside the phone only when its state did not move', () => {
+    const parent = document.createElement('div');
+    const device = document.createElement('div');
+    const content = document.createElement('div');
+    parent.style.overflowY = 'auto';
+    Object.defineProperties(parent, { scrollHeight: { value: 2000 }, clientHeight: { value: 800 } });
+    parent.scrollBy = jest.fn();
+    parent.append(device);
+    device.append(content);
+    document.body.append(parent);
+    const current = { state: { scroll: 0 } };
+    const cleanups: Array<() => void> = [];
+    releaseWheelAtEdges(device, () => current as unknown as import('material-next-web-components/marketing.js').ScreenHost, cleanups);
+    let move = false;
+    content.addEventListener('wheel', (event) => {
+      event.preventDefault();
+      if (move) current.state.scroll += 20;
+    });
+    content.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 3, deltaMode: 1 }));
+    expect(parent.scrollBy).toHaveBeenCalledWith({ top: 48, left: 0, behavior: 'instant' });
+    move = true;
+    content.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 20 }));
+    expect(parent.scrollBy).toHaveBeenCalledTimes(1);
+    cleanups.forEach((cleanup) => cleanup());
+    move = false;
+    content.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 20 }));
+    expect(parent.scrollBy).toHaveBeenCalledTimes(1);
+    parent.remove();
   });
 });

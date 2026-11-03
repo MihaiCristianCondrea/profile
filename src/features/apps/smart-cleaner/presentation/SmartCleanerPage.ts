@@ -42,7 +42,7 @@ export function parseScreenState(source: string | undefined): ScreenState | unde
 export function deviceZoom(stageWidth: number, maxHeight: number): number {
   const byHeight = maxHeight / DEVICE_HEIGHT;
   const byWidth = stageWidth > 0 ? stageWidth / DEVICE_WIDTH : byHeight;
-  return Math.max(0.3, Math.min(byHeight, byWidth));
+  return Math.max(0.1, Math.min(byHeight, byWidth));
 }
 
 /**
@@ -50,7 +50,7 @@ export function deviceZoom(stageWidth: number, maxHeight: number): number {
  * the viewport with it, so the phone takes a little over half.
  */
 export function viewportDeviceHeight(width: number, height: number): number {
-  return width < 900 ? Math.max(320, height * 0.56) : Math.min(840, height - VIEWPORT_CHROME);
+  return width < 900 ? Math.max(180, Math.min(448, height * 0.5)) : Math.min(840, height - VIEWPORT_CHROME);
 }
 
 /**
@@ -130,13 +130,18 @@ function numericSnapshot(state: ScreenState): string {
     .join('|');
 }
 
-function scrollContainerOf(event: Event): Element | null {
-  for (const node of event.composedPath()) {
-    if (!(node instanceof Element)) continue;
+function scrollContainerOf(device: HTMLElement): Element | null {
+  // Start outside the phone. Its screen has already consumed the wheel event.
+  for (let node = device.parentElement; node; node = node.parentElement) {
     const { overflowY } = getComputedStyle(node);
     if ((overflowY === 'auto' || overflowY === 'scroll') && node.scrollHeight > node.clientHeight) return node;
   }
   return document.scrollingElement;
+}
+
+/** Wheel units are pixels, lines, or pages. Native chaining handles this normally. */
+export function wheelDistance(delta: number, mode: number, viewport: number): number {
+  return delta * (mode === 1 ? 16 : mode === 2 ? viewport : 1);
 }
 
 /**
@@ -144,7 +149,7 @@ function scrollContainerOf(event: Event): Element | null {
  * wheel over a phone would never reach the page. When the screen did not move
  * (it is at its top or bottom, or does not scroll), hand the wheel back.
  */
-function releaseWheelAtEdges(device: HTMLElement, host: () => ScreenHost | undefined, cleanups: Array<() => void>): void {
+export function releaseWheelAtEdges(device: HTMLElement, host: () => ScreenHost | undefined, cleanups: Array<() => void>): void {
   let before = '';
   const capture = (): void => {
     const current = host();
@@ -153,7 +158,12 @@ function releaseWheelAtEdges(device: HTMLElement, host: () => ScreenHost | undef
   const bubble = (event: WheelEvent): void => {
     const current = host();
     if (!event.defaultPrevented || !current || numericSnapshot(current.state) !== before) return;
-    scrollContainerOf(event)?.scrollBy({ top: event.deltaY, left: event.deltaX });
+    const container = scrollContainerOf(device);
+    container?.scrollBy({
+      top: wheelDistance(event.deltaY, event.deltaMode, container.clientHeight || window.innerHeight),
+      left: wheelDistance(event.deltaX, event.deltaMode, container.clientWidth || window.innerWidth),
+      behavior: 'instant',
+    });
   };
   device.addEventListener('wheel', capture, { capture: true, passive: true });
   device.addEventListener('wheel', bubble);
@@ -184,7 +194,7 @@ export function initSmartCleanerPage(): void {
 
   const devices = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-device[data-screen]'));
   const fitDevices = (): void => {
-    devices.forEach((device) => {
+    const fits = devices.map((device) => {
       // The figure, not the shrink-wrapped Pixel stage, gives the room available.
       const stage = device.closest('figure') ?? device.parentElement;
       const maxHeight = device.dataset.deviceFit === 'viewport'
@@ -192,8 +202,9 @@ export function initSmartCleanerPage(): void {
         : Number(device.dataset.deviceHeight) || 720;
       // On a 3D stage the variable sizes the stage, which the screen no longer fills.
       const target = device.closest<HTMLElement>('[data-pixel]') ?? device;
-      target.style.setProperty('--device-zoom', String(deviceZoom(stage?.clientWidth ?? 0, maxHeight)));
+      return { target, zoom: deviceZoom(stage?.clientWidth ?? 0, maxHeight) };
     });
+    fits.forEach(({ target, zoom }) => target.style.setProperty('--device-zoom', String(zoom)));
   };
   fitDevices();
   window.addEventListener('resize', fitDevices, { passive: true });
@@ -210,6 +221,42 @@ export function initSmartCleanerPage(): void {
 
   const scenes = startScrollScenes({ still });
   cleanups.push(() => scenes.stop());
+
+  const chapterButtons = Array.from(page.querySelectorAll<HTMLButtonElement>('[data-chapter]'));
+  const chapters = Array.from(page.querySelectorAll<HTMLElement>('[data-scene]'));
+  chapterButtons.forEach((button) => {
+    const jump = (): void => {
+      const chapter = chapters.find((section) => section.dataset.scene === button.dataset.chapter);
+      chapter?.scrollIntoView({ behavior: still ? 'instant' : 'smooth', block: 'start' });
+      const heading = chapter?.querySelector<HTMLElement>('h1, h2');
+      heading?.setAttribute('tabindex', '-1');
+      heading?.focus({ preventScroll: true });
+    };
+    button.addEventListener('click', jump);
+    cleanups.push(() => button.removeEventListener('click', jump));
+  });
+  if (typeof IntersectionObserver === 'function') {
+    const chapterObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        chapterButtons.forEach((button) => {
+          if (button.dataset.chapter === (entry.target as HTMLElement).dataset.scene) {
+            button.setAttribute('aria-current', 'step');
+          } else button.removeAttribute('aria-current');
+        });
+      }
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    const motionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) entry.target.classList.toggle('is-in-view', entry.isIntersecting);
+    });
+    chapters.forEach((chapter) => {
+      chapterObserver.observe(chapter);
+      motionObserver.observe(chapter);
+    });
+    cleanups.push(() => chapterObserver.disconnect(), () => motionObserver.disconnect());
+  } else {
+    chapters.forEach((chapter) => chapter.classList.add('is-in-view'));
+  }
 
   // Tear everything down once the router swaps this page out.
   const teardown = (): void => {
@@ -254,6 +301,27 @@ export function initSmartCleanerPage(): void {
           const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
           if (canvas) pixel.resize(canvas.clientWidth, canvas.clientHeight);
         });
+        const visibleStages = new Set<HTMLElement>();
+        const updateVisibility = (): void => pixels.forEach((pixel, stage) => {
+          pixel.setVisible(!document.hidden && visibleStages.has(stage));
+        });
+        if (typeof IntersectionObserver === 'function') {
+          const visibility = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              const stage = entry.target as HTMLElement;
+              if (entry.isIntersecting) visibleStages.add(stage);
+              else visibleStages.delete(stage);
+            }
+            updateVisibility();
+          }, { rootMargin: '100px' });
+          pixelStages.forEach((stage) => visibility.observe(stage));
+          cleanups.push(() => visibility.disconnect());
+        } else {
+          pixelStages.forEach((stage) => visibleStages.add(stage));
+        }
+        document.addEventListener('visibilitychange', updateVisibility);
+        cleanups.push(() => document.removeEventListener('visibilitychange', updateVisibility));
+        updateVisibility();
         page.classList.add('has-pixel');
         fit();
         moveScreensOntoPixels();
@@ -323,16 +391,25 @@ export function initSmartCleanerPage(): void {
     const quickHost = hostOf('[data-screen="quick-clean"]');
     const steps = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-steps [data-step]'));
     if (quick && quickHost) {
+      let lastScan = -1;
+      let lastStep = -1;
       scenes.add(quick, (progress) => {
         const next = quickCleanState(progress);
-        if (next.phase !== 'done') quickHost.set(next);
-        else if (quickHost.state.phase !== 'done') {
+        const scan = Math.round(Number(next.progress ?? 1) * 1000);
+        if (next.phase !== 'done' && (scan !== lastScan || quickHost.state.phase !== 'scanning')) {
+          quickHost.set({ ...next, progress: scan / 1000 });
+        }
+        else if (next.phase === 'done' && quickHost.state.phase !== 'done') {
           // The finished screen eases in on its own clock; a still page shows it settled.
           const entrance = still ? 1 : 0;
           quickHost.set({ phase: 'done', running: false, heroIn: entrance, cardsIn: entrance });
         }
+        lastScan = scan;
         const active = progress >= 0.8 ? 2 : progress >= 0.25 ? 1 : 0;
-        steps.forEach((step) => step.classList.toggle('is-active', Number(step.dataset.step) === active));
+        if (active !== lastStep) {
+          steps.forEach((step) => step.classList.toggle('is-active', Number(step.dataset.step) === active));
+          lastStep = active;
+        }
       });
     }
 
@@ -352,14 +429,31 @@ export function initSmartCleanerPage(): void {
     const tiles = Array.from(page.querySelectorAll<HTMLElement>('.cleaner-tile[data-category]'));
     tiles.forEach((tile) => kit.renderCategoryTile(tile, tile.dataset.category ?? ''));
     if (storage && ring) {
+      let ringSize = Math.round(Math.min(360, ring.clientWidth || 360));
+      let lastRing = '';
+      const categoryTiles = CATEGORY_IDS.map((id) => tiles.find((tile) => tile.dataset.category === id));
+      if (typeof ResizeObserver === 'function') {
+        const observer = new ResizeObserver((entries) => {
+          const size = Math.round(Math.min(360, entries[0]?.contentRect.width || 360));
+          if (size === ringSize) return;
+          ringSize = size;
+          scenes.refresh();
+        });
+        observer.observe(ring);
+        cleanups.push(() => observer.disconnect());
+      }
       scenes.add(storage, (progress) => {
         const peeled: string[] = [];
         CATEGORY_IDS.forEach((id, index) => {
           const lift = within(progress, 0.55 + index * 0.07, 0.67 + index * 0.07);
-          tiles.find((tile) => tile.dataset.category === id)?.style.setProperty('--t', lift.toFixed(3));
+          categoryTiles[index]?.style.setProperty('--t', lift.toFixed(3));
           if (lift > 0) peeled.push(id);
         });
-        kit.renderRing(ring, Math.round(Math.min(360, ring.clientWidth || 360)), within(progress, 0.05, 0.5), peeled);
+        const fill = Math.round(within(progress, 0.05, 0.5) * 100) / 100;
+        const key = `${ringSize}:${fill}:${peeled.join(',')}`;
+        if (key === lastRing) return;
+        lastRing = key;
+        kit.renderRing(ring, ringSize, fill, peeled);
       });
     }
 
