@@ -68,6 +68,29 @@ export function swipeDrag(progress: number): number {
   return -Math.sin(clamp01(progress) * Math.PI * 2) * 0.85;
 }
 
+/**
+ * Creates a 3D Pixel for every stage, or none: if any fails, the ones already
+ * built are disposed before the error propagates, so the page falls back to
+ * flat frames everywhere without holding GPU resources.
+ */
+export async function createPixelsAtomically(
+  stages: readonly HTMLElement[],
+  create: (canvas: HTMLCanvasElement) => Promise<Pixel3D>,
+): Promise<Map<HTMLElement, Pixel3D>> {
+  const created = new Map<HTMLElement, Pixel3D>();
+  try {
+    for (const stage of stages) {
+      const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
+      if (!canvas) throw new Error('A 3D Pixel stage has no canvas.');
+      created.set(stage, await create(canvas));
+    }
+    return created;
+  } catch (error) {
+    created.forEach((pixel) => pixel.dispose());
+    throw error;
+  }
+}
+
 /** Runs `onVisible` the first time `el` is at least half on screen. */
 function whenVisible(el: Element, onVisible: () => void, cleanups: Array<() => void>): void {
   if (typeof IntersectionObserver !== 'function') {
@@ -217,18 +240,16 @@ export function initSmartCleanerPage(): void {
   });
   if (pixelStages.length > 0 && !still) {
     void Promise.all([fetchPixelModel(), import('./Pixel3D.ts')])
-      .then(async ([model, { createPixel3D }]) => {
-        for (const stage of pixelStages) {
-          const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
-          if (!canvas || !page.isConnected) continue;
-          const pixel = await createPixel3D(canvas, model);
-          pixels.set(stage, pixel);
-          cleanups.push(() => pixel.dispose());
-        }
+      .then(([model, { createPixel3D }]) => createPixelsAtomically(pixelStages, (canvas) => createPixel3D(canvas, model)))
+      .then((created) => {
         if (!page.isConnected) {
-          pixels.forEach((pixel) => pixel.dispose());
+          created.forEach((pixel) => pixel.dispose());
           return;
         }
+        created.forEach((pixel, stage) => {
+          pixels.set(stage, pixel);
+          cleanups.push(() => pixel.dispose());
+        });
         const fit = (): void => pixels.forEach((pixel, stage) => {
           const canvas = stage.querySelector<HTMLCanvasElement>('canvas.cleaner-pixel');
           if (canvas) pixel.resize(canvas.clientWidth, canvas.clientHeight);

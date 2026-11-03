@@ -17,6 +17,8 @@ if (!existsSync(kitSource)) {
   throw new Error(`No marketing UI kit at ${kitSource}. Pass the path of a Smart Cleaner checkout.`);
 }
 
+// public/smart-cleaner-ui/ is owned by this script and rebuilt from scratch.
+// The 3D Pixel and its Draco decoder live in public/pixel-3d/, which it never touches.
 const vendor = join(ROOT, 'vendor/smart-cleaner-ui/src');
 const assets = join(ROOT, 'public/smart-cleaner-ui');
 rmSync(vendor, { recursive: true, force: true });

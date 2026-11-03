@@ -1,4 +1,5 @@
 import {
+  createPixelsAtomically,
   deviceZoom,
   initSmartCleanerPage,
   parseScreenState,
@@ -162,5 +163,45 @@ describe('screen helpers', () => {
   test('pinned phones share a narrow viewport with their copy', () => {
     expect(viewportDeviceHeight(1440, 900)).toBe(750);
     expect(viewportDeviceHeight(390, 800)).toBeCloseTo(448);
+  });
+});
+
+describe('createPixelsAtomically', () => {
+  const stage = (): HTMLElement => {
+    const el = document.createElement('div');
+    el.append(document.createElement('canvas'));
+    el.firstElementChild?.classList.add('cleaner-pixel');
+    return el;
+  };
+  const pixel = (): { pose: jest.Mock; resize: jest.Mock; attachScreen: jest.Mock; dispose: jest.Mock } => ({
+    pose: jest.fn(),
+    resize: jest.fn(),
+    attachScreen: jest.fn(),
+    dispose: jest.fn(),
+  });
+
+  test('creates a Pixel for every stage', async () => {
+    const stages = [stage(), stage()];
+    const created = await createPixelsAtomically(stages, () => Promise.resolve(pixel()));
+
+    expect([...created.keys()]).toEqual(stages);
+  });
+
+  test('disposes the Pixels already built when a later one fails', async () => {
+    const first = pixel();
+    const second = pixel();
+    const results = [Promise.resolve(first), Promise.resolve(second), Promise.reject(new Error('WebGL lost'))];
+
+    await expect(createPixelsAtomically([stage(), stage(), stage()], () => results.shift() as Promise<typeof first>))
+      .rejects.toThrow('WebGL lost');
+    expect(first.dispose).toHaveBeenCalledTimes(1);
+    expect(second.dispose).toHaveBeenCalledTimes(1);
+  });
+
+  test('fails, and builds nothing further, when a stage has no canvas', async () => {
+    const create = jest.fn(() => Promise.resolve(pixel()));
+
+    await expect(createPixelsAtomically([document.createElement('div')], create)).rejects.toThrow('no canvas');
+    expect(create).not.toHaveBeenCalled();
   });
 });

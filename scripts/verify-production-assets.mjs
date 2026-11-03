@@ -68,4 +68,16 @@ assert(!resumeSource.includes('A3'), 'resume print preparation must not include 
 assert(resumeSource.includes('window.print()'), 'resume export must continue to use browser print, not canvas/image PDF generation.');
 assert(!resumeSource.includes('html2canvas') && !resumeSource.includes('jsPDF'), 'resume export must not use html2canvas/jsPDF.');
 
+// The 3D Pixel: the model and three.js's Draco decoder must ship, and the decoder must be the one
+// the installed three.js expects (public/pixel-3d/, outside the folder the UI-kit sync replaces).
+const pixelAssets = ['pixel-3d/pixel-9-pro-xl.glb', ...['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'].map((file) => `pixel-3d/draco/${file}`)];
+pixelAssets.forEach((file) => assert(existsSync(new URL(file, distDir)), `missing 3D Pixel asset: ${file}`));
+const glb = readFileSync(new URL('pixel-3d/pixel-9-pro-xl.glb', distDir));
+assert(glb.subarray(0, 4).toString('latin1') === 'glTF', 'pixel-3d/pixel-9-pro-xl.glb is not a binary glTF.');
+['draco_decoder.js', 'draco_decoder.wasm', 'draco_wasm_wrapper.js'].forEach((file) => {
+  const shipped = readFileSync(new URL(`pixel-3d/draco/${file}`, distDir));
+  const installed = readFileSync(new URL(`node_modules/three/examples/jsm/libs/draco/gltf/${file}`, projectDir));
+  assert(shipped.equals(installed), `pixel-3d/draco/${file} does not match the installed three.js; copy it again.`);
+});
+
 console.log(`Verified production assets: ${cssFile}`);

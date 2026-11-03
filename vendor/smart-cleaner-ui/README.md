@@ -38,12 +38,20 @@ types the few entry points the page imports, and Vite resolves them through the
 
 ## The 3D Pixel
 
-`public/smart-cleaner-ui/models/pixel-9-pro-xl.glb` is the Google Pixel 9 Pro XL from
+`public/pixel-3d/pixel-9-pro-xl.glb` is the Google Pixel 9 Pro XL from
 BlenderKit (`asset_base_id:511e7e71-de38-4d6e-99da-9b34cc4dd738`), a free asset under BlenderKit's
 Royalty Free licence: it may be used inside this site, but not redistributed on its own, so do not
 copy it into public repositories or offer it as a download. Its meshes are Draco-compressed;
-`public/smart-cleaner-ui/draco/` holds three.js's decoder, copied from
-`node_modules/three/examples/jsm/libs/draco/gltf/`.
+`public/pixel-3d/draco/` holds three.js's decoder, copied from
+`node_modules/three/examples/jsm/libs/draco/gltf/`. Both live outside `public/smart-cleaner-ui/`
+because the sync script replaces that folder; `npm run verify:production-assets` fails if either is
+missing from the build or the decoder no longer matches the installed three.js (after upgrading
+three, copy the three decoder files again).
+
+`Pixel3D.ts` releases everything it loads on `dispose()`: every geometry, material and texture in the
+model (`DisposeTree.ts`), the display material it replaced, the environment map and the renderers.
+The page builds all its Pixels or none: if one fails, those already built are disposed and every
+phone keeps its flat frame.
 
 `Pixel3D.ts` renders it with three.js (loaded only on this page, and never with reduced motion).
 Every phone on the page is this model with the live screen on its display: WebGL cannot paint a live

@@ -16,12 +16,17 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import { disposeTree, type DisposableNode } from './DisposeTree.ts';
 
 /** The model's display material: dark glass under the live screen, which shows through it. */
 const SCREEN_MATERIAL = 'GP9XL_Screen';
 const FIELD_OF_VIEW = 18;
-/** The model's meshes are Draco-compressed; three.js's decoder is copied here from node_modules. */
-const DRACO_DECODER_PATH = './smart-cleaner-ui/draco/';
+/**
+ * The model's meshes are Draco-compressed. three.js's decoder is committed in
+ * public/pixel-3d/draco/; verify-production-assets checks it matches the
+ * installed three.js.
+ */
+const DRACO_DECODER_PATH = './pixel-3d/draco/';
 /** The UI kit's phone window in CSS pixels (Material Next `phone`). */
 export const SCREEN_WIDTH = 430;
 export const SCREEN_HEIGHT = 957;
@@ -87,13 +92,16 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
   const phone = gltf.scene;
   const glass = new MeshPhysicalMaterial({ color: 0x07090d, roughness: 0.08, metalness: 0, clearcoat: 1 });
   let screenY = 0;
+  // Swapped-out display materials leave the tree, so they are disposed separately.
+  const replaced = new Set<Material>();
+  const swap = (material: Material): Material => {
+    if (material.name !== SCREEN_MATERIAL) return material;
+    replaced.add(material);
+    return glass;
+  };
   phone.traverse((node) => {
     if (!(node instanceof Mesh)) return;
-    if (Array.isArray(node.material)) {
-      node.material = node.material.map((material) => (material.name === SCREEN_MATERIAL ? glass : material));
-    } else if (node.material.name === SCREEN_MATERIAL) {
-      node.material = glass;
-    }
+    node.material = Array.isArray(node.material) ? node.material.map(swap) : swap(node.material);
     // Which side of the slab the display sits on, from the screen's own vertices.
     if (materialsOf(node).includes(glass)) {
       const box = new Box3().setFromObject(node);
@@ -182,9 +190,12 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
       draw();
     },
     dispose() {
+      // The model's own geometries, materials and textures, the dark glass
+      // included (it replaced the display material on the meshes).
+      disposeTree(phone as unknown as DisposableNode);
+      disposeTree({ traverse: (visit) => visit({ material: [...replaced], traverse: () => undefined }) });
       environment.dispose();
       pmrem.dispose();
-      glass.dispose();
       renderer.dispose();
       cssRenderer.domElement.remove();
     },
