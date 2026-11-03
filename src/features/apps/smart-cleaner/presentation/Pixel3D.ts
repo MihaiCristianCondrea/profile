@@ -51,6 +51,8 @@ export interface Pixel3D {
    */
   pose(turn: number, tilt?: number, side?: number): void;
   resize(width: number, height: number): void;
+  /** Defer GPU and CSS3D work while the stage is outside the viewport. */
+  setVisible(visible: boolean): void;
   /**
    * Places `screen` (a live, interactive element of SCREEN_WIDTH by
    * SCREEN_HEIGHT pixels) on the phone's display. It turns with the phone and
@@ -77,7 +79,11 @@ function materialsOf(mesh: Mesh): Material[] {
  */
 export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffer): Promise<Pixel3D> {
   const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  const pixelRatio = (): number => Math.min(
+    window.innerWidth < 900 ? 1.5 : 2,
+    window.devicePixelRatio || 1,
+  );
+  renderer.setPixelRatio(pixelRatio());
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
 
@@ -87,8 +93,12 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
   scene.environment = environment;
 
   const draco = new DRACOLoader().setDecoderPath(DRACO_DECODER_PATH);
-  const gltf = await new GLTFLoader().setDRACOLoader(draco).parseAsync(model, '');
-  draco.dispose();
+  const gltf = await new GLTFLoader().setDRACOLoader(draco).parseAsync(model, '').catch((error: unknown) => {
+    environment.dispose();
+    pmrem.dispose();
+    renderer.dispose();
+    throw error;
+  }).finally(() => draco.dispose());
   const phone = gltf.scene;
   const glass = new MeshPhysicalMaterial({ color: 0x07090d, roughness: 0.08, metalness: 0, clearcoat: 1 });
   let screenY = 0;
@@ -148,16 +158,29 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
   cssScene.add(cssTurntable);
   let screenObject: CSS3DObject | undefined;
 
+  let visible = false;
+  let dirty = true;
+  let lastWidth = 0;
+  let lastHeight = 0;
   const draw = (): void => {
+    if (!visible || !dirty) return;
+    dirty = false;
     cssTurntable.rotation.copy(turntable.rotation);
     renderer.render(scene, camera);
     cssRenderer.render(cssScene, camera);
   };
 
   return {
+    setVisible(next) {
+      visible = next;
+      draw();
+    },
     pose(turn, tilt = 0, side = 1) {
-      turntable.rotation.y = side * Math.PI * (1 - easeTurn(turn));
+      const rotation = side * Math.PI * (1 - easeTurn(turn));
+      if (turntable.rotation.y === rotation && turntable.rotation.x === tilt) return;
+      turntable.rotation.y = rotation;
       turntable.rotation.x = tilt;
+      dirty = true;
       draw();
     },
     attachScreen(screen) {
@@ -179,14 +202,21 @@ export async function createPixel3D(canvas: HTMLCanvasElement, model: ArrayBuffe
       );
       screenObject.scale.set(widthMm / SCREEN_WIDTH, heightMm / SCREEN_HEIGHT, 1);
       cssTurntable.add(screenObject);
+      dirty = true;
       draw();
     },
     resize(width, heightPx) {
       if (width <= 0 || heightPx <= 0) return;
+      const ratio = pixelRatio();
+      if (width === lastWidth && heightPx === lastHeight && renderer.getPixelRatio() === ratio) return;
+      lastWidth = width;
+      lastHeight = heightPx;
+      renderer.setPixelRatio(ratio);
       renderer.setSize(width, heightPx, false);
       cssRenderer.setSize(width, heightPx);
       camera.aspect = width / heightPx;
       camera.updateProjectionMatrix();
+      dirty = true;
       draw();
     },
     dispose() {

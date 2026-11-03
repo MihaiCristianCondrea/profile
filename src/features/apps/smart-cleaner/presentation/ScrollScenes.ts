@@ -11,6 +11,7 @@ interface Scene {
   el: HTMLElement;
   update: SceneUpdate;
   last: number;
+  visible: boolean;
   /** `arrival` scenes report how far `el` has entered the viewport instead of a pinned progress. */
   arrival?: boolean;
 }
@@ -55,24 +56,46 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
   const scenes: Scene[] = [];
   let frame = 0;
 
+  let stopped = false;
   const measure = (): void => {
     frame = 0;
+    if (stopped) return;
     const viewport = window.innerHeight;
-    for (const scene of scenes) {
+    // Finish every layout read before a callback can change the DOM.
+    // Read offscreen boxes too: a fast jump must still publish both endpoints.
+    const measured = scenes.map((scene) => {
       const box = scene.el.getBoundingClientRect();
-      const progress = scene.arrival
+      const raw = scene.arrival
         ? arrivalProgress(box.top, viewport)
         : sceneProgress(box.top, box.height, viewport);
+      return { scene, progress: Math.round(raw * 10000) / 10000 };
+    });
+    for (const { scene, progress } of measured) {
       if (progress === scene.last) continue;
+      if (!scene.visible && progress > 0 && progress < 1) continue;
       scene.last = progress;
-      scene.el.style.setProperty('--p', progress.toFixed(4));
+      scene.el.style.setProperty('--p', String(progress));
       scene.update(progress);
     }
   };
 
   const schedule = (): void => {
-    if (!frame) frame = requestAnimationFrame(measure);
+    if (!stopped && !frame) frame = requestAnimationFrame(measure);
   };
+
+  const observer = !still && typeof IntersectionObserver === 'function'
+    ? new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        for (const scene of scenes) {
+          if (scene.el === entry.target) scene.visible = entry.isIntersecting;
+        }
+      }
+      schedule();
+    })
+    : undefined;
+  const resizeObserver = !still && typeof ResizeObserver === 'function'
+    ? new ResizeObserver(schedule)
+    : undefined;
 
   if (!still) {
     // Capture: the shell may scroll an inner element rather than the document.
@@ -82,14 +105,20 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
 
   return {
     arrive(el, update) {
-      const scene = { el, update, last: -1, arrival: true };
+      const scene = { el, update, last: -1, visible: true, arrival: true };
       scenes.push(scene);
-      if (still) update(1);
-      else schedule();
+      observer?.observe(el);
+      resizeObserver?.observe(el);
+      if (still) {
+        el.style.setProperty('--p', '1');
+        update(1);
+      } else schedule();
     },
     add(el, update) {
-      const scene = { el, update, last: -1 };
+      const scene = { el, update, last: -1, visible: true };
       scenes.push(scene);
+      observer?.observe(el);
+      resizeObserver?.observe(el);
       if (still) {
         el.style.setProperty('--p', '1');
         update(1);
@@ -105,6 +134,9 @@ export function startScrollScenes({ still }: { still: boolean }): ScrollScenes {
       schedule();
     },
     stop() {
+      stopped = true;
+      observer?.disconnect();
+      resizeObserver?.disconnect();
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener('scroll', schedule, { capture: true });
       window.removeEventListener('resize', schedule);

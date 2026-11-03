@@ -34,3 +34,76 @@ describe('arrivalProgress', () => {
     expect(arrivalProgress(-200, 1000)).toBe(1);
   });
 });
+
+describe('scroll frame scheduling', () => {
+  let frames: FrameRequestCallback[];
+  beforeEach(() => {
+    frames = [];
+    jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      frames.push(callback);
+      return frames.length;
+    });
+    jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+  });
+  afterEach(() => jest.restoreAllMocks());
+  const tick = (): void => { frames.splice(0).forEach((callback) => callback(0)); };
+
+  test('batches every box read before any scene callback writes', () => {
+    const order: string[] = [];
+    const scenes = startScrollScenes({ still: false });
+    for (const id of ['first', 'second']) {
+      const el = document.createElement('section');
+      el.getBoundingClientRect = () => {
+        order.push(`read ${id}`);
+        return { top: -500, height: 2000 } as DOMRect;
+      };
+      scenes.add(el, () => order.push(`write ${id}`));
+    }
+    expect(frames).toHaveLength(1);
+    tick();
+    expect(order).toEqual(['read first', 'read second', 'write first', 'write second']);
+    scenes.stop();
+  });
+
+  test('fast jumps publish endpoints in both directions and settled frames do not update', () => {
+    const scenes = startScrollScenes({ still: false });
+    const el = document.createElement('section');
+    let top = 500;
+    el.getBoundingClientRect = () => ({ top, height: 3000 } as DOMRect);
+    const update = jest.fn();
+    scenes.add(el, update);
+    tick();
+    top = -5000;
+    window.dispatchEvent(new Event('scroll'));
+    window.dispatchEvent(new Event('scroll'));
+    expect(frames).toHaveLength(1);
+    tick();
+    window.dispatchEvent(new Event('scroll'));
+    tick();
+    top = 500;
+    window.dispatchEvent(new Event('scroll'));
+    tick();
+    expect(update.mock.calls.map(([value]) => value)).toEqual([0, 1, 0]);
+    scenes.stop();
+    window.dispatchEvent(new Event('scroll'));
+    expect(frames).toHaveLength(0);
+  });
+
+  test('ignores subprecision movement but refresh republishes state after a resize', () => {
+    const scenes = startScrollScenes({ still: false });
+    const el = document.createElement('section');
+    let top = -400;
+    el.getBoundingClientRect = () => ({ top, height: window.innerHeight + 1000 } as DOMRect);
+    const update = jest.fn();
+    scenes.add(el, update);
+    tick();
+    top -= 0.001;
+    window.dispatchEvent(new Event('scroll'));
+    tick();
+    expect(update).toHaveBeenCalledTimes(1);
+    scenes.refresh();
+    tick();
+    expect(update).toHaveBeenCalledTimes(2);
+    scenes.stop();
+  });
+});

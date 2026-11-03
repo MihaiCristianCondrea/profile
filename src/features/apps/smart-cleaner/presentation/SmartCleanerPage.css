@@ -135,10 +135,11 @@
 
   height: 280vh;
   position: relative;
+  scroll-margin-top: var(--cleaner-bar);
 }
 
 .cleaner-scene__stage {
-  height: calc(100dvh - var(--cleaner-bar));
+  height: calc(100svh - var(--cleaner-bar));
   position: sticky;
   top: var(--cleaner-bar);
 }
@@ -149,7 +150,7 @@
   --copy-out: clamp(0, var(--p) * 3, 1);
   --phone-in: clamp(0, (var(--p) - 0.12) * 2.2, 1);
 
-  height: 240vh;
+  height: 200vh;
 }
 
 .cleaner-scene--assemble .cleaner-scene__stage {
@@ -174,6 +175,7 @@
 
   animation: cleaner-drift 6s ease-in-out infinite alternate;
   animation-delay: calc(var(--d) * -40s);
+  animation-play-state: paused;
   left: 0;
   opacity: calc(1 - var(--t) * var(--t));
   position: absolute;
@@ -186,6 +188,11 @@
     )
     scale(calc(var(--s) * (1 - 0.75 * var(--t))));
   width: var(--w, auto);
+}
+
+.is-in-view .cleaner-piece,
+.is-in-view .cleaner-scroll-cue {
+  animation-play-state: running;
 }
 
 /* List rows are drawn inside the app's own surfaces; out of the phone they
@@ -321,6 +328,7 @@
 
 .cleaner-scroll-cue {
   animation: cleaner-drift 1.4s ease-in-out infinite alternate;
+  animation-play-state: paused;
   bottom: 24px;
   color: var(--md-sys-color-on-surface-variant);
   left: 50%;
@@ -332,7 +340,7 @@
 /* Quick Clean: scrolling runs the scan ---------------------------------- */
 
 .cleaner-scene--quick {
-  height: 320vh;
+  height: 260vh;
 }
 
 .cleaner-split {
@@ -392,7 +400,7 @@
   --right: clamp(0, var(--lean) * 1.25, 1);
 
   background: var(--md-sys-color-surface-container-low);
-  height: 300vh;
+  height: 240vh;
 }
 
 .cleaner-swipe {
@@ -457,7 +465,7 @@
 /* Storage: the ring fills, then its categories peel off ----------------- */
 
 .cleaner-scene--storage {
-  height: 260vh;
+  height: 210vh;
 }
 
 .cleaner-storage {
@@ -695,7 +703,7 @@
   }
 
   .cleaner-swipe__caption p {
-    display: none;
+    font-size: 0.9375rem;
   }
 
   .cleaner-tools {
@@ -706,5 +714,128 @@
 @media (max-width: 599px) {
   .cleaner-principles__list {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A quiet chapter rail leaves the presentation itself as the focal point. */
+.cleaner-chapters {
+  display: none;
+}
+
+@media (min-width: 1400px) {
+  .cleaner-chapters {
+    display: grid;
+    gap: 4px;
+    inset-inline-end: 8px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+  }
+
+  .cleaner-chapters button {
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: var(--md-sys-color-outline);
+    cursor: pointer;
+    height: 36px;
+    padding: 12px;
+    width: 36px;
+  }
+
+  .cleaner-chapters button::before {
+    background: currentColor;
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 8px;
+    width: 8px;
+    transition: transform 180ms var(--cleaner-ease);
+  }
+
+  .cleaner-chapters button[aria-current='step'],
+  .cleaner-chapters button:hover {
+    color: var(--md-sys-color-primary);
+  }
+
+  .cleaner-chapters button[aria-current='step']::before {
+    transform: scale(1.5);
+  }
+
+  .cleaner-chapters button:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Only decorative, normal-flow reveals use native timelines. Unsupported
+   browsers keep the content fully visible; live phone state stays in JS. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cleaner-principles__list > div {
+      animation: cleaner-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+
+@keyframes cleaner-reveal {
+  from {
+    opacity: 0.4;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* On short windows or at high zoom, reading takes priority over pinning.
+   JS still drives each demo to its endpoint as its section passes the top. */
+@media (max-height: 680px) {
+  .cleaner-scene {
+    height: auto;
+  }
+
+  .cleaner-scene .cleaner-scene__stage {
+    height: auto;
+    min-height: calc(100svh - var(--cleaner-bar));
+    padding-block: 32px;
+    position: relative;
+    top: 0;
+  }
+
+  .cleaner-scene--assemble .cleaner-scene__stage {
+    display: grid;
+    gap: 32px;
+    justify-items: center;
+  }
+
+  .cleaner-cloud,
+  .cleaner-scroll-cue {
+    display: none;
+  }
+
+  .cleaner-hero-copy,
+  .cleaner-assembled {
+    opacity: 1;
+    pointer-events: auto;
+    position: static;
+    transform: none;
+  }
+
+  .cleaner-assembled .cleaner-live-note {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smart-cleaner-page *,
+  .smart-cleaner-page *::before {
+    animation: none !important;
+    transition: none !important;
   }
 }
